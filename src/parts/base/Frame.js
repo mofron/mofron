@@ -44,7 +44,7 @@ mofron.parts.Frame = class extends mofron.parts.Core {
     }
     
     setLayout (lo) {
-        
+        this.layout = lo;
     }
 }
 /* end of file */

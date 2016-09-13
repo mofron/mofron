@@ -10,7 +10,6 @@ mofron.parts.Core = class {
         this.parent = null;
         this.child  = new Array();
         this.event  = null;
-        
     }
     
     
@@ -52,7 +51,33 @@ mofron.parts.Core = class {
         } else {
             tgt = '#' + this.parent.getId();
         }
-        $(tgt).append('<div id="'+ this.getId() +'"></div>');
+        $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
+    }
+    
+    visible (flg, eff) {
+        try  {
+            var p_eff = eff || null;
+            
+            if ('boolean' != (typeof flg)) {
+                throw new Error('invalid parameter');
+            }
+            
+            if (null != p_eff) {
+                if (false === flg) {
+                    p_eff.start(this);
+                } else {
+                    p_eff.end(this);
+                }
+            } else {
+                if (false === flg) {
+                    $('#' + this.getId()).css('display', 'none');
+                } else {
+                    $('#' + this.getId()).css('display', '');
+                }
+            }
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
     }
 }
 /* end of file */
