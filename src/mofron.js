@@ -6,44 +6,43 @@ try {
     if (typeof mofron === "undefined") {
         var mofron  = {
             conf : {
-                base_path : './'
+                base_path : '.'  // path to mofron
             },
             mng  : {
                 is_loaded : false
             },
-            parts : {},
+            parts : {
+                base    : {},
+                extends : {}
+            },
             /**
              *
              */
-            loadParts : null,
+            useParts : null,
             
         };
         
-        mofron.loadParts = function(mod, cb_func, prm) {
+        mofron.useParts = function(name) {
             try {
                 if (false === mofron.mng.is_loaded) {
                     /* not loaded yet */
-                    setTimeout(
-                        function(mod, cb_func, prm) {
-                            mofron.loadParts(mod, cb_func, prm);
-                        }       ,
-                        200     ,
-                        mod     ,
-                        cb_func ,
-                        prm
-                    );
-                    return;
+                    throw new Error('initialize is not finished yet');
                 }
-                var p_cb_func = cb_func || null;
-                var p_prm     = prm     || null;
-                                
-                                
+                /* paramter must be string type */
+                if ('string' != (typeof name)) {
+                    throw new Error('invalid parameter');
+                }
+                var p_name = name.split('/');
+                if (1 != p_name.length) {
+                    throw new Error('invalid parameter');
+                }
+                tetraring.loader.jsSerial([mofron.conf.base_path + '/src/parts/extends/' + name]);
             } catch (e) {
                 console.error(e.stack);
             }
         };
         
-        //$.getScript('./src/lib/tetraring4js/src/tetraring.js');
+        $.getScript('./src/lib/tetraring4js/src/tetraring.js');
     } else {
         throw new Error('mofron is already defined');
     }
