@@ -4,12 +4,18 @@
  * @author simpart
  */
 
-mofron.parts.Core = class {
+mofron.parts.Component = class {
     constructor () {
-        this.id     = null;
-        this.parent = null;
-        this.child  = new Array();
-        this.event  = null;
+        try {
+            this.id     = null;
+            this.parent = null;
+            this.child  = new Array();
+            this.event  = null;
+            this.layout = null;
+            this.effect = null;
+        } catch (e) {
+            throw new Error(e.stack);
+        }
     }
     
     
@@ -40,18 +46,33 @@ mofron.parts.Core = class {
         return ret_id;
     }
     
+    addChild() {
+        try {}
+    }
+    
     addEvents(evt) {
         
     }
     
-    init () {
-        var tgt = null;
-        if (null === this.parent) {
-            tgt = 'body';
-        } else {
-            tgt = '#' + this.parent.getId();
+    init (disp) {
+        try {
+            var _disp = disp || false;
+            var tgt   = null;
+            if (null === this.parent) {
+                tgt = 'body';
+            } else {
+                tgt = '#' + this.parent.getId();
+            }
+            if (false === _disp) {
+                $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
+            } else if (true === _disp) {
+                $(tgt).append('<div id="'+ this.getId() +'"></div>');
+            } else {
+                throw new Error('invalid parameter');
+            }
+        } catch (e) {
+            throw new Error(e.stack + '\n');
         }
-        $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
     }
     
     visible (flg, eff) {
