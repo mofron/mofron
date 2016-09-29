@@ -47,7 +47,11 @@ mofron.parts.Component = class {
     }
     
     addChild() {
-        try {}
+        try {
+            
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
     }
     
     addEvents(evt) {

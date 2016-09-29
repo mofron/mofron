@@ -21,7 +21,7 @@ try {
                 if (null != _bp) {
                     tetraring.base_path = _bp;
                 }
-                mofron.js_loader = new tetraring.loader.JsLoader();
+                mofron.js_loader = new tetraring.loader.JsLoader(_bp);
                 
                 /* load core parts */
                 $.getScript(

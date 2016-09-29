@@ -16,5 +16,17 @@ mofron.parts.Header = class extends mofron.parts.Component {
             throw new Error(e.stack + '\n');
         }
     }
+    
+    init (disp) {
+        try {
+            var _disp = disp || false;
+alert(_disp);
+            super.init(_disp);
+            
+            
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
 }
 /* end of file */
