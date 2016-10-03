@@ -7,9 +7,11 @@ try {
         var mofron  = {
             js_loader : null  ,
             init      : null  ,
+            theme     : null  ,
             parts     : {}    ,
             layout    : {}    ,
             effect    : {}    ,
+            other     : {}    ,
             useParts  : null  
             
         };
@@ -24,11 +26,14 @@ try {
                 mofron.js_loader = new tetraring.loader.JsLoader(_bp);
                 
                 /* load core parts */
-                $.getScript(
-                    tetraring.base_path + 'Component.js',
+                mofron.js_loader.addPath(tetraring.base_path + 'parts/base/Component.js');
+                mofron.js_loader.addPath(tetraring.base_path + 'other/Color.js');
+                mofron.js_loader.addPath(tetraring.base_path + 'other/Theme.js');
+                mofron.js_loader.load(
                     function() {
                         try {
-                            mofron.js_loader.addPath('Header.js');
+                            mofron.theme = new mofron.other.Theme();
+                            mofron.js_loader.addPath('parts/base/Header.js');
                             mofron.js_loader.load(_cb,null);
                         } catch (e) {
                             console.error(e.stack + '\n');

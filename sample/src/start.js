@@ -2,48 +2,54 @@
  * @file  start.js
  * @brief start view
  */
-$(function() {
-    try {
-        /* start page header */
-        mofron.init(
-            '../src/parts/base/',
-            function () {
-                try {
-                    if (typeof app === "undefined") {
-                        app      = {};
-                        app.view = {};
-                        app.jsLoader = new tetraring.loader.JsLoader('./src/');
-                        app.jsLoader.addPath('view/frame.js');
-                        app.jsLoader.load(function() {
-                            try {
-                                startApp();
-                            } catch (e) {
-                                console.error(e.stack + '\n');
-                            }
-                        },null);
-                    } else {
-                        throw new Error('init error');
+try {
+    if (typeof app === "undefined") {
+        app = {};
+        /* set app function */
+        app.init = function () {
+            try {
+                app.view = {};
+                app.jsLoader = new tetraring.loader.JsLoader('./src/');
+                app.jsLoader.addPath('view/frame.js');
+                app.jsLoader.load(function() {
+                    try {
+                        app.start();
+                    } catch (e) {
+                        console.error(e.stack + '\n');
                     }
-                } catch (e) {
-                    console.error(e.stack);
-                }
+                },null);
+                app.init = null;
+            } catch (e) {
+                throw new Error(e.stack + '\n');
             }
-        );
-    } catch (e) {
-        console.error(e.stack);
-    }
-});
+        };
+        
+        app.start = function () {
+            try {
+                /* show frame */
+                app.view.frame.init();
+                
+                /* set menu */
 
-function startApp() {
-    try {
-        /* show frame */
-        app.view.frame.init();
+                /* show top contetns */
+                
+                /* start visible */
+                $('body').fadeIn();
+                app.start = null;
+            } catch (e) {
+                throw new Error(e.stack + '\n');
+            }
+        }
         
-        /* set menu */
-        
-        /* show top contetns */
-    } catch (e) {
-        console.error(e.stack);
+        /* initialize mofron */
+        mofron.init(
+            '../src/',
+            app.init
+        );
+    } else {
+        throw new Error('failed app initialize');
     }
+} catch (e) {
+    console.error(e.stack);
 }
 /* end of file */

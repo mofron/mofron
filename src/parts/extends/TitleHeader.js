@@ -1,16 +1,22 @@
 /**
- * @file   Header.js
- * @brief  Base UI of Header
+ * @file   TitleHeader.js
+ * @brief  Simpale Page Title Header
  * @author simpart
  */
 
-mofron.parts.Header = class extends mofron.parts.Component {
+mofron.parts.TitleHeader = class extends mofron.parts.Header {
     /**
      * initialize Header
+     *
+     * @param cnt : (string) header title
      */
-    constructor () {
+    constructor (cnt) {
         try {
             super();
+            if ('string' != (typeof cnt)) {
+                throw new Error('invalid parameter type');
+            }
+            this.conts  = cnt;
             this.height = 70;
         } catch (e) {
             throw new Error(e.stack + '\n');
@@ -60,14 +66,6 @@ mofron.parts.Header = class extends mofron.parts.Component {
      * col : (string) color
      */
     setColor (col) {
-        try {
-            
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
-    
-    setFix (flg) {
         try {
             
         } catch (e) {
