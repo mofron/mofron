@@ -13,6 +13,7 @@ mofron.parts.Component = class {
             this.event  = null;
             this.layout = null;
             this.effect = null;
+            this.theme  = mofron.theme;
         } catch (e) {
             throw new Error(e.stack);
         }

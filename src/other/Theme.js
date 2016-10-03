@@ -17,7 +17,7 @@ mofron.other.Theme = class {
     
     setMainColor (col) {
         try {
-            
+            this.colors[0] = col;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -25,7 +25,7 @@ mofron.other.Theme = class {
     
     setScndColor (col) {
         try {
-            
+            this.colors[1] = col;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -33,7 +33,7 @@ mofron.other.Theme = class {
     
     setThrdColor (col) {
         try {
-            
+            this.colors[2] = col;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

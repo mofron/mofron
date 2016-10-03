@@ -11,7 +11,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
     constructor () {
         try {
             super();
-            this.height = 70;
+            this.height = 50;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -32,7 +32,14 @@ mofron.parts.Header = class extends mofron.parts.Component {
             $('#' + this.getId() + ' .conts').css('height', this.height + 'px');
             $('#' + this.getId() + ' .conts').css('border-bottom', 'solid 1px black');
             $('#' + this.getId() + ' .padd').css('float' , 'none');
-            $('#' + this.getId() + ' .padd').css('height', '70px');
+            $('#' + this.getId() + ' .padd').css('height', this.height + 'px');
+            
+            if (null !== this.theme.colors[0]) {
+                $('#' + this.getId() + ' .conts').css(
+                    'background',
+                    this.theme.colors[0].getStyle()
+                );
+            }
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

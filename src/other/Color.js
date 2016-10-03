@@ -3,44 +3,59 @@
  * @brief color abstructor
  */
 mofron.other.Color = class {
-    constructor () {
+    constructor (r,g,b,a) {
         try {
-            this.color = null;
-            this.red   = null;
-            this.green = null;
-            this.blue  = null;
+            this.red   = r || null;
+            this.green = g || null;
+            this.blue  = b || null;
+            this.alpha = a || 1;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
     }
     
-    setColor(col) {
-        try {
-            
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
-    
-    getColor() {
-        try { 
-        
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
+//    setColor(col) {
+//        try {
+//            
+//        } catch (e) {
+//            throw new Error(e.stack + '\n');
+//        }
+//    }
     
     setRgb (r, g, b) {
         try {
-            
+            this.red   = r;
+            this.green = g;
+            this.blue  = b;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
     }
     
-    getRgb () {
+    setAlpha (a) {
         try {
-            
+            this.alpha = a;
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    getRgba () {
+        try {
+            return new Array(
+                           this.red   ,
+                           this.green ,
+                           this.blue  ,
+                           this.alpha
+                       );
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    getStyle () {
+        try {
+            return 'rgba('+ this.red +','+ this.green +','+ this.blue +','+ this.alpha +')';
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
