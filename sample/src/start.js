@@ -10,7 +10,6 @@ try {
             try {
                 app.view = {};
                 app.jsLoader = new tetraring.loader.JsPara('./src/');
-                app.jsLoader.addPath('view/parts.js');
                 app.jsLoader.addPath('view/frame.js');
                 app.jsLoader.load(function() {
                     try {
@@ -30,12 +29,10 @@ try {
                 mofron.theme.setMainColor (
                     new mofron.other.Color(230,230,230,1)
                 );
-                app.view.parts.init();
                 /* show frame */
                 app.view.frame.init();
-                
                 /* set menu */
-
+                
                 /* show top contetns */
                 
                 /* start visible */

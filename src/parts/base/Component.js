@@ -47,9 +47,14 @@ mofron.parts.Component = class {
         return ret_id;
     }
     
-    addChild() {
+    getTarget() {
+        return this.getId();
+    }
+    
+    addChild(chd) {
         try {
-            
+            chd.parent = this;
+            this.child.push(chd);
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -66,7 +71,7 @@ mofron.parts.Component = class {
             if (null === this.parent) {
                 tgt = 'body';
             } else {
-                tgt = '#' + this.parent.getId();
+                tgt = this.parent.getTarget();
             }
             if (false === _disp) {
                 $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
@@ -75,8 +80,15 @@ mofron.parts.Component = class {
             } else {
                 throw new Error('invalid parameter');
             }
+            
         } catch (e) {
             throw new Error(e.stack + '\n');
+        }
+    }
+    
+    initChild(disp) {
+        for(var idx in this.child) {
+            this.child[idx].init(disp);
         }
     }
     

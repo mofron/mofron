@@ -16,52 +16,7 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
             if ('string' != (typeof ttl)) {
                 throw new Error('invalid parameter type');
             }
-            this.title  = ttl;
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
-    
-    /**
-     * structure header
-     * 
-     * @param disp : (bool) visible flag
-     */
-    init (disp) {
-        try {
-            var _disp = disp || false;
-            super.init();
-            $('#' + this.getId() + ' .conts').html(this.title);
-            this.visible(_disp);
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
-    
-    /**
-     * set header height
-     *
-     * @param hei : (int) height
-     */
-    setHeight (hei) {
-        try {
-            this.height = hei;
-            if (null !== this.id) {
-                $('#' + this.getId() + ' .header-conts').css('height', this.height + 'px');
-            }
-        } catch (e) {
-            throw new Error(e.stack + '\n');
-        }
-    }
-    
-    /**
-     * set header background color
-     *
-     * col : (string) color
-     */
-    setColor (col) {
-        try {
-            
+            this.addChild(new mofron.parts.Text(ttl));
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

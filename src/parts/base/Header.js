@@ -24,8 +24,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
      */
     init (disp) {
         try {
-            var _disp = disp || false;
-            super.init(_disp);
+            super.init(disp);
             var tag  = "<div class='conts'></div>";
             tag     += "<div class='padd'></div>";
             $('#' + this.getId()).html(tag);
@@ -40,9 +39,14 @@ mofron.parts.Header = class extends mofron.parts.Component {
                     this.theme.colors[0].getStyle()
                 );
             }
+            super.initChild(disp);
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
+    }
+    
+    getTarget () {
+        return '#' + super.getTarget() + ' .conts';
     }
     
     /**

@@ -13,6 +13,7 @@ try {
             layout    : {}    ,
             effect    : {}    ,
             other     : {}    ,
+            rootConts : null  ,
             useParts  : null  
             
         };
@@ -32,8 +33,10 @@ try {
                     function() {
                         try {
                             var __cb = _cb;
-                            mofron.theme = new mofron.other.Theme();
+                            mofron.theme     = new mofron.other.Theme();
+                            mofron.rootConts = new mofron.parts.Component();
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
+                            mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.load(function() {
                                 try {
                                     __cb();
@@ -53,17 +56,16 @@ try {
         };
         mofron.useParts = function(name) {
             try {
-//                if (false === mofron.is_loaded) {
-//                    /* not loaded yet */
-//                    throw new Error('initialize is not finished yet');
-//                }
-//                /* paramter must be string type */
-//                if ('string' != (typeof name)) {
-//                    throw new Error('invalid parameter');
-//                }
-//                mofron.js_loader.addPath('parts/extends/' + name + '.js');
-//                mofron.js_loader.load();
-//                //tetraring.loader.jsSerial([mofron.conf.base_path + '/src/parts/extends/' + name]);
+                if (false === mofron.is_loaded) {
+                    /* not loaded yet */
+                    throw new Error('initialize is not finished yet');
+                }
+                /* paramter must be string type */
+                if ('string' != (typeof name)) {
+                    throw new Error('invalid parameter');
+                }
+                mofron.js_loader.Seri.addPath('parts/extends/' + name + '.js');
+                mofron.js_loader.Seri.load();
             } catch (e) {
                 console.error(e.stack);
             }
