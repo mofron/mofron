@@ -7,7 +7,8 @@ $(function () {
         app.view.frame      = {};
         app.view.frame.init = function() {
             try {
-                var hdr = new mofron.parts.Header('mofron.js');
+                //mofron.useParts('TitleHeader');
+                var hdr = new mofron.parts.Header('mofron.js Document');
                 hdr.init(true);
             } catch (e) {
                 throw new Error(e.stack + '\n');

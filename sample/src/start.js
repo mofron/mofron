@@ -9,7 +9,7 @@ try {
         app.init = function () {
             try {
                 app.view = {};
-                app.jsLoader = new tetraring.loader.JsLoader('./src/');
+                app.jsLoader = new tetraring.loader.JsPara('./src/');
                 app.jsLoader.addPath('view/frame.js');
                 app.jsLoader.load(function() {
                     try {

@@ -10,14 +10,13 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
      *
      * @param cnt : (string) header title
      */
-    constructor (cnt) {
+    constructor (ttl) {
         try {
             super();
-            if ('string' != (typeof cnt)) {
+            if ('string' != (typeof ttl)) {
                 throw new Error('invalid parameter type');
             }
-            this.conts  = cnt;
-            this.height = 70;
+            this.title  = ttl;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -31,14 +30,9 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
     init (disp) {
         try {
             var _disp = disp || false;
-            super.init(_disp);
-            var tag  = "<div class='header-conts'></div>";
-            tag     += "<div class='header-padd'></div>";
-            $('#' + this.getId()).html(tag);
-            $('#' + this.getId() + ' .header-conts').css('height', this.height + 'px');
-            $('#' + this.getId() + ' .header-conts').css('border-bottom', 'solid 1px black');
-            $('#' + this.getId() + ' .header-padd').css('float' , 'none');
-            $('#' + this.getId() + ' .header-padd').css('height', '70px');
+            super.init();
+            $('#' + this.getId() + ' .conts').html(this.title);
+            this.visible(_disp);
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

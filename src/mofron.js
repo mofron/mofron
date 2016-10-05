@@ -5,7 +5,8 @@
 try {
     if (typeof mofron === "undefined") {
         var mofron  = {
-            js_loader : null  ,
+            is_loaded : false ,
+            js_loader : {}    ,
             init      : null  ,
             theme     : null  ,
             parts     : {}    ,
@@ -20,21 +21,27 @@ try {
                 /* set base path */
                 var _bp = bp || null;
                 var _cb = cb || null;
-                if (null != _bp) {
-                    tetraring.base_path = _bp;
-                }
-                mofron.js_loader = new tetraring.loader.JsLoader(_bp);
+                mofron.js_loader.Para = new tetraring.loader.JsPara(_bp);
+                mofron.js_loader.Seri = new tetraring.loader.JsSeri(_bp);
                 
                 /* load core parts */
-                mofron.js_loader.addPath(tetraring.base_path + 'parts/base/Component.js');
-                mofron.js_loader.addPath(tetraring.base_path + 'other/Color.js');
-                mofron.js_loader.addPath(tetraring.base_path + 'other/Theme.js');
-                mofron.js_loader.load(
+                mofron.js_loader.Para.addPath('parts/base/Component.js');
+                mofron.js_loader.Para.addPath('other/Color.js');
+                mofron.js_loader.Para.addPath('other/Theme.js');
+                mofron.js_loader.Para.load(
                     function() {
                         try {
+                            var __cb = _cb;
                             mofron.theme = new mofron.other.Theme();
-                            mofron.js_loader.addPath('parts/base/Header.js');
-                            mofron.js_loader.load(_cb,null);
+                            mofron.js_loader.Para.addPath('parts/base/Header.js');
+                            mofron.js_loader.Para.load(function() {
+                                try {
+                                    __cb();
+                                    mofron.is_loaded = true;
+                                } catch (e) {
+                                    console.error(e.stack);
+                                }
+                            },null);
                         } catch (e) {
                             console.error(e.stack + '\n');
                         }
@@ -46,19 +53,17 @@ try {
         };
         mofron.useParts = function(name) {
             try {
-                //if (false === mofron.mng.is_loaded) {
-                //    /* not loaded yet */
-                //    throw new Error('initialize is not finished yet');
-                //}
-                ///* paramter must be string type */
-                //if ('string' != (typeof name)) {
-                //    throw new Error('invalid parameter');
-                //}
-                //var p_name = name.split('/');
-                //if (1 != p_name.length) {
-                //    throw new Error('invalid parameter');
-                //}
-                //tetraring.loader.jsSerial([mofron.conf.base_path + '/src/parts/extends/' + name]);
+//                if (false === mofron.is_loaded) {
+//                    /* not loaded yet */
+//                    throw new Error('initialize is not finished yet');
+//                }
+//                /* paramter must be string type */
+//                if ('string' != (typeof name)) {
+//                    throw new Error('invalid parameter');
+//                }
+//                mofron.js_loader.addPath('parts/extends/' + name + '.js');
+//                mofron.js_loader.load();
+//                //tetraring.loader.jsSerial([mofron.conf.base_path + '/src/parts/extends/' + name]);
             } catch (e) {
                 console.error(e.stack);
             }

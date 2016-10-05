@@ -26,13 +26,13 @@ mofron.parts.Header = class extends mofron.parts.Component {
         try {
             var _disp = disp || false;
             super.init(_disp);
-            var tag  = "<div class='header-conts'></div>";
-            tag     += "<div class='header-padd'></div>";
+            var tag  = "<div class='conts'></div>";
+            tag     += "<div class='padd'></div>";
             $('#' + this.getId()).html(tag);
-            $('#' + this.getId() + ' .header-conts').css('height', this.height + 'px');
-            $('#' + this.getId() + ' .header-conts').css('border-bottom', 'solid 1px black');
-            $('#' + this.getId() + ' .header-padd').css('float' , 'none');
-            $('#' + this.getId() + ' .header-padd').css('height', '70px');
+            $('#' + this.getId() + ' .conts').css('height', this.height + 'px');
+            $('#' + this.getId() + ' .conts').css('border-bottom', 'solid 1px black');
+            $('#' + this.getId() + ' .padd').css('float' , 'none');
+            $('#' + this.getId() + ' .padd').css('height', '70px');
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
