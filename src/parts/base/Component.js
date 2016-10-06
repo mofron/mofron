@@ -84,6 +84,10 @@ mofron.parts.Component = class {
             } else {
                 throw new Error('invalid parameter');
             }
+            
+            if (null !== this.layout) {
+                this.layout.layout();
+            }
             this.init_flg = true;
         } catch (e) {
             throw new Error(e.stack + '\n');
