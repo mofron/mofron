@@ -7,13 +7,14 @@
 mofron.parts.Component = class {
     constructor () {
         try {
-            this.id     = null;
-            this.parent = null;
-            this.child  = new Array();
-            this.event  = null;
-            this.layout = null;
-            this.effect = null;
-            this.theme  = mofron.theme;
+            this.id       = null;
+            this.parent   = null;
+            this.child    = new Array();
+            this.event    = null;
+            this.layout   = null;
+            this.effect   = null;
+            this.theme    = mofron.theme;
+            this.init_flg = false;
         } catch (e) {
             throw new Error(e.stack);
         }
@@ -41,20 +42,23 @@ mofron.parts.Component = class {
                 (loop === 20)) {
                 ret_id += "-";
             }
-                ret_id += (loop == 12 ? 4 : (loop == 16 ? (val & 3 | 8) : val)).toString(16);
+            ret_id += (loop == 12 ? 4 : (loop == 16 ? (val & 3 | 8) : val)).toString(16);
         }
         this.id = ret_id;
         return ret_id;
     }
     
     getTarget() {
-        return this.getId();
+        return '#' + this.getId();
     }
     
     addChild(chd) {
         try {
             chd.parent = this;
             this.child.push(chd);
+            if (true === this.init_flg) {
+                chd.init();
+            }
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -80,7 +84,7 @@ mofron.parts.Component = class {
             } else {
                 throw new Error('invalid parameter');
             }
-            
+            this.init_flg = true;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

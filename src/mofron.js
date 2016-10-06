@@ -29,6 +29,7 @@ try {
                 mofron.js_loader.Para.addPath('parts/base/Component.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
+                mofron.js_loader.Para.addPath('other/Style.js');
                 mofron.js_loader.Para.load(
                     function() {
                         try {
@@ -37,6 +38,7 @@ try {
                             mofron.rootConts = new mofron.parts.Component();
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
+                            mofron.js_loader.Para.addPath('parts/base/Frame.js');
                             mofron.js_loader.Para.load(function() {
                                 try {
                                     __cb();

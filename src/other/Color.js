@@ -14,14 +14,6 @@ mofron.other.Color = class {
         }
     }
     
-//    setColor(col) {
-//        try {
-//            
-//        } catch (e) {
-//            throw new Error(e.stack + '\n');
-//        }
-//    }
-    
     setRgb (r, g, b) {
         try {
             this.red   = r;

@@ -28,8 +28,10 @@ mofron.parts.Header = class extends mofron.parts.Component {
             var tag  = "<div class='conts'></div>";
             tag     += "<div class='padd'></div>";
             $('#' + this.getId()).html(tag);
-            $('#' + this.getId() + ' .conts').css('height', this.height + 'px');
-            $('#' + this.getId() + ' .conts').css('border-bottom', 'solid 1px black');
+            $(this.getTarget()).css('height', this.height + 'px');
+            $(this.getTarget()).css('width' , '100%');
+            $(this.getTarget()).css('float' , 'left');
+            $(this.getTarget()).css('border-bottom', 'solid 1px black');
             $('#' + this.getId() + ' .padd').css('float' , 'none');
             $('#' + this.getId() + ' .padd').css('height', this.height + 'px');
             
@@ -46,7 +48,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
     }
     
     getTarget () {
-        return '#' + super.getTarget() + ' .conts';
+        return super.getTarget() + ' .conts';
     }
     
     /**

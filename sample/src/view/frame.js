@@ -11,6 +11,8 @@ $(function () {
                 var hdr = new mofron.parts.TitleHeader('mofron.js Document');
                 hdr.init(true);
                 
+                app.view.main_conts = new mofron.parts.Component();
+                app.view.main_conts.init(true);
                 app.view.frame.init = null;
             } catch (e) {
                 throw new Error(e.stack + '\n');

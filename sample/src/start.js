@@ -31,8 +31,10 @@ try {
                 );
                 /* show frame */
                 app.view.frame.init();
-                /* set menu */
-                
+                var conts = app.view.main_conts;
+                var quick = new mofron.parts.Frame();
+                conts.addChild(quick);
+                quick.visible(true);
                 /* show top contetns */
                 
                 /* start visible */
