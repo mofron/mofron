@@ -31,7 +31,12 @@ try {
                 );
                 /* show frame */
                 app.view.frame.init();
+                
                 var conts = app.view.main_conts;
+                var title = new mofron.parts.Title('Index');
+                conts.addChild(title);
+                title.visible(true);
+                
                 var quick = new mofron.parts.Frame();
                 conts.addChild(quick);
                 quick.visible(true);

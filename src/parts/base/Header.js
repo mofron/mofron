@@ -41,6 +41,18 @@ mofron.parts.Header = class extends mofron.parts.Component {
                     this.theme.colors[0].getStyle()
                 );
             }
+            this.initHdrChild(disp);
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    initChild (disp) {
+        // dummy
+    }
+    
+    initHdrChild (disp) {
+        try {
             super.initChild(disp);
         } catch (e) {
             throw new Error(e.stack + '\n');
