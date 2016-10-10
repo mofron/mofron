@@ -13,6 +13,7 @@ mofron.parts.Component = class {
             this.event    = null;
             this.layout   = null;
             this.effect   = null;
+            this.style    = new mofron.other.Style(this.getTarget());
             this.theme    = mofron.theme;
             this.init_flg = false;
         } catch (e) {
@@ -52,13 +53,16 @@ mofron.parts.Component = class {
         return '#' + this.getId();
     }
     
-    addChild(chd) {
+    addChild(chd,disp) {
         try {
             chd.parent = this;
             this.child.push(chd);
             if (true === this.init_flg) {
-                chd.init();
-                
+                if (null !== this.layout) {
+                    this.layout.layout(chd,disp);
+                } else {
+                    chd.init(disp);
+                }
             }
         } catch (e) {
             throw new Error(e.stack + '\n');
@@ -87,7 +91,7 @@ mofron.parts.Component = class {
             }
             
             this.initChild(disp);
-            
+            this.style.setStyle();
             this.init_flg = true;
         } catch (e) {
             throw new Error(e.stack + '\n');
@@ -96,9 +100,12 @@ mofron.parts.Component = class {
     
     initChild(disp) {
         for(var idx in this.child) {
-            this.child[idx].init(disp);
             if (null !== this.layout) {
-                this.layout.layout(idx);
+                //this.child[idx].init(false);
+                this.layout.layout(this.child[idx],disp);
+                //this.child[idx].visible(disp);
+            } else {
+                this.child[idx].init(disp);
             }
         }
     }

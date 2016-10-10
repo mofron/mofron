@@ -17,12 +17,12 @@ $(function () {
                 center.init(true);
                 
                 
-                var grid = new mofron.parts.Component();
-                grid.layout = new mofron.layout.Grid(grid);
-                grid.layout.setGrid(3,1);
-                center.addChild(grid);
+                //var grid = new mofron.parts.Component();
+                //grid.layout = new mofron.layout.Grid(grid);
+                //grid.layout.setGrid(3,1);
+                //center.addChild(grid,true);
                 
-                app.view.main_conts = grid;
+                app.view.main_conts = center;
                 
                 app.view.frame.init = null;
             } catch (e) {

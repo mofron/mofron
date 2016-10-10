@@ -13,7 +13,7 @@ mofron.parts.Text = class extends mofron.parts.Component {
             super();
             this.text  = txt;
             this.size  = 15;
-            this.style = new mofron.other.Style('#' + this.getId() + ' div');
+            this.style = new mofron.other.Style(this.getTarget() + ' div');
         } catch (e) {
             throw new Error(e.stack + '\n');
         }

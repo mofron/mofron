@@ -3,10 +3,10 @@
  */
 
 mofron.layout.Center = class {
-    constructor (parts) {
+    constructor (tgt) {
         try {
-            this.parts = parts;
-            this.rate  = 80;
+            this.tgt_parts = tgt;
+            this.rate      = 80;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -20,14 +20,19 @@ mofron.layout.Center = class {
         }
     }
     
-    layout () {
+    layout (child,disp) {
         try {
-            var tgt = this.parts.getTarget();
-            $(tgt).css('width'   , this.rate + '%');
-            $(tgt).css('position', 'relative');
-            $(tgt).css('left'    , (100 - this.rate)/2 + '%');
+            var dummy = new mofron.parts.Component();
+            dummy.parent = this.tgt_parts;
+            dummy.addChild(child);
+            dummy.style.addStyle('width'   , this.rate + '%');
+            dummy.style.addStyle('position', 'relative');
+            dummy.style.addStyle('left'    , (100 - this.rate)/2 + '%');
+            dummy.init(disp);
+            child.parent = this.tgt_parts;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
     }
 }
+/* end of file */

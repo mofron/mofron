@@ -38,6 +38,7 @@ try {
                             var __cb = _cb;
                             mofron.theme     = new mofron.other.Theme();
                             mofron.rootConts = new mofron.parts.Component();
+                            mofron.js_loader.Para.addPath('parts/base/Dummy.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');
