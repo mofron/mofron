@@ -73,6 +73,15 @@ mofron.parts.Component = class {
         
     }
     
+    setLayout (lo) {
+        try {
+            this.layout = lo;
+            this.layout.setTgtParts(this);
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
     init (disp) {
         try {
             var _disp = disp || false;

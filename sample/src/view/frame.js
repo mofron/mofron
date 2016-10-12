@@ -12,17 +12,19 @@ $(function () {
                 hdr.init(true);
                 
                 var center = new mofron.parts.Component();
-                center.layout = new mofron.layout.Center(center);
+                center.setLayout(new mofron.layout.Center());
                 center.layout.setRate(60);
+                // center.init(true);
+                
+                
+                var grid = new mofron.parts.Component();
+                grid.setLayout(new mofron.layout.Grid());
+                grid.layout.setGrid(3,1);
+                grid.layout.setMargin ('top',30);
+                center.addChild(grid);
+                
                 center.init(true);
-                
-                
-                //var grid = new mofron.parts.Component();
-                //grid.layout = new mofron.layout.Grid(grid);
-                //grid.layout.setGrid(3,1);
-                //center.addChild(grid,true);
-                
-                app.view.main_conts = center;
+                app.view.main_conts = grid;
                 
                 app.view.frame.init = null;
             } catch (e) {

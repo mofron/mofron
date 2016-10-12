@@ -3,10 +3,10 @@
  */
 
 mofron.layout.Center = class {
-    constructor (tgt) {
+    constructor () {
         try {
-            this.tgt_parts = tgt;
-            this.rate      = 80;
+            this.target = null;
+            this.rate   = 80;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -20,16 +20,24 @@ mofron.layout.Center = class {
         }
     }
     
+    setTgtParts(tgt) {
+        try {
+            this.target = tgt;
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
     layout (child,disp) {
         try {
             var dummy = new mofron.parts.Component();
-            dummy.parent = this.tgt_parts;
+            dummy.parent = this.target;
             dummy.addChild(child);
             dummy.style.addStyle('width'   , this.rate + '%');
             dummy.style.addStyle('position', 'relative');
             dummy.style.addStyle('left'    , (100 - this.rate)/2 + '%');
             dummy.init(disp);
-            child.parent = this.tgt_parts;
+            child.parent = this.target;
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
