@@ -1,0 +1,18 @@
+.menu {
+    float: left;
+}
+#i-cnt #menubar {
+    margin-top:  5px;
+    margin-left: 5px;
+    cursor:      pointer;
+    float:       left;
+}
+
+#i-cnt #menuconts {
+    border-right: solid 1px black;
+    background:   gray;
+    display:      none;
+    width:        350px;
+    position:     fixed;
+    top:          70px;
+}
