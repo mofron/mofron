@@ -11,7 +11,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
     constructor () {
         try {
             super();
-            this.height = 50;
+            this.setHeight (50);
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -25,23 +25,33 @@ mofron.parts.Header = class extends mofron.parts.Component {
     init (disp) {
         try {
             super.init(disp);
-            var tag  = "<div class='conts'></div>";
-            tag     += "<div class='padd'></div>";
-            $('#' + this.getId()).html(tag);
-            $(this.getTarget()).css('height', this.height + 'px');
-            $(this.getTarget()).css('width' , '100%');
-            $(this.getTarget()).css('float' , 'left');
-            $(this.getTarget()).css('border-bottom', 'solid 1px black');
-            $('#' + this.getId() + ' .padd').css('float' , 'none');
-            $('#' + this.getId() + ' .padd').css('height', this.height + 'px');
+            
+            this.style.addStyle('width' , '100%', ' .conts');
+            this.style.addStyle('float' , 'left', ' .conts');
+            this.style.addStyle('border-bottom', 'solid 1px black', ' .conts');
+            this.style.addStyle('float' , 'none', ' .padd');
             
             if (null !== this.theme.colors[0]) {
-                $('#' + this.getId() + ' .conts').css(
+                this.style.addStyle(
                     'background',
-                    this.theme.colors[0].getStyle()
+                    this.theme.colors[0].getStyle(),
+                    ' .conts'
                 );
             }
-            this.initHdrChild(disp);
+            
+            this.style.setStyle(' .conts');
+            this.style.setStyle(' .padd');
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    initConts (disp) {
+        try {
+             super.initConts(disp);
+             var tag  = "<div class='conts'></div>";
+             tag     += "<div class='padd'></div>";
+             $('#' + this.getId()).html(tag);
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -60,7 +70,11 @@ mofron.parts.Header = class extends mofron.parts.Component {
     }
     
     getTarget () {
-        return super.getTarget() + ' .conts';
+        try {
+            return super.getTarget() + ' .conts';
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
     }
     
     /**
@@ -70,9 +84,11 @@ mofron.parts.Header = class extends mofron.parts.Component {
      */
     setHeight (hei) {
         try {
-            this.height = hei;
-            if (null !== this.id) {
-                $('#' + this.getId() + ' .header-conts').css('height', this.height + 'px');
+            this.style.addStyle('height', hei + 'px', ' .conts');
+            this.style.addStyle('height', hei + 'px', ' .padd');
+            if (true === this.init_flg) {
+                this.style.setStyle(' .conts');
+                this.style.setStyle(' .padd');
             }
         } catch (e) {
             throw new Error(e.stack + '\n');

@@ -13,7 +13,7 @@ mofron.parts.Component = class {
             this.event    = null;
             this.layout   = null;
             this.effect   = null;
-            this.style    = new mofron.other.Style(this.getTarget());
+            this.style    = new mofron.other.Style(this);
             this.theme    = mofron.theme;
             this.init_flg = false;
         } catch (e) {
@@ -85,21 +85,9 @@ mofron.parts.Component = class {
     init (disp) {
         try {
             var _disp = disp || false;
-            var tgt   = null;
-            if (null === this.parent) {
-                tgt = 'body';
-            } else {
-                tgt = this.parent.getTarget();
-            }
-            if (false === _disp) {
-                $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
-            } else if (true === _disp) {
-                $(tgt).append('<div id="'+ this.getId() +'"></div>');
-            } else {
-                throw new Error('invalid parameter');
-            }
             
-            this.initChild(disp);
+            this.initConts(_disp);
+            this.initChild(_disp);
             this.style.setStyle();
             this.init_flg = true;
         } catch (e) {
@@ -107,7 +95,28 @@ mofron.parts.Component = class {
         }
     }
     
+    initConts(disp) {
+        try {
+            var tgt   = null;
+            if (null === this.parent) {
+                tgt = 'body';
+            } else {
+                tgt = this.parent.getTarget();
+            }
+            if (false === disp) {
+                $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
+            } else if (true === disp) {
+                $(tgt).append('<div id="'+ this.getId() +'"></div>');
+            } else {
+                throw new Error('invalid parameter');
+            }
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
     initChild(disp) {
+        //if ()
         for(var idx in this.child) {
             if (null !== this.layout) {
                 //this.child[idx].init(false);

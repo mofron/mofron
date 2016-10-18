@@ -12,8 +12,8 @@ mofron.parts.Text = class extends mofron.parts.Component {
         try {
             super();
             this.text  = txt;
-            this.size  = 15;
-            this.style = new mofron.other.Style(this.getTarget() + ' div');
+            this.setSize(15);
+            //this.style = new mofron.other.Style(this.getTarget() + ' div');
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -27,16 +27,24 @@ mofron.parts.Text = class extends mofron.parts.Component {
     init (disp) {
         try {
             super.init(disp);
-            $('#' + this.getId()).html('<div>'+ this.text +'</div>');
             
             if (null !== this.theme.colors[0]) {
                 var rgb = this.theme.colors[0].getRgba();
                 if (390 > (rgb[0]+rgb[1]+rgb[2])) {
-                    this.style.addStyle('color', 'rgba(0,0,0,'+ rgb[3] +')');
+                    this.style.addStyle('color', 'rgba(0,0,0,'+ rgb[3] +')', ' div');
                 }
             }
-            this.style.addStyle('font-size', this.size + 'px');
-            this.style.setStyle();
+            
+            this.style.setStyle(' div');
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    initConts (disp) {
+        try {
+            super.initConts(disp);
+            $(this.getTarget()).html('<div>'+ this.text +'</div>');
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
@@ -45,8 +53,9 @@ mofron.parts.Text = class extends mofron.parts.Component {
     setSize (size) {
         try {
             this.size = size;
-            if ('undefined' !== $('#' + this.getId()).html()) {
-                this.style.addStyle('font-size', size + 'px');
+            this.style.addStyle('font-size', size + 'px', ' div');
+            if (true === this.init_flg) {
+                this.style.setStyle(' div');
             }
         } catch (e) {
             throw new Error(e.stack + '\n');
