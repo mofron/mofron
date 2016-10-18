@@ -16,12 +16,22 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
             if ('string' != (typeof ttl)) {
                 throw new Error('invalid parameter type');
             }
-            var title = new mofron.parts.Text(ttl);
-            title.setSize (25);
-            title.style.addStyle('margin-left', '20px');
-            title.style.addStyle('position'   , 'relative');
-            title.style.addStyle('top'        , '5px');
-            this.addChild(title);
+            this.title = new mofron.parts.Text(ttl);
+        } catch (e) {
+            throw new Error(e.stack + '\n');
+        }
+    }
+    
+    init (disp) {
+        try {
+            super.init(disp);
+            
+            this.title.setSize (25);
+            this.title.style.addStyle('margin-left', '20px');
+            this.title.style.addStyle('position'   , 'relative');
+            this.title.style.addStyle('top'        , '5px');
+            this.addChild(this.title, disp);
+            
         } catch (e) {
             throw new Error(e.stack + '\n');
         }
