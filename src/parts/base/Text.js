@@ -15,7 +15,8 @@ mofron.parts.Text = class extends mofron.parts.Component {
             this.setSize(15);
             //this.style = new mofron.other.Style(this.getTarget() + ' div');
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -37,7 +38,8 @@ mofron.parts.Text = class extends mofron.parts.Component {
             
             this.style.setStyle(' div');
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -46,7 +48,8 @@ mofron.parts.Text = class extends mofron.parts.Component {
             super.initConts(disp);
             $(this.getTarget()).html('<div>'+ this.text +'</div>');
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -58,7 +61,8 @@ mofron.parts.Text = class extends mofron.parts.Component {
                 this.style.setStyle(' div');
             }
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

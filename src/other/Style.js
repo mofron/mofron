@@ -10,7 +10,8 @@ mofron.other.Style = class {
             this.style   = new Array();
             this.target  = tgt;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -22,7 +23,8 @@ mofron.other.Style = class {
             var _ext_sel = ext_sel || '';
             this.style.push(new Array(key, val, _ext_sel, false));
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -40,7 +42,8 @@ mofron.other.Style = class {
                 }
             }
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

@@ -18,7 +18,8 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
             }
             this.title = new mofron.parts.Text(ttl);
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -33,7 +34,8 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
             this.addChild(this.title, disp);
             
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

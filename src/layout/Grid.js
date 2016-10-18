@@ -11,7 +11,8 @@ mofron.layout.Grid = class {
             this.dummy  = null;
             this.style_buff = new Array();
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -19,7 +20,8 @@ mofron.layout.Grid = class {
         try {
             this.target = tgt;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -28,7 +30,8 @@ mofron.layout.Grid = class {
             this.row    = row;
             this.column = col;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -40,7 +43,8 @@ mofron.layout.Grid = class {
                 this.style_buff.push(new Array('margin-'+type, val+'px'));
             }
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -64,7 +68,8 @@ mofron.layout.Grid = class {
             child.parent = this.target;
             this.dummy = dummy;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

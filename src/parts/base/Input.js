@@ -13,13 +13,19 @@ mofron.parts.InputText = class extends mofron.parts.Core {
             }
             this.conts = val;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
     init () {
-        super.init();
-        $('#' + this.getId()).append('<input></input>');
+        try {
+            super.init();
+            $('#' + this.getId()).append('<input></input>');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
     
     setClickEvent (func, prm) {
@@ -36,7 +42,8 @@ mofron.parts.InputText = class extends mofron.parts.Core {
                 }
             });
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

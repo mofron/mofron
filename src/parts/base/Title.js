@@ -15,7 +15,8 @@ mofron.parts.Title = class extends mofron.parts.Component {
             title.setSize(30);
             this.addChild(title);
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -28,7 +29,8 @@ mofron.parts.Title = class extends mofron.parts.Component {
             $('#' + this.child[0].getId()).css('border-bottom', 'solid 1px black');
             
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

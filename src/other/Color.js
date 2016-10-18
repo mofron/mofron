@@ -10,7 +10,8 @@ mofron.other.Color = class {
             this.blue  = b || null;
             this.alpha = a || 1;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -20,7 +21,8 @@ mofron.other.Color = class {
             this.green = g;
             this.blue  = b;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -28,7 +30,8 @@ mofron.other.Color = class {
         try {
             this.alpha = a;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -41,7 +44,8 @@ mofron.other.Color = class {
                            this.alpha
                        );
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -49,7 +53,8 @@ mofron.other.Color = class {
         try {
             return 'rgba('+ this.red +','+ this.green +','+ this.blue +','+ this.alpha +')';
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

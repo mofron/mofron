@@ -12,6 +12,7 @@ $(function() {
             
         }
     } catch (e) {
-        console.error(e.stack + '\n');
+        console.error(e.stack);
+        throw e;
     }
 });
