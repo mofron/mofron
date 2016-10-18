@@ -8,7 +8,8 @@ mofron.layout.Center = class {
             this.target = null;
             this.rate   = 80;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -16,7 +17,8 @@ mofron.layout.Center = class {
         try {
             this.rate = rate;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -24,7 +26,8 @@ mofron.layout.Center = class {
         try {
             this.target = tgt;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -39,7 +42,8 @@ mofron.layout.Center = class {
             dummy.init(disp);
             child.parent = this.target;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

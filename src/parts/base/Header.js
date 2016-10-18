@@ -13,7 +13,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
             super();
             this.setHeight (50);
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -42,18 +43,20 @@ mofron.parts.Header = class extends mofron.parts.Component {
             this.style.setStyle(' .conts');
             this.style.setStyle(' .padd');
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
     initConts (disp) {
         try {
-             super.initConts(disp);
-             var tag  = "<div class='conts'></div>";
-             tag     += "<div class='padd'></div>";
-             $('#' + this.getId()).html(tag);
+            super.initConts(disp);
+            var tag  = "<div class='conts'></div>";
+            tag     += "<div class='padd'></div>";
+            $('#' + this.getId()).html(tag);
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -65,7 +68,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
         try {
             super.initChild(disp);
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -73,7 +77,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
         try {
             return super.getTarget() + ' .conts';
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -91,7 +96,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
                 this.style.setStyle(' .padd');
             }
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -104,7 +110,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
         try {
             
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -112,7 +119,8 @@ mofron.parts.Header = class extends mofron.parts.Component {
         try {
             
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

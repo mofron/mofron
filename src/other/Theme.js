@@ -11,7 +11,8 @@ mofron.other.Theme = class {
                                   null   /* thirdly color */
                               );
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -19,7 +20,8 @@ mofron.other.Theme = class {
         try {
             this.colors[0] = col;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -27,7 +29,8 @@ mofron.other.Theme = class {
         try {
             this.colors[1] = col;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -35,7 +38,8 @@ mofron.other.Theme = class {
         try {
             this.colors[2] = col;
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }

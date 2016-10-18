@@ -51,12 +51,13 @@ try {
                                 }
                             },null);
                         } catch (e) {
-                            console.error(e.stack + '\n');
+                            console.error(e.stack);
                         }
                     }
                 );
             } catch (e) {
-                throw new Error(e.stack + '\n');
+                console.error(e.stack);
+                throw e;
             }
         };
         mofron.useParts = function(name) {

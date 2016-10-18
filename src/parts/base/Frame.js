@@ -13,7 +13,8 @@ mofron.parts.Frame = class extends mofron.parts.Component {
             super();
             this.style = new mofron.other.Style('#' + this.getId());
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -30,7 +31,8 @@ mofron.parts.Frame = class extends mofron.parts.Component {
             this.style.addStyle('border', 'solid 1px black');
             this.style.setStyle();
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
@@ -38,14 +40,16 @@ mofron.parts.Frame = class extends mofron.parts.Component {
         try {
             
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
     
     setRadius (flg) {
         try {
         } catch (e) {
-            throw new Error(e.stack + '\n');
+            console.error(e.stack);
+            throw e;
         }
     }
 }
