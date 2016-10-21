@@ -10,7 +10,6 @@ $(function () {
                 mofron.useParts('TitleHeader');
                 var hdr = new mofron.parts.TitleHeader('mofron.js Document');
                 hdr.init(true);
-                
                 //var center = new mofron.parts.Component();
                 //center.setLayout(new mofron.layout.Center());
                 //center.layout.setRate(60);

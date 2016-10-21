@@ -18,55 +18,30 @@ mofron.parts.Header = class extends mofron.parts.Component {
         }
     }
     
-    /**
-     * structure header
-     * 
-     * @param disp : (bool) visible flag
-     */
-    init (disp) {
+    initConts (disp) {
         try {
-            super.init(disp);
+            super.initConts(disp);
+console.log('initConts : Header');
+
+            var tag  = "<div class='conts'></div>";
+            tag     += "<div class='padd'></div>";
+            $('#' + this.getId()).html(tag);
             
-            this.style.addStyle('width' , '100%', ' .conts');
-            this.style.addStyle('float' , 'left', ' .conts');
-            this.style.addStyle('border-bottom', 'solid 1px black', ' .conts');
-            this.style.addStyle('float' , 'none', ' .padd');
+            var conts_style = new mofron.other.Styles(this, ' .conts');
+            conts_style.style('width' , '100%');
+            conts_style.style('float' , 'left');
+            conts_style.style('border-bottom', 'solid 1px black');
+            var padd_style = new mofron.other.Styles(this, ' .padd');
+            padd_style.style('float' , 'none');
             
             if (null !== this.theme.colors[0]) {
-                this.style.addStyle(
+                conts_style.style(
                     'background',
                     this.theme.colors[0].getStyle(),
                     ' .conts'
                 );
             }
-            
-            this.style.setStyle(' .conts');
-            this.style.setStyle(' .padd');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    initConts (disp) {
-        try {
-            super.initConts(disp);
-            var tag  = "<div class='conts'></div>";
-            tag     += "<div class='padd'></div>";
-            $('#' + this.getId()).html(tag);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    initChild (disp) {
-        // dummy
-    }
-    
-    initHdrChild (disp) {
-        try {
-            super.initChild(disp);
+
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -89,12 +64,12 @@ mofron.parts.Header = class extends mofron.parts.Component {
      */
     setHeight (hei) {
         try {
-            this.style.addStyle('height', hei + 'px', ' .conts');
-            this.style.addStyle('height', hei + 'px', ' .padd');
-            if (true === this.init_flg) {
-                this.style.setStyle(' .conts');
-                this.style.setStyle(' .padd');
-            }
+            var conts_style = new mofron.other.Styles(this, ' .conts');
+            conts_style.style('height', hei + 'px');
+            
+            var padd_style = new mofron.other.Styles(this, ' .padd');
+            padd_style.style('height', hei + 'px');
+            
         } catch (e) {
             console.error(e.stack);
             throw e;

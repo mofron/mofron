@@ -13,7 +13,7 @@ mofron.parts.Component = class {
             this.event    = null;
             this.layout   = null;
             this.effect   = null;
-            this.style    = new mofron.other.Style(this);
+            this.style    = new Array(); //new mofron.other.Style(this);
             this.theme    = mofron.theme;
             this.init_flg = false;
         } catch (e) {
@@ -33,7 +33,7 @@ mofron.parts.Component = class {
         if (null != this.id) {
             return this.id;
         }
-        this.id = mofron..innerFunc.getId();
+        this.id = mofron.innerFunc.getId();
         return this.id;
     }
     
@@ -48,6 +48,8 @@ mofron.parts.Component = class {
     
     addChild(chd,disp) {
         try {
+console.log('addChild : Components');
+
             chd.parent = this;
             this.child.push(chd);
             if (true === this.init_flg) {
@@ -82,8 +84,13 @@ mofron.parts.Component = class {
             var _disp = disp || false;
             
             this.initConts(_disp);
+            
+            for(var idx in this.style) {
+                this.style[idx].setStyle();
+            }
+            
             this.initChild(_disp);
-            this.style.setStyle();
+            
             this.init_flg = true;
         } catch (e) {
             console.error(e.stack);
@@ -93,18 +100,19 @@ mofron.parts.Component = class {
     
     initConts(disp) {
         try {
-            var tgt   = null;
+console.log('initConts : Component');
+            
+            var tgt = null;
             if (null === this.parent) {
                 tgt = 'body';
             } else {
                 tgt = this.parent.getTarget();
             }
+            $(tgt).append('<div id="'+ this.getId() +'"></div>');
+            
             if (false === disp) {
-                $(tgt).append('<div id="'+ this.getId() +'" style="display:none;"></div>');
-            } else if (true === disp) {
-                $(tgt).append('<div id="'+ this.getId() +'"></div>');
-            } else {
-                throw new Error('invalid parameter');
+                var style = new mofron.other.Styles(this);
+                style.style('display', 'none');
             }
         } catch (e) {
             console.error(e.stack);
@@ -112,8 +120,11 @@ mofron.parts.Component = class {
         }
     }
     
+    
     initChild(disp) {
         try {
+console.log('initChild : Component');
+
             for(var idx in this.child) {
                 if (null !== this.layout) {
                     //this.child[idx].init(false);
@@ -159,5 +170,14 @@ mofron.parts.Component = class {
             throw e;
         }
     }
+    
+//    style (key, val, ext) {
+//        try {
+//            
+//        } catch (e) {
+//            console.error(e.stack);
+//            throw e;
+//        }
+//    }
 }
 /* end of file */

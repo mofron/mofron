@@ -13,6 +13,8 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
     constructor (ttl) {
         try {
             super();
+console.log('constructor : TitleHeader');
+
             if ('string' != (typeof ttl)) {
                 throw new Error('invalid parameter type');
             }
@@ -23,16 +25,22 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
         }
     }
     
-    init (disp) {
+    initConts(disp) {
         try {
-            super.init(disp);
+            super.initConts(disp);
+console.log('initConts : TitleHeader');
             
+            var style = new mofron.other.Styles(this.title);
             this.title.setSize (25);
-            this.title.style.addStyle('margin-left', '20px');
-            this.title.style.addStyle('position'   , 'relative');
-            this.title.style.addStyle('top'        , '5px');
-            this.addChild(this.title, disp);
+            style.style('margin-left', '20px');
+            style.style('position'   , 'relative');
+            style.style('top'        , '5px');
             
+            //this.title.style.addStyle('margin-left', '20px');
+            //this.title.style.addStyle('position'   , 'relative');
+            //this.title.style.addStyle('top'        , '5px');
+            
+            this.addChild(this.title, disp);
         } catch (e) {
             console.error(e.stack);
             throw e;

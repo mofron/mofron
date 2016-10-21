@@ -31,7 +31,7 @@ try {
                 mofron.js_loader.Para.addPath('layout/Grid.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
-                mofron.js_loader.Para.addPath('other/Style.js');
+                mofron.js_loader.Para.addPath('other/Styles.js');
                 mofron.js_loader.Para.load(
                     function() {
                         try {
