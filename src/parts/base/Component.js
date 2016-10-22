@@ -11,7 +11,7 @@ mofron.parts.Component = class {
             this.parent   = null;
             this.child    = new Array();
             this.event    = null;
-            this.layout   = null;
+            this.layout   = new Array();
             this.effect   = null;
             this.style    = new Array(); //new mofron.other.Style(this);
             this.theme    = mofron.theme;
@@ -48,15 +48,14 @@ mofron.parts.Component = class {
     
     addChild(chd,disp) {
         try {
-console.log('addChild : Components');
+            console.log('addChild : Components');
 
             chd.parent = this;
             this.child.push(chd);
             if (true === this.init_flg) {
-                if (null !== this.layout) {
-                    this.layout.layout(chd,disp);
-                } else {
-                    chd.init(disp);
+                chd.init(disp);
+                for(var idx in this.layout) {
+                    this.layout[idx].layout(chd);
                 }
             }
         } catch (e) {
@@ -69,10 +68,15 @@ console.log('addChild : Components');
         
     }
     
-    setLayout (lo) {
+    addLayout (lo) {
         try {
-            this.layout = lo;
-            this.layout.setTgtParts(this);
+            this.layout.push(lo);
+            lo.setTarget(this);
+            if (true === this.init_flg) {
+                for(var idx in this.child) {
+                    lo.layout(this.child[idx]);
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -81,7 +85,15 @@ console.log('addChild : Components');
     
     init (disp) {
         try {
+            if (true === this.init_flg) {
+                throw new Error('detect duplicate init');
+            }
             var _disp = disp || false;
+            
+            if (null === this.parent) {
+                mofron.rootConts.addChild(this,_disp);
+                return;
+            }
             
             this.initConts(_disp);
             
@@ -100,10 +112,10 @@ console.log('addChild : Components');
     
     initConts(disp) {
         try {
-console.log('initConts : Component');
+            console.log('initConts : Component');
             
             var tgt = null;
-            if (null === this.parent) {
+            if ('RootConts' === this.parent) {
                 tgt = 'body';
             } else {
                 tgt = this.parent.getTarget();
@@ -123,15 +135,14 @@ console.log('initConts : Component');
     
     initChild(disp) {
         try {
-console.log('initChild : Component');
+            console.log('initChild : Component');
 
             for(var idx in this.child) {
-                if (null !== this.layout) {
-                    //this.child[idx].init(false);
-                    this.layout.layout(this.child[idx],disp);
-                    //this.child[idx].visible(disp);
-                } else {
-                    this.child[idx].init(disp);
+                this.child[idx].init(disp);
+                if (0 !== this.layout.length) {
+                    for(var lo_idx in this.layout) {
+                        this.layout[lo_idx].layout(this.child[idx]);
+                    }
                 }
             }
         } catch (e) {

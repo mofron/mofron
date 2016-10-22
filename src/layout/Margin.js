@@ -1,13 +1,13 @@
 /**
- * @file Center.js
+ * @file Margin.js
  */
 
-mofron.layout.Center = class extends mofron.layout.Base {
-    constructor (rt) {
+mofron.layout.Margin = class extends mofron.layout.Base {
+    constructor (tp,v) {
         try {
             super();
-            var _rt = rt || 80;
-            this.rate = _rt;
+            this.type = tp;
+            this.val  = v;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -18,9 +18,11 @@ mofron.layout.Center = class extends mofron.layout.Base {
         try {
             super.layout();
             var style = new mofron.other.Styles(tgt_chd);
-            style.style('width'   , this.rate + '%');
-            style.style('position', 'relative');
-            style.style('left'    , (100 - this.rate)/2 + '%');
+            var mg = 'margin';
+            if (null !== this.type) {
+                mg += '-' + this.type;
+            }
+            style.style(mg  , this.val);
         } catch (e) {
             console.error(e.stack);
             throw e;

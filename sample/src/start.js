@@ -11,9 +11,15 @@ try {
                 app.view = {};
                 app.jsLoader = new tetraring.loader.JsPara('./src/');
                 app.jsLoader.addPath('view/frame.js');
+                
                 app.jsLoader.load(function() {
                     try {
                         app.start();
+                        
+                        //var style = new mofron.other.Styles(mofron.rootConts);
+                        //style.style('margin', '0px');
+                        //mofron.rootConts.init();
+                        //mofron.rootConts.visible(true);
                     } catch (e) {
                         console.error(e.stack + '\n');
                     }
@@ -29,20 +35,20 @@ try {
                 mofron.theme.setMainColor (
                     new mofron.other.Color(230,230,230,1)
                 );
-                /* show frame */
+                /* set app base frame */
                 app.view.frame.init();
                 
-//                var conts = app.view.main_conts;
-//                var title = new mofron.parts.Title('Index');
-//                conts.addChild(title,true);
-//                
-//                //var quick = new mofron.parts.Frame();
-//                //conts.addChild(quick);
-//                //quick.visible(true);
-//                /* show top contetns */
-//                
-//                /* start visible */
-                $('body').fadeIn();
+                /* display index title */
+                var conts = app.view.main_conts;
+                var title = new mofron.parts.Title('Index');
+                conts.addChild(title,true);
+                
+                /* display index elements */
+                
+                
+                /* display element description */
+                
+                
                 app.start = null;
             } catch (e) {
                 throw new Error(e.stack + '\n');

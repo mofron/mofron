@@ -26,7 +26,7 @@ mofron.other.Styles = class {
                 throw new Error('invalid parameter');
             }
             var set_flg = false;
-            if (true === this.tgt_obj) {
+            if (true === this.tgt_obj.init_flg) {
                 $('#' + this.tgt_obj.getId() + this.ext_sel).css(
                     key, val
                 );

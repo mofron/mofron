@@ -10,11 +10,12 @@ $(function () {
                 mofron.useParts('TitleHeader');
                 var hdr = new mofron.parts.TitleHeader('mofron.js Document');
                 hdr.init(true);
-                //var center = new mofron.parts.Component();
-                //center.setLayout(new mofron.layout.Center());
-                //center.layout.setRate(60);
-                //// center.init(true);
                 
+                var main_conts = new mofron.parts.Component();
+                app.view.main_conts = main_conts;
+                main_conts.addLayout(new mofron.layout.Center(60));
+                main_conts.addLayout(new mofron.layout.Margin('top',30));
+                main_conts.init(true);
                 
                 //var grid = new mofron.parts.Component();
                 //grid.setLayout(new mofron.layout.Grid());

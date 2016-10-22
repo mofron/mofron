@@ -21,7 +21,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
     initConts (disp) {
         try {
             super.initConts(disp);
-console.log('initConts : Header');
+            console.log('initConts : Header');
 
             var tag  = "<div class='conts'></div>";
             tag     += "<div class='padd'></div>";
@@ -41,7 +41,8 @@ console.log('initConts : Header');
                     ' .conts'
                 );
             }
-
+            
+            this.addLayout(new mofron.layout.Float('left'));
         } catch (e) {
             console.error(e.stack);
             throw e;

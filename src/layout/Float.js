@@ -1,13 +1,12 @@
 /**
- * @file Center.js
+ * @file Float.js
  */
 
-mofron.layout.Center = class extends mofron.layout.Base {
-    constructor (rt) {
+mofron.layout.Float = class extends mofron.layout.Base {
+    constructor (tp) {
         try {
             super();
-            var _rt = rt || 80;
-            this.rate = _rt;
+            this.type = tp;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -18,9 +17,7 @@ mofron.layout.Center = class extends mofron.layout.Base {
         try {
             super.layout();
             var style = new mofron.other.Styles(tgt_chd);
-            style.style('width'   , this.rate + '%');
-            style.style('position', 'relative');
-            style.style('left'    , (100 - this.rate)/2 + '%');
+            style.style('float'   , this.type);
         } catch (e) {
             console.error(e.stack);
             throw e;

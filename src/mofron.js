@@ -27,8 +27,7 @@ try {
                 
                 /* load core parts */
                 mofron.js_loader.Para.addPath('parts/base/Component.js');
-                mofron.js_loader.Para.addPath('layout/Center.js');
-                mofron.js_loader.Para.addPath('layout/Grid.js');
+                mofron.js_loader.Para.addPath('layout/Base.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
                 mofron.js_loader.Para.addPath('other/Styles.js');
@@ -36,16 +35,23 @@ try {
                     function() {
                         try {
                             var __cb = _cb;
-                            mofron.theme     = new mofron.other.Theme();
-                            mofron.rootConts = new mofron.parts.Component();
+                            mofron.js_loader.Para.addPath('layout/Float.js');
+                            mofron.js_loader.Para.addPath('layout/Center.js');
+                            mofron.js_loader.Para.addPath('layout/Margin.js');
+                            mofron.js_loader.Para.addPath('layout/Grid.js');
+                            mofron.js_loader.Para.addPath('parts/base/RootConts.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');
                             mofron.js_loader.Para.addPath('parts/base/Title.js');
+                            mofron.theme     = new mofron.other.Theme();
+                            mofron.rootConts = new mofron.parts.Component();
+                            mofron.rootConts.parent = 'RootConts';
+                            mofron.rootConts.init(true);
                             mofron.js_loader.Para.load(function() {
                                 try {
-                                    __cb();
                                     mofron.is_loaded = true;
+                                    __cb();
                                 } catch (e) {
                                     console.error(e.stack);
                                 }
