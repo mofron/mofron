@@ -13,7 +13,7 @@ $(function () {
                 
                 var main_conts = new mofron.parts.Component();
                 app.view.main_conts = main_conts;
-                main_conts.addLayout(new mofron.layout.Center(60));
+                main_conts.addLayout(new mofron.layout.HorizCenter(60));
                 main_conts.addLayout(new mofron.layout.Margin('top',30));
                 main_conts.init(true);
                 

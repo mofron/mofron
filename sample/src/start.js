@@ -46,10 +46,31 @@ try {
                 /* display index elements */
                 mofron.useParts('BoxList');
                 var menu = new mofron.parts.BoxList();
+                // ttl, img, cbf, cbp
+                mofron.useParts('AwesomeIcon');
                 menu.addElement(
-                    new mofron.parts.Text('Parts'),
-                    function(){alert("test");}
+                    'Parts',
+                    new mofron.parts.AwesomeIcon('fa-cogs') ,
+                    function(){alert("parts");}
                 );
+                menu.addElement(
+                    'Event' ,
+                    new mofron.parts.AwesomeIcon('fa-exclamation-circle') ,
+                    function(){alert("event");}
+                );
+                
+                menu.addElement(
+                    'Layout' ,
+                    new mofron.parts.AwesomeIcon('fa-object-group') ,
+                    function(){alert("layout");}
+                );
+                
+                menu.addElement(
+                    'Effect' ,
+                    new mofron.parts.AwesomeIcon('fa-magic') ,
+                    function(){alert("effect");}
+                );
+                
                 conts.addChild(menu,true);
                 
                 /* display element description */
