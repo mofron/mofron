@@ -11,9 +11,7 @@ mofron.parts.Menu = class extends mofron.parts.Component {
             style.style('cursor', 'pointer');
             
             var cl_evt = new mofron.event.Click();
-            cl_evt.setCbfunc(function(){
-                alert("click test");
-            },null);
+            cl_evt.setCbfunc(cbf,cbp);
             elm.addEvent(cl_evt);
             //var cl_evt = new mofron.event.Click(elm);
             //cl_evt.setEvent(cbf,cbp);

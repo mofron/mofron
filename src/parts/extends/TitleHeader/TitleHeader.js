@@ -36,10 +36,6 @@ console.log('initConts : TitleHeader');
             style.style('position'   , 'relative');
             style.style('top'        , '5px');
             
-            //this.title.style.addStyle('margin-left', '20px');
-            //this.title.style.addStyle('position'   , 'relative');
-            //this.title.style.addStyle('top'        , '5px');
-            
             this.addChild(this.title, disp);
         } catch (e) {
             console.error(e.stack);

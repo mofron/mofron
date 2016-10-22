@@ -38,10 +38,13 @@ try {
                         try {
                             var __cb = _cb;
                             mofron.js_loader.Para.addPath('layout/Float.js');
-                            mofron.js_loader.Para.addPath('layout/Center.js');
+                            mofron.js_loader.Para.addPath('layout/HorizCenter.js');
+                            mofron.js_loader.Para.addPath('layout/VartCenter.js');
                             mofron.js_loader.Para.addPath('layout/Margin.js');
                             mofron.js_loader.Para.addPath('layout/Grid.js');
                             mofron.js_loader.Para.addPath('event/Click.js');
+                            mofron.js_loader.Para.addPath('event/HoverIn.js');
+                            mofron.js_loader.Para.addPath('event/HoverOut.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');

@@ -7,15 +7,16 @@
 mofron.parts.Component = class {
     constructor () {
         try {
-            this.id       = null;
-            this.parent   = null;
-            this.child    = new Array();
-            this.event    = new Array();
-            this.layout   = new Array();
-            this.effect   = new Array();
-            this.style    = new Array(); //new mofron.other.Style(this);
-            this.theme    = mofron.theme;
-            this.init_flg = false;
+            this.id        = null;
+            this.parent    = null;
+            this.child     = new Array();
+            this.event     = new Array();
+            this.layout    = new Array();
+            this.effect    = new Array();
+            this.style     = new Array(); //new mofron.other.Style(this);
+            this.theme     = mofron.theme;
+            this.init_disp = true;
+            this.init_flg  = false;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -106,10 +107,12 @@ mofron.parts.Component = class {
             
             this.initConts(_disp);
             
+            /* set style */
             for(var idx in this.style) {
                 this.style[idx].setStyle();
             }
             
+            /* set event */
             for(var idx in this.event) {
                 this.event[idx].event();
             }
@@ -135,7 +138,7 @@ mofron.parts.Component = class {
             }
             $(tgt).append('<div id="'+ this.getId() +'"></div>');
             
-            if (false === disp) {
+            if ((false === disp) || (false === this.init_disp)) {
                 var style = new mofron.other.Styles(this);
                 style.style('display', 'none');
             }
@@ -195,13 +198,13 @@ mofron.parts.Component = class {
         }
     }
     
-//    style (key, val, ext) {
-//        try {
-//            
-//        } catch (e) {
-//            console.error(e.stack);
-//            throw e;
-//        }
-//    }
+    setInitDisp (flg) {
+        try {
+            this.init_disp = flg;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */

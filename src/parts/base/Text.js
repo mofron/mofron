@@ -11,10 +11,9 @@ mofron.parts.Text = class extends mofron.parts.Component {
     constructor (txt) {
         try {
             super();
-console.log('constructor : Text');
             this.text  = txt;
+            this.size  = null;
             this.setSize(15);
-            //this.style = new mofron.other.Style(this.getTarget() + ' div');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -24,7 +23,6 @@ console.log('constructor : Text');
     initConts (disp) {
         try {
             super.initConts(disp);
-console.log('initConts : Text');
             
             $(this.getTarget()).html('<div>'+ this.text +'</div>');
             
@@ -45,14 +43,34 @@ console.log('initConts : Text');
     
     setSize (size) {
         try {
-            //if (true === this.init_flg) {
-                var style = new mofron.other.Styles(this, ' div');
-                style.style('font-size', size + 'px');
-            //}
+            var style = new mofron.other.Styles(this, ' div');
+            style.style('font-size', size + 'px');
+            this.size = size;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
+    getSize() {
+        try {
+            return this.size;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setAlign (tp) {
+        try {
+            var style = new mofron.other.Styles(this, ' div');
+            style.style('text-align', tp);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    
 }
 /* end of file */

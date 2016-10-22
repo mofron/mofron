@@ -2,7 +2,7 @@
  * @file Center.js
  */
 
-mofron.layout.Center = class extends mofron.layout.Base {
+mofron.layout.HorizCenter = class extends mofron.layout.Base {
     constructor (rt) {
         try {
             super();

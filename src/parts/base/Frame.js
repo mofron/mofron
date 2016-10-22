@@ -5,13 +5,11 @@
  */
 
 mofron.parts.Frame = class extends mofron.parts.Component {
-    /**
-     * initialize Header
-     */
+        
     constructor () {
         try {
             super();
-            this.style = new mofron.other.Style('#' + this.getId());
+            this.setSize (100, 100);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -23,13 +21,11 @@ mofron.parts.Frame = class extends mofron.parts.Component {
      * 
      * @param disp : (bool) visible flag
      */
-    init (disp) {
+    initConts (disp) {
         try {
-            super.init(disp);
-            this.style.addStyle('height', '100px');
-            this.style.addStyle('width' , '100px');
-            this.style.addStyle('border', 'solid 1px black');
-            this.style.setStyle();
+            super.initConts(disp);
+            var style = new mofron.other.Styles(this);
+            style.style('border', 'solid 1px black');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -38,7 +34,9 @@ mofron.parts.Frame = class extends mofron.parts.Component {
     
     setSize (hei, wid) {
         try {
-            
+            var style = new mofron.other.Styles(this);
+            style.style('height', hei + 'px');
+            style.style('width' , wid + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
