@@ -44,7 +44,13 @@ try {
                 conts.addChild(title,true);
                 
                 /* display index elements */
-                
+                mofron.useParts('BoxList');
+                var menu = new mofron.parts.BoxList();
+                menu.addElement(
+                    new mofron.parts.Text('Parts'),
+                    function(){alert("test");}
+                );
+                conts.addChild(menu,true);
                 
                 /* display element description */
                 

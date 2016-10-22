@@ -15,7 +15,7 @@ try {
                     this.callback   = new Array(null,null);
                     this.load_cnt   = 0;
                     this.loading    = false;
-                    this.timeout    = 0;
+                    this.timeout    = 1000;
                     this.load_intvl = 200;
                 } catch (e) {
                     throw new Error(e.stack + '\n');
@@ -85,19 +85,17 @@ try {
                     
                     /* check load finish */
                     /* set load timeout */
-                    if (0 === this.timeout) {
-                        this.timeout = this.load_path.length * 200;
-                    }
-                    setTimeout(
-                        function() {
-                            try {
-                                own_loader.chkLoad();
-                            } catch (e) {
-                                console.error(e.stack);
-                            }
-                        },
-                        this.timeout
-                    );
+                    //setTimeout(
+                    //    function() {
+                    //        try {
+                    //            own_loader.chkLoad();
+                    //        } catch (e) {
+                    //            console.error(e.stack);
+                    //        }
+                    //    },
+                    //    100
+                    //);
+                    this.chkLoad(0);
                 } catch (e) {
                     throw new Error(e.stack + '\n');
                 }
@@ -136,12 +134,31 @@ try {
                 }
             }
             
-            chkLoad() {
+            chkLoad(idx) {
                 try {
+                    var load_flg = true;
                     for (var load_path_idx in this.load_path) {
                         if (false === this.load_path[load_path_idx][1]) {
+                            //throw new Error('timeout load js : ' + this.base_path + this.load_path[load_path_idx][0]);
+                            load_flg = false;
+                            break;
+                        }
+                    }
+                    if (false === load_flg) {
+                        if ((idx * 100) > this.timeout) {
                             throw new Error('timeout load js : ' + this.base_path + this.load_path[load_path_idx][0]);
                         }
+                        var own_loader = this;
+                        setTimeout(
+                            function() {
+                                try {
+                                    own_loader.chkLoad(idx+1);
+                                } catch (e) {
+                                    console.error(e.stack);
+                                }
+                            },
+                            100
+                        );
                     }
                 } catch (e) {
                     throw new Error(e.stack + '\n');
@@ -207,7 +224,7 @@ try {
                     .done(function(jqXHR, textStatus, errorThrown) {
                         try {
                             if (_idx < (own_obj.load_path.length-1)) {
-                                this.jsSeri(_idx+1);
+                                own_obj.loadElm(_idx+1);
                             }
                         } catch (e) {
                             console.error(e.stack);

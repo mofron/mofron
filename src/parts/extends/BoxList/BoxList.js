@@ -1,23 +1,27 @@
 /**
- * @file   Text.js
- * @brief  Base UI of Text
+ * @file   BoxList.js
  * @author simpart
  */
 
-mofron.parts.RootConts = class extends mofron.parts.Component {
-    constructor (txt) {
+mofron.parts.BoxList = class extends mofron.parts.Menu {
+    /**
+     * initialize Header
+     *
+     * @param cnt : (string) header title
+     */
+    constructor (ttl) {
         try {
             super();
-            this.parent = 'RootConts';
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    initConts (disp) {
+    initConts(disp) {
         try {
-            $('body').attr('id',this.getId());
+            super.initConts(disp);
+            
         } catch (e) {
             console.error(e.stack);
             throw e;

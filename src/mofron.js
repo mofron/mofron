@@ -11,6 +11,7 @@ try {
             theme     : null  ,
             parts     : {}    ,
             layout    : {}    ,
+            event     : {}    ,
             effect    : {}    ,
             other     : {}    ,
             rootConts : null  ,
@@ -28,6 +29,7 @@ try {
                 /* load core parts */
                 mofron.js_loader.Para.addPath('parts/base/Component.js');
                 mofron.js_loader.Para.addPath('layout/Base.js');
+                mofron.js_loader.Para.addPath('event/Base.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
                 mofron.js_loader.Para.addPath('other/Styles.js');
@@ -39,11 +41,12 @@ try {
                             mofron.js_loader.Para.addPath('layout/Center.js');
                             mofron.js_loader.Para.addPath('layout/Margin.js');
                             mofron.js_loader.Para.addPath('layout/Grid.js');
-                            mofron.js_loader.Para.addPath('parts/base/RootConts.js');
+                            mofron.js_loader.Para.addPath('event/Click.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');
                             mofron.js_loader.Para.addPath('parts/base/Title.js');
+                            mofron.js_loader.Para.addPath('parts/base/Menu.js');
                             mofron.theme     = new mofron.other.Theme();
                             mofron.rootConts = new mofron.parts.Component();
                             mofron.rootConts.parent = 'RootConts';
@@ -76,7 +79,7 @@ try {
                 if ('string' != (typeof name)) {
                     throw new Error('invalid parameter');
                 }
-                mofron.js_loader.Seri.addPath('parts/extends/' + name + '.js');
+                mofron.js_loader.Seri.addPath('parts/extends/' + name + '/' + name + '.js');
                 mofron.js_loader.Seri.load();
             } catch (e) {
                 console.error(e.stack);

@@ -10,9 +10,9 @@ mofron.parts.Component = class {
             this.id       = null;
             this.parent   = null;
             this.child    = new Array();
-            this.event    = null;
+            this.event    = new Array();
             this.layout   = new Array();
-            this.effect   = null;
+            this.effect   = new Array();
             this.style    = new Array(); //new mofron.other.Style(this);
             this.theme    = mofron.theme;
             this.init_flg = false;
@@ -64,8 +64,17 @@ mofron.parts.Component = class {
         }
     }
     
-    addEvents(evt) {
-        
+    addEvent (evt) {
+        try {
+            this.event.push(evt);
+            evt.setTarget(this);
+            if (true === this.init_flg) {
+                evt.event();
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
     
     addLayout (lo) {
@@ -99,6 +108,10 @@ mofron.parts.Component = class {
             
             for(var idx in this.style) {
                 this.style[idx].setStyle();
+            }
+            
+            for(var idx in this.event) {
+                this.event[idx].event();
             }
             
             this.initChild(_disp);
