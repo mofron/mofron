@@ -10,6 +10,7 @@ mofron.other.Theme = class {
                                   null,  /* secondary color */
                                   null   /* thirdly color */
                               );
+            this.font = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -37,6 +38,15 @@ mofron.other.Theme = class {
     setThrdColor (col) {
         try {
             this.colors[2] = col;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setFont(ft) {
+        try {
+            this.font = ft;
         } catch (e) {
             console.error(e.stack);
             throw e;

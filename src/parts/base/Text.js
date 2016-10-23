@@ -11,8 +11,9 @@ mofron.parts.Text = class extends mofron.parts.Component {
     constructor (txt) {
         try {
             super();
-            this.text  = txt;
-            this.size  = null;
+            this.text       = txt;
+            this.size       = null;
+            this.auto_color = false;
             this.setSize(15);
         } catch (e) {
             console.error(e.stack);
@@ -26,14 +27,20 @@ mofron.parts.Text = class extends mofron.parts.Component {
             
             $(this.getTarget()).html('<div>'+ this.text +'</div>');
             
-            if (null !== this.theme.colors[0]) {
-                var rgb = this.theme.colors[0].getRgba();
-                if (390 > (rgb[0]+rgb[1]+rgb[2])) {
-                    var style = new mofron.other.Styles(this, ' div');
-                    style.style('color', 'rgba(0,0,0,'+ rgb[3] +')');
+            if ((null !== this.theme.colors[0]) &&
+                (true === this.auto_color)) {
+                if (true === this.auto_color) {
+                    var rgb = this.theme.colors[0].getRgba();
+                    if (290 > (rgb[0]+rgb[1]+rgb[2])) {
+                        var style = new mofron.other.Styles(this, ' div');
+                        style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
+                    }
                 }
             }
             
+            if (null !== this.theme.font) {
+                this.theme.font.font(this);
+            }
             //style.style('font-size', this.size + 'px');
         } catch (e) {
             console.error(e.stack);

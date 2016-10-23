@@ -13,6 +13,7 @@ try {
             layout    : {}    ,
             event     : {}    ,
             effect    : {}    ,
+            appframe  : {}    ,
             other     : {}    ,
             rootConts : null  ,
             useParts  : null  ,
@@ -23,6 +24,9 @@ try {
                 /* set base path */
                 var _bp = bp || null;
                 var _cb = cb || null;
+                if (null === _cb) {
+                    console.error('mofron init callback func is null');
+                }
                 mofron.js_loader.Para = new tetraring.loader.JsPara(_bp);
                 mofron.js_loader.Seri = new tetraring.loader.JsSeri(_bp);
                 
@@ -30,17 +34,19 @@ try {
                 mofron.js_loader.Para.addPath('parts/base/Component.js');
                 mofron.js_loader.Para.addPath('layout/Base.js');
                 mofron.js_loader.Para.addPath('event/Base.js');
+                mofron.js_loader.Para.addPath('appframe/Base.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
                 mofron.js_loader.Para.addPath('other/Styles.js');
+                mofron.js_loader.Para.addPath('other/Font.js');
                 mofron.js_loader.Para.load(
                     function() {
                         try {
-                            var __cb = _cb;
                             mofron.js_loader.Para.addPath('layout/Float.js');
                             mofron.js_loader.Para.addPath('layout/HorizCenter.js');
                             mofron.js_loader.Para.addPath('layout/VartCenter.js');
                             mofron.js_loader.Para.addPath('layout/Margin.js');
+                            mofron.js_loader.Para.addPath('layout/Padding.js');
                             mofron.js_loader.Para.addPath('layout/Grid.js');
                             mofron.js_loader.Para.addPath('event/Click.js');
                             mofron.js_loader.Para.addPath('event/HoverIn.js');
@@ -48,16 +54,23 @@ try {
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');
-                            mofron.js_loader.Para.addPath('parts/base/Title.js');
                             mofron.js_loader.Para.addPath('parts/base/Menu.js');
+                            mofron.js_loader.Para.addPath('parts/base/Background.js');
                             mofron.theme     = new mofron.other.Theme();
                             mofron.rootConts = new mofron.parts.Component();
                             mofron.rootConts.parent = 'RootConts';
                             mofron.rootConts.init(true);
                             mofron.js_loader.Para.load(function() {
                                 try {
-                                    mofron.is_loaded = true;
-                                    __cb();
+                                    mofron.js_loader.Para.addPath('parts/base/Title.js');
+                                    mofron.js_loader.Para.load(function() {
+                                        try {
+                                            mofron.is_loaded = true;
+                                            _cb();
+                                        } catch (e) {
+                                            console.error(e.stack);
+                                        }
+                                    });
                                 } catch (e) {
                                     console.error(e.stack);
                                 }
@@ -83,6 +96,22 @@ try {
                     throw new Error('invalid parameter');
                 }
                 mofron.js_loader.Seri.addPath('parts/extends/' + name + '/' + name + '.js');
+                mofron.js_loader.Seri.load();
+            } catch (e) {
+                console.error(e.stack);
+            }
+        };
+        mofron.useAppframe = function(name) {
+            try {
+                if (false === mofron.is_loaded) {
+                    /* not loaded yet */
+                    throw new Error('initialize is not finished yet');
+                }
+                /* paramter must be string type */
+                if ('string' != (typeof name)) {
+                    throw new Error('invalid parameter');
+                }
+                mofron.js_loader.Seri.addPath('appframe/' + name + '/' + name + '.js');
                 mofron.js_loader.Seri.load();
             } catch (e) {
                 console.error(e.stack);

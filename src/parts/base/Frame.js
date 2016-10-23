@@ -25,7 +25,7 @@ mofron.parts.Frame = class extends mofron.parts.Component {
         try {
             super.initConts(disp);
             var style = new mofron.other.Styles(this);
-            style.style('border', 'solid 1px black');
+            style.style('border', 'solid 1px gray');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -43,8 +43,22 @@ mofron.parts.Frame = class extends mofron.parts.Component {
         }
     }
     
-    setRadius (flg) {
+    setRadius (val) {
         try {
+            var style = new mofron.other.Styles(this);
+            style.style('webkit-border-radius', val + 'px');
+            style.style('-moz-border-radius'  , val + 'px');
+            style.style('border-radius'       , val + 'px');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setShadow (val) {
+        try {
+            var style = new mofron.other.Styles(this);
+            style.style('box-shadow', val/2 + 'px '+ val/2 + 'px '+ val +'px '+ '0px gray');
         } catch (e) {
             console.error(e.stack);
             throw e;
