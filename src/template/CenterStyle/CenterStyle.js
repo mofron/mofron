@@ -35,7 +35,10 @@ mofron.appframe.CenterStyle = class extends mofron.appframe.Base {
             var title = new mofron.parts.RadiusTitle(ttl);
             padd.addChild(title,true);
             this.conts.push(padd);
-            this.conts.push(conts);
+            var wrap = new mofron.parts.Component();
+            wrap.addLayout(new mofron.layout.HorizCenter(90));
+            wrap.addChild(conts);
+            this.conts.push(wrap);
         } catch (e) {
             console.error(e.stack);
             throw e;

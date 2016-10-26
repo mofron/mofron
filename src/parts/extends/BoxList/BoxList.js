@@ -46,7 +46,7 @@ mofron.parts.BoxList = class extends mofron.parts.Menu {
                 return;
             }
             for(var idx in this.child) {
-                this.child[idx].setRadius(val);
+                this.child[idx][0].setRadius(val);
             }
         } catch (e) {
             console.error(e.stack);

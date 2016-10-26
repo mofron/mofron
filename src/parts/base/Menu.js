@@ -7,7 +7,12 @@ mofron.parts.Menu = class extends mofron.parts.Component {
     
     addElement(elm, cbf, cbp) {
         try {
-            var style = new mofron.other.Styles(elm);
+            var tgt_sel = elm.getTarget().split(' ');
+            var ext_sel = '';
+            if (1 < tgt_sel.length) {
+                ext_sel = ' ' + tgt_sel[1];
+            }
+            var style = new mofron.other.Styles(elm, ext_sel);
             style.style('cursor', 'pointer');
             
             var cl_evt = new mofron.event.Click();

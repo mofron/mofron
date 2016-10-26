@@ -49,12 +49,13 @@ mofron.parts.Component = class {
     
     addChild(chd,disp) {
         try {
+            var _disp = disp === undefined ? true : disp;
             console.log('addChild : Components');
 
             chd.parent = this;
-            this.child.push(chd);
+            this.child.push([chd,_disp]);
             if (true === this.init_flg) {
-                chd.init(disp);
+                chd.init(_disp);
                 for(var idx in this.layout) {
                     this.layout[idx].layout(chd);
                 }
@@ -84,7 +85,7 @@ mofron.parts.Component = class {
             lo.setTarget(this);
             if (true === this.init_flg) {
                 for(var idx in this.child) {
-                    lo.layout(this.child[idx]);
+                    lo.layout(this.child[idx][0]);
                 }
             }
         } catch (e) {
@@ -98,7 +99,7 @@ mofron.parts.Component = class {
             if (true === this.init_flg) {
                 throw new Error('detect duplicate init');
             }
-            var _disp = disp || false;
+            var _disp = disp === undefined ? true : disp;
             
             if (null === this.parent) {
                 mofron.rootConts.addChild(this,_disp);
@@ -138,7 +139,7 @@ mofron.parts.Component = class {
             }
             $(tgt).append('<div id="'+ this.getId() +'"></div>');
             
-            if ((false === disp) || (false === this.init_disp)) {
+            if (false === disp) {
                 var style = new mofron.other.Styles(this);
                 style.style('display', 'none');
             }
@@ -154,10 +155,13 @@ mofron.parts.Component = class {
             console.log('initChild : Component');
 
             for(var idx in this.child) {
-                this.child[idx].init(disp);
+                if (false === this.child[idx][1]) {
+                    disp = false;
+                }
+                this.child[idx][0].init(disp);
                 if (0 !== this.layout.length) {
                     for(var lo_idx in this.layout) {
-                        this.layout[lo_idx].layout(this.child[idx]);
+                        this.layout[lo_idx].layout(this.child[idx][0]);
                     }
                 }
             }
@@ -189,18 +193,11 @@ mofron.parts.Component = class {
                 }
                 // set child visible
                 for(var idx in this.child) {
-                    this.child[idx].visible(flg,p_eff);
+                    if (true === this.child[idx][1]) {
+                        this.child[idx][0].visible(flg,p_eff);
+                    }
                 }
             }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setInitDisp (flg) {
-        try {
-            this.init_disp = flg;
         } catch (e) {
             console.error(e.stack);
             throw e;

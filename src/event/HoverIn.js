@@ -8,7 +8,7 @@ mofron.event.HoverIn = class extends mofron.event.Base {
             var cbf = this.cb_func;
             var cbp = this.cb_parm;
             
-            $('#' + this.tgt_obj.getId()).hover(function() {
+            $(this.tgt_obj.getTarget()).hover(function() {
                 try {
                     cbf(cbp);
                 } catch (e) {

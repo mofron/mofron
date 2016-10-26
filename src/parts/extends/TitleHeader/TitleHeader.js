@@ -18,6 +18,7 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
                 throw new Error('invalid parameter type');
             }
             this.title = new mofron.parts.Text(ttl);
+            this.title.setLink('./');
             this.title.auto_color = true;
         } catch (e) {
             console.error(e.stack);

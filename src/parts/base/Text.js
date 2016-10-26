@@ -78,6 +78,26 @@ mofron.parts.Text = class extends mofron.parts.Component {
         }
     }
     
-    
+    setLink (url,tab) {
+        try {
+            var _tab = tab || false;
+            var style = new mofron.other.Styles(this, ' div');
+            style.style('cursor', 'pointer');
+            var click = new mofron.event.Click();
+            if (false === _tab) {
+                click.setCbfunc (function(){
+                    window.location.href = url;
+                });
+            } else {
+                click.setCbfunc (function(){
+                    window.open(url, '_blank');
+                });
+            }
+            this.addEvent(click);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */

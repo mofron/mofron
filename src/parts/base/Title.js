@@ -21,7 +21,7 @@ mofron.parts.Title = class extends mofron.parts.Frame {
             this.title.setSize(30);
             
             //var bd_comp  = new mofron.parts.Frame();
-            var style = new mofron.other.Styles(this);
+            var style = new mofron.other.Styles(this, ' div');
             style.style('width'  , '100%');
             style.style('height' , '35px');
             style.style('border-left'  , 'solid 15px black');

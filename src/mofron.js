@@ -34,7 +34,8 @@ try {
                 mofron.js_loader.Para.addPath('parts/base/Component.js');
                 mofron.js_loader.Para.addPath('layout/Base.js');
                 mofron.js_loader.Para.addPath('event/Base.js');
-                mofron.js_loader.Para.addPath('appframe/Base.js');
+                mofron.js_loader.Para.addPath('effect/Base.js');
+                mofron.js_loader.Para.addPath('template/Base.js');
                 mofron.js_loader.Para.addPath('other/Color.js');
                 mofron.js_loader.Para.addPath('other/Theme.js');
                 mofron.js_loader.Para.addPath('other/Styles.js');
@@ -51,6 +52,8 @@ try {
                             mofron.js_loader.Para.addPath('event/Click.js');
                             mofron.js_loader.Para.addPath('event/HoverIn.js');
                             mofron.js_loader.Para.addPath('event/HoverOut.js');
+                            mofron.js_loader.Para.addPath('effect/Fadein.js');
+                            mofron.js_loader.Para.addPath('effect/Shadow.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');
@@ -101,7 +104,7 @@ try {
                 console.error(e.stack);
             }
         };
-        mofron.useAppframe = function(name) {
+        mofron.useTemplate = function(name) {
             try {
                 if (false === mofron.is_loaded) {
                     /* not loaded yet */
@@ -111,7 +114,7 @@ try {
                 if ('string' != (typeof name)) {
                     throw new Error('invalid parameter');
                 }
-                mofron.js_loader.Seri.addPath('appframe/' + name + '/' + name + '.js');
+                mofron.js_loader.Seri.addPath('template/' + name + '/' + name + '.js');
                 mofron.js_loader.Seri.load();
             } catch (e) {
                 console.error(e.stack);

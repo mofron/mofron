@@ -7,7 +7,7 @@ mofron.event.Click = class extends mofron.event.Base {
         try {
             var cbf = this.cb_func;
             var cbp = this.cb_parm;
-            $('#' + this.tgt_obj.getId()).click(function() {
+            $(this.tgt_obj.getTarget()).click(function() {
                 try {
                     cbf(cbp);
                 } catch (e) {
