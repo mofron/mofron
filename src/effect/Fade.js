@@ -1,5 +1,5 @@
 
-mofron.effect.Fadein = class extends mofron.effect.Base {
+mofron.effect.Fade = class extends mofron.effect.Base {
     effect (flg) {
         try {
             if (true === flg) {

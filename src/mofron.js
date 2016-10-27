@@ -52,8 +52,9 @@ try {
                             mofron.js_loader.Para.addPath('event/Click.js');
                             mofron.js_loader.Para.addPath('event/HoverIn.js');
                             mofron.js_loader.Para.addPath('event/HoverOut.js');
-                            mofron.js_loader.Para.addPath('effect/Fadein.js');
+                            mofron.js_loader.Para.addPath('effect/Fade.js');
                             mofron.js_loader.Para.addPath('effect/Shadow.js');
+                            mofron.js_loader.Para.addPath('effect/Blur.js');
                             mofron.js_loader.Para.addPath('parts/base/Header.js');
                             mofron.js_loader.Para.addPath('parts/base/Text.js');
                             mofron.js_loader.Para.addPath('parts/base/Frame.js');

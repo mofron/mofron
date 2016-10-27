@@ -9,7 +9,7 @@ mofron.parts.BoxList = class extends mofron.parts.Menu {
      *
      * @param cnt : (string) header title
      */
-    constructor (ttl) {
+    constructor () {
         try {
             super();
             mofron.useParts('ImageBox');
