@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.Button = class extends mofron.parts.Core {
+mofron.parts.Button = class extends mofron.parts.Base {
     constructor (cnt) {
         try {
             super();

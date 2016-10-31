@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.InputText = class extends mofron.parts.Base {
+mofron.parts.Loading = class extends mofron.parts.Base {
     constructor (val) {
         try {
             super();

@@ -22,8 +22,10 @@ mofron.parts.BoxList = class extends mofron.parts.Menu {
     initConts(disp) {
         try {
             super.initConts(disp);
+            this.addChild(new mofron.parts.Base(),disp);
             this.addLayout(new mofron.layout.Float('left'));
             this.addLayout(new mofron.layout.Margin('right',25));
+            this.addLayout(new mofron.layout.Margin('top',25));
         } catch (e) {
             console.error(e.stack);
             throw e;

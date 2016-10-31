@@ -50,7 +50,7 @@ mofron.layout.Grid = class {
     
     layout (child,disp) {
         try {
-            var dummy = new mofron.parts.Component();
+            var dummy = new mofron.parts.Base();
             dummy.parent = this.target;
             dummy.addChild(child);
             

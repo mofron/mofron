@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.Frame = class extends mofron.parts.Component {
+mofron.parts.Frame = class extends mofron.parts.Base {
         
     constructor () {
         try {

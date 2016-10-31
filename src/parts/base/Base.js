@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.Component = class {
+mofron.parts.Base = class {
     constructor () {
         try {
             this.id        = null;

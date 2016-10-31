@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.Text = class extends mofron.parts.Component {
+mofron.parts.Text = class extends mofron.parts.Base {
     /**
      * initialize Header
      */
@@ -25,8 +25,7 @@ mofron.parts.Text = class extends mofron.parts.Component {
         try {
             super.initConts(disp);
             
-            $(this.getTarget()).html('<div>'+ this.text +'</div>');
-            
+            $('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
             if ((null !== this.theme.colors[0]) &&
                 (true === this.auto_color)) {
                 if (true === this.auto_color) {
@@ -50,7 +49,7 @@ mofron.parts.Text = class extends mofron.parts.Component {
     
     setSize (size) {
         try {
-            var style = new mofron.other.Styles(this, ' div');
+            var style = new mofron.other.Styles(this, ' .text-conts');
             style.style('font-size', size + 'px');
             this.size = size;
         } catch (e) {
@@ -70,7 +69,7 @@ mofron.parts.Text = class extends mofron.parts.Component {
     
     setAlign (tp) {
         try {
-            var style = new mofron.other.Styles(this, ' div');
+            var style = new mofron.other.Styles(this, ' .text-conts');
             style.style('text-align', tp);
         } catch (e) {
             console.error(e.stack);
@@ -81,7 +80,7 @@ mofron.parts.Text = class extends mofron.parts.Component {
     setLink (url,tab) {
         try {
             var _tab = tab || false;
-            var style = new mofron.other.Styles(this, ' div');
+            var style = new mofron.other.Styles(this, ' .text-conts');
             style.style('cursor', 'pointer');
             var click = new mofron.event.Click();
             if (false === _tab) {
@@ -94,6 +93,25 @@ mofron.parts.Text = class extends mofron.parts.Component {
                 });
             }
             this.addEvent(click);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setColor(color) {
+        try {
+            var style = new mofron.other.Styles(this, ' .text-conts');
+            style.style('color', color.getStyle());
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getTarget() {
+        try {
+            return '#' + this.getId() + ' .text-conts';
         } catch (e) {
             console.error(e.stack);
             throw e;

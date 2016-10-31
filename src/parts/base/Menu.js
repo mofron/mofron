@@ -3,7 +3,7 @@
  * @author simpart
  */
 
-mofron.parts.Menu = class extends mofron.parts.Component {
+mofron.parts.Menu = class extends mofron.parts.Base {
     
     addElement(elm, cbf, cbp) {
         try {

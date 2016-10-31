@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-mofron.parts.Header = class extends mofron.parts.Component {
+mofron.parts.Header = class extends mofron.parts.Base {
     /**
      * initialize Header
      */
@@ -31,6 +31,7 @@ mofron.parts.Header = class extends mofron.parts.Component {
             conts_style.style('width' , '100%');
             conts_style.style('float' , 'left');
             conts_style.style('border-bottom', 'solid 1px black');
+            conts_style.style('position', 'fixed');
             var padd_style = new mofron.other.Styles(this, ' .padd');
             padd_style.style('float' , 'none');
             

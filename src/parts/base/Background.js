@@ -3,7 +3,7 @@
  * @author simpart
  */
 
-mofron.parts.Background = class extends mofron.parts.Component {
+mofron.parts.Background = class extends mofron.parts.Base {
     
     initConts (disp) {
         try {

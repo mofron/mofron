@@ -39,42 +39,38 @@ try {
                 
                 /* set header */
                 mofron.useParts('TitleHeader');
+                mofron.useParts('AwesomeIcon');
+                
                 topconts.setHeader(
-                    new mofron.parts.TitleHeader('mofron.js Documentation')
+                    app.getHeader()
                 );
                 
                 topconts.addConts('Overview', app.getOverview());
                 topconts.addConts('Index'   , app.getIndex());
-//                menu.addElement(
-//                    'Parts',
-//                    new mofron.parts.AwesomeIcon('fa-cogs') ,
-//                    function(){alert("parts");}
-//                );
-//                menu.addElement(
-//                    'Event' ,
-//                    new mofron.parts.AwesomeIcon('fa-exclamation-circle') ,
-//                    function(){alert("event");}
-//                );
-//                
-//                menu.addElement(
-//                    'Layout' ,
-//                    new mofron.parts.AwesomeIcon('fa-object-group') ,
-//                    function(){alert("layout");}
-//                );
-//                
-//                menu.addElement(
-//                    'Effect' ,
-//                    new mofron.parts.AwesomeIcon('fa-magic') ,
-//                    function(){alert("effect");}
-//                );
-//                menu.setRadius(20);
-//                conts.addChild(menu,true);
-//                
-//                /* display element description */
-//                
-//                
+                
                 topconts.start();
                 app.start = null;
+            } catch (e) {
+                throw new Error(e.stack + '\n');
+            }
+        };
+        
+        app.getHeader = function () {
+            try {
+                var header = new mofron.parts.TitleHeader('mofron.js Documentation');
+                
+                var github = new mofron.parts.AwesomeIcon('fa-github');
+                github.setColor(new mofron.other.Color(255,255,255));
+                github.setSize(40);
+                github.setLink('https://github.com/simpart/mofron', true);
+                var gh_style = new mofron.other.Styles(github);
+                gh_style.style('position', 'relative');
+                gh_style.style('top' , '5');
+                gh_style.style('left', '10%');
+                header.addChild(github);
+                
+                header.addChild(new mofron.parts.Base());
+                return header;
             } catch (e) {
                 throw new Error(e.stack + '\n');
             }
@@ -84,7 +80,7 @@ try {
             try {
                 app.jsSeri.addPath('view/text/top_JP.js');
                 app.jsSeri.load();
-                var ret_comp = new mofron.parts.Component();
+                var ret_comp = new mofron.parts.Base();
                 ret_comp.addChild(
                     new mofron.parts.Text(app.view.text.top.overview)
                 );
@@ -99,17 +95,63 @@ try {
         app.getIndex = function () {
             try {
                 mofron.useParts('BoxList');
-                mofron.useParts('AwesomeIcon');
-                var ret_comp = new mofron.parts.Component();
+                var ret_comp = new mofron.parts.Base();
                 var index    = new mofron.parts.BoxList();
+                var icon     = null;
+                var ico_clr  = new mofron.other.Color(80,80,80);
                 
+                icon = new mofron.parts.AwesomeIcon('fa-cogs');
+                icon.setColor(ico_clr);
                 index.addElement(
                     'Parts',
-                    new mofron.parts.AwesomeIcon('fa-cogs') ,
+                    icon ,
                     function(){alert("parts");}
                 );
-                index.setRadius(20);
                 
+                icon = new mofron.parts.AwesomeIcon('fa-css3');
+                icon.setColor(ico_clr);
+                index.addElement(
+                    'Style' ,
+                    icon ,
+                    function(){alert("style");}
+                );
+                
+                icon = new mofron.parts.AwesomeIcon('fa-exclamation-circle');
+                icon.setColor(ico_clr);
+                index.addElement(
+                    'Event' ,
+                    icon ,
+                    function(){alert("event");}
+                );
+                
+                icon = new mofron.parts.AwesomeIcon('fa-object-group');
+                icon.setColor(ico_clr);
+                index.addElement(
+                    'Layout' ,
+                    icon ,
+                    function(){alert("layout");}
+                );
+                
+                icon = new mofron.parts.AwesomeIcon('fa-magic');
+                icon.setColor(ico_clr);
+                index.addElement(
+                    'Effect' ,
+                    icon ,
+                    function(){alert("effect");}
+                );
+                
+                icon = new mofron.parts.AwesomeIcon('fa-files-o');
+                icon.setColor(ico_clr);
+                index.addElement(
+                    'Template' ,
+                    icon ,
+                    function(){alert("template");}
+                );
+                
+                index.setRadius(20);
+                var idx_style = new mofron.other.Styles(index);
+                idx_style.style('position', 'relative');
+                idx_style.style('top', '-50px');
                 ret_comp.addChild(index);
                 return ret_comp;
             } catch (e) {

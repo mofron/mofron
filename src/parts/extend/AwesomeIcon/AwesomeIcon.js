@@ -1,10 +1,10 @@
 /**
  * @file BandText.js
  */
-mofron.parts.AwesomeIcon = class extends mofron.parts.Component {
+mofron.parts.AwesomeIcon = class extends mofron.parts.Text {
     constructor (ico) {
         try {
-            super();
+            super('');
             this.icon  = ico;
             this.setSize(15);
         } catch (e) {

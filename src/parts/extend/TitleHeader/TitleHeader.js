@@ -20,6 +20,7 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
             this.title = new mofron.parts.Text(ttl);
             this.title.setLink('./');
             this.title.auto_color = true;
+            this.addChild(this.title, true);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -29,7 +30,6 @@ mofron.parts.TitleHeader = class extends mofron.parts.Header {
     initConts(disp) {
         try {
             super.initConts(disp);
-console.log('initConts : TitleHeader');
             
             var style = new mofron.other.Styles(this.title);
             this.title.setSize (35);
@@ -37,7 +37,6 @@ console.log('initConts : TitleHeader');
             style.style('position'   , 'relative');
             style.style('top'        , '5px');
             
-            this.addChild(this.title, disp);
         } catch (e) {
             console.error(e.stack);
             throw e;
