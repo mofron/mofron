@@ -1,0 +1,5 @@
+*.swp
+/src/node_modules/
+/src/package.json
+/src/webpack.config.*
+/src/webpack.config.js
