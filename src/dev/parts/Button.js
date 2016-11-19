@@ -1,0 +1,49 @@
+/**
+ * @file   Button.js
+ * @author simpart
+ */
+
+mofron.parts.Button = class extends mofron.parts.Base {
+    constructor (cnt) {
+        try {
+            super();
+            if ('string' != (typeof cnt)) {
+                throw new Error('invalid parameter type');
+            }
+            this.conts = cnt;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    init () {
+        try {
+            super.init();
+            $('#' + this.getId()).append('<button>'+ this.conts +'</button>');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setClickEvent (func, prm) {
+        try {
+            if (null === func) {
+                throw new Error('invalid parameter');
+            }
+            var p_prm = prm || null;
+            $('#' + this.getId()).click(function() {
+                try {
+                    func(p_prm);
+                } catch (e) {
+                    console.error(e.stack + '\n');
+                }
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+}
+/* end of file */
