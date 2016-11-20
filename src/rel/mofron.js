@@ -49,6 +49,8 @@
 	__webpack_require__(1);
 	__webpack_require__(3);
 	mofron.parts.Base = __webpack_require__(4);
+	mofron.parts.Text = __webpack_require__(7);
+	mofron.parts.Button = __webpack_require__(8);
 	//mofron.event.Base = require('./event/Base.js');
 	//mofron.layout.Base = require('./layout/Base.js');
 
@@ -140,10 +142,11 @@
 	mofron.util.Vdom = __webpack_require__(5);
 
 	module.exports = function () {
-	    function _class() {
+	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _prm = prm === undefined ? null : prm;
 	            this.parent = null;
 	            this.child = new Array();
 	            //this.event     = new Array();
@@ -151,7 +154,7 @@
 	            //this.effect    = new Array();
 	            this.vdom = new mofron.util.Vdom('div');
 	            this.init_flg = false;
-	            this.initContents(this.vdom);
+	            this.initContents(this.vdom, _prm);
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -183,9 +186,15 @@
 	                    //                    this.layout[idx].layout(chd);
 	                    //                }
 	                }
-	                var chd_tgt = this.getTarget();
+
+	                /* set initial display of child */
 	                var chd_vdom = chd.getVdom();
-	                chd_vdom.setStyle('display', 'none');
+	                if (false === _disp) {
+	                    chd_vdom.setStyle('display', 'none');
+	                }
+
+	                /* set to target vdom */
+	                var chd_tgt = this.getTarget();
 	                chd_tgt.addChild(chd_vdom);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -372,7 +381,8 @@
 	            this.parent = null;
 	            this.child = new Array();
 	            this.style = new mofron.util.Style(this);
-	            this.init_flg = false;
+	            this.text = null;
+	            this.push_flg = false;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -410,6 +420,7 @@
 	        key: 'setStyle',
 	        value: function setStyle(key, val) {
 	            try {
+	                console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
 	                this.style.set(key, val);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -421,6 +432,19 @@
 	        value: function getStyle(key) {
 	            try {
 	                return this.style.get(key);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setText',
+	        value: function setText(txt) {
+	            try {
+	                if ('string' != typeof txt) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.text = txt;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -442,12 +466,13 @@
 
 	                /* set style attribute */
 	                var style_conts = this.style.get();
-	                if (null != this.style_conts) {
-	                    ret_val += 'style="';
-	                    for (var key in style_conts) {
-	                        ret_val += key + ':' + style_conts[key] + ';';
-	                    }
-	                    ret_val += '"';
+	                var style = 'style="';
+	                for (var key in style_conts) {
+	                    style += key + ':' + style_conts[key] + ';';
+	                }
+	                style += '"';
+	                if ('style=""' != style) {
+	                    ret_val += style;
 	                }
 	                ret_val += '>';
 	                /* get child value */
@@ -457,7 +482,12 @@
 	                    }
 	                }
 
+	                if (null != this.text) {
+	                    ret_val += this.text;
+	                }
+
 	                ret_val += '</' + this.tag + '>';
+	                console.log(ret_val);
 	                return ret_val;
 	            } catch (e) {
 	                console.error(e.stack);
@@ -468,6 +498,10 @@
 	        key: 'pushDom',
 	        value: function pushDom(tgt) {
 	            try {
+	                if (true === this.push_flg) {
+	                    throw new Error('already pushed');
+	                }
+
 	                this.setTarget(tgt);
 
 	                var tgt_dom = null;
@@ -477,10 +511,19 @@
 	                } else {
 	                    tgt_dom = document.querySelector('#' + tgt.getId());
 	                }
-	                console.log(this.getValue());
-	                tgt_dom.innerHTML = this.getValue();
+	                tgt_dom.innerHTML += this.getValue();
 
-	                this.init_flg = true;
+	                this.push_flg = true;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'isPushed',
+	        value: function isPushed() {
+	            try {
+	                return this.push_flg;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -494,6 +537,23 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.parent = tgt;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getChild',
+	        value: function getChild(idx) {
+	            try {
+	                var _idx = idx === undefined ? null : idx;
+	                if (null === _idx) {
+	                    return this.child;
+	                }
+	                if (0 > _idx || this.child.length - 1 < _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return this.child[_idx];
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -528,7 +588,7 @@
 	                throw new Error('invalid parameter');
 	            }
 	            this.target = tgt;
-	            this.conts = new Array();
+	            this.conts = {};
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -542,7 +602,7 @@
 	                if ('string' != typeof key || 'string' != typeof val) {
 	                    throw new Error('invalid parameter');
 	                }
-	                if (true === this.target.init_flg) {
+	                if (true === this.target.isPushed()) {
 	                    var dom = document.querySelector('#' + this.getId());
 	                    dom.style[key] = val;
 	                }
@@ -560,9 +620,6 @@
 	                if (null === _key) {
 	                    return this.conts;
 	                }
-	                if (0 === this.conts.length) {
-	                    return null;
-	                }
 	                return this.conts[_key] === undefined ? null : this.conts[_key];
 	            } catch (e) {
 	                console.error(e.stack);
@@ -573,6 +630,275 @@
 
 	    return _class;
 	}();
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file   Text.js
+	 * @brief  Base UI of Text
+	 * @author simpart
+	 */
+
+	module.exports = function (_mofron$parts$Base) {
+	    _inherits(_class, _mofron$parts$Base);
+
+	    /**
+	     * initialize Header
+	     */
+	    function _class(txt) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, txt));
+
+	            _this.size = null;
+	            _this.auto_color = false;
+	            _this.setSize(15);
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(_class, [{
+	        key: 'initContents',
+	        value: function initContents(vd, prm) {
+	            try {
+	                if ('string' != typeof prm) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                var text = new mofron.util.Vdom('div');
+	                text.setText(prm);
+	                vd.addChild(text);
+	                //$('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
+	                //if ((null !== this.theme.colors[0]) &&
+	                //    (true === this.auto_color)) {
+	                //    if (true === this.auto_color) {
+	                //        var rgb = this.theme.colors[0].getRgba();
+	                //        if (290 > (rgb[0]+rgb[1]+rgb[2])) {
+	                //            var style = new mofron.other.Styles(this, ' div');
+	                //            style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
+	                //        }
+	                //    }
+	                //}
+	                //
+	                //if (null !== this.theme.font) {
+	                //    this.theme.font.font(this);
+	                //}
+	                //style.style('font-size', this.size + 'px');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setSize',
+	        value: function setSize(size) {
+	            try {
+	                //var style = new mofron.other.Styles(this, ' .text-conts');
+	                //style.style('font-size', size + 'px');
+	                //this.size = size;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getSize',
+	        value: function getSize() {
+	            try {
+	                //return this.size;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setAlign',
+	        value: function setAlign(tp) {
+	            try {
+	                //var style = new mofron.other.Styles(this, ' .text-conts');
+	                //style.style('text-align', tp);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setLink',
+	        value: function setLink(url, tab) {
+	            try {
+	                //var _tab = tab || false;
+	                //var style = new mofron.other.Styles(this, ' .text-conts');
+	                //style.style('cursor', 'pointer');
+	                //var click = new mofron.event.Click();
+	                //if (false === _tab) {
+	                //    click.setCbfunc (function(){
+	                //        window.location.href = url;
+	                //    });
+	                //} else {
+	                //    click.setCbfunc (function(){
+	                //        window.open(url, '_blank');
+	                //    });
+	                //}
+	                //this.addEvent(click);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setColor',
+	        value: function setColor(color) {
+	            try {
+	                //var style = new mofron.other.Styles(this, ' .text-conts');
+	                //style.style('color', color.getStyle());
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getTarget',
+	        value: function getTarget() {
+	            try {
+	                return this.vdom.getChild(0);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.parts.Base);
+	/* end of file */
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file   Button.js
+	 * @author simpart
+	 */
+
+	module.exports = function (_mofron$parts$Base) {
+	    _inherits(_class, _mofron$parts$Base);
+
+	    function _class(cnt) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, cnt));
+
+	            if ('string' != typeof cnt) {
+	                throw new Error('invalid parameter type');
+	            }
+	            _this.addChild(new mofron.parts.Text(cnt));
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(_class, [{
+	        key: 'getTarget',
+	        value: function getTarget() {
+	            try {
+	                return this.vdom.getChild(0);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'initContents',
+	        value: function initContents(vd, prm) {
+	            try {
+	                var btn = new mofron.util.Vdom('button');
+	                vd.addChild(btn);
+
+	                this.width(50);
+	                this.height(25);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setClickEvent',
+	        value: function setClickEvent(func, prm) {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'width',
+	        value: function width(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                var btn = this.getTarget();
+	                if (null === _val) {
+	                    return btn.getStyle('width');
+	                }
+	                if ('number' != typeof _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                btn.setStyle('width', val + 'px');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'height',
+	        value: function height(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                var btn = this.getTarget();
+	                if (null === _val) {
+	                    return btn.getStyle('height');
+	                }
+	                if ('number' != typeof _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                btn.setStyle('height', val + 'px');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.parts.Base);
 
 /***/ }
 /******/ ]);

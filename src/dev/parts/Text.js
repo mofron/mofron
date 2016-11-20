@@ -4,14 +4,13 @@
  * @author simpart
  */
 
-mofron.parts.Text = class extends mofron.parts.Base {
+module.exports = class extends mofron.parts.Base {
     /**
      * initialize Header
      */
     constructor (txt) {
         try {
-            super();
-            this.text       = txt;
+            super(txt);
             this.size       = null;
             this.auto_color = false;
             this.setSize(15);
@@ -21,25 +20,30 @@ mofron.parts.Text = class extends mofron.parts.Base {
         }
     }
     
-    initConts (disp) {
+    initContents (vd, prm) {
         try {
-            super.initConts(disp);
-            
-            $('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
-            if ((null !== this.theme.colors[0]) &&
-                (true === this.auto_color)) {
-                if (true === this.auto_color) {
-                    var rgb = this.theme.colors[0].getRgba();
-                    if (290 > (rgb[0]+rgb[1]+rgb[2])) {
-                        var style = new mofron.other.Styles(this, ' div');
-                        style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
-                    }
-                }
+            if ('string' != (typeof prm)) {
+                throw new Error('invalid parameter');
             }
             
-            if (null !== this.theme.font) {
-                this.theme.font.font(this);
-            }
+            var text = new mofron.util.Vdom('div');
+            text.setText(prm);
+            vd.addChild(text);
+            //$('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
+            //if ((null !== this.theme.colors[0]) &&
+            //    (true === this.auto_color)) {
+            //    if (true === this.auto_color) {
+            //        var rgb = this.theme.colors[0].getRgba();
+            //        if (290 > (rgb[0]+rgb[1]+rgb[2])) {
+            //            var style = new mofron.other.Styles(this, ' div');
+            //            style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
+            //        }
+            //    }
+            //}
+            //
+            //if (null !== this.theme.font) {
+            //    this.theme.font.font(this);
+            //}
             //style.style('font-size', this.size + 'px');
         } catch (e) {
             console.error(e.stack);
@@ -49,9 +53,9 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     setSize (size) {
         try {
-            var style = new mofron.other.Styles(this, ' .text-conts');
-            style.style('font-size', size + 'px');
-            this.size = size;
+            //var style = new mofron.other.Styles(this, ' .text-conts');
+            //style.style('font-size', size + 'px');
+            //this.size = size;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -60,7 +64,7 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     getSize() {
         try {
-            return this.size;
+            //return this.size;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -69,8 +73,8 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     setAlign (tp) {
         try {
-            var style = new mofron.other.Styles(this, ' .text-conts');
-            style.style('text-align', tp);
+            //var style = new mofron.other.Styles(this, ' .text-conts');
+            //style.style('text-align', tp);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -79,20 +83,20 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     setLink (url,tab) {
         try {
-            var _tab = tab || false;
-            var style = new mofron.other.Styles(this, ' .text-conts');
-            style.style('cursor', 'pointer');
-            var click = new mofron.event.Click();
-            if (false === _tab) {
-                click.setCbfunc (function(){
-                    window.location.href = url;
-                });
-            } else {
-                click.setCbfunc (function(){
-                    window.open(url, '_blank');
-                });
-            }
-            this.addEvent(click);
+            //var _tab = tab || false;
+            //var style = new mofron.other.Styles(this, ' .text-conts');
+            //style.style('cursor', 'pointer');
+            //var click = new mofron.event.Click();
+            //if (false === _tab) {
+            //    click.setCbfunc (function(){
+            //        window.location.href = url;
+            //    });
+            //} else {
+            //    click.setCbfunc (function(){
+            //        window.open(url, '_blank');
+            //    });
+            //}
+            //this.addEvent(click);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -101,8 +105,8 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     setColor(color) {
         try {
-            var style = new mofron.other.Styles(this, ' .text-conts');
-            style.style('color', color.getStyle());
+            //var style = new mofron.other.Styles(this, ' .text-conts');
+            //style.style('color', color.getStyle());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -111,7 +115,7 @@ mofron.parts.Text = class extends mofron.parts.Base {
     
     getTarget() {
         try {
-            return '#' + this.getId() + ' .text-conts';
+            return this.vdom.getChild(0);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -16,7 +16,8 @@ module.exports = class {
             this.parent   = null;
             this.child    = new Array();
             this.style    = new mofron.util.Style(this);
-            this.init_flg = false;
+            this.text     = null;
+            this.push_flg = false;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -50,6 +51,7 @@ module.exports = class {
     
     setStyle(key, val) {
         try {
+            console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
             this.style.set(key,val);
         } catch (e) {
             console.error(e.stack);
@@ -60,6 +62,18 @@ module.exports = class {
     getStyle(key) {
         try {
             return this.style.get(key);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setText(txt) {
+        try {
+            if ('string' != (typeof txt)) {
+                throw new Error('invalid parameter');
+            }
+            this.text = txt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -80,12 +94,13 @@ module.exports = class {
             
             /* set style attribute */
             var style_conts = this.style.get();
-            if (null != this.style_conts) {
-                ret_val += 'style="';
-                for(var key in style_conts) {
-                    ret_val += key + ':'+ style_conts[key] + ';';
-                }
-                ret_val += '"';
+            var style = 'style="';
+            for(var key in style_conts) {
+                style += key + ':'+ style_conts[key] + ';';
+            }
+            style += '"';
+            if ('style=""' != style) {
+                ret_val += style;
             }
             ret_val += '>';
             /* get child value */
@@ -95,7 +110,12 @@ module.exports = class {
                 }
             }
             
+            if (null != this.text) {
+                ret_val += this.text;
+            }
+            
             ret_val += '</'+ this.tag +'>';
+console.log(ret_val);
             return ret_val;
         } catch (e) {
             console.error(e.stack);
@@ -105,6 +125,10 @@ module.exports = class {
     
     pushDom (tgt) {
         try {
+            if (true === this.push_flg) {
+                throw new Error('already pushed');
+            }
+            
             this.setTarget(tgt);
             
             var tgt_dom = null;
@@ -114,10 +138,18 @@ module.exports = class {
             } else {
                 tgt_dom = document.querySelector('#'+tgt.getId());
             }
-console.log(this.getValue());
-            tgt_dom.innerHTML = this.getValue();
+            tgt_dom.innerHTML += this.getValue();
             
-            this.init_flg = true;
+            this.push_flg = true;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isPushed() {
+        try {
+            return this.push_flg;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -130,6 +162,22 @@ console.log(this.getValue());
                 throw new Error('invalid parameter');
             }
             this.parent = tgt;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getChild(idx) {
+        try {
+            var _idx = (idx === undefined) ? null : idx;
+            if (null === _idx) {
+                return this.child;
+            }
+            if ((0 > _idx) || ((this.child.length-1) < _idx)) {
+                throw new Error('invalid parameter');
+            }
+            return this.child[_idx];
         } catch (e) {
             console.error(e.stack);
             throw e;

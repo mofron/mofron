@@ -3,24 +3,36 @@
  * @author simpart
  */
 
-mofron.parts.Button = class extends mofron.parts.Base {
+module.exports = class extends mofron.parts.Base {
     constructor (cnt) {
         try {
-            super();
+            super(cnt);
             if ('string' != (typeof cnt)) {
                 throw new Error('invalid parameter type');
             }
-            this.conts = cnt;
+            this.addChild(new mofron.parts.Text(cnt));
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    init () {
+    getTarget () {
         try {
-            super.init();
-            $('#' + this.getId()).append('<button>'+ this.conts +'</button>');
+            return this.vdom.getChild(0);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    initContents (vd,prm) {
+        try {
+            var btn = new mofron.util.Vdom('button');
+            vd.addChild(btn);
+            
+            this.width(50);
+            this.height(25);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -29,21 +41,43 @@ mofron.parts.Button = class extends mofron.parts.Base {
     
     setClickEvent (func, prm) {
         try {
-            if (null === func) {
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    width (val) {
+        try {
+            var _val = (val === undefined) ? null : val;
+            var btn  = this.getTarget();
+            if (null === _val) {
+                return btn.getStyle('width');
+            }
+            if ('number' != (typeof _val)) {
                 throw new Error('invalid parameter');
             }
-            var p_prm = prm || null;
-            $('#' + this.getId()).click(function() {
-                try {
-                    func(p_prm);
-                } catch (e) {
-                    console.error(e.stack + '\n');
-                }
-            });
+            btn.setStyle('width', val + 'px');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    height (val) {
+        try {
+            var _val = (val === undefined) ? null : val;
+            var btn  = this.getTarget();
+            if (null === _val) {
+                return btn.getStyle('height');
+            }
+            if ('number' != (typeof _val)) {
+                throw new Error('invalid parameter');
+            }
+            btn.setStyle('height', val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

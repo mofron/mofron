@@ -8,7 +8,7 @@ module.exports = class {
                 throw new Error('invalid parameter');
             }
             this.target = tgt;
-            this.conts  = new Array();
+            this.conts  = {};
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -21,7 +21,7 @@ module.exports = class {
                  ('string' != (typeof val)) ) {
                 throw new Error('invalid parameter');
             }
-            if (true === this.target.init_flg) {
+            if (true === this.target.isPushed()) {
                 var dom = document.querySelector('#' + this.getId());
                 dom.style[key] = val;
             }
@@ -37,9 +37,6 @@ module.exports = class {
             var _key = (key === undefined) ? null : key;
             if (null === _key) {
                 return this.conts;
-            }
-            if (0 === this.conts.length) {
-                return null;
             }
             return (this.conts[_key] === undefined) ? null : this.conts[_key];
         } catch (e) {

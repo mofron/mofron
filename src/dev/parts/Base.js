@@ -6,8 +6,9 @@
 mofron.util.Vdom = require('../util/Vdom.js');
 
 module.exports = class {
-    constructor () {
+    constructor (prm) {
         try {
+            var _prm = (prm === undefined) ? null : prm;
             this.parent    = null;
             this.child     = new Array();
             //this.event     = new Array();
@@ -15,7 +16,7 @@ module.exports = class {
             //this.effect    = new Array();
             this.vdom      = new mofron.util.Vdom('div');
             this.init_flg  = false;
-            this.initContents(this.vdom);
+            this.initContents(this.vdom, _prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -44,9 +45,15 @@ module.exports = class {
 //                    this.layout[idx].layout(chd);
 //                }
             }
-            var chd_tgt  = this.getTarget();
+            
+            /* set initial display of child */
             var chd_vdom = chd.getVdom();
-            chd_vdom.setStyle('display', 'none');
+            if (false === _disp) {
+                chd_vdom.setStyle('display', 'none');
+            }
+            
+            /* set to target vdom */
+            var chd_tgt  = this.getTarget();
             chd_tgt.addChild(chd_vdom);
         } catch (e) {
             console.error(e.stack);
