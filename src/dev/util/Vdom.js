@@ -10,14 +10,26 @@ module.exports = class {
             if ('string' != (typeof tag)) {
                 throw new Error('invalid parameter');
             }
-            this.id       = null;
+            this.id         = null;
+            this.tag        = tag;
+            this.clname     = null;
+            this.parent     = null;
+            this.child      = new Array();
+            this.style      = new mofron.util.Style(this);
+            this.text       = null;
+            this.push_flg   = false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    chgTag(tag) {
+        try {
+            if ('string' != (typeof tag)) {
+                throw new Error('invalid parameter');
+            }
             this.tag      = tag;
-            this.clname   = null;
-            this.parent   = null;
-            this.child    = new Array();
-            this.style    = new mofron.util.Style(this);
-            this.text     = null;
-            this.push_flg = false;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -113,9 +125,9 @@ module.exports = class {
             if (null != this.text) {
                 ret_val += this.text;
             }
-            
-            ret_val += '</'+ this.tag +'>';
-console.log(ret_val);
+            if (false === this.isSimpleTag()) {
+                ret_val += '</'+ this.tag +'>';
+            }
             return ret_val;
         } catch (e) {
             console.error(e.stack);
@@ -150,6 +162,20 @@ console.log(ret_val);
     isPushed() {
         try {
             return this.push_flg;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isSimpleTag () {
+        try {
+            if ( ('br'    == this.tag) ||
+                 ('hr'    == this.tag) ||
+                 ('input' == this.tag) ) {
+                return true;
+            }
+            return false;
         } catch (e) {
             console.error(e.stack);
             throw e;

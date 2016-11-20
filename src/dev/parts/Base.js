@@ -61,6 +61,15 @@ module.exports = class {
         }
     }
     
+    getStyleTgt () {
+        try {
+            return this.getTarget();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     style(key, val) {
         try {
             var _key = (key === undefined) ? null : key;
@@ -70,7 +79,8 @@ module.exports = class {
                  (null === _val) ) {
                 return this.vdom.getStyle();
             }
-            this.vdom.setStyle(key, val);
+            var style_tgt = this.getStyleTgt();
+            style_tgt.setStyle(key, val);
         } catch (e) {
             console.error(e.stack);
             throw e;

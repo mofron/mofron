@@ -1,4 +1,8 @@
-mofron.layout.Base = class {
+/**
+ * @file layout/Base.js
+ * @brief Base class of layout
+ */
+module.exports = class {
     constructor () {
         try {
             this.target  = null;
@@ -9,22 +13,21 @@ mofron.layout.Base = class {
         }
     }
     
-    setTarget(tgt) {
-        try {
-            this.target = tgt;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //setTarget(tgt) {
+    //    try {
+    //        this.target = tgt;
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
     
     layout () {
         try {
-            this.exe_cnt++;
+            console.warn('layout is not implements');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

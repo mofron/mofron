@@ -1,19 +1,13 @@
 /**
- * @file   Button.js
+ * @file   Input.js
+ * @brief  Base of UI InputText Class
  * @author simpart
  */
 
-/**
- * @class Button
- */
 module.exports = class extends mofron.parts.Base {
-    constructor (cnt) {
+    constructor (val) {
         try {
-            super(cnt);
-            if ('string' != (typeof cnt)) {
-                throw new Error('invalid parameter type');
-            }
-            this.addChild(new mofron.parts.Text(cnt));
+            super(val);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -31,22 +25,9 @@ module.exports = class extends mofron.parts.Base {
     
     initContents (vd, prm) {
         try {
-            vd.addChild(new mofron.util.Vdom('button'));
-            this.width(50);
+            vd.addChild(new mofron.util.Vdom('input'));
+            this.width(200);
             this.height(25);
-            
-            this.style('display'        , 'flex');
-            this.style('align-items'    , 'center');
-            this.style('justify-content', 'center');
-            
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setClickEvent (func, prm) {
-        try {
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -55,15 +36,15 @@ module.exports = class extends mofron.parts.Base {
     
     width (val) {
         try {
-            var _val = (val === undefined) ? null : val;
-            var btn  = this.getTarget();
+            var _val  = (val === undefined) ? null : val;
+            var input = this.getTarget();
             if (null === _val) {
-                return btn.getStyle('width');
+                return input.getStyle('width');
             }
             if ('number' != (typeof _val)) {
                 throw new Error('invalid parameter');
             }
-            btn.setStyle('width', val + 'px');
+            input.setStyle('width', val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -73,17 +54,32 @@ module.exports = class extends mofron.parts.Base {
     height (val) {
         try {
             var _val = (val === undefined) ? null : val;
-            var btn  = this.getTarget();
+            var input = this.getTarget();
             if (null === _val) {
-                return btn.getStyle('height');
+                return input.getStyle('height');
             }
             if ('number' != (typeof _val)) {
                 throw new Error('invalid parameter');
             }
-            btn.setStyle('height', val + 'px');
+            input.setStyle('height', val + 'px');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getText() {
+        try {
+            var vd = this.getTarget();
+            if (false === vd.isPushed()) {
+                return null;
+            }
+            var dm = document.querySelector('#'+vd.getId());
+            return dm.value;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
+/* end of file */

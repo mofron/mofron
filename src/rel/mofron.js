@@ -48,11 +48,18 @@
 
 	__webpack_require__(1);
 	__webpack_require__(3);
+
+	/* UI Parts */
 	mofron.parts.Base = __webpack_require__(4);
 	mofron.parts.Text = __webpack_require__(7);
 	mofron.parts.Button = __webpack_require__(8);
+	mofron.parts.InputText = __webpack_require__(9);
+
+	/* Layout */
+	mofron.layout.Base = __webpack_require__(10);
+	mofron.layout.HorizCenter = __webpack_require__(11);
+
 	//mofron.event.Base = require('./event/Base.js');
-	//mofron.layout.Base = require('./layout/Base.js');
 
 /***/ },
 /* 1 */
@@ -202,6 +209,16 @@
 	            }
 	        }
 	    }, {
+	        key: 'getStyleTgt',
+	        value: function getStyleTgt() {
+	            try {
+	                return this.getTarget();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'style',
 	        value: function style(key, val) {
 	            try {
@@ -211,7 +228,8 @@
 	                if (null === _key && null === _val) {
 	                    return this.vdom.getStyle();
 	                }
-	                this.vdom.setStyle(key, val);
+	                var style_tgt = this.getStyleTgt();
+	                style_tgt.setStyle(key, val);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -390,6 +408,19 @@
 	    }
 
 	    _createClass(_class, [{
+	        key: 'chgTag',
+	        value: function chgTag(tag) {
+	            try {
+	                if ('string' != typeof tag) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.tag = tag;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'getId',
 	        value: function getId() {
 	            try {
@@ -485,9 +516,9 @@
 	                if (null != this.text) {
 	                    ret_val += this.text;
 	                }
-
-	                ret_val += '</' + this.tag + '>';
-	                console.log(ret_val);
+	                if (false === this.isSimpleTag()) {
+	                    ret_val += '</' + this.tag + '>';
+	                }
 	                return ret_val;
 	            } catch (e) {
 	                console.error(e.stack);
@@ -524,6 +555,19 @@
 	        value: function isPushed() {
 	            try {
 	                return this.push_flg;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'isSimpleTag',
+	        value: function isSimpleTag() {
+	            try {
+	                if ('br' == this.tag || 'hr' == this.tag || 'input' == this.tag) {
+	                    return true;
+	                }
+	                return false;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -807,6 +851,9 @@
 	 * @author simpart
 	 */
 
+	/**
+	 * @class Button
+	 */
 	module.exports = function (_mofron$parts$Base) {
 	    _inherits(_class, _mofron$parts$Base);
 
@@ -841,11 +888,13 @@
 	        key: 'initContents',
 	        value: function initContents(vd, prm) {
 	            try {
-	                var btn = new mofron.util.Vdom('button');
-	                vd.addChild(btn);
-
+	                vd.addChild(new mofron.util.Vdom('button'));
 	                this.width(50);
 	                this.height(25);
+
+	                this.style('display', 'flex');
+	                this.style('align-items', 'center');
+	                this.style('justify-content', 'center');
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -899,6 +948,220 @@
 
 	    return _class;
 	}(mofron.parts.Base);
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file   Input.js
+	 * @brief  Base of UI InputText Class
+	 * @author simpart
+	 */
+
+	module.exports = function (_mofron$parts$Base) {
+	    _inherits(_class, _mofron$parts$Base);
+
+	    function _class(val) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, val));
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(_class, [{
+	        key: 'getTarget',
+	        value: function getTarget() {
+	            try {
+	                return this.vdom.getChild(0);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'initContents',
+	        value: function initContents(vd, prm) {
+	            try {
+	                vd.addChild(new mofron.util.Vdom('input'));
+	                this.width(200);
+	                this.height(25);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'width',
+	        value: function width(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                var input = this.getTarget();
+	                if (null === _val) {
+	                    return input.getStyle('width');
+	                }
+	                if ('number' != typeof _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                input.setStyle('width', val + 'px');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'height',
+	        value: function height(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                var input = this.getTarget();
+	                if (null === _val) {
+	                    return input.getStyle('height');
+	                }
+	                if ('number' != typeof _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                input.setStyle('height', val + 'px');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getText',
+	        value: function getText() {
+	            try {
+	                var input = this.getTarget();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.parts.Base);
+	/* end of file */
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @file layout/Base.js
+	 * @brief Base class of layout
+	 */
+	module.exports = function () {
+	    function _class() {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            this.target = null;
+	            this.exe_cnt = -1;
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	    }
+
+	    //setTarget(tgt) {
+	    //    try {
+	    //        this.target = tgt;
+	    //    } catch (e) {
+	    //        console.error(e.stack);
+	    //        throw e;
+	    //    }
+	    //}
+
+	    _createClass(_class, [{
+	        key: 'layout',
+	        value: function layout() {
+	            try {
+	                console.warn('layout is not implements');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}();
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file HorizCenter.js
+	 */
+	module.exports = function (_mofron$layout$Base) {
+	    _inherits(_class, _mofron$layout$Base);
+
+	    function _class(rt) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            var _rt = rt === undefined ? 80 : rt;
+	            _this.rate = _rt;
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(_class, [{
+	        key: "layout",
+	        value: function layout(tgt_dom) {
+	            try {
+	                //var style = new mofron.other.Styles(tgt_chd);
+	                //style.style('width'   , this.rate + '%');
+	                //style.style('position', 'relative');
+	                //style.style('left'    , (100 - this.rate)/2 + '%');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.layout.Base);
+	/* end of file */
 
 /***/ }
 /******/ ]);
