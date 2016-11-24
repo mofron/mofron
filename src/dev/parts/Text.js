@@ -11,9 +11,8 @@ module.exports = class extends mofron.parts.Base {
     constructor (txt) {
         try {
             super(txt);
-            this.size       = null;
             this.auto_color = false;
-            this.setSize(15);
+            this.size(15);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -51,20 +50,26 @@ module.exports = class extends mofron.parts.Base {
         }
     }
     
-    setSize (size) {
+    text (val) {
         try {
-            //var style = new mofron.other.Styles(this, ' .text-conts');
-            //style.style('font-size', size + 'px');
-            //this.size = size;
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getSize() {
+    size (val) {
         try {
-            //return this.size;
+            if ('number' != (typeof val)) {
+                throw new Error('invalid parameter');
+            }
+            var _val = (val === undefined) ? null : val
+            var txt  = this.getTarget();
+            if (null === _val) {
+                return txt.getStyle('font-size');
+            }
+            txt.setStyle('font-size', val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;

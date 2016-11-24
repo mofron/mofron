@@ -2,7 +2,6 @@
  * @file util/Vdom.js
  *
  */
-mofron.util.Style = require('./Style.js');
 
 module.exports = class {
     constructor (tag) {
@@ -16,8 +15,12 @@ module.exports = class {
             this.parent     = null;
             this.child      = new Array();
             this.style      = new mofron.util.Style(this);
+            this.attr       = {};
             this.text       = null;
             this.push_flg   = false;
+            this.value      = null;
+////console.log(tag + ' -> ' + this.getId());
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -55,6 +58,7 @@ module.exports = class {
             }
             chd.setTarget(this);
             this.child.push(chd);
+            this.value = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -63,15 +67,16 @@ module.exports = class {
     
     setStyle(key, val) {
         try {
-            console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
+            //console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
             this.style.set(key,val);
+            this.value = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getStyle(key) {
+    getStyle (key) {
         try {
             return this.style.get(key);
         } catch (e) {
@@ -80,12 +85,37 @@ module.exports = class {
         }
     }
     
-    setText(txt) {
+    setAttr (key, val) {
+        try {
+            var _key = (key === undefined) ? null : key;
+            var _val = (val === undefined) ? null : val;
+            this.attr[_key] = _val;
+            this.value = null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getAttr (val) {
+        try {
+            var _val = (val === undefined) ? null : val;
+            if (null === _val) {
+                return this.attr;
+            }
+            return this.attr[_val];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setText (txt) {
         try {
             if ('string' != (typeof txt)) {
                 throw new Error('invalid parameter');
             }
-            this.text = txt;
+            this.text  = txt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -94,30 +124,48 @@ module.exports = class {
     
     getValue () {
         try {
-            var ret_val = '<'+ this.tag + ' ';
-
-            /* set id attribute */
-            ret_val += 'id="'+ this.getId() +'" ';
-
-            /* set class attribute:*/
-            if (null != this.clname) {
-                ret_val += 'class="' + this.clname +'" ';
+            var ret_val = '';
+            if (null != this.value) {
+                ret_val += this.value;
+            } else {
+                //console.log(this.getId() + ' -> getValue()');
+                ret_val += '<'+ this.tag + ' ';
+                
+                /* set id attribute */
+                ret_val += 'id="'+ this.getId() +'" ';
+                
+                /* set class attribute:*/
+                if (null != this.clname) {
+                    ret_val += 'class="' + this.clname +'" ';
+                }
+                
+                /* set style attribute */
+                var style_conts = this.style.get();
+                var style = 'style="';
+                for(var key in style_conts) {
+                    style += key + ':'+ style_conts[key] + ';';
+                }
+                style += '"';
+                if ('style=""' != style) {
+                    ret_val += style;
+                }
+                
+                var attr_conts = '';
+                for (var key in this.attr) {
+                    attr_conts += key;
+                    if (null != this.attr[key]) {
+                        attr_conts += '=' +this.attr[key] + ' ';
+                    }
+                }
+                ret_val += attr_conts + '>';
+                
+                this.value = ret_val;
             }
             
-            /* set style attribute */
-            var style_conts = this.style.get();
-            var style = 'style="';
-            for(var key in style_conts) {
-                style += key + ':'+ style_conts[key] + ';';
-            }
-            style += '"';
-            if ('style=""' != style) {
-                ret_val += style;
-            }
-            ret_val += '>';
             /* get child value */
             if (0 != this.child.length) {
                 for(var chd_idx in this.child) {
+                    //console.log(this.getId() + ' -> child value() -> ' + this.child[chd_idx].getValue());
                     ret_val += this.child[chd_idx].getValue();
                 }
             }
@@ -125,9 +173,13 @@ module.exports = class {
             if (null != this.text) {
                 ret_val += this.text;
             }
+            
             if (false === this.isSimpleTag()) {
                 ret_val += '</'+ this.tag +'>';
             }
+
+//console.log(this.getId() + ' -> ' + ret_val);
+            //console.log(this.getId() + ' -> value() -> ' + ret_val);
             return ret_val;
         } catch (e) {
             console.error(e.stack);
@@ -145,14 +197,17 @@ module.exports = class {
             
             var tgt_dom = null;
             if (null === this.parent) {
-                console.log("insert to body");
                 tgt_dom = document.body;
+                console.log(this.getId() + ' -> push DOM to body');
             } else {
-                tgt_dom = document.querySelector('#'+tgt.getId());
+                tgt_dom = document.querySelector('#' + this.parent.getId());
+                console.log(this.getId() + ' -> push DOM to ' + this.parent.getId());
             }
-            tgt_dom.innerHTML += this.getValue();
+            tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
+//console.log('innerHTML : ' + tgt_dom.innerHTML);
+            //tgt_dom.innerHTML += this.getValue();
             
-            this.push_flg = true;
+            this.setPushed();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -168,11 +223,26 @@ module.exports = class {
         }
     }
     
+    setPushed () {
+        try {
+            if (0 != this.child.length) {
+                for(var chd_idx in this.child) {
+                    this.child[chd_idx].setPushed();
+                }
+            }
+            this.push_flg = true;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     isSimpleTag () {
         try {
             if ( ('br'    == this.tag) ||
                  ('hr'    == this.tag) ||
-                 ('input' == this.tag) ) {
+                 ('input' == this.tag) ||
+                 ('img'   == this.tag)) {
                 return true;
             }
             return false;

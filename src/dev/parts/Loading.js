@@ -1,50 +1,54 @@
 /**
- * @file   Input.js
- * @brief  Base of UI InputText Class
+ * @file   Loading.js
+ * @brief  Base UI Loading Class
  * @author simpart
  */
 
-mofron.parts.Loading = class extends mofron.parts.Base {
-    constructor (val) {
+module.exports = class extends mofron.parts.Base {
+    constructor (prm) {
         try {
             super();
-            if ('string' != (typeof cnt)) {
-                throw new Error('invalid parameter type');
-            }
-            this.conts = val;
+            this.timeout = 0;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    /**
+     * 
+     */
+    initContents (vd,tgt) {
+        try {
+            var txt = new mofron.util.Vdom('div');
+            txt.setText('Loading..');
+            vd.addChild(txt);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    init () {
+    notifyTimeout (cbf, to) {
         try {
-            super.init();
-            $('#' + this.getId()).append('<input></input>');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setClickEvent (func, prm) {
-        try {
-            if (null === func) {
+            if (0 > to) {
                 throw new Error('invalid parameter');
             }
-            var p_prm = prm || null;
-            $('#' + this.getId()).click(function() {
-                try {
-                    func(p_prm);
-                } catch (e) {
-                    console.error(e.stack + '\n');
-                }
-            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setVisible (flg, eff) {
+        try {
+            super.setVisible(flg, eff);
+            if ( (true === flg) &&
+                 (0    !=  this.timeout)) {
+                
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

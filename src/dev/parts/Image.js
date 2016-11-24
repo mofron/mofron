@@ -1,50 +1,20 @@
 /**
- * @file   Input.js
- * @brief  Base of UI InputText Class
+ * @file   Image.js
+ * @brief  Base UI Image Class
  * @author simpart
  */
 
-mofron.parts.Image = class extends mofron.parts.Base {
-    constructor (val) {
+module.exports = class extends mofron.parts.Base {
+    initContents (vd, prm) {
         try {
-            super();
-            if ('string' != (typeof cnt)) {
-                throw new Error('invalid parameter type');
-            }
-            this.conts = val;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    init () {
-        try {
-            super.init();
-            $('#' + this.getId()).append('<input></input>');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setClickEvent (func, prm) {
-        try {
-            if (null === func) {
+            if ('string' !== (typeof prm)) {
                 throw new Error('invalid parameter');
             }
-            var p_prm = prm || null;
-            $('#' + this.getId()).click(function() {
-                try {
-                    func(p_prm);
-                } catch (e) {
-                    console.error(e.stack + '\n');
-                }
-            });
+            var image = new mofron.util.Vdom('img');
+            vd.addChild(image);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

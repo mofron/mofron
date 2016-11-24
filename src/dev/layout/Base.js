@@ -13,18 +13,21 @@ module.exports = class {
         }
     }
     
-    //setTarget(tgt) {
-    //    try {
-    //        this.target = tgt;
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
+    /**
+     * @param tgt : (object) layout target Parts
+     */
+    setTarget(tgt) {
+        try {
+            this.target = tgt;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     
     layout () {
         try {
-            console.warn('layout is not implements');
+            console.warn('not implements');
         } catch (e) {
             console.error(e.stack);
             throw e;

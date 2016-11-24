@@ -10,17 +10,20 @@ module.exports = class extends mofron.parts.Base {
     constructor (cnt) {
         try {
             super(cnt);
-            if ('string' != (typeof cnt)) {
-                throw new Error('invalid parameter type');
+            if ('string' === (typeof cnt)) {
+                this.addChild(new mofron.parts.Text(cnt));
+            } else if ('object' === (typeof cnt)) {
+                this.addChild(cnt);
+            } else {
+                throw new Error('invalid parameter');
             }
-            this.addChild(new mofron.parts.Text(cnt));
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getTarget() {
+    getTarget () {
         try {
             return this.vdom.getChild(0);
         } catch (e) {
@@ -35,9 +38,9 @@ module.exports = class extends mofron.parts.Base {
             this.width(50);
             this.height(25);
             
-            this.style('display'        , 'flex');
-            this.style('align-items'    , 'center');
-            this.style('justify-content', 'center');
+            //this.style('display'        , 'flex');
+            //this.style('align-items'    , 'center');
+            //this.style('justify-content', 'center');
             
         } catch (e) {
             console.error(e.stack);
@@ -47,6 +50,13 @@ module.exports = class extends mofron.parts.Base {
     
     setClickEvent (func, prm) {
         try {
+            if (null === func) {
+                throw new Error('invalid parameter');
+            }
+            var _prm  = (prm === undefined) ? null : prm;
+            var click = new mofron.event.Click();
+            click.setCbfunc (func, _prm);
+            this.addEvent(click);
         } catch (e) {
             console.error(e.stack);
             throw e;

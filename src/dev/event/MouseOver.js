@@ -1,5 +1,5 @@
 /**
- * @file Click.js
+ * @file HoverOut.js
  */
 module.exports = class extends mofron.event.Base {
     
@@ -7,12 +7,12 @@ module.exports = class extends mofron.event.Base {
         try {
             var cbf = this.cb_func;
             var cbp = this.cb_parm;
+            
             if (false === this.target.isPushed()) {
                 throw new Error('target is not ready');
             }
-            //console.log('set click event -> ' + this.target.getId());
             var tgt_dom = document.querySelector('#'+ this.target.getId());
-            tgt_dom.addEventListener('click',function() {
+            tgt_dom.addEventListener('mouseover',function() {
                 try {
                     if (null != cbf) {
                         cbf(cbp);
@@ -28,4 +28,3 @@ module.exports = class extends mofron.event.Base {
         }
     }
 }
-/* end of file */

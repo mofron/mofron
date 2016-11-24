@@ -4,74 +4,75 @@
  * @author simpart
  */
 
-mofron.parts.Header = class extends mofron.parts.Base {
+module.exports = class extends mofron.parts.Base {
+    
+    initContents (vd, prm) {
+        try {
+            var hdr_conts = new mofron.util.Vdom('div');
+            hdr_conts.setStyle('width', '100%');
+            //hdr_conts.setStyle('float', 'left');
+            hdr_conts.setStyle('border-bottom', 'solid 1px lightgray');
+            hdr_conts.setStyle('position', 'fixed');
+            vd.addChild(hdr_conts);
+            
+            var hdr_pad = new mofron.util.Vdom('div');
+            //hdr_pad.setStyle('float', 'none');
+            vd.addChild(hdr_pad);
+            
+            this.height(50);
+            
+            
+            //if (null !== this.theme.colors[0]) {
+            //    conts_style.style(
+            //        'background',
+            //        this.theme.colors[0].getStyle(),
+            //        ' .conts'
+            //    );
+            //}
+            
+            this.addLayout(new mofron.layout.Horizon());
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getEventTgt () {
+        try {
+console.log('get event target : ' + this.vdom.getChild(1).getId());
+            return this.vdom;//.getChild(1);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getTarget() {
+        try {
+            return this.vdom.getChild(0);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     /**
-     * initialize Header
-     */
-    constructor () {
-        try {
-            super();
-            this.setHeight (50);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    initConts (disp) {
-        try {
-            super.initConts(disp);
-            console.log('initConts : Header');
-
-            var tag  = "<div class='conts'></div>";
-            tag     += "<div class='padd'></div>";
-            $('#' + this.getId()).html(tag);
-            
-            var conts_style = new mofron.other.Styles(this, ' .conts');
-            conts_style.style('width' , '100%');
-            conts_style.style('float' , 'left');
-            conts_style.style('border-bottom', 'solid 1px black');
-            conts_style.style('position', 'fixed');
-            var padd_style = new mofron.other.Styles(this, ' .padd');
-            padd_style.style('float' , 'none');
-            
-            if (null !== this.theme.colors[0]) {
-                conts_style.style(
-                    'background',
-                    this.theme.colors[0].getStyle(),
-                    ' .conts'
-                );
-            }
-            
-            this.addLayout(new mofron.layout.Float('left'));
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    getTarget () {
-        try {
-            return super.getTarget() + ' .conts';
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * set header height
+     * set/get header height
      *
-     * @param hei : (int) height
+     * @param hei : (int) height (px)
      */
-    setHeight (hei) {
+    height (val) {
         try {
-            var conts_style = new mofron.other.Styles(this, ' .conts');
-            conts_style.style('height', hei + 'px');
+            var _val = (val === undefined) ? null : val;
+            var hdr  = this.getTarget();
             
-            var padd_style = new mofron.other.Styles(this, ' .padd');
-            padd_style.style('height', hei + 'px');
-            
+            if (null === _val) {
+                return hdr.getStyle('height');
+            }
+            if ('number' != (typeof _val)) {
+                throw new Error('invalid parameter');
+            }
+            hdr.setStyle('height', val + 'px');
+            this.vdom.getChild(1).setStyle('height', val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -83,22 +84,20 @@ mofron.parts.Header = class extends mofron.parts.Base {
      *
      * col : (string) color
      */
-    setColor (col) {
+    color (col) {
         try {
+            if ( (null === col) ||
+                 (col  === undefined)) {
+                throw new Error('invalid parameter');
+            }
             
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setFix (flg) {
-        try {
-            
+            if ('object' != (typeof col)) {
+                throw new Error('invalid parameter');
+            }
+            this.style('background', col.getStyle());
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

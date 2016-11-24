@@ -1,15 +1,24 @@
 /**
  * @file   Frame.js
- * @brief  Base UI of Frame
+ * @brief  Base UI Frame class
  * @author simpart
  */
 
-mofron.parts.Frame = class extends mofron.parts.Base {
-        
-    constructor () {
+module.exports = class extends mofron.parts.Base {
+    
+//    constructor () {
+//        try {
+//            super();
+//            this.setSize (100, 100);
+//        } catch (e) {
+//            console.error(e.stack);
+//            throw e;
+//        }
+//    }
+    
+    getTarget () {
         try {
-            super();
-            this.setSize (100, 100);
+            return this.vdom.getChild(0);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -17,62 +26,104 @@ mofron.parts.Frame = class extends mofron.parts.Base {
     }
     
     /**
-     * structure
+     * initialize contents
      * 
      * @param disp : (bool) visible flag
      */
-    initConts (disp) {
+    initContents (vd, prm) {
         try {
-            super.initConts(disp);
-            $('#' + this.getId()).html('<div class="frame-conts"></div>');
-            var style = new mofron.other.Styles(this, ' div');
-            style.style('border', 'solid 1px gray');
+            var frame = new mofron.util.Vdom('div');
+            frame.setStyle('border', 'solid 1px black');
+            vd.addChild(frame);
+            
+            if ('number' === (typeof prm)) {
+                this.size(prm,prm);
+            } else {
+                this.size(100, 100);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setSize (hei, wid) {
+    size (hei, wid) {
         try {
-            var style = new mofron.other.Styles(this, ' div');
-            style.style('height', hei + 'px');
-            style.style('width' , wid + 'px');
+            var _hei  = (hei === undefined) ? null : hei;
+            var _wid  = (wid === undefined) ? null : wid;
+            var style = this.getStyleTgt();
+            
+            if ( (null === _hei) &&
+                 (null === _wid)) {
+                return [
+                    style.getStyle('height'),
+                    style.getStyle('width')
+                ];
+            }
+            
+            if ( ('number' != (typeof _hei)) ||
+                 ('number' != (typeof _wid)) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            style.setStyle('height', _hei + 'px');
+            style.setStyle('width' , _wid + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setRadius (val) {
+    radius (val) {
         try {
-            var style = new mofron.other.Styles(this, ' div');
-            style.style('webkit-border-radius', val + 'px');
-            style.style('-moz-border-radius'  , val + 'px');
-            style.style('border-radius'       , val + 'px');
+            var _val  = (val === undefined) ? null : val;
+            var style = this.getStyleTgt();
+            
+            if (null === _val) {
+                var ret_val = style.getStyle('webkit-border-radius');
+                if (null != ret_val) {
+                    return ret_val;
+                }
+                ret_val = style.getStyle('-moz-border-radius');
+                if (null != ret_val) {
+                    return ret_val;
+                }
+                ret_val = style.getStyle('border-radius');
+                if (null != ret_val) {
+                    return ret_val;
+                }
+                return null;
+            }
+            
+            if ('number' != (typeof val)) {
+                throw new Error('invalid parameter');
+            }
+            
+            style.setStyle('webkit-border-radius', _val + 'px');
+            style.setStyle('-moz-border-radius'  , _val + 'px');
+            style.setStyle('border-radius'       , _val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setShadow (val) {
+    shadow (val) {
         try {
-            var style = new mofron.other.Styles(this, ' div');
-            style.style('box-shadow', val/2 + 'px '+ val/2 + 'px '+ val +'px '+ '0px gray');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    getTarget() {
-        try {
-            return '#' + this.getId() + ' .frame-conts';
+            var _val  = (val === undefined) ? null : val;
+            var style = this.getStyleTgt();
+            
+            if (null === _val) {
+                return style.getStyle('box-shadow');
+            }
+            
+            if ('number' != (typeof val)) {
+                throw new Error('invalid parameter');
+            }
+            style.setStyle('box-shadow', val/2 + 'px '+ val/2 + 'px '+ val +'px '+ '0px gray');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

@@ -22,7 +22,7 @@ module.exports = class {
                 throw new Error('invalid parameter');
             }
             if (true === this.target.isPushed()) {
-                var dom = document.querySelector('#' + this.getId());
+                var dom = document.querySelector('#' + this.target.getId());
                 dom.style[key] = val;
             }
             this.conts[key] = val;

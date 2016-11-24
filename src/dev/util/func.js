@@ -1,6 +1,6 @@
 mofron.util.getId = function() {
     try {
-        var ret_id = "";
+        var ret_id = "aid_";
         var loop   = 0;
         var val    = 0;
         for (loop=0; loop < 32 ;loop++) {

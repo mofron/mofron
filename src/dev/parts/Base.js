@@ -3,7 +3,6 @@
  * @brief  Base of UI Parts Class
  * @author simpart
  */
-mofron.util.Vdom = require('../util/Vdom.js');
 
 module.exports = class {
     constructor (prm) {
@@ -11,11 +10,12 @@ module.exports = class {
             var _prm = (prm === undefined) ? null : prm;
             this.parent    = null;
             this.child     = new Array();
-            //this.event     = new Array();
-            //this.layout    = new Array();
+            this.event     = new Array();
+            this.layout    = new Array();
             //this.effect    = new Array();
             this.vdom      = new mofron.util.Vdom('div');
             this.init_flg  = false;
+            this.state     = null;
             this.initContents(this.vdom, _prm);
         } catch (e) {
             console.error(e.stack);
@@ -25,7 +25,7 @@ module.exports = class {
     
     /*** method ***/
     
-    getTarget() {
+    getTarget () {
         try {
             return this.vdom;
         } catch (e) {
@@ -34,7 +34,16 @@ module.exports = class {
         }
     }
     
-    addChild(chd,disp) {
+    getEventTgt () {
+        try {
+            return this.getTarget();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    addChild (chd,disp) {
         try {
             var _disp = (disp === undefined) ? true : disp;
             chd.parent = this;
@@ -54,7 +63,24 @@ module.exports = class {
             
             /* set to target vdom */
             var chd_tgt  = this.getTarget();
+console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
             chd_tgt.addChild(chd_vdom);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getChild (idx) {
+        try {
+            var _idx = (idx === undefined) ? null : idx;
+            if (null === _idx) {
+                return this.child;
+            }
+            if ((0 > _idx) || ((this.child.length-1) < _idx)) {
+                throw new Error('invalid parameter');
+            }
+            return this.child[_idx];
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -89,12 +115,16 @@ module.exports = class {
     
     addEvent (evt) {
         try {
-return;
-//            this.event.push(evt);
-//            evt.setTarget(this);
-//            if (true === this.init_flg) {
-//                evt.event();
-//            }
+            if ( (undefined === evt) ||
+                 (null      === evt) ||
+                 ('object'  != (typeof evt)) ) {
+                throw new Error('invalid parameter');
+            }
+            this.event.push(evt);
+            evt.setTarget(this);
+            if (true === this.init_flg) {
+                evt.event();
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -103,14 +133,16 @@ return;
     
     addLayout (lo) {
         try {
-return;
-//            this.layout.push(lo);
-//            lo.setTarget(this);
-//            if (true === this.init_flg) {
-//                for(var idx in this.child) {
-//                    lo.layout(this.child[idx][0]);
-//                }
-//            }
+            if ( (undefined === lo) ||
+                 (null      === lo) ||
+                 ('object'  != (typeof lo)) ) {
+                throw new Error('invalid parameter');
+            }
+            this.layout.push(lo);
+            lo.setTarget(this);
+            //if (true === this.init_flg) {
+            //    lo.layout();
+            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -124,38 +156,55 @@ return;
      */
     init (disp) {
         try {
+            
             if (true === this.init_flg) {
                 throw new Error('detect duplicate init');
             }
+            this.state = 'init';
             var _disp = disp === undefined ? true : disp;
             
             /* set initialize target */
-            //var init_tgt = document.body;
-            var init_tgt = null;
-            if (null !== this.parent) {
-                /* create to parent parts */
-                this.vdom.setTarget(this.parent.getTarget());
-            } else {
-                mofron.root.push(this);
+            if ( (null === this.parent) || 
+                 (null === this.parent.state) ) {
+                var init_tgt = null;
+                if (null === this.parent) {
+                    mofron.root.push(this);
+                } else {
+                    init_tgt = this.parent.getTarget();
+                }
+                
+                if (false === _disp) {
+                    this.vdom.setStyle('display', 'none');
+                }
+                //console.log(this.getVdom().getId() + ' -> pushDom()');
+                this.vdom.pushDom(init_tgt);
+                console.log("pushed");
+                
             }
             
-            if (false === _disp) {
-                this.vdom.setStyle('display', 'none');
+            
+            for (var idx in this.event) {
+                this.event[idx].event();
             }
-            this.vdom.pushDom(init_tgt);
-
-            /* initialize event */
-            //for(var idx in this.event) {
-            //    this.event[idx].event();
-            //}
+            
+            /* set layout */
+            for (var idx in this.layout) {
+                this.layout[idx].layout();
+            }
+            
+            for (var idx in this.child) {
+                this.child[idx].init(_disp);
+            }
+            
             this.init_flg = true;
+            this.state    = "inited";
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    initContents(vd) {
+    initContents(vd, prm) {
         try {
             
         } catch (e) {
