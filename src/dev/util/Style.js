@@ -17,8 +17,10 @@ module.exports = class {
     
     set (key, val) {
         try {
+            var _val = (val === undefined) ? null : val;
+            
             if ( ('string' != (typeof key)) ||
-                 ('string' != (typeof val)) ) {
+                 ((null != _val) && ('string' != (typeof _val))) ) {
                 throw new Error('invalid parameter');
             }
             if (true === this.target.isPushed()) {

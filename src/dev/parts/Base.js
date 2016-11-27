@@ -215,33 +215,42 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
     
     setVisible (flg, eff) {
         try  {
-        
-return;
-//            var p_eff = eff || null;
-//            
-//            if ('boolean' != (typeof flg)) {
-//                throw new Error('invalid parameter');
-//            }
-//            
-//            if (null != p_eff) {
-//                if (false === flg) {
-//                    p_eff.start(this);
-//                } else {
-//                    p_eff.end(this);
-//                }
-//            } else {
-//                if (false === flg) {
-//                    $('#' + this.getId()).css('display', 'none');
-//                } else {
-//                    $('#' + this.getId()).css('display', '');
-//                }
-//                // set child visible
-//                for(var idx in this.child) {
-//                    if (true === this.child[idx][1]) {
-//                        this.child[idx][0].visible(flg,p_eff);
-//                    }
-//                }
-//            }
+            var _flg = (flg === undefined) ?  null : flg;
+            var _eff = (eff === undefined) ?  null : eff;
+            
+            if (null === _flg) {
+                throw new Error('invalid parameter');
+            }
+            
+            if ( ('boolean' != (typeof _flg)) ||
+                 ( (null != _eff) && ('object'  != (typeof _eff)) ) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            if (null != _eff) {
+                eff.setTarget(this);
+                eff.setCallback(function(prm) {
+                    try {
+                        if (true === prm[1]) {
+                            prm[0].setStyle('display', null);
+                        } else {
+                            prm[0].setStyle('display', 'none');
+                        }
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                },
+                [this.getVdom(),_flg]);
+                _eff.effect(_flg);
+            } else {
+                var vd = this.getVdom();
+                if (true === _flg) {
+                    vd.setStyle('display', null);
+                } else {
+                    vd.setStyle('display', 'none');
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

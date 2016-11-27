@@ -28,3 +28,6 @@ mofron.event.Base      = require('./event/Base.js');
 mofron.event.Click     = require('./event/Click.js');
 mofron.event.MouseOver = require('./event/MouseOver.js');
 
+/* effect */
+mofron.effect.Base     = require('./effect/Base.js');
+mofron.effect.Fade     = require('./effect/Fade.js');

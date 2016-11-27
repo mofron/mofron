@@ -76,6 +76,10 @@
 	mofron.event.Click = __webpack_require__(21);
 	mofron.event.MouseOver = __webpack_require__(22);
 
+	/* effect */
+	mofron.effect.Base = __webpack_require__(23);
+	mofron.effect.Fade = __webpack_require__(24);
+
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
@@ -144,6 +148,375 @@
 	        console.error(e.stack);
 	        throw new Error();
 	    }
+	};
+
+	mofron.util.camelMap = {
+	    "alignItems": "alignItems",
+	    "alignSelf": "alignSelf",
+	    "alignmentBaseline": "alignmentBaseline",
+	    "all": "all",
+	    "animation": "animation",
+	    "animationDelay": "animationDelay",
+	    "animationDirection": "animationDirection",
+	    "animationDuration": "animationDuration",
+	    "animationFillMode": "animationFillMode",
+	    "animationIterationCount": "animationIterationCount",
+	    "animationName": "animationName",
+	    "animationPlayState": "animationPlayState",
+	    "animationTimingFunction": "animationTimingFunction",
+	    "backfaceVisibility": "backfaceVisibility",
+	    "background": "background",
+	    "backgroundAttachment": "backgroundAttachment",
+	    "backgroundBlendMode": "backgroundBlendMode",
+	    "backgroundClip": "backgroundClip",
+	    "backgroundColor": "backgroundColor",
+	    "backgroundImage": "backgroundImage",
+	    "backgroundOrigin": "backgroundOrigin",
+	    "backgroundPosition": "backgroundPosition",
+	    "backgroundPositionX": "backgroundPositionX",
+	    "backgroundPositionY": "backgroundPositionY",
+	    "backgroundRepeat": "backgroundRepeat",
+	    "backgroundRepeatX": "backgroundRepeatX",
+	    "backgroundRepeatY": "backgroundRepeatY",
+	    "backgroundSize": "backgroundSize",
+	    "baselineShift": "baselineShift",
+	    "border": "border",
+	    "borderBottom": "borderBottom",
+	    "borderBottomColor": "borderBottomColor",
+	    "borderBottomLeftRadius": "borderBottomLeftRadius",
+	    "borderBottomRightRadius": "borderBottomRightRadius",
+	    "borderBottomStyle": "borderBottomStyle",
+	    "borderBottomWidth": "borderBottomWidth",
+	    "borderCollapse": "borderCollapse",
+	    "borderColor": "borderColor",
+	    "borderImage": "borderImage",
+	    "borderImageOutset": "borderImageOutset",
+	    "borderImageRepeat": "borderImageRepeat",
+	    "borderImageSlice": "borderImageSlice",
+	    "borderImageSource": "borderImageSource",
+	    "borderImageWidth": "borderImageWidth",
+	    "borderLeft": "borderLeft",
+	    "borderLeftColor": "borderLeftColor",
+	    "borderLeftStyle": "borderLeftStyle",
+	    "borderLeftWidth": "borderLeftWidth",
+	    "borderRadius": "borderRadius",
+	    "borderRight": "borderRight",
+	    "borderRightColor": "borderRightColor",
+	    "borderRightStyle": "borderRightStyle",
+	    "borderRightWidth": "borderRightWidth",
+	    "borderSpacing": "borderSpacing",
+	    "borderStyle": "borderStyle",
+	    "borderTop": "borderTop",
+	    "borderTopColor": "borderTopColor",
+	    "borderTopLeftRadius": "borderTopLeftRadius",
+	    "borderTopRightRadius": "borderTopRightRadius",
+	    "borderTopStyle": "borderTopStyle",
+	    "borderTopWidth": "borderTopWidth",
+	    "borderWidth": "borderWidth",
+	    "bottom": "bottom",
+	    "boxShadow": "boxShadow",
+	    "boxSizing": "boxSizing",
+	    "breakAfter": "breakAfter",
+	    "breakBefore": "breakBefore",
+	    "breakInside": "breakInside",
+	    "bufferedRendering": "bufferedRendering",
+	    "captionSide": "captionSide",
+	    "clear": "clear",
+	    "clip": "clip",
+	    "clipPath": "clipPath",
+	    "clipRule": "clipRule",
+	    "color": "color",
+	    "colorInterpolation": "colorInterpolation",
+	    "colorInterpolationFilters": "colorInterpolationFilters",
+	    "colorRendering": "colorRendering",
+	    "columnCount": "columnCount",
+	    "columnFill": "columnFill",
+	    "columnGap": "columnGap",
+	    "columnRule": "columnRule",
+	    "columnRuleColor": "columnRuleColor",
+	    "columnRuleStyle": "columnRuleStyle",
+	    "columnRuleWidth": "columnRuleWidth",
+	    "columnSpan": "columnSpan",
+	    "columnWidth": "columnWidth",
+	    "columns": "columns",
+	    "content": "content",
+	    "counterIncrement": "counterIncrement",
+	    "counterReset": "counterReset",
+	    "cursor": "cursor",
+	    "cx": "cx",
+	    "cy": "cy",
+	    "direction": "direction",
+	    "display": "display",
+	    "dominantBaseline": "dominantBaseline",
+	    "emptyCells": "emptyCells",
+	    "fill": "fill",
+	    "fillOpacity": "fillOpacity",
+	    "fillRule": "fillRule",
+	    "filter": "filter",
+	    "flex": "flex",
+	    "flexBasis": "flexBasis",
+	    "flexDirection": "flexDirection",
+	    "flexFlow": "flexFlow",
+	    "flexGrow": "flexGrow",
+	    "flexShrink": "flexShrink",
+	    "flexWrap": "flexWrap",
+	    "float": "float",
+	    "floodColor": "floodColor",
+	    "floodOpacity": "floodOpacity",
+	    "font": "font",
+	    "fontFamily": "fontFamily",
+	    "fontFeatureSettings": "fontFeatureSettings",
+	    "fontKerning": "fontKerning",
+	    "fontSize": "fontSize",
+	    "fontStretch": "fontStretch",
+	    "fontStyle": "fontStyle",
+	    "fontVariant": "fontVariant",
+	    "fontVariantLigatures": "fontVariantLigatures",
+	    "fontWeight": "fontWeight",
+	    "height": "height",
+	    "imageRendering": "imageRendering",
+	    "isolation": "isolation",
+	    "justifyContent": "justifyContent",
+	    "left": "left",
+	    "letterSpacing": "letterSpacing",
+	    "lightingColor": "lightingColor",
+	    "lineHeight": "lineHeight",
+	    "listStyle": "listStyle",
+	    "listStyleImage": "listStyleImage",
+	    "listStylePosition": "listStylePosition",
+	    "listStyleType": "listStyleType",
+	    "margin": "margin",
+	    "marginBottom": "marginBottom",
+	    "marginLeft": "marginLeft",
+	    "marginRight": "marginRight",
+	    "marginTop": "marginTop",
+	    "marker": "marker",
+	    "markerEnd": "markerEnd",
+	    "markerMid": "markerMid",
+	    "markerStart": "markerStart",
+	    "mask": "mask",
+	    "maskType": "maskType",
+	    "maxHeight": "maxHeight",
+	    "maxWidth": "maxWidth",
+	    "maxZoom": "maxZoom",
+	    "minHeight": "minHeight",
+	    "minWidth": "minWidth",
+	    "minZoom": "minZoom",
+	    "mixBlendMode": "mixBlendMode",
+	    "motion": "motion",
+	    "motionOffset": "motionOffset",
+	    "motionPath": "motionPath",
+	    "motionRotation": "motionRotation",
+	    "objectFit": "objectFit",
+	    "objectPosition": "objectPosition",
+	    "opacity": "opacity",
+	    "order": "order",
+	    "orientation": "orientation",
+	    "orphans": "orphans",
+	    "outline": "outline",
+	    "outlineColor": "outlineColor",
+	    "outlineOffset": "outlineOffset",
+	    "outlineStyle": "outlineStyle",
+	    "outlineWidth": "outlineWidth",
+	    "overflow": "overflow",
+	    "overflowWrap": "overflowWrap",
+	    "overflowX": "overflowX",
+	    "overflowY": "overflowY",
+	    "padding": "padding",
+	    "paddingBottom": "paddingBottom",
+	    "paddingLeft": "paddingLeft",
+	    "paddingRight": "paddingRight",
+	    "paddingTop": "paddingTop",
+	    "page": "page",
+	    "pageBreakAfter": "pageBreakAfter",
+	    "pageBreakBefore": "pageBreakBefore",
+	    "pageBreakInside": "pageBreakInside",
+	    "paintOrder": "paintOrder",
+	    "perspective": "perspective",
+	    "perspectiveOrigin": "perspectiveOrigin",
+	    "pointerEvents": "pointerEvents",
+	    "position": "position",
+	    "quotes": "quotes",
+	    "r": "r",
+	    "resize": "resize",
+	    "right": "right",
+	    "rx": "rx",
+	    "ry": "ry",
+	    "shapeImageThreshold": "shapeImageThreshold",
+	    "shapeMargin": "shapeMargin",
+	    "shapeOutside": "shapeOutside",
+	    "shapeRendering": "shapeRendering",
+	    "size": "size",
+	    "speak": "speak",
+	    "src": "src",
+	    "stopColor": "stopColor",
+	    "stopOpacity": "stopOpacity",
+	    "stroke": "stroke",
+	    "strokeDasharray": "strokeDasharray",
+	    "strokeDashoffset": "strokeDashoffset",
+	    "strokeLinecap": "strokeLinecap",
+	    "strokeLinejoin": "strokeLinejoin",
+	    "strokeMiterlimit": "strokeMiterlimit",
+	    "strokeOpacity": "strokeOpacity",
+	    "strokeWidth": "strokeWidth",
+	    "tabSize": "tabSize",
+	    "tableLayout": "tableLayout",
+	    "textAlign": "textAlign",
+	    "textAlignLast": "textAlignLast",
+	    "textAnchor": "textAnchor",
+	    "textCombineUpright": "textCombineUpright",
+	    "textDecoration": "textDecoration",
+	    "textIndent": "textIndent",
+	    "textOrientation": "textOrientation",
+	    "textOverflow": "textOverflow",
+	    "textRendering": "textRendering",
+	    "textShadow": "textShadow",
+	    "textTransform": "textTransform",
+	    "top": "top",
+	    "touchAction": "touchAction",
+	    "transform": "transform",
+	    "transformOrigin": "transformOrigin",
+	    "transformStyle": "transformStyle",
+	    "transition": "transition",
+	    "transitionDelay": "transitionDelay",
+	    "transitionDuration": "transitionDuration",
+	    "transitionProperty": "transitionProperty",
+	    "transitionTimingFunction": "transitionTimingFunction",
+	    "unicodeBidi": "unicodeBidi",
+	    "unicodeRange": "unicodeRange",
+	    "userZoom": "userZoom",
+	    "vectorEffect": "vectorEffect",
+	    "verticalAlign": "verticalAlign",
+	    "visibility": "visibility",
+	    "webkitAppRegion": "webkitAppRegion",
+	    "webkitAppearance": "webkitAppearance",
+	    "webkitBackgroundClip": "webkitBackgroundClip",
+	    "webkitBackgroundOrigin": "webkitBackgroundOrigin",
+	    "webkitBorderAfter": "webkitBorderAfter",
+	    "webkitBorderAfterColor": "webkitBorderAfterColor",
+	    "webkitBorderAfterStyle": "webkitBorderAfterStyle",
+	    "webkitBorderAfterWidth": "webkitBorderAfterWidth",
+	    "webkitBorderBefore": "webkitBorderBefore",
+	    "webkitBorderBeforeColor": "webkitBorderBeforeColor",
+	    "webkitBorderBeforeStyle": "webkitBorderBeforeStyle",
+	    "webkitBorderBeforeWidth": "webkitBorderBeforeWidth",
+	    "webkitBorderEnd": "webkitBorderEnd",
+	    "webkitBorderEndColor": "webkitBorderEndColor",
+	    "webkitBorderEndStyle": "webkitBorderEndStyle",
+	    "webkitBorderEndWidth": "webkitBorderEndWidth",
+	    "webkitBorderHorizontalSpacing": "webkitBorderHorizontalSpacing",
+	    "webkitBorderImage": "webkitBorderImage",
+	    "webkitBorderStart": "webkitBorderStart",
+	    "webkitBorderStartColor": "webkitBorderStartColor",
+	    "webkitBorderStartStyle": "webkitBorderStartStyle",
+	    "webkitBorderStartWidth": "webkitBorderStartWidth",
+	    "webkitBorderVerticalSpacing": "webkitBorderVerticalSpacing",
+	    "webkitBoxAlign": "webkitBoxAlign",
+	    "webkitBoxDecorationBreak": "webkitBoxDecorationBreak",
+	    "webkitBoxDirection": "webkitBoxDirection",
+	    "webkitBoxFlex": "webkitBoxFlex",
+	    "webkitBoxFlexGroup": "webkitBoxFlexGroup",
+	    "webkitBoxLines": "webkitBoxLines",
+	    "webkitBoxOrdinalGroup": "webkitBoxOrdinalGroup",
+	    "webkitBoxOrient": "webkitBoxOrient",
+	    "webkitBoxPack": "webkitBoxPack",
+	    "webkitBoxReflect": "webkitBoxReflect",
+	    "webkitClipPath": "webkitClipPath",
+	    "webkitColumnBreakAfter": "webkitColumnBreakAfter",
+	    "webkitColumnBreakBefore": "webkitColumnBreakBefore",
+	    "webkitColumnBreakInside": "webkitColumnBreakInside",
+	    "webkitFilter": "webkitFilter",
+	    "webkitFontSizeDelta": "webkitFontSizeDelta",
+	    "webkitFontSmoothing": "webkitFontSmoothing",
+	    "webkitHighlight": "webkitHighlight",
+	    "webkitHyphenateCharacter": "webkitHyphenateCharacter",
+	    "webkitLineBreak": "webkitLineBreak",
+	    "webkitLineClamp": "webkitLineClamp",
+	    "webkitLocale": "webkitLocale",
+	    "webkitLogicalHeight": "webkitLogicalHeight",
+	    "webkitLogicalWidth": "webkitLogicalWidth",
+	    "webkitMarginAfter": "webkitMarginAfter",
+	    "webkitMarginAfterCollapse": "webkitMarginAfterCollapse",
+	    "webkitMarginBefore": "webkitMarginBefore",
+	    "webkitMarginBeforeCollapse": "webkitMarginBeforeCollapse",
+	    "webkitMarginBottomCollapse": "webkitMarginBottomCollapse",
+	    "webkitMarginCollapse": "webkitMarginCollapse",
+	    "webkitMarginEnd": "webkitMarginEnd",
+	    "webkitMarginStart": "webkitMarginStart",
+	    "webkitMarginTopCollapse": "webkitMarginTopCollapse",
+	    "webkitMask": "webkitMask",
+	    "webkitMaskBoxImage": "webkitMaskBoxImage",
+	    "webkitMaskBoxImageOutset": "webkitMaskBoxImageOutset",
+	    "webkitMaskBoxImageRepeat": "webkitMaskBoxImageRepeat",
+	    "webkitMaskBoxImageSlice": "webkitMaskBoxImageSlice",
+	    "webkitMaskBoxImageSource": "webkitMaskBoxImageSource",
+	    "webkitMaskBoxImageWidth": "webkitMaskBoxImageWidth",
+	    "webkitMaskClip": "webkitMaskClip",
+	    "webkitMaskComposite": "webkitMaskComposite",
+	    "webkitMaskImage": "webkitMaskImage",
+	    "webkitMaskOrigin": "webkitMaskOrigin",
+	    "webkitMaskPosition": "webkitMaskPosition",
+	    "webkitMaskPositionX": "webkitMaskPositionX",
+	    "webkitMaskPositionY": "webkitMaskPositionY",
+	    "webkitMaskRepeat": "webkitMaskRepeat",
+	    "webkitMaskRepeatX": "webkitMaskRepeatX",
+	    "webkitMaskRepeatY": "webkitMaskRepeatY",
+	    "webkitMaskSize": "webkitMaskSize",
+	    "webkitMaxLogicalHeight": "webkitMaxLogicalHeight",
+	    "webkitMaxLogicalWidth": "webkitMaxLogicalWidth",
+	    "webkitMinLogicalHeight": "webkitMinLogicalHeight",
+	    "webkitMinLogicalWidth": "webkitMinLogicalWidth",
+	    "webkitPaddingAfter": "webkitPaddingAfter",
+	    "webkitPaddingBefore": "webkitPaddingBefore",
+	    "webkitPaddingEnd": "webkitPaddingEnd",
+	    "webkitPaddingStart": "webkitPaddingStart",
+	    "webkitPerspectiveOriginX": "webkitPerspectiveOriginX",
+	    "webkitPerspectiveOriginY": "webkitPerspectiveOriginY",
+	    "webkitPrintColorAdjust": "webkitPrintColorAdjust",
+	    "webkitRtlOrdering": "webkitRtlOrdering",
+	    "webkitRubyPosition": "webkitRubyPosition",
+	    "webkitTapHighlightColor": "webkitTapHighlightColor",
+	    "webkitTextCombine": "webkitTextCombine",
+	    "webkitTextDecorationsInEffect": "webkitTextDecorationsInEffect",
+	    "webkitTextEmphasis": "webkitTextEmphasis",
+	    "webkitTextEmphasisColor": "webkitTextEmphasisColor",
+	    "webkitTextEmphasisPosition": "webkitTextEmphasisPosition",
+	    "webkitTextEmphasisStyle": "webkitTextEmphasisStyle",
+	    "webkitTextFillColor": "webkitTextFillColor",
+	    "webkitTextOrientation": "webkitTextOrientation",
+	    "webkitTextSecurity": "webkitTextSecurity",
+	    "webkitTextStroke": "webkitTextStroke",
+	    "webkitTextStrokeColor": "webkitTextStrokeColor",
+	    "webkitTextStrokeWidth": "webkitTextStrokeWidth",
+	    "-webkit-transition": "webkitTransition",
+	    "webkitTransformOriginX": "webkitTransformOriginX",
+	    "webkitTransformOriginY": "webkitTransformOriginY",
+	    "webkitTransformOriginZ": "webkitTransformOriginZ",
+	    "webkitUserDrag": "webkitUserDrag",
+	    "webkitUserModify": "webkitUserModify",
+	    "webkitUserSelect": "webkitUserSelect",
+	    "webkitWritingMode": "webkitWritingMode",
+	    "whiteSpace": "whiteSpace",
+	    "widows": "widows",
+	    "width": "width",
+	    "willChange": "willChange",
+	    "wordBreak": "wordBreak",
+	    "wordSpacing": "wordSpacing",
+	    "wordWrap": "wordWrap",
+	    "writingMode": "writingMode",
+	    "x": "x",
+	    "y": "y",
+	    "zIndex": "zIndex",
+	    "zoom": "zoom",
+	    "cssText": "cssText",
+	    "length": "length",
+	    "parentRule": "parentRule",
+	    "cssFloat": "cssFloat",
+	    "item": "item",
+	    "getPropertyValue": "getPropertyValue",
+	    "getPropertyPriority": "getPropertyPriority",
+	    "setProperty": "setProperty",
+	    "removeProperty": "removeProperty"
 	};
 
 /***/ },
@@ -493,7 +866,9 @@
 	        key: 'set',
 	        value: function set(key, val) {
 	            try {
-	                if ('string' != typeof key || 'string' != typeof val) {
+	                var _val = val === undefined ? null : val;
+
+	                if ('string' != typeof key || null != _val && 'string' != typeof _val) {
 	                    throw new Error('invalid parameter');
 	                }
 	                if (true === this.target.isPushed()) {
@@ -815,33 +1190,40 @@
 	        key: 'setVisible',
 	        value: function setVisible(flg, eff) {
 	            try {
+	                var _flg = flg === undefined ? null : flg;
+	                var _eff = eff === undefined ? null : eff;
 
-	                return;
-	                //            var p_eff = eff || null;
-	                //            
-	                //            if ('boolean' != (typeof flg)) {
-	                //                throw new Error('invalid parameter');
-	                //            }
-	                //            
-	                //            if (null != p_eff) {
-	                //                if (false === flg) {
-	                //                    p_eff.start(this);
-	                //                } else {
-	                //                    p_eff.end(this);
-	                //                }
-	                //            } else {
-	                //                if (false === flg) {
-	                //                    $('#' + this.getId()).css('display', 'none');
-	                //                } else {
-	                //                    $('#' + this.getId()).css('display', '');
-	                //                }
-	                //                // set child visible
-	                //                for(var idx in this.child) {
-	                //                    if (true === this.child[idx][1]) {
-	                //                        this.child[idx][0].visible(flg,p_eff);
-	                //                    }
-	                //                }
-	                //            }
+	                if (null === _flg) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if ('boolean' != typeof _flg || null != _eff && 'object' != (typeof _eff === 'undefined' ? 'undefined' : _typeof(_eff))) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if (null != _eff) {
+	                    eff.setTarget(this);
+	                    eff.setCallback(function (prm) {
+	                        try {
+	                            if (true === prm[1]) {
+	                                prm[0].setStyle('display', null);
+	                            } else {
+	                                prm[0].setStyle('display', 'none');
+	                            }
+	                        } catch (e) {
+	                            console.error(e.stack);
+	                            throw e;
+	                        }
+	                    }, [this.getVdom(), _flg]);
+	                    _eff.effect(_flg);
+	                } else {
+	                    var vd = this.getVdom();
+	                    if (true === _flg) {
+	                        vd.setStyle('display', null);
+	                    } else {
+	                        vd.setStyle('display', 'none');
+	                    }
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2170,6 +2552,231 @@
 
 	    return _class;
 	}(mofron.event.Base);
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @file effect/Base.js
+	 */
+	module.exports = function () {
+	    function _class(tgt, spd) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _tgt = tgt === undefined ? null : tgt;
+	            this.target = null;
+	            if (null != _tgt) {
+	                this.setTarget(_tgt);
+	            }
+
+	            var _spd = spd === undefined ? null : spd;
+	            this.speed = 0.5;
+	            if (null != _spd) {
+	                this.setSpeed(_spd);
+	            }
+	            this.callback = new Array(null, null);
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	    }
+
+	    _createClass(_class, [{
+	        key: 'setTarget',
+	        value: function setTarget(tgt) {
+	            try {
+	                if ('object' != (typeof tgt === 'undefined' ? 'undefined' : _typeof(tgt))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.target = tgt;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'effect',
+	        value: function effect(flg) {
+	            try {
+	                var _flg = flg === undefined ? true : flg;
+	                var dom = this.target.getVdom();
+	                if (false === dom.isPushed()) {
+	                    throw new Error('target is not ready');
+	                }
+	                this.effect_func(_flg, dom);
+
+	                if (null != this.callback[0]) {
+	                    setTimeout(this.callback[0], 1000 * this.speed, this.callback[1]);
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'effect_func',
+	        value: function effect_func(flg, vd) {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setSpeed',
+	        value: function setSpeed(spd) {
+	            try {
+	                if ('number' != typeof spd) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.speed = spd;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setCallback',
+	        value: function setCallback(cbf, cbp) {
+	            try {
+	                var _cbp = cbp === undefined ? null : cbp;
+	                if ('function' != typeof cbf) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.callback[0] = cbf;
+
+	                if (null != _cbp) {
+	                    this.callback[1] = _cbp;
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}();
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	module.exports = function (_mofron$effect$Base) {
+	    _inherits(_class, _mofron$effect$Base);
+
+	    function _class(tgt, spd) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, tgt, spd));
+
+	            _this.exec = false;
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    _createClass(_class, [{
+	        key: 'effect_func',
+	        value: function effect_func(flg, vd) {
+	            try {
+	                if (false === this.exec) {
+	                    vd.setStyle('-webkit-transition', this.speed + 's all linear 0s');
+	                    vd.setStyle('-moz-transition', 'all ' + this.speed + 's');
+	                    vd.setStyle('-ms-transition', 'all ' + this.speed + 's');
+	                    vd.setStyle('-o-transition', 'all ' + this.speed + 's');
+	                    vd.setStyle('transtion', this.speed + 's all linear 0s');
+
+	                    if (true === flg) {
+	                        vd.setStyle('opacity', '0');
+	                    } else {
+	                        vd.setStyle('opacity', '1');
+	                    }
+	                }
+
+	                var disp = vd.getStyle('display');
+	                if ('none' == disp) {
+	                    vd.setStyle('display', null);
+	                }
+
+	                setTimeout(function (prm) {
+	                    if (true === prm[1]) {
+	                        prm[0].setStyle('opacity', '1');
+	                    } else {
+	                        prm[0].setStyle('opacity', '0');
+	                    }
+	                }, 200, [vd, flg]);
+	                //if (true === flg) {
+	                //    vd.setStyle('opacity', '1');
+	                //} else {
+	                //    vd.setStyle('opacity', '0');
+	                //}
+
+	                //var tgt_dom = document.querySelector('#' + this.target.getVdom().getId());
+	                //if (true === flg) {
+	                //    tgt_dom.classList.add('mofron-effect-fadein');
+	                //    tgt_dom.classList.remove('mofron-effect-fadeout');
+	                //} else {
+	                //    tgt_dom.classList.remove('mofron-effect-fadein');
+	                //    tgt_dom.classList.add('mofron-effect-fadeout');
+	                //}
+
+
+	                this.exec = true;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getStyleTag',
+	        value: function getStyleTag() {
+	            try {
+	                var ret_val = '<style>';
+
+	                ret_val += '.mofron-effect-fadein {';
+	                ret_val += 'opacity:1;';
+	                ret_val += '}';
+
+	                ret_val += '.mofron-effect-fadeout {';
+	                ret_val += 'opacity:0;';
+	                ret_val += '}';
+
+	                ret_val += '</style>';
+	                return ret_val;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.effect.Base);
+
+	mofron.effect.fade_exec = false;
 
 /***/ }
 /******/ ]);
