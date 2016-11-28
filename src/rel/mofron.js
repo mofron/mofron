@@ -46,8 +46,12 @@
 
 	'use strict';
 
+	if (typeof mofron != "undefined") {
+	    console.error('mofron is already defined');
+	}
+
 	__webpack_require__(1);
-	//require('expose?$!jquery');
+
 	/* util */
 	__webpack_require__(3);
 	mofron.util.Vdom = __webpack_require__(4);
@@ -63,22 +67,21 @@
 	mofron.parts.Frame = __webpack_require__(12);
 	mofron.parts.Image = __webpack_require__(13);
 	mofron.parts.Loading = __webpack_require__(14);
-	__webpack_require__(15);
 
 	/* Layout */
-	mofron.layout.Base = __webpack_require__(16);
-	mofron.layout.Horizon = __webpack_require__(17);
-	mofron.layout.HorizCenter = __webpack_require__(18);
-	mofron.layout.VertiCenter = __webpack_require__(19);
+	mofron.layout.Base = __webpack_require__(15);
+	mofron.layout.Horizon = __webpack_require__(16);
+	mofron.layout.HorizCenter = __webpack_require__(17);
+	mofron.layout.VertiCenter = __webpack_require__(18);
 
 	/* Event */
-	mofron.event.Base = __webpack_require__(20);
-	mofron.event.Click = __webpack_require__(21);
-	mofron.event.MouseOver = __webpack_require__(22);
+	mofron.event.Base = __webpack_require__(19);
+	mofron.event.Click = __webpack_require__(20);
+	mofron.event.MouseOver = __webpack_require__(21);
 
 	/* effect */
-	mofron.effect.Base = __webpack_require__(23);
-	mofron.effect.Fade = __webpack_require__(24);
+	mofron.effect.Base = __webpack_require__(22);
+	mofron.effect.Fade = __webpack_require__(23);
 
 /***/ },
 /* 1 */
@@ -299,8 +302,8 @@
 	    "maxHeight": "maxHeight",
 	    "maxWidth": "maxWidth",
 	    "maxZoom": "maxZoom",
-	    "minHeight": "minHeight",
-	    "minWidth": "minWidth",
+	    "min-height": "minHeight",
+	    "min-width": "minWidth",
 	    "minZoom": "minZoom",
 	    "mixBlendMode": "mixBlendMode",
 	    "motion": "motion",
@@ -381,8 +384,8 @@
 	    "transitionDelay": "transitionDelay",
 	    "transitionDuration": "transitionDuration",
 	    "transitionProperty": "transitionProperty",
-	    "transitionTimingFunction": "transitionTimingFunction",
-	    "unicodeBidi": "unicodeBidi",
+	    "transition-timing-function": "transitionTimingFunction",
+	    "unicode-bidi": "unicodeBidi",
 	    "unicodeRange": "unicodeRange",
 	    "userZoom": "userZoom",
 	    "vectorEffect": "vectorEffect",
@@ -546,7 +549,7 @@
 	            }
 	            this.id = null;
 	            this.tag = tag;
-	            this.clname = null;
+	            this.clname = new Array();
 	            this.parent = null;
 	            this.child = new Array();
 	            this.style = new mofron.util.Style(this);
@@ -652,6 +655,19 @@
 	            }
 	        }
 	    }, {
+	        key: 'addClname',
+	        value: function addClname(name) {
+	            try {
+	                if ('string' != typeof name) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.clname.push(name);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'setText',
 	        value: function setText(txt) {
 	            try {
@@ -679,14 +695,22 @@
 	                    ret_val += 'id="' + this.getId() + '" ';
 
 	                    /* set class attribute:*/
-	                    if (null != this.clname) {
-	                        ret_val += 'class="' + this.clname + '" ';
+	                    var clname_str = 'class="';
+	                    for (var idx in this.clname) {
+	                        clname_str += this.clname[idx] + ' ';
+	                    }
+	                    clname_str += '"';
+	                    if ('class=""' != clname_str) {
+	                        ret_val += clname_str;
 	                    }
 
 	                    /* set style attribute */
 	                    var style_conts = this.style.get();
 	                    var style = 'style="';
 	                    for (var key in style_conts) {
+	                        if (null === style_conts[key]) {
+	                            continue;
+	                        }
 	                        style += key + ':' + style_conts[key] + ';';
 	                    }
 	                    style += '"';
@@ -985,7 +1009,6 @@
 	            this.layout = new Array();
 	            //this.effect    = new Array();
 	            this.vdom = new mofron.util.Vdom('div');
-	            this.init_flg = false;
 	            this.state = null;
 	            this.initContents(this.vdom, _prm);
 	        } catch (e) {
@@ -1023,7 +1046,7 @@
 	                var _disp = disp === undefined ? true : disp;
 	                chd.parent = this;
 	                this.child.push(chd);
-	                if (true === this.init_flg) {
+	                if ('inited' === this.state) {
 	                    chd.init(_disp);
 	                    //                for(var idx in this.layout) {
 	                    //                    this.layout[idx].layout(chd);
@@ -1098,7 +1121,7 @@
 	                }
 	                this.event.push(evt);
 	                evt.setTarget(this);
-	                if (true === this.init_flg) {
+	                if ('inited' === this.state) {
 	                    evt.event();
 	                }
 	            } catch (e) {
@@ -1115,9 +1138,10 @@
 	                }
 	                this.layout.push(lo);
 	                lo.setTarget(this);
-	                //if (true === this.init_flg) {
-	                //    lo.layout();
-	                //}
+
+	                if ('inited' === this.state) {
+	                    lo.layout();
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1135,7 +1159,7 @@
 	        value: function init(disp) {
 	            try {
 
-	                if (true === this.init_flg) {
+	                if ('inited' === this.state) {
 	                    throw new Error('detect duplicate init');
 	                }
 	                this.state = 'init';
@@ -1171,7 +1195,6 @@
 	                    this.child[idx].init(_disp);
 	                }
 
-	                this.init_flg = true;
 	                this.state = "inited";
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1466,9 +1489,9 @@
 	        value: function initContents(vd, prm) {
 	            try {
 	                vd.addChild(new mofron.util.Vdom('button'));
+	                this.style('cursor', 'pointer');
 	                this.width(50);
 	                this.height(25);
-
 	                //this.style('display'        , 'flex');
 	                //this.style('align-items'    , 'center');
 	                //this.style('justify-content', 'center');
@@ -1505,7 +1528,7 @@
 	                if ('number' != typeof _val) {
 	                    throw new Error('invalid parameter');
 	                }
-	                btn.setStyle('width', val + 'px');
+	                btn.setStyle('width', _val + 'px');
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1523,7 +1546,7 @@
 	                if ('number' != typeof _val) {
 	                    throw new Error('invalid parameter');
 	                }
-	                btn.setStyle('height', val + 'px');
+	                btn.setStyle('height', _val + 'px');
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2084,69 +2107,6 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   TitleHeader.js
-	 * @brief  Simpale Page Title Header
-	 * @author simpart
-	 */
-
-	mofron.parts.TitleHeader = function (_mofron$parts$Header) {
-	    _inherits(_class, _mofron$parts$Header);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'initContents', this).call(this, vd, prm);
-
-	                if ('string' != typeof prm) {
-	                    throw new Error('invalid parameter type');
-	                }
-
-	                var title = new mofron.parts.Text(prm);
-	                title.size(35);
-	                //title.setLink('./');
-	                //title.auto_color = true;
-	                title.style('margin-left', '20px');
-
-	                var conts = this.vdom.getChild(0);
-	                conts.setStyle('display', 'flex');
-	                conts.setStyle('align-items', 'center');
-
-	                this.addChild(title);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Header);
-	/* end of file */
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
@@ -2197,7 +2157,7 @@
 	}();
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2252,7 +2212,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2308,7 +2268,7 @@
 	/* end of file */
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2365,7 +2325,7 @@
 	/* end of file */
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2439,7 +2399,7 @@
 	/* end of file */
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2497,7 +2457,7 @@
 	/* end of file */
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2554,7 +2514,7 @@
 	}(mofron.event.Base);
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2668,7 +2628,7 @@
 	}();
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';

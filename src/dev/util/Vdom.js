@@ -11,7 +11,7 @@ module.exports = class {
             }
             this.id         = null;
             this.tag        = tag;
-            this.clname     = null;
+            this.clname     = new Array();
             this.parent     = null;
             this.child      = new Array();
             this.style      = new mofron.util.Style(this);
@@ -110,6 +110,18 @@ module.exports = class {
         }
     }
     
+    addClname(name) {
+        try {
+            if ('string' != (typeof name)) {
+                throw new Error('invalid parameter');
+            }
+            this.clname.push(name);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     setText (txt) {
         try {
             if ('string' != (typeof txt)) {
@@ -135,14 +147,22 @@ module.exports = class {
                 ret_val += 'id="'+ this.getId() +'" ';
                 
                 /* set class attribute:*/
-                if (null != this.clname) {
-                    ret_val += 'class="' + this.clname +'" ';
+                var clname_str = 'class="';
+                for (var idx in this.clname) {
+                    clname_str += this.clname[idx] + ' ';
+                }
+                clname_str += '"';
+                if ('class=""' != clname_str) {
+                    ret_val += clname_str;
                 }
                 
                 /* set style attribute */
                 var style_conts = this.style.get();
                 var style = 'style="';
                 for(var key in style_conts) {
+                    if (null === style_conts[key]) {
+                        continue;
+                    }
                     style += key + ':'+ style_conts[key] + ';';
                 }
                 style += '"';

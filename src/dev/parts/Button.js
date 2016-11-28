@@ -35,9 +35,9 @@ module.exports = class extends mofron.parts.Base {
     initContents (vd, prm) {
         try {
             vd.addChild(new mofron.util.Vdom('button'));
+            this.style('cursor', 'pointer');
             this.width(50);
             this.height(25);
-            
             //this.style('display'        , 'flex');
             //this.style('align-items'    , 'center');
             //this.style('justify-content', 'center');
@@ -73,7 +73,7 @@ module.exports = class extends mofron.parts.Base {
             if ('number' != (typeof _val)) {
                 throw new Error('invalid parameter');
             }
-            btn.setStyle('width', val + 'px');
+            btn.setStyle('width', _val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -90,7 +90,7 @@ module.exports = class extends mofron.parts.Base {
             if ('number' != (typeof _val)) {
                 throw new Error('invalid parameter');
             }
-            btn.setStyle('height', val + 'px');
+            btn.setStyle('height', _val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;

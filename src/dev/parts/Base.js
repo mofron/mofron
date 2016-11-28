@@ -14,7 +14,6 @@ module.exports = class {
             this.layout    = new Array();
             //this.effect    = new Array();
             this.vdom      = new mofron.util.Vdom('div');
-            this.init_flg  = false;
             this.state     = null;
             this.initContents(this.vdom, _prm);
         } catch (e) {
@@ -48,7 +47,7 @@ module.exports = class {
             var _disp = (disp === undefined) ? true : disp;
             chd.parent = this;
             this.child.push(chd);
-            if (true === this.init_flg) {
+            if ('inited' === this.state) {
                 chd.init(_disp);
 //                for(var idx in this.layout) {
 //                    this.layout[idx].layout(chd);
@@ -122,7 +121,7 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
             }
             this.event.push(evt);
             evt.setTarget(this);
-            if (true === this.init_flg) {
+            if ('inited' === this.state) {
                 evt.event();
             }
         } catch (e) {
@@ -140,9 +139,10 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
             }
             this.layout.push(lo);
             lo.setTarget(this);
-            //if (true === this.init_flg) {
-            //    lo.layout();
-            //}
+            
+            if ('inited' === this.state) {
+                lo.layout();
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -157,7 +157,7 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
     init (disp) {
         try {
             
-            if (true === this.init_flg) {
+            if ('inited' === this.state) {
                 throw new Error('detect duplicate init');
             }
             this.state = 'init';
@@ -196,7 +196,6 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
                 this.child[idx].init(_disp);
             }
             
-            this.init_flg = true;
             this.state    = "inited";
         } catch (e) {
             console.error(e.stack);
