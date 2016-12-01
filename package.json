@@ -1,0 +1,22 @@
+{
+  "name": "mofron",
+  "version": "0.0.1",
+  "description": "javascript front-end framework",
+  "main": "./src/rel/mofron.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simpart/mofron.git"
+  },
+  "keywords": [
+    "mofron"
+  ],
+  "author": "sipart",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/simpart/mofron/issues"
+  },
+  "homepage": "https://github.com/simpart/mofron#readme"
+}

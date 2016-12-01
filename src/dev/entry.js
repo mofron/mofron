@@ -9,16 +9,24 @@ require('./util/func.js');
 mofron.util.Vdom  = require('./util/Vdom.js');
 mofron.util.Style = require('./util/Style.js');
 mofron.util.Color = require('./util/Color.js');
+mofron.util.Font  = require('./util/Font.js');
+(function() {
+    var theme = require('./util/Theme.js');
+    mofron.util.theme = new theme();
+}());
+
     
 /* UI Parts */
-mofron.parts.Base      = require('./parts/Base.js');
-mofron.parts.Text      = require('./parts/Text.js');
-mofron.parts.Button    = require('./parts/Button.js');
-mofron.parts.InputText = require('./parts/InputText.js');
-mofron.parts.Header    = require('./parts/Header.js');
-mofron.parts.Frame     = require('./parts/Frame.js');
-mofron.parts.Image     = require('./parts/Image.js');
-mofron.parts.Loading   = require('./parts/Loading.js');
+mofron.parts.Base       = require('./parts/Base.js');
+mofron.parts.Text       = require('./parts/Text.js');
+mofron.parts.Button     = require('./parts/Button.js');
+mofron.parts.InputText  = require('./parts/InputText.js');
+mofron.parts.Header     = require('./parts/Header.js');
+mofron.parts.Frame      = require('./parts/Frame.js');
+mofron.parts.Image      = require('./parts/Image.js');
+mofron.parts.Loading    = require('./parts/Loading.js');
+mofron.parts.Heading    = require('./parts/Heading.js');
+mofron.parts.Background = require('./parts/Background.js');
 
 /* Layout */
 mofron.layout.Base        = require('./layout/Base.js');

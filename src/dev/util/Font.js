@@ -1,9 +1,12 @@
 /**
  * @file  Font.js
  */
-mofron.other.Font = class {
+module.exports = class {
     constructor (fm) {
         try {
+            if ('string' != (typeof fm)) {
+                throw new Error('invalid parameter');
+            }
             this.family = fm;
         } catch (e) {
             console.error(e.stack);
@@ -13,12 +16,10 @@ mofron.other.Font = class {
     
     font (tgt) {
         try {
-            var style = new mofron.other.Styles(tgt, ' div');
-            style.style('font-family', this.family);
+            tgt.style('font-family', this.family);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

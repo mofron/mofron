@@ -3,15 +3,24 @@
  * @author simpart
  */
 
-mofron.parts.Background = class extends mofron.parts.Base {
+module.exports = class extends mofron.parts.Base {
     
-    initConts (disp) {
+    initContents (vd, prm) {
         try {
-            super.initConts(disp);
-            var style = new mofron.other.Styles(this);
-            style.style('height'    , '100%');
-            style.style('width'     , '100%');
-            style.style('position'  , 'fixed');
+            var div = new mofron.util.Vdom('div');
+            div.setStyle('height'    , '100%');
+            div.setStyle('width'     , '100%');
+            div.setStyle('position'  , 'fixed');
+            vd.addChild(div);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getTarget () {
+        try {
+            return this.getVdom().getChild(0);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -20,8 +29,8 @@ mofron.parts.Background = class extends mofron.parts.Base {
     
     setColor(clr) {
         try {
-            var style = new mofron.other.Styles(this);
-            style.style('background'    , clr.getStyle ());
+            //var style = new mofron.other.Styles(this);
+            //style.style('background'    , clr.getStyle ());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -30,12 +39,11 @@ mofron.parts.Background = class extends mofron.parts.Base {
     
     setShadow(val) {
         try {
-            var style = new mofron.other.Styles(this);
-            style.style('box-shadow'    , '0px '+ val/2 + 'px '+ val +'px '+ '0px gray');
+            //var style = new mofron.other.Styles(this);
+            //style.style('box-shadow'    , '0px '+ val/2 + 'px '+ val +'px '+ '0px gray');
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

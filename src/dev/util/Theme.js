@@ -1,8 +1,8 @@
 /**
  * @file Theme.js
- *
+ * @attention this source is GPLv3 license 
  */
-mofron.other.Theme = class {
+module.exports = class {
     constructor () {
         try {
             this.colors = new Array(
@@ -17,27 +17,14 @@ mofron.other.Theme = class {
         }
     }
     
-    setMainColor (col) {
+    setColor (col, idx) {
         try {
-            this.colors[0] = col;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setScndColor (col) {
-        try {
-            this.colors[1] = col;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setThrdColor (col) {
-        try {
-            this.colors[2] = col;
+            var _idx = (idx === undefined) ? 0 : idx;
+            if ( ('object' != (typeof col)) ||
+                 ('number' != (typeof _idx)) ) {
+                throw new Error('invalid parameter');
+            }
+            this.colors[_idx] = col;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -46,6 +33,9 @@ mofron.other.Theme = class {
     
     setFont(ft) {
         try {
+            if ('object' != (typeof ft)) {
+                throw new Error('invalid parameter');
+            }
             this.font = ft;
         } catch (e) {
             console.error(e.stack);
