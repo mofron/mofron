@@ -6,16 +6,6 @@
 
 module.exports = class extends mofron.parts.Base {
     
-//    constructor () {
-//        try {
-//            super();
-//            this.setSize (100, 100);
-//        } catch (e) {
-//            console.error(e.stack);
-//            throw e;
-//        }
-//    }
-    
     getTarget () {
         try {
             return this.vdom.getChild(0);

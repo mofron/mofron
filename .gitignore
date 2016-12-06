@@ -1,6 +1,6 @@
 *.swp
 build.sh
+dev_build.sh
 /src/node_modules/
 /src/package.json
-/src/webpack.config.*
-/src/webpack.config.js
+webpack.config.*

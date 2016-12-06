@@ -2,10 +2,19 @@
  * @file Margin.js
  */
 
-mofron.layout.Margin = class extends mofron.layout.Base {
+module.exports = class extends mofron.layout.Base {
     constructor (tp,v) {
         try {
             super();
+            if ( ('string' != (typeof tp)) ||
+                 ( (''       != tp) && 
+                   ('top'    != tp) &&
+                   ('right'  != tp) && 
+                   ('bottom' != tp) && 
+                   ('left'   != tp) )      ||
+                 ('number' != (typeof v)) ) {
+                throw new Error('invalid parameter');
+            }
             this.type = tp;
             this.val  = v;
         } catch (e) {
@@ -14,19 +23,29 @@ mofron.layout.Margin = class extends mofron.layout.Base {
         }
     }
     
-    layout (tgt_chd) {
+    layoutFunc (idx, tgt) {
         try {
-            super.layout();
-            var style = new mofron.other.Styles(tgt_chd);
             var mg = 'margin';
-            if (null !== this.type) {
+            if ('' !== this.type) {
                 mg += '-' + this.type;
             }
-            style.style(mg  , this.val);
+            tgt.getVdom().setStyle(mg, this.val + 'px');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    value (val) {
+        try {
+            var _val = (val === undefined) ? null : val;
+            if (null === _val) {
+                return this.val;
+            }
+            this.val = _val;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-/* end of file */

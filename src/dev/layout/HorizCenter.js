@@ -27,4 +27,3 @@ module.exports = class extends mofron.layout.Base {
         }
     }
 }
-/* end of file */

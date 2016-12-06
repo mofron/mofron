@@ -42,16 +42,17 @@ module.exports = class {
         }
     }
     
-    addChild (chd,disp) {
+    addChild (chd,disp,tgt) {
         try {
-            var _disp = (disp === undefined) ? true : disp;
+            var _disp = (disp === undefined) ? true  : disp;
+            var _tgt  = (tgt === undefined) ?  null : tgt;
             chd.parent = this;
             this.child.push(chd);
             if ('inited' === this.state) {
                 chd.init(_disp);
-//                for(var idx in this.layout) {
-//                    this.layout[idx].layout(chd);
-//                }
+                for(var idx in this.layout) {
+                    this.layout[idx].layout();
+                }
             }
             
             /* set initial display of child */
@@ -61,9 +62,11 @@ module.exports = class {
             }
             
             /* set to target vdom */
-            var chd_tgt  = this.getTarget();
-console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
-            chd_tgt.addChild(chd_vdom);
+            if (null === _tgt) {
+                this.getTarget().addChild(chd_vdom);
+            } else {
+                _tgt.addChild(chd_vdom);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -149,6 +152,24 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
         }
     }
     
+    getLayout (idx) {
+        try {
+            var _idx = (idx === undefined) ? null : idx;
+            if (null === _idx) {
+                return this.layout;
+            }
+            
+            if (('number' !== (typeof _idx)) ||
+                (0 > _idx) || (this.layout.length <= _idx)) {
+                return null;
+            }
+            return this.layout[_idx];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * create parts to DOM
      * 
@@ -205,7 +226,6 @@ console.log(chd_tgt.getId() + ' add child -> ' + chd_vdom.getId());
     
     initContents(vd, prm) {
         try {
-            
         } catch (e) {
             console.error(e.stack);
             throw e;

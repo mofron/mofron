@@ -21,17 +21,27 @@ module.exports = class extends mofron.parts.Base {
         }
     }
     
+    getTarget() {
+        try {
+            return this.vdom.getChild(0);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     initContents (vd, prm) {
         try {
-            var frame = new mofron.parts.Frame();
-            frame.style('width', '100%');
-            frame.style('height', null);
-            this.addChild(frame);
+            // var frame = new mofron.parts.Frame();
+            //frame.style('width', '100%');
+            //frame.style('height', null);
+            //this.addChild(frame);
             
             var conts = new mofron.util.Vdom('h' + prm[1]);
             conts.setStyle('margin', '0px');
             conts.setText(prm[0]);
-            frame.getTarget().addChild(conts);
+            //frame.getTarget().addChild(conts);
+            vd.addChild(conts);
             
             //var style = new mofron.other.Styles(this, ' div');
             //style.style('width'  , '100%');
@@ -46,6 +56,22 @@ module.exports = class extends mofron.parts.Base {
             //ttl_style.style('margin-left'  , '20px');
             //this.addChild(this.title,disp);
             
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    marginLeft (val) {
+        try {
+            var _val = (val === undefined) ? null : val;
+            if (null === _val) {
+                return this.getTarget().getStyle('margin-left');
+            }
+            if ('number' !== (typeof _val)) {
+                throw new Error('invalid parameter');
+            }
+            this.style('margin-left', val + 'px');
         } catch (e) {
             console.error(e.stack);
             throw e;

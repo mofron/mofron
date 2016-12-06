@@ -22,13 +22,12 @@ module.exports = class extends mofron.parts.Base {
             this.height(50);
             
             
-            //if (null !== this.theme.colors[0]) {
-            //    conts_style.style(
-            //        'background',
-            //        this.theme.colors[0].getStyle(),
-            //        ' .conts'
-            //    );
-            //}
+            if ( (undefined != mofron.util.theme) && (null !== this.util.theme) ) {
+                var clr = moforn.util.theme.getColor(0);
+                if (null !== clr) {
+                    this.color(clr);
+                }
+            }
             
             this.addLayout(new mofron.layout.Horizon());
         } catch (e) {
@@ -39,7 +38,6 @@ module.exports = class extends mofron.parts.Base {
     
     getEventTgt () {
         try {
-console.log('get event target : ' + this.vdom.getChild(1).getId());
             return this.vdom;//.getChild(1);
         } catch (e) {
             console.error(e.stack);

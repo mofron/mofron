@@ -5,8 +5,8 @@
 module.exports = class {
     constructor () {
         try {
-            this.target  = null;
-            this.exe_cnt = -1;
+            this.target   = null;
+            this.exec_cnt = 0;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -27,7 +27,26 @@ module.exports = class {
     
     layout () {
         try {
-            console.warn('not implements');
+            if (null === this.target) {
+                throw new Error('target is null');
+            }
+            var tgt_chd = this.target.getChild();
+            for (var idx in tgt_chd) {
+                if (idx < this.exec_cnt) {
+                    continue;
+                }
+                this.layoutFunc(idx,tgt_chd[idx]);
+                this.exec_cnt++;
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    layoutFunc (idx, tgt) {
+        try {
+            console.warn('layout is not implements');
         } catch (e) {
             console.error(e.stack);
             throw e;

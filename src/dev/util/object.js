@@ -21,7 +21,7 @@
         layout    : {},
         event     : {},
         effect    : {},
-        template  : {},
+        tmpl      : {},
         util      : {},
         root      : new Array(),
     };

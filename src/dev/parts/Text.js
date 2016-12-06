@@ -12,7 +12,6 @@ module.exports = class extends mofron.parts.Base {
         try {
             super(txt);
             this.auto_color = false;
-            this.size(15);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -28,6 +27,8 @@ module.exports = class extends mofron.parts.Base {
             var text = new mofron.util.Vdom('div');
             text.setText(prm);
             vd.addChild(text);
+            this.size(15);
+
             //$('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
             //if ((null !== this.theme.colors[0]) &&
             //    (true === this.auto_color)) {

@@ -1,10 +1,10 @@
 /**
- * @file Base.js
+ * @file tmpl/Base.js
  */
-mofron.template.Base = class {
+module.exports = class {
     constructor () {
         try {
-            
+            this.test;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -20,4 +20,3 @@ mofron.template.Base = class {
         }
     }
 }
-/* end of file */
