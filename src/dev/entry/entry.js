@@ -6,10 +6,11 @@ require('expose?mofron!../util/object.js');
 
 /* util */
 require('../util/func.js');
-mofron.util.Vdom  = require('../util/Vdom.js');
-mofron.util.Style = require('../util/Style.js');
-mofron.util.Color = require('../util/Color.js');
-mofron.util.Font  = require('../util/Font.js');
+mofron.util.Vdom      = require('../util/Vdom.js');
+mofron.util.Style     = require('../util/Style.js');
+mofron.util.Color     = require('../util/Color.js');
+mofron.util.Font      = require('../util/Font.js');
+mofron.util.HeadConts = require('../util/HeadConts.js');
     
 /* UI Parts */
 mofron.parts.Base       = require('../parts/Base.js');

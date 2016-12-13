@@ -5,18 +5,6 @@
  */
 
 module.exports = class extends mofron.parts.Base {
-    /**
-     * initialize Header
-     */
-    constructor (txt) {
-        try {
-            super(txt);
-            this.auto_color = false;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
     
     initContents (vd, prm) {
         try {
@@ -28,23 +16,8 @@ module.exports = class extends mofron.parts.Base {
             text.setText(prm);
             vd.addChild(text);
             this.size(15);
-
-            //$('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
-            //if ((null !== this.theme.colors[0]) &&
-            //    (true === this.auto_color)) {
-            //    if (true === this.auto_color) {
-            //        var rgb = this.theme.colors[0].getRgba();
-            //        if (290 > (rgb[0]+rgb[1]+rgb[2])) {
-            //            var style = new mofron.other.Styles(this, ' div');
-            //            style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
-            //        }
-            //    }
-            //}
-            //
-            //if (null !== this.theme.font) {
-            //    this.theme.font.font(this);
-            //}
-            //style.style('font-size', this.size + 'px');
+            this.setTheme();
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -53,7 +26,14 @@ module.exports = class extends mofron.parts.Base {
     
     text (val) {
         try {
-            
+            var _val = (val === undefined) ? null : val;
+            if (null === _val) {
+                return this.getTarget().getText();
+            }
+            if ('string' !== (typeof _val)) {
+                throw new Error('invalid parameter');
+            }
+            this.getTarget().setText(_val);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -65,7 +45,7 @@ module.exports = class extends mofron.parts.Base {
             if ('number' != (typeof val)) {
                 throw new Error('invalid parameter');
             }
-            var _val = (val === undefined) ? null : val
+            var _val = (val === undefined) ? null : val;
             var txt  = this.getTarget();
             if (null === _val) {
                 return txt.getStyle('font-size');
@@ -77,7 +57,7 @@ module.exports = class extends mofron.parts.Base {
         }
     }
     
-    setAlign (tp) {
+    align (tp) {
         try {
             //var style = new mofron.other.Styles(this, ' .text-conts');
             //style.style('text-align', tp);
@@ -89,30 +69,51 @@ module.exports = class extends mofron.parts.Base {
     
     setLink (url,tab) {
         try {
-            //var _tab = tab || false;
-            //var style = new mofron.other.Styles(this, ' .text-conts');
-            //style.style('cursor', 'pointer');
-            //var click = new mofron.event.Click();
-            //if (false === _tab) {
-            //    click.setCbfunc (function(){
-            //        window.location.href = url;
-            //    });
-            //} else {
-            //    click.setCbfunc (function(){
-            //        window.open(url, '_blank');
-            //    });
-            //}
-            //this.addEvent(click);
+            var _tab = (tab === undefined) ? false : tab;
+            this.style('cursor', 'pointer');
+            var click = new mofron.event.Click();
+            if (false === _tab) {
+                click = new mofron.event.Click(function(){
+                    window.location.href = url;
+                });
+            } else {
+                click = new mofron.event.Click(function(){
+                    window.open(url, '_blank');
+                });
+            }
+            this.addEvent(click);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setColor(color) {
+    color (clr) {
         try {
-            //var style = new mofron.other.Styles(this, ' .text-conts');
-            //style.style('color', color.getStyle());
+            var _clr = (clr === undefined) ? null : clr;
+            if (null === _clr) {
+                return this.getStyleTgt().getStyle('color');
+            }
+            if ('object' !== (typeof _clr)) {
+                throw new Error('invalid parameter');
+            }
+            this.style('color', _clr.getStyle());
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    font (fnt) {
+        try {
+            var _fnt = (fnt === undefined) ? null : fnt;
+            if (null === _fnt) {
+                return this.getStyleTgt().getStyle('font-family');
+            }
+            if ('object' !== (typeof _fnt)) {
+                throw new Error('invalid parameter');
+            }
+            this.style('font-family', _fnt.getFontFamily());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -127,5 +128,14 @@ module.exports = class extends mofron.parts.Base {
             throw e;
         }
     }
+    
+    setTheme (idx) {
+        try {
+            var _idx = (idx === undefined) ? 0 : idx;
+            this.getTarget().addClname('mofron-theme-font' + _idx);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
-/* end of file */

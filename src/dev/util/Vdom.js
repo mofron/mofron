@@ -19,15 +19,13 @@ module.exports = class {
             this.text       = null;
             this.push_flg   = false;
             this.value      = null;
-////console.log(tag + ' -> ' + this.getId());
-            
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    chgTag(tag) {
+    chgTag (tag) {
         try {
             if ('string' != (typeof tag)) {
                 throw new Error('invalid parameter');
@@ -39,7 +37,7 @@ module.exports = class {
         }
     }
     
-    getId() {
+    getId () {
         try {
             if (null === this.id) {
                 this.id = mofron.util.getId();
@@ -127,7 +125,19 @@ module.exports = class {
             if ('string' != (typeof txt)) {
                 throw new Error('invalid parameter');
             }
+            if (true === this.isPushed()) {
+                this.getPushedDom().innerHTML = txt;
+            }
             this.text  = txt;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getText () {
+        try {
+            return this.text;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -185,7 +195,6 @@ module.exports = class {
             /* get child value */
             if (0 != this.child.length) {
                 for(var chd_idx in this.child) {
-                    //console.log(this.getId() + ' -> child value() -> ' + this.child[chd_idx].getValue());
                     ret_val += this.child[chd_idx].getValue();
                 }
             }
@@ -198,8 +207,6 @@ module.exports = class {
                 ret_val += '</'+ this.tag +'>';
             }
 
-//console.log(this.getId() + ' -> ' + ret_val);
-            //console.log(this.getId() + ' -> value() -> ' + ret_val);
             return ret_val;
         } catch (e) {
             console.error(e.stack);
@@ -209,7 +216,7 @@ module.exports = class {
     
     pushDom (tgt) {
         try {
-            if (true === this.push_flg) {
+            if (true === this.isPushed()) {
                 throw new Error('already pushed');
             }
             
@@ -218,14 +225,10 @@ module.exports = class {
             var tgt_dom = null;
             if (null === this.parent) {
                 tgt_dom = document.body;
-                console.log(this.getId() + ' -> push DOM to body');
             } else {
                 tgt_dom = document.querySelector('#' + this.parent.getId());
-                console.log(this.getId() + ' -> push DOM to ' + this.parent.getId());
             }
             tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
-//console.log('innerHTML : ' + tgt_dom.innerHTML);
-            //tgt_dom.innerHTML += this.getValue();
             
             this.setPushed();
         } catch (e) {
@@ -234,7 +237,7 @@ module.exports = class {
         }
     }
     
-    isPushed() {
+    isPushed () {
         try {
             return this.push_flg;
         } catch (e) {
@@ -294,6 +297,18 @@ module.exports = class {
                 throw new Error('invalid parameter');
             }
             return this.child[_idx];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getPushedDom () {
+        try {
+            if (false === this.isPushed()) {
+                throw new Error('invalid parameter');
+            }
+            return document.querySelector('#' + this.getId());
         } catch (e) {
             console.error(e.stack);
             throw e;

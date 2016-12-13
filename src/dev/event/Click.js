@@ -28,4 +28,3 @@ module.exports = class extends mofron.event.Base {
         }
     }
 }
-/* end of file */

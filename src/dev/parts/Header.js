@@ -8,28 +8,37 @@ module.exports = class extends mofron.parts.Base {
     
     initContents (vd, prm) {
         try {
+            /* set header style */
             var hdr_conts = new mofron.util.Vdom('div');
             hdr_conts.setStyle('width', '100%');
-            //hdr_conts.setStyle('float', 'left');
             hdr_conts.setStyle('border-bottom', 'solid 1px lightgray');
             hdr_conts.setStyle('position', 'fixed');
             vd.addChild(hdr_conts);
-            
             var hdr_pad = new mofron.util.Vdom('div');
-            //hdr_pad.setStyle('float', 'none');
             vd.addChild(hdr_pad);
             
+            /* set default height */
             this.height(50);
             
+            /* child parts is added at horizon layout */
+            this.addLayout(new mofron.layout.Horizon());
             
-            if ( (undefined != mofron.util.theme) && (null !== this.util.theme) ) {
-                var clr = moforn.util.theme.getColor(0);
+            this.setThemeColor();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setThemeColor () {
+        try {
+            if ( (undefined != mofron.util.theme) &&
+                 (null !== mofron.util.theme) ) {
+                var clr = mofron.util.theme.getColor(0);
                 if (null !== clr) {
                     this.color(clr);
                 }
             }
-            
-            this.addLayout(new mofron.layout.Horizon());
         } catch (e) {
             console.error(e.stack);
             throw e;

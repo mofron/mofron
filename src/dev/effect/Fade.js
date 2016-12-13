@@ -42,48 +42,10 @@ module.exports = class extends mofron.effect.Base {
                 200,
                 [vd,flg]
             );
-            //if (true === flg) {
-            //    vd.setStyle('opacity', '1');
-            //} else {
-            //    vd.setStyle('opacity', '0');
-            //}
-            
-            //var tgt_dom = document.querySelector('#' + this.target.getVdom().getId());
-            //if (true === flg) {
-            //    tgt_dom.classList.add('mofron-effect-fadein');
-            //    tgt_dom.classList.remove('mofron-effect-fadeout');
-            //} else {
-            //    tgt_dom.classList.remove('mofron-effect-fadein');
-            //    tgt_dom.classList.add('mofron-effect-fadeout');
-            //}
-            
-            
             this.exec = true;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    getStyleTag () {
-        try {
-            var ret_val = '<style>';
-            
-            ret_val    += '.mofron-effect-fadein {';
-            ret_val    +=     'opacity:1;';
-            ret_val    += '}';
-            
-            ret_val    += '.mofron-effect-fadeout {';
-            ret_val    +=     'opacity:0;';
-            ret_val    += '}';
-            
-            ret_val    += '</style>';
-            return ret_val;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
 }
-
-mofron.effect.fade_exec = false;

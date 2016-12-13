@@ -4,7 +4,7 @@
 module.exports = class {
     constructor () {
         try {
-            this.test;
+            this.base = new mofron.parts.Base();
         } catch (e) {
             console.error(e.stack);
             throw e;

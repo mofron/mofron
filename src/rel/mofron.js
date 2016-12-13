@@ -46,74 +46,65 @@
 
 	'use strict';
 
-	__webpack_require__(1);
-
-	(function () {
-	    var theme = __webpack_require__(29);
-	    mofron.util.theme = new theme();
-	})();
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	if (typeof mofron != "undefined") {
 	    console.error('mofron is already defined');
 	}
 
-	__webpack_require__(2);
+	__webpack_require__(1);
+
+	try {
+	    __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"ewar\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	} catch (e) {}
 
 	/* util */
+	__webpack_require__(3);
 	__webpack_require__(4);
 	mofron.util.Vdom = __webpack_require__(5);
 	mofron.util.Style = __webpack_require__(6);
 	mofron.util.Color = __webpack_require__(7);
 	mofron.util.Font = __webpack_require__(8);
-	//(function() {
-	//    var theme = require('../util/Theme.js');
-	//    mofron.util.theme = new theme();
-	//}());
-
+	mofron.util.HeadConts = __webpack_require__(9);
 
 	/* UI Parts */
-	mofron.parts.Base = __webpack_require__(9);
-	mofron.parts.Text = __webpack_require__(10);
-	mofron.parts.Button = __webpack_require__(11);
-	mofron.parts.InputText = __webpack_require__(12);
-	mofron.parts.Header = __webpack_require__(13);
-	mofron.parts.Frame = __webpack_require__(14);
-	mofron.parts.Image = __webpack_require__(15);
-	mofron.parts.Loading = __webpack_require__(16);
-	mofron.parts.Heading = __webpack_require__(17);
-	mofron.parts.Background = __webpack_require__(18);
+	mofron.parts.Base = __webpack_require__(10);
+	mofron.parts.Text = __webpack_require__(11);
+	mofron.parts.Button = __webpack_require__(12);
+	mofron.parts.InputText = __webpack_require__(13);
+	mofron.parts.Header = __webpack_require__(14);
+	mofron.parts.Frame = __webpack_require__(15);
+	mofron.parts.Image = __webpack_require__(16);
+	mofron.parts.Loading = __webpack_require__(17);
+	mofron.parts.Heading = __webpack_require__(18);
+	mofron.parts.Background = __webpack_require__(19);
 
 	/* Layout */
-	mofron.layout.Base = __webpack_require__(19);
-	mofron.layout.Horizon = __webpack_require__(20);
-	mofron.layout.HorizCenter = __webpack_require__(21);
-	mofron.layout.VertiCenter = __webpack_require__(22);
-	mofron.layout.Margin = __webpack_require__(23);
+	mofron.layout.Base = __webpack_require__(20);
+	mofron.layout.Horizon = __webpack_require__(21);
+	mofron.layout.HorizCenter = __webpack_require__(22);
+	mofron.layout.VertiCenter = __webpack_require__(23);
+	mofron.layout.Margin = __webpack_require__(24);
 
 	/* Event */
-	mofron.event.Base = __webpack_require__(24);
-	mofron.event.Click = __webpack_require__(25);
-	mofron.event.MouseOver = __webpack_require__(26);
+	mofron.event.Base = __webpack_require__(25);
+	mofron.event.Click = __webpack_require__(26);
+	mofron.event.MouseOver = __webpack_require__(27);
 
 	/* effect */
-	mofron.effect.Base = __webpack_require__(27);
-	mofron.effect.Fade = __webpack_require__(28);
+	mofron.effect.Base = __webpack_require__(28);
+	mofron.effect.Fade = __webpack_require__(29);
+
+	/* template */
+	mofron.tmpl.Base = __webpack_require__(30);
 
 /***/ },
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["mofron"] = __webpack_require__(3);
+	/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["mofron"] = __webpack_require__(2);
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -146,19 +137,25 @@
 	        effect: {},
 	        tmpl: {},
 	        util: {},
+	        theme: {},
 	        root: new Array()
 	    };
 	});
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
 
-	mofron.util.getId = function () {
+	/**
+	 * @file func.js
+	 */
+
+	mofron.util.getId = function (pf) {
 	    try {
-	        var ret_id = "aid_";
+	        var _pf = pf === undefined ? "aid" : pf;
+	        var ret_id = _pf + "-";
 	        var loop = 0;
 	        var val = 0;
 	        for (loop = 0; loop < 32; loop++) {
@@ -176,190 +173,190 @@
 	};
 
 	mofron.util.camelMap = {
-	    "alignItems": "alignItems",
-	    "alignSelf": "alignSelf",
-	    "alignmentBaseline": "alignmentBaseline",
+	    "align-items": "alignItems",
+	    "align-self": "alignSelf",
+	    "alignment-baseline": "alignmentBaseline",
 	    "all": "all",
 	    "animation": "animation",
-	    "animationDelay": "animationDelay",
-	    "animationDirection": "animationDirection",
-	    "animationDuration": "animationDuration",
-	    "animationFillMode": "animationFillMode",
-	    "animationIterationCount": "animationIterationCount",
-	    "animationName": "animationName",
-	    "animationPlayState": "animationPlayState",
-	    "animationTimingFunction": "animationTimingFunction",
-	    "backfaceVisibility": "backfaceVisibility",
+	    "animation-delay": "animationDelay",
+	    "animation-direction": "animationDirection",
+	    "animation-duration": "animationDuration",
+	    "animation-fillMode": "animationFillMode",
+	    "animation-iteration-count": "animationIterationCount",
+	    "animation-name": "animationName",
+	    "animation-play-state": "animationPlayState",
+	    "animation-timing-function": "animationTimingFunction",
+	    "backface-visibility": "backfaceVisibility",
 	    "background": "background",
-	    "backgroundAttachment": "backgroundAttachment",
-	    "backgroundBlendMode": "backgroundBlendMode",
-	    "backgroundClip": "backgroundClip",
-	    "backgroundColor": "backgroundColor",
-	    "backgroundImage": "backgroundImage",
-	    "backgroundOrigin": "backgroundOrigin",
-	    "backgroundPosition": "backgroundPosition",
-	    "backgroundPositionX": "backgroundPositionX",
-	    "backgroundPositionY": "backgroundPositionY",
-	    "backgroundRepeat": "backgroundRepeat",
-	    "backgroundRepeatX": "backgroundRepeatX",
-	    "backgroundRepeatY": "backgroundRepeatY",
-	    "backgroundSize": "backgroundSize",
-	    "baselineShift": "baselineShift",
+	    "background-attachment": "backgroundAttachment",
+	    "background-blend-mode": "backgroundBlendMode",
+	    "background-clip": "backgroundClip",
+	    "background-color": "backgroundColor",
+	    "background-image": "backgroundImage",
+	    "background-origin": "backgroundOrigin",
+	    "background-position": "backgroundPosition",
+	    "background-position-x": "backgroundPositionX",
+	    "background-position-y": "backgroundPositionY",
+	    "background-repeat": "backgroundRepeat",
+	    "background-repeat-x": "backgroundRepeatX",
+	    "background-repeat-y": "backgroundRepeatY",
+	    "background-size": "backgroundSize",
+	    "baseline-shift": "baselineShift",
 	    "border": "border",
-	    "borderBottom": "borderBottom",
-	    "borderBottomColor": "borderBottomColor",
-	    "borderBottomLeftRadius": "borderBottomLeftRadius",
-	    "borderBottomRightRadius": "borderBottomRightRadius",
-	    "borderBottomStyle": "borderBottomStyle",
-	    "borderBottomWidth": "borderBottomWidth",
-	    "borderCollapse": "borderCollapse",
-	    "borderColor": "borderColor",
-	    "borderImage": "borderImage",
-	    "borderImageOutset": "borderImageOutset",
-	    "borderImageRepeat": "borderImageRepeat",
-	    "borderImageSlice": "borderImageSlice",
-	    "borderImageSource": "borderImageSource",
-	    "borderImageWidth": "borderImageWidth",
-	    "borderLeft": "borderLeft",
-	    "borderLeftColor": "borderLeftColor",
-	    "borderLeftStyle": "borderLeftStyle",
-	    "borderLeftWidth": "borderLeftWidth",
-	    "borderRadius": "borderRadius",
-	    "borderRight": "borderRight",
-	    "borderRightColor": "borderRightColor",
-	    "borderRightStyle": "borderRightStyle",
-	    "borderRightWidth": "borderRightWidth",
-	    "borderSpacing": "borderSpacing",
-	    "borderStyle": "borderStyle",
-	    "borderTop": "borderTop",
-	    "borderTopColor": "borderTopColor",
-	    "borderTopLeftRadius": "borderTopLeftRadius",
-	    "borderTopRightRadius": "borderTopRightRadius",
-	    "borderTopStyle": "borderTopStyle",
-	    "borderTopWidth": "borderTopWidth",
-	    "borderWidth": "borderWidth",
+	    "border-bottom": "borderBottom",
+	    "border-bottom-color": "borderBottomColor",
+	    "border-bottom-left-radius": "borderBottomLeftRadius",
+	    "border-bottom-right-radius": "borderBottomRightRadius",
+	    "border-bottom-style": "borderBottomStyle",
+	    "border-bottom-width": "borderBottomWidth",
+	    "border-collapse": "borderCollapse",
+	    "border-color": "borderColor",
+	    "border-image": "borderImage",
+	    "border-image-outset": "borderImageOutset",
+	    "border-image-repeat": "borderImageRepeat",
+	    "border-image-slice": "borderImageSlice",
+	    "border-image-source": "borderImageSource",
+	    "border-image-width": "borderImageWidth",
+	    "border-left": "borderLeft",
+	    "border-left-color": "borderLeftColor",
+	    "border-left-style": "borderLeftStyle",
+	    "border-left-width": "borderLeftWidth",
+	    "border-radius": "borderRadius",
+	    "border-right": "borderRight",
+	    "border-right-color": "borderRightColor",
+	    "border-right-style": "borderRightStyle",
+	    "border-right-width": "borderRightWidth",
+	    "border-spacing": "borderSpacing",
+	    "border-style": "borderStyle",
+	    "border-top": "borderTop",
+	    "border-top-color": "borderTopColor",
+	    "border-top-leftRadius": "borderTopLeftRadius",
+	    "border-top-rightRadius": "borderTopRightRadius",
+	    "border-top-style": "borderTopStyle",
+	    "border-top-width": "borderTopWidth",
+	    "border-width": "borderWidth",
 	    "bottom": "bottom",
-	    "boxShadow": "boxShadow",
-	    "boxSizing": "boxSizing",
-	    "breakAfter": "breakAfter",
-	    "breakBefore": "breakBefore",
-	    "breakInside": "breakInside",
-	    "bufferedRendering": "bufferedRendering",
-	    "captionSide": "captionSide",
+	    "box-shadow": "boxShadow",
+	    "box-sizing": "boxSizing",
+	    "break-after": "breakAfter",
+	    "break-before": "breakBefore",
+	    "break-inside": "breakInside",
+	    "buffered-rendering": "bufferedRendering",
+	    "caption-side": "captionSide",
 	    "clear": "clear",
 	    "clip": "clip",
-	    "clipPath": "clipPath",
-	    "clipRule": "clipRule",
+	    "clip-path": "clipPath",
+	    "clip-rule": "clipRule",
 	    "color": "color",
-	    "colorInterpolation": "colorInterpolation",
-	    "colorInterpolationFilters": "colorInterpolationFilters",
-	    "colorRendering": "colorRendering",
-	    "columnCount": "columnCount",
-	    "columnFill": "columnFill",
-	    "columnGap": "columnGap",
-	    "columnRule": "columnRule",
-	    "columnRuleColor": "columnRuleColor",
-	    "columnRuleStyle": "columnRuleStyle",
-	    "columnRuleWidth": "columnRuleWidth",
-	    "columnSpan": "columnSpan",
-	    "columnWidth": "columnWidth",
+	    "color-interpolation": "colorInterpolation",
+	    "color-interpolation-filters": "colorInterpolationFilters",
+	    "color-rendering": "colorRendering",
+	    "column-count": "columnCount",
+	    "column-fill": "columnFill",
+	    "column-gap": "columnGap",
+	    "column-rule": "columnRule",
+	    "column-rule-color": "columnRuleColor",
+	    "column-rule-style": "columnRuleStyle",
+	    "column-rule-width": "columnRuleWidth",
+	    "column-span": "columnSpan",
+	    "column-width": "columnWidth",
 	    "columns": "columns",
 	    "content": "content",
-	    "counterIncrement": "counterIncrement",
-	    "counterReset": "counterReset",
+	    "counter-increment": "counterIncrement",
+	    "counter-reset": "counterReset",
 	    "cursor": "cursor",
 	    "cx": "cx",
 	    "cy": "cy",
 	    "direction": "direction",
 	    "display": "display",
-	    "dominantBaseline": "dominantBaseline",
-	    "emptyCells": "emptyCells",
+	    "dominant-baseline": "dominantBaseline",
+	    "empty-cells": "emptyCells",
 	    "fill": "fill",
-	    "fillOpacity": "fillOpacity",
-	    "fillRule": "fillRule",
+	    "fill-opacity": "fillOpacity",
+	    "fill-rule": "fillRule",
 	    "filter": "filter",
 	    "flex": "flex",
-	    "flexBasis": "flexBasis",
-	    "flexDirection": "flexDirection",
-	    "flexFlow": "flexFlow",
-	    "flexGrow": "flexGrow",
-	    "flexShrink": "flexShrink",
-	    "flexWrap": "flexWrap",
+	    "flex-basis": "flexBasis",
+	    "flex-direction": "flexDirection",
+	    "flex-flow": "flexFlow",
+	    "flex-grow": "flexGrow",
+	    "flex-shrink": "flexShrink",
+	    "flex-wrap": "flexWrap",
 	    "float": "float",
-	    "floodColor": "floodColor",
-	    "floodOpacity": "floodOpacity",
+	    "flood-color": "floodColor",
+	    "flood-opacity": "floodOpacity",
 	    "font": "font",
-	    "fontFamily": "fontFamily",
-	    "fontFeatureSettings": "fontFeatureSettings",
-	    "fontKerning": "fontKerning",
-	    "fontSize": "fontSize",
-	    "fontStretch": "fontStretch",
-	    "fontStyle": "fontStyle",
-	    "fontVariant": "fontVariant",
-	    "fontVariantLigatures": "fontVariantLigatures",
-	    "fontWeight": "fontWeight",
+	    "font-family": "fontFamily",
+	    "font-featureSettings": "fontFeatureSettings",
+	    "font-kerning": "fontKerning",
+	    "font-size": "fontSize",
+	    "font-stretch": "fontStretch",
+	    "font-style": "fontStyle",
+	    "font-variant": "fontVariant",
+	    "font-variant-ligatures": "fontVariantLigatures",
+	    "font-weight": "fontWeight",
 	    "height": "height",
-	    "imageRendering": "imageRendering",
+	    "image-rendering": "imageRendering",
 	    "isolation": "isolation",
-	    "justifyContent": "justifyContent",
+	    "justify-content": "justifyContent",
 	    "left": "left",
-	    "letterSpacing": "letterSpacing",
-	    "lightingColor": "lightingColor",
-	    "lineHeight": "lineHeight",
-	    "listStyle": "listStyle",
-	    "listStyleImage": "listStyleImage",
-	    "listStylePosition": "listStylePosition",
-	    "listStyleType": "listStyleType",
+	    "letter-spacing": "letterSpacing",
+	    "lighting-color": "lightingColor",
+	    "line-height": "lineHeight",
+	    "list-style": "listStyle",
+	    "list-style-image": "listStyleImage",
+	    "list-style-position": "listStylePosition",
+	    "list-style-type": "listStyleType",
 	    "margin": "margin",
-	    "marginBottom": "marginBottom",
-	    "marginLeft": "marginLeft",
-	    "marginRight": "marginRight",
-	    "marginTop": "marginTop",
+	    "margin-bottom": "marginBottom",
+	    "margin-left": "marginLeft",
+	    "margin-right": "marginRight",
+	    "margin-top": "marginTop",
 	    "marker": "marker",
-	    "markerEnd": "markerEnd",
-	    "markerMid": "markerMid",
-	    "markerStart": "markerStart",
+	    "marker-end": "markerEnd",
+	    "marker-mid": "markerMid",
+	    "marker-start": "markerStart",
 	    "mask": "mask",
-	    "maskType": "maskType",
-	    "maxHeight": "maxHeight",
-	    "maxWidth": "maxWidth",
-	    "maxZoom": "maxZoom",
+	    "mask-type": "maskType",
+	    "max-height": "maxHeight",
+	    "max-width": "maxWidth",
+	    "max-zoom": "maxZoom",
 	    "min-height": "minHeight",
 	    "min-width": "minWidth",
-	    "minZoom": "minZoom",
-	    "mixBlendMode": "mixBlendMode",
+	    "min-zoom": "minZoom",
+	    "mix-blend-mode": "mixBlendMode",
 	    "motion": "motion",
-	    "motionOffset": "motionOffset",
-	    "motionPath": "motionPath",
-	    "motionRotation": "motionRotation",
-	    "objectFit": "objectFit",
-	    "objectPosition": "objectPosition",
+	    "motion-offset": "motionOffset",
+	    "motion-path": "motionPath",
+	    "motion-rotation": "motionRotation",
+	    "object-fit": "objectFit",
+	    "object-position": "objectPosition",
 	    "opacity": "opacity",
 	    "order": "order",
 	    "orientation": "orientation",
 	    "orphans": "orphans",
 	    "outline": "outline",
-	    "outlineColor": "outlineColor",
-	    "outlineOffset": "outlineOffset",
-	    "outlineStyle": "outlineStyle",
-	    "outlineWidth": "outlineWidth",
+	    "outline-color": "outlineColor",
+	    "outline-offset": "outlineOffset",
+	    "outline-style": "outlineStyle",
+	    "outline-width": "outlineWidth",
 	    "overflow": "overflow",
-	    "overflowWrap": "overflowWrap",
-	    "overflowX": "overflowX",
-	    "overflowY": "overflowY",
+	    "overflow-wrap": "overflowWrap",
+	    "overflow-x": "overflowX",
+	    "overflow-y": "overflowY",
 	    "padding": "padding",
-	    "paddingBottom": "paddingBottom",
-	    "paddingLeft": "paddingLeft",
-	    "paddingRight": "paddingRight",
-	    "paddingTop": "paddingTop",
+	    "padding-bottom": "paddingBottom",
+	    "padding-left": "paddingLeft",
+	    "padding-right": "paddingRight",
+	    "padding-top": "paddingTop",
 	    "page": "page",
-	    "pageBreakAfter": "pageBreakAfter",
-	    "pageBreakBefore": "pageBreakBefore",
-	    "pageBreakInside": "pageBreakInside",
-	    "paintOrder": "paintOrder",
+	    "page-break-after": "pageBreakAfter",
+	    "page-break-before": "pageBreakBefore",
+	    "page-break-inside": "pageBreakInside",
+	    "paint-order": "paintOrder",
 	    "perspective": "perspective",
-	    "perspectiveOrigin": "perspectiveOrigin",
-	    "pointerEvents": "pointerEvents",
+	    "perspective-origin": "perspectiveOrigin",
+	    "pointer-events": "pointerEvents",
 	    "position": "position",
 	    "quotes": "quotes",
 	    "r": "r",
@@ -367,181 +364,217 @@
 	    "right": "right",
 	    "rx": "rx",
 	    "ry": "ry",
-	    "shapeImageThreshold": "shapeImageThreshold",
-	    "shapeMargin": "shapeMargin",
-	    "shapeOutside": "shapeOutside",
-	    "shapeRendering": "shapeRendering",
+	    "shape-image-threshold": "shapeImageThreshold",
+	    "shape-margin": "shapeMargin",
+	    "shape-outside": "shapeOutside",
+	    "shape-rendering": "shapeRendering",
 	    "size": "size",
 	    "speak": "speak",
 	    "src": "src",
-	    "stopColor": "stopColor",
-	    "stopOpacity": "stopOpacity",
+	    "stop-color": "stopColor",
+	    "stop-opacity": "stopOpacity",
 	    "stroke": "stroke",
-	    "strokeDasharray": "strokeDasharray",
-	    "strokeDashoffset": "strokeDashoffset",
-	    "strokeLinecap": "strokeLinecap",
-	    "strokeLinejoin": "strokeLinejoin",
-	    "strokeMiterlimit": "strokeMiterlimit",
-	    "strokeOpacity": "strokeOpacity",
-	    "strokeWidth": "strokeWidth",
-	    "tabSize": "tabSize",
-	    "tableLayout": "tableLayout",
-	    "textAlign": "textAlign",
-	    "textAlignLast": "textAlignLast",
-	    "textAnchor": "textAnchor",
-	    "textCombineUpright": "textCombineUpright",
-	    "textDecoration": "textDecoration",
-	    "textIndent": "textIndent",
-	    "textOrientation": "textOrientation",
-	    "textOverflow": "textOverflow",
-	    "textRendering": "textRendering",
-	    "textShadow": "textShadow",
-	    "textTransform": "textTransform",
+	    "stroke-dasharray": "strokeDasharray",
+	    "stroke-dashoffset": "strokeDashoffset",
+	    "stroke-linecap": "strokeLinecap",
+	    "stroke-linejoin": "strokeLinejoin",
+	    "stroke-miterlimit": "strokeMiterlimit",
+	    "stroke-opacity": "strokeOpacity",
+	    "stroke-width": "strokeWidth",
+	    "tab-size": "tabSize",
+	    "table-layout": "tableLayout",
+	    "text-align": "textAlign",
+	    "text-alignLast": "textAlignLast",
+	    "text-anchor": "textAnchor",
+	    "text-combineUpright": "textCombineUpright",
+	    "text-decoration": "textDecoration",
+	    "text-indent": "textIndent",
+	    "text-orientation": "textOrientation",
+	    "text-overflow": "textOverflow",
+	    "text-rendering": "textRendering",
+	    "text-shadow": "textShadow",
+	    "text-transform": "textTransform",
 	    "top": "top",
-	    "touchAction": "touchAction",
+	    "touch-action": "touchAction",
 	    "transform": "transform",
-	    "transformOrigin": "transformOrigin",
-	    "transformStyle": "transformStyle",
+	    "transform-origin": "transformOrigin",
+	    "transform-style": "transformStyle",
 	    "transition": "transition",
-	    "transitionDelay": "transitionDelay",
-	    "transitionDuration": "transitionDuration",
-	    "transitionProperty": "transitionProperty",
+	    "transition-delay": "transitionDelay",
+	    "transition-duration": "transitionDuration",
+	    "transition-property": "transitionProperty",
 	    "transition-timing-function": "transitionTimingFunction",
 	    "unicode-bidi": "unicodeBidi",
-	    "unicodeRange": "unicodeRange",
-	    "userZoom": "userZoom",
-	    "vectorEffect": "vectorEffect",
-	    "verticalAlign": "verticalAlign",
+	    "unicode-range": "unicodeRange",
+	    "user-zoom": "userZoom",
+	    "vector-effect": "vectorEffect",
+	    "vertical-align": "verticalAlign",
 	    "visibility": "visibility",
-	    "webkitAppRegion": "webkitAppRegion",
-	    "webkitAppearance": "webkitAppearance",
-	    "webkitBackgroundClip": "webkitBackgroundClip",
-	    "webkitBackgroundOrigin": "webkitBackgroundOrigin",
-	    "webkitBorderAfter": "webkitBorderAfter",
-	    "webkitBorderAfterColor": "webkitBorderAfterColor",
-	    "webkitBorderAfterStyle": "webkitBorderAfterStyle",
-	    "webkitBorderAfterWidth": "webkitBorderAfterWidth",
-	    "webkitBorderBefore": "webkitBorderBefore",
-	    "webkitBorderBeforeColor": "webkitBorderBeforeColor",
-	    "webkitBorderBeforeStyle": "webkitBorderBeforeStyle",
-	    "webkitBorderBeforeWidth": "webkitBorderBeforeWidth",
-	    "webkitBorderEnd": "webkitBorderEnd",
-	    "webkitBorderEndColor": "webkitBorderEndColor",
-	    "webkitBorderEndStyle": "webkitBorderEndStyle",
-	    "webkitBorderEndWidth": "webkitBorderEndWidth",
-	    "webkitBorderHorizontalSpacing": "webkitBorderHorizontalSpacing",
-	    "webkitBorderImage": "webkitBorderImage",
-	    "webkitBorderStart": "webkitBorderStart",
-	    "webkitBorderStartColor": "webkitBorderStartColor",
-	    "webkitBorderStartStyle": "webkitBorderStartStyle",
-	    "webkitBorderStartWidth": "webkitBorderStartWidth",
-	    "webkitBorderVerticalSpacing": "webkitBorderVerticalSpacing",
-	    "webkitBoxAlign": "webkitBoxAlign",
-	    "webkitBoxDecorationBreak": "webkitBoxDecorationBreak",
-	    "webkitBoxDirection": "webkitBoxDirection",
-	    "webkitBoxFlex": "webkitBoxFlex",
-	    "webkitBoxFlexGroup": "webkitBoxFlexGroup",
-	    "webkitBoxLines": "webkitBoxLines",
-	    "webkitBoxOrdinalGroup": "webkitBoxOrdinalGroup",
-	    "webkitBoxOrient": "webkitBoxOrient",
-	    "webkitBoxPack": "webkitBoxPack",
-	    "webkitBoxReflect": "webkitBoxReflect",
-	    "webkitClipPath": "webkitClipPath",
-	    "webkitColumnBreakAfter": "webkitColumnBreakAfter",
-	    "webkitColumnBreakBefore": "webkitColumnBreakBefore",
-	    "webkitColumnBreakInside": "webkitColumnBreakInside",
-	    "webkitFilter": "webkitFilter",
-	    "webkitFontSizeDelta": "webkitFontSizeDelta",
-	    "webkitFontSmoothing": "webkitFontSmoothing",
-	    "webkitHighlight": "webkitHighlight",
-	    "webkitHyphenateCharacter": "webkitHyphenateCharacter",
-	    "webkitLineBreak": "webkitLineBreak",
-	    "webkitLineClamp": "webkitLineClamp",
-	    "webkitLocale": "webkitLocale",
-	    "webkitLogicalHeight": "webkitLogicalHeight",
-	    "webkitLogicalWidth": "webkitLogicalWidth",
-	    "webkitMarginAfter": "webkitMarginAfter",
-	    "webkitMarginAfterCollapse": "webkitMarginAfterCollapse",
-	    "webkitMarginBefore": "webkitMarginBefore",
-	    "webkitMarginBeforeCollapse": "webkitMarginBeforeCollapse",
-	    "webkitMarginBottomCollapse": "webkitMarginBottomCollapse",
-	    "webkitMarginCollapse": "webkitMarginCollapse",
-	    "webkitMarginEnd": "webkitMarginEnd",
-	    "webkitMarginStart": "webkitMarginStart",
-	    "webkitMarginTopCollapse": "webkitMarginTopCollapse",
-	    "webkitMask": "webkitMask",
-	    "webkitMaskBoxImage": "webkitMaskBoxImage",
-	    "webkitMaskBoxImageOutset": "webkitMaskBoxImageOutset",
-	    "webkitMaskBoxImageRepeat": "webkitMaskBoxImageRepeat",
-	    "webkitMaskBoxImageSlice": "webkitMaskBoxImageSlice",
-	    "webkitMaskBoxImageSource": "webkitMaskBoxImageSource",
-	    "webkitMaskBoxImageWidth": "webkitMaskBoxImageWidth",
-	    "webkitMaskClip": "webkitMaskClip",
-	    "webkitMaskComposite": "webkitMaskComposite",
-	    "webkitMaskImage": "webkitMaskImage",
-	    "webkitMaskOrigin": "webkitMaskOrigin",
-	    "webkitMaskPosition": "webkitMaskPosition",
-	    "webkitMaskPositionX": "webkitMaskPositionX",
-	    "webkitMaskPositionY": "webkitMaskPositionY",
-	    "webkitMaskRepeat": "webkitMaskRepeat",
-	    "webkitMaskRepeatX": "webkitMaskRepeatX",
-	    "webkitMaskRepeatY": "webkitMaskRepeatY",
-	    "webkitMaskSize": "webkitMaskSize",
-	    "webkitMaxLogicalHeight": "webkitMaxLogicalHeight",
-	    "webkitMaxLogicalWidth": "webkitMaxLogicalWidth",
-	    "webkitMinLogicalHeight": "webkitMinLogicalHeight",
-	    "webkitMinLogicalWidth": "webkitMinLogicalWidth",
-	    "webkitPaddingAfter": "webkitPaddingAfter",
-	    "webkitPaddingBefore": "webkitPaddingBefore",
-	    "webkitPaddingEnd": "webkitPaddingEnd",
-	    "webkitPaddingStart": "webkitPaddingStart",
-	    "webkitPerspectiveOriginX": "webkitPerspectiveOriginX",
-	    "webkitPerspectiveOriginY": "webkitPerspectiveOriginY",
-	    "webkitPrintColorAdjust": "webkitPrintColorAdjust",
-	    "webkitRtlOrdering": "webkitRtlOrdering",
-	    "webkitRubyPosition": "webkitRubyPosition",
-	    "webkitTapHighlightColor": "webkitTapHighlightColor",
-	    "webkitTextCombine": "webkitTextCombine",
-	    "webkitTextDecorationsInEffect": "webkitTextDecorationsInEffect",
-	    "webkitTextEmphasis": "webkitTextEmphasis",
-	    "webkitTextEmphasisColor": "webkitTextEmphasisColor",
-	    "webkitTextEmphasisPosition": "webkitTextEmphasisPosition",
-	    "webkitTextEmphasisStyle": "webkitTextEmphasisStyle",
-	    "webkitTextFillColor": "webkitTextFillColor",
-	    "webkitTextOrientation": "webkitTextOrientation",
-	    "webkitTextSecurity": "webkitTextSecurity",
-	    "webkitTextStroke": "webkitTextStroke",
-	    "webkitTextStrokeColor": "webkitTextStrokeColor",
-	    "webkitTextStrokeWidth": "webkitTextStrokeWidth",
-	    "-webkit-transition": "webkitTransition",
-	    "webkitTransformOriginX": "webkitTransformOriginX",
-	    "webkitTransformOriginY": "webkitTransformOriginY",
-	    "webkitTransformOriginZ": "webkitTransformOriginZ",
-	    "webkitUserDrag": "webkitUserDrag",
-	    "webkitUserModify": "webkitUserModify",
-	    "webkitUserSelect": "webkitUserSelect",
-	    "webkitWritingMode": "webkitWritingMode",
-	    "whiteSpace": "whiteSpace",
+	    "webkit-app-region": "webkitAppRegion",
+	    "webkit-appearance": "webkitAppearance",
+	    "webkit-background-clip": "webkitBackgroundClip",
+	    "webkit-background-origin": "webkitBackgroundOrigin",
+	    "webkit-border-after": "webkitBorderAfter",
+	    "webkit-border-after-color": "webkitBorderAfterColor",
+	    "webkit-border-after-style": "webkitBorderAfterStyle",
+	    "webkit-border-after-width": "webkitBorderAfterWidth",
+	    "webkit-border-before": "webkitBorderBefore",
+	    "webkit-border-before-color": "webkitBorderBeforeColor",
+	    "webkit-border-before-style": "webkitBorderBeforeStyle",
+	    "webkit-border-before-width": "webkitBorderBeforeWidth",
+	    "webkit-border-end": "webkitBorderEnd",
+	    "webkit-border-end-color": "webkitBorderEndColor",
+	    "webkit-border-end-style": "webkitBorderEndStyle",
+	    "webkit-border-end-width": "webkitBorderEndWidth",
+	    "webkit-border-horizontal-spacing": "webkitBorderHorizontalSpacing",
+	    "webkit-border-image": "webkitBorderImage",
+	    "webkit-border-start": "webkitBorderStart",
+	    "webkit-border-start-color": "webkitBorderStartColor",
+	    "webkit-border-start-style": "webkitBorderStartStyle",
+	    "webkit-border-start-width": "webkitBorderStartWidth",
+	    "webkit-border-vertical-spacing": "webkitBorderVerticalSpacing",
+	    "webkit-box-align": "webkitBoxAlign",
+	    "webkit-box-decoration-break": "webkitBoxDecorationBreak",
+	    "webkit-box-direction": "webkitBoxDirection",
+	    "webkit-box-flex": "webkitBoxFlex",
+	    "webkit-box-flex-group": "webkitBoxFlexGroup",
+	    "webkit-box-lines": "webkitBoxLines",
+	    "webkit-box-ordinal-group": "webkitBoxOrdinalGroup",
+	    "webkit-box-orient": "webkitBoxOrient",
+	    "webkit-box-pack": "webkitBoxPack",
+	    "webkit-box-reflect": "webkitBoxReflect",
+	    "webkit-clip-path": "webkitClipPath",
+	    "webkit-column-break-after": "webkitColumnBreakAfter",
+	    "webkit-column-break-before": "webkitColumnBreakBefore",
+	    "webkit-column-break-inside": "webkitColumnBreakInside",
+	    "webkit-filter": "webkitFilter",
+	    "webkit-font-size-delta": "webkitFontSizeDelta",
+	    "webkit-font-smoothing": "webkitFontSmoothing",
+	    "webkit-highlight": "webkitHighlight",
+	    "webkit-hyphenate-character": "webkitHyphenateCharacter",
+	    "webkit-line-break": "webkitLineBreak",
+	    "webkit-line-clamp": "webkitLineClamp",
+	    "webkit-locale": "webkitLocale",
+	    "webkit-logical-height": "webkitLogicalHeight",
+	    "webkit-logical-width": "webkitLogicalWidth",
+	    "webkit-margin-after": "webkitMarginAfter",
+	    "webkit-margin-after-collapse": "webkitMarginAfterCollapse",
+	    "webkit-margin-before": "webkitMarginBefore",
+	    "webkit-margin-before-collapse": "webkitMarginBeforeCollapse",
+	    "webkit-margin-bottom-collapse": "webkitMarginBottomCollapse",
+	    "webkit-margin-collapse": "webkitMarginCollapse",
+	    "webkit-margin-end": "webkitMarginEnd",
+	    "webkit-margin-start": "webkitMarginStart",
+	    "webkit-margin-top-collapse": "webkitMarginTopCollapse",
+	    "webkit-mask": "webkitMask",
+	    "webkit-mask-box-image": "webkitMaskBoxImage",
+	    "webkit-mask-box-image-outset": "webkitMaskBoxImageOutset",
+	    "webkit-mask-box-image-repeat": "webkitMaskBoxImageRepeat",
+	    "webkit-mask-box-image-slice": "webkitMaskBoxImageSlice",
+	    "webkit-mask-box-image-source": "webkitMaskBoxImageSource",
+	    "webkit-mask-box-image-width": "webkitMaskBoxImageWidth",
+	    "webkit-mask-clip": "webkitMaskClip",
+	    "webkit-mask-composite": "webkitMaskComposite",
+	    "webkit-mask-image": "webkitMaskImage",
+	    "webkit-mask-origin": "webkitMaskOrigin",
+	    "webkit-mask-position": "webkitMaskPosition",
+	    "webkit-mask-positionX": "webkitMaskPositionX",
+	    "webkit-mask-positionY": "webkitMaskPositionY",
+	    "webkit-mask-repeat": "webkitMaskRepeat",
+	    "webkit-mask-repeatX": "webkitMaskRepeatX",
+	    "webkit-mask-repeatY": "webkitMaskRepeatY",
+	    "webkit-mask-size": "webkitMaskSize",
+	    "webkit-max-logical-height": "webkitMaxLogicalHeight",
+	    "webkit-max-logical-width": "webkitMaxLogicalWidth",
+	    "webkit-min-logical-height": "webkitMinLogicalHeight",
+	    "webkit-min-logical-width": "webkitMinLogicalWidth",
+	    "webkit-padding-after": "webkitPaddingAfter",
+	    "webkit-padding-before": "webkitPaddingBefore",
+	    "webkit-padding-end": "webkitPaddingEnd",
+	    "webkit-padding-start": "webkitPaddingStart",
+	    "webkit-perspective-origin-x": "webkitPerspectiveOriginX",
+	    "webkit-perspective-origin-y": "webkitPerspectiveOriginY",
+	    "webkit-print-color-adjust": "webkitPrintColorAdjust",
+	    "webkit-rtl-ordering": "webkitRtlOrdering",
+	    "webkit-ruby-position": "webkitRubyPosition",
+	    "webkit-tap-highlight-color": "webkitTapHighlightColor",
+	    "webkit-text-combine": "webkitTextCombine",
+	    "webkit-text-decorations-in-effect": "webkitTextDecorationsInEffect",
+	    "webkit-text-emphasis": "webkitTextEmphasis",
+	    "webkit-text-emphasis-color": "webkitTextEmphasisColor",
+	    "webkit-text-emphasis-position": "webkitTextEmphasisPosition",
+	    "webkit-text-emphasis-style": "webkitTextEmphasisStyle",
+	    "webkit-text-fillColor": "webkitTextFillColor",
+	    "webkit-text-orientation": "webkitTextOrientation",
+	    "webkit-text-security": "webkitTextSecurity",
+	    "webkit-text-stroke": "webkitTextStroke",
+	    "webkit-text-stroke-color": "webkitTextStrokeColor",
+	    "webkit-text-stroke-width": "webkitTextStrokeWidth",
+	    "webkit-transition": "webkitTransition",
+	    "webkit-transform-origin-x": "webkitTransformOriginX",
+	    "webkit-transform-origin-y": "webkitTransformOriginY",
+	    "webkit-transform-origin-z": "webkitTransformOriginZ",
+	    "webkit-user-drag": "webkitUserDrag",
+	    "webkit-user-modify": "webkitUserModify",
+	    "webkit-user-select": "webkitUserSelect",
+	    "webkit-writing-mode": "webkitWritingMode",
+	    "white-space": "whiteSpace",
 	    "widows": "widows",
 	    "width": "width",
-	    "willChange": "willChange",
-	    "wordBreak": "wordBreak",
-	    "wordSpacing": "wordSpacing",
-	    "wordWrap": "wordWrap",
-	    "writingMode": "writingMode",
+	    "will-change": "willChange",
+	    "word-break": "wordBreak",
+	    "word-spacing": "wordSpacing",
+	    "word-wrap": "wordWrap",
+	    "writing-mode": "writingMode",
 	    "x": "x",
 	    "y": "y",
-	    "zIndex": "zIndex",
+	    "z-index": "zIndex",
 	    "zoom": "zoom",
-	    "cssText": "cssText",
+	    "css-text": "cssText",
 	    "length": "length",
-	    "parentRule": "parentRule",
-	    "cssFloat": "cssFloat",
+	    "parent-rule": "parentRule",
+	    "css-float": "cssFloat",
 	    "item": "item",
-	    "getPropertyValue": "getPropertyValue",
-	    "getPropertyPriority": "getPropertyPriority",
-	    "setProperty": "setProperty",
-	    "removeProperty": "removeProperty"
+	    "get-property-value": "getPropertyValue",
+	    "get-property-priority": "getPropertyPriority",
+	    "set-property": "setProperty",
+	    "remove-property": "removeProperty"
+	};
+
+	mofron.util.getStyleConts = function (sel, cnt) {
+	    try {
+	        var ret_val = sel + '{';
+	        for (var idx in cnt) {
+	            ret_val += idx + ':' + cnt[idx] + ';';
+	        }
+	        return ret_val + '}';
+	    } catch (e) {
+	        console.error(e.stack);
+	        throw new Error();
+	    }
+	};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	mofron.theme.getColor = function (idx) {
+	    try {
+	        var _idx = idx === undefined ? 0 : idx;
+	        if (undefined == mofron.theme.theme) {
+	            return null;
+	        }
+	        var thm = mofron.theme.theme;
+	        if ('number' !== typeof _idx) {
+	            throw new Error('invalid parameter');
+	        }
+	        return thm.getColor(_idx);
+	    } catch (e) {
+	        console.error(e.stack);
+	        throw new Error();
+	    }
 	};
 
 /***/ },
@@ -579,7 +612,6 @@
 	            this.text = null;
 	            this.push_flg = false;
 	            this.value = null;
-	            ////console.log(tag + ' -> ' + this.getId());
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -696,7 +728,20 @@
 	                if ('string' != typeof txt) {
 	                    throw new Error('invalid parameter');
 	                }
+	                if (true === this.isPushed()) {
+	                    this.getPushedDom().innerHTML = txt;
+	                }
 	                this.text = txt;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getText',
+	        value: function getText() {
+	            try {
+	                return this.text;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -755,7 +800,6 @@
 	                /* get child value */
 	                if (0 != this.child.length) {
 	                    for (var chd_idx in this.child) {
-	                        //console.log(this.getId() + ' -> child value() -> ' + this.child[chd_idx].getValue());
 	                        ret_val += this.child[chd_idx].getValue();
 	                    }
 	                }
@@ -768,8 +812,6 @@
 	                    ret_val += '</' + this.tag + '>';
 	                }
 
-	                //console.log(this.getId() + ' -> ' + ret_val);
-	                //console.log(this.getId() + ' -> value() -> ' + ret_val);
 	                return ret_val;
 	            } catch (e) {
 	                console.error(e.stack);
@@ -780,7 +822,7 @@
 	        key: 'pushDom',
 	        value: function pushDom(tgt) {
 	            try {
-	                if (true === this.push_flg) {
+	                if (true === this.isPushed()) {
 	                    throw new Error('already pushed');
 	                }
 
@@ -789,14 +831,10 @@
 	                var tgt_dom = null;
 	                if (null === this.parent) {
 	                    tgt_dom = document.body;
-	                    console.log(this.getId() + ' -> push DOM to body');
 	                } else {
 	                    tgt_dom = document.querySelector('#' + this.parent.getId());
-	                    console.log(this.getId() + ' -> push DOM to ' + this.parent.getId());
 	                }
 	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
-	                //console.log('innerHTML : ' + tgt_dom.innerHTML);
-	                //tgt_dom.innerHTML += this.getValue();
 
 	                this.setPushed();
 	            } catch (e) {
@@ -867,6 +905,19 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                return this.child[_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getPushedDom',
+	        value: function getPushedDom() {
+	            try {
+	                if (false === this.isPushed()) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return document.querySelector('#' + this.getId());
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -965,10 +1016,10 @@
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.red = r || null;
-	            this.green = g || null;
-	            this.blue = b || null;
-	            this.alpha = a || 1;
+	            this.red = r === undefined ? 255 : r;
+	            this.green = g === undefined ? 255 : g;
+	            this.blue = b === undefined ? 255 : b;
+	            this.alpha = a === undefined ? 1 : a;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -999,13 +1050,14 @@
 
 	    return _class;
 	}();
-	/* end of file */
 
 /***/ },
 /* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1015,14 +1067,16 @@
 	 * @file  Font.js
 	 */
 	module.exports = function () {
-	    function _class(fm) {
+	    function _class(fnt) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            if ('string' != typeof fm) {
+	            if ('string' !== typeof fnt) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.family = fm;
+	            this.family = {};
+	            this.font = fnt;
+	            this.addFamily(fnt);
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -1030,10 +1084,98 @@
 	    }
 
 	    _createClass(_class, [{
-	        key: 'font',
-	        value: function font(tgt) {
+	        key: 'setFace',
+	        value: function setFace(url) {
 	            try {
-	                tgt.style('font-family', this.family);
+	                var hc = new mofron.util.HeadConts('style');
+	                var fm = null;
+	                for (var idx in this.family) {
+	                    fm = idx;
+	                    break;
+	                }
+	                if ('string' !== typeof url) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                /* format */
+	                var url_spt = url.split('.');
+	                var format = '';
+	                if ('woff' === url_spt[url_spt.length - 1]) {
+	                    format = "format('woff')";
+	                } else if ('ttf' === url_spt[url_spt.length - 1]) {
+	                    format = "format('truetype')";
+	                } else if ('otf' === url_spt[url_spt.length - 1]) {
+	                    format = "format('opentype')";
+	                } else if ('eot' === url_spt[url_spt.length - 1]) {
+	                    format = "format('embedded-opentype')";
+	                } else if ('svg' === url_spt[url_spt.length - 1] || 'svgz' === url_spt[url_spt.length - 1]) {
+	                    format = "format('svg')";
+	                }
+
+	                var style = {
+	                    'font-family': fm,
+	                    'src': "url('" + url + "') " + format
+	                };
+	                hc.addConts(mofron.util.getStyleConts('@font-face', style));
+	                hc.pushTag();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setImport',
+	        value: function setImport(url) {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'addFamily',
+	        value: function addFamily(fm) {
+	            try {
+	                if ('string' !== typeof fm && 'object' !== (typeof fm === 'undefined' ? 'undefined' : _typeof(fm))) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if ('string' === typeof fm) {
+	                    this.family['"' + fm + '"'] = null;
+	                } else if ('object' === (typeof fm === 'undefined' ? 'undefined' : _typeof(fm))) {
+	                    for (var idx in fm) {
+	                        if ('string' !== fm[idx]) {
+	                            throw new Error('invalid parameter');
+	                        }
+	                        this.family['"' + fm[idx] + '"'] = null;
+	                    }
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getFamily',
+	        value: function getFamily() {
+	            try {
+	                return this.family;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getFontFamily',
+	        value: function getFontFamily() {
+	            try {
+	                var fm_str = '';
+	                for (var idx in this.family) {
+	                    if ('' !== fm_str) {
+	                        fm_str += ',';
+	                    }
+	                    fm_str += idx;
+	                }
+	                return fm_str;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1046,6 +1188,107 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @file HeadConts.js
+	 *
+	 */
+
+	module.exports = function () {
+	    function _class(tag) {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            if ('string' != typeof tag) {
+	                throw new Error('invalid parameter');
+	            }
+	            this.tag = tag;
+	            this.attr = {};
+	            this.conts = '';
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	    }
+
+	    _createClass(_class, [{
+	        key: 'setAttr',
+	        value: function setAttr(key, val) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _val = val === undefined ? null : val;
+	                this.attr[_key] = _val;
+	                this.value = null;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getAttr',
+	        value: function getAttr(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                if (null === _val) {
+	                    return this.attr;
+	                }
+	                return this.attr[_val];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'addConts',
+	        value: function addConts(txt) {
+	            try {
+	                if ('string' !== typeof txt) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.conts += txt;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'pushTag',
+	        value: function pushTag() {
+	            try {
+	                var set_conts = '';
+	                if (false === this.isSimpleTag(this.tag)) {
+	                    set_conts += '<' + this.tag + '>' + this.conts + '</' + this.tag + '>';
+	                }
+	                document.head.insertAdjacentHTML('beforeend', set_conts);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'isSimpleTag',
+	        value: function isSimpleTag(tag) {
+	            try {
+	                return false;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}();
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1354,10 +1597,12 @@
 	}();
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1376,21 +1621,10 @@
 	module.exports = function (_mofron$parts$Base) {
 	    _inherits(_class, _mofron$parts$Base);
 
-	    /**
-	     * initialize Header
-	     */
-	    function _class(txt) {
+	    function _class() {
 	        _classCallCheck(this, _class);
 
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, txt));
-
-	            _this.auto_color = false;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
+	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
 	    }
 
 	    _createClass(_class, [{
@@ -1405,23 +1639,7 @@
 	                text.setText(prm);
 	                vd.addChild(text);
 	                this.size(15);
-
-	                //$('#' + this.getId()).html('<div class="text-conts">'+ this.text +'</div>');
-	                //if ((null !== this.theme.colors[0]) &&
-	                //    (true === this.auto_color)) {
-	                //    if (true === this.auto_color) {
-	                //        var rgb = this.theme.colors[0].getRgba();
-	                //        if (290 > (rgb[0]+rgb[1]+rgb[2])) {
-	                //            var style = new mofron.other.Styles(this, ' div');
-	                //            style.style('color', 'rgba(255,255,255,'+ rgb[3] +')');
-	                //        }
-	                //    }
-	                //}
-	                //
-	                //if (null !== this.theme.font) {
-	                //    this.theme.font.font(this);
-	                //}
-	                //style.style('font-size', this.size + 'px');
+	                this.setTheme();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1430,7 +1648,16 @@
 	    }, {
 	        key: 'text',
 	        value: function text(val) {
-	            try {} catch (e) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                if (null === _val) {
+	                    return this.getTarget().getText();
+	                }
+	                if ('string' !== typeof _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.getTarget().setText(_val);
+	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
@@ -1454,8 +1681,8 @@
 	            }
 	        }
 	    }, {
-	        key: 'setAlign',
-	        value: function setAlign(tp) {
+	        key: 'align',
+	        value: function align(tp) {
 	            try {
 	                //var style = new mofron.other.Styles(this, ' .text-conts');
 	                //style.style('text-align', tp);
@@ -1468,31 +1695,53 @@
 	        key: 'setLink',
 	        value: function setLink(url, tab) {
 	            try {
-	                //var _tab = tab || false;
-	                //var style = new mofron.other.Styles(this, ' .text-conts');
-	                //style.style('cursor', 'pointer');
-	                //var click = new mofron.event.Click();
-	                //if (false === _tab) {
-	                //    click.setCbfunc (function(){
-	                //        window.location.href = url;
-	                //    });
-	                //} else {
-	                //    click.setCbfunc (function(){
-	                //        window.open(url, '_blank');
-	                //    });
-	                //}
-	                //this.addEvent(click);
+	                var _tab = tab === undefined ? false : tab;
+	                this.style('cursor', 'pointer');
+	                var click = new mofron.event.Click();
+	                if (false === _tab) {
+	                    click = new mofron.event.Click(function () {
+	                        window.location.href = url;
+	                    });
+	                } else {
+	                    click = new mofron.event.Click(function () {
+	                        window.open(url, '_blank');
+	                    });
+	                }
+	                this.addEvent(click);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
 	    }, {
-	        key: 'setColor',
-	        value: function setColor(color) {
+	        key: 'color',
+	        value: function color(clr) {
 	            try {
-	                //var style = new mofron.other.Styles(this, ' .text-conts');
-	                //style.style('color', color.getStyle());
+	                var _clr = clr === undefined ? null : clr;
+	                if (null === _clr) {
+	                    return this.getStyleTgt().getStyle('color');
+	                }
+	                if ('object' !== (typeof _clr === 'undefined' ? 'undefined' : _typeof(_clr))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.style('color', _clr.getStyle());
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'font',
+	        value: function font(fnt) {
+	            try {
+	                var _fnt = fnt === undefined ? null : fnt;
+	                if (null === _fnt) {
+	                    return this.getStyleTgt().getStyle('font-family');
+	                }
+	                if ('object' !== (typeof _fnt === 'undefined' ? 'undefined' : _typeof(_fnt))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.style('font-family', _fnt.getFontFamily());
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1508,14 +1757,24 @@
 	                throw e;
 	            }
 	        }
+	    }, {
+	        key: 'setTheme',
+	        value: function setTheme(idx) {
+	            try {
+	                var _idx = idx === undefined ? 0 : idx;
+	                this.getTarget().addClname('mofron-theme-font' + _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
 	    }]);
 
 	    return _class;
 	}(mofron.parts.Base);
-	/* end of file */
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1645,7 +1904,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1759,7 +2018,7 @@
 	/* end of file */
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1793,28 +2052,37 @@
 	        key: 'initContents',
 	        value: function initContents(vd, prm) {
 	            try {
+	                /* set header style */
 	                var hdr_conts = new mofron.util.Vdom('div');
 	                hdr_conts.setStyle('width', '100%');
-	                //hdr_conts.setStyle('float', 'left');
 	                hdr_conts.setStyle('border-bottom', 'solid 1px lightgray');
 	                hdr_conts.setStyle('position', 'fixed');
 	                vd.addChild(hdr_conts);
-
 	                var hdr_pad = new mofron.util.Vdom('div');
-	                //hdr_pad.setStyle('float', 'none');
 	                vd.addChild(hdr_pad);
 
+	                /* set default height */
 	                this.height(50);
 
-	                //if (null !== this.theme.colors[0]) {
-	                //    conts_style.style(
-	                //        'background',
-	                //        this.theme.colors[0].getStyle(),
-	                //        ' .conts'
-	                //    );
-	                //}
-
+	                /* child parts is added at horizon layout */
 	                this.addLayout(new mofron.layout.Horizon());
+
+	                this.setThemeColor();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setThemeColor',
+	        value: function setThemeColor() {
+	            try {
+	                if (undefined != mofron.util.theme && null !== mofron.util.theme) {
+	                    var clr = mofron.util.theme.getColor(0);
+	                    if (null !== clr) {
+	                        this.color(clr);
+	                    }
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1824,7 +2092,6 @@
 	        key: 'getEventTgt',
 	        value: function getEventTgt() {
 	            try {
-	                console.log('get event target : ' + this.vdom.getChild(1).getId());
 	                return this.vdom; //.getChild(1);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1897,7 +2164,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2044,7 +2311,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2104,7 +2371,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2187,7 +2454,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2294,7 +2561,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2373,7 +2640,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2450,7 +2717,7 @@
 	}();
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2505,7 +2772,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2560,7 +2827,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2617,7 +2884,7 @@
 	/* end of file */
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2689,7 +2956,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2763,7 +3030,7 @@
 	/* end of file */
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2818,10 +3085,9 @@
 
 	    return _class;
 	}(mofron.event.Base);
-	/* end of file */
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2878,7 +3144,7 @@
 	}(mofron.event.Base);
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2992,7 +3258,7 @@
 	}();
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3052,44 +3318,7 @@
 	                        prm[0].setStyle('opacity', '0');
 	                    }
 	                }, 200, [vd, flg]);
-	                //if (true === flg) {
-	                //    vd.setStyle('opacity', '1');
-	                //} else {
-	                //    vd.setStyle('opacity', '0');
-	                //}
-
-	                //var tgt_dom = document.querySelector('#' + this.target.getVdom().getId());
-	                //if (true === flg) {
-	                //    tgt_dom.classList.add('mofron-effect-fadein');
-	                //    tgt_dom.classList.remove('mofron-effect-fadeout');
-	                //} else {
-	                //    tgt_dom.classList.remove('mofron-effect-fadein');
-	                //    tgt_dom.classList.add('mofron-effect-fadeout');
-	                //}
-
-
 	                this.exec = true;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getStyleTag',
-	        value: function getStyleTag() {
-	            try {
-	                var ret_val = '<style>';
-
-	                ret_val += '.mofron-effect-fadein {';
-	                ret_val += 'opacity:1;';
-	                ret_val += '}';
-
-	                ret_val += '.mofron-effect-fadeout {';
-	                ret_val += 'opacity:0;';
-	                ret_val += '}';
-
-	                ret_val += '</style>';
-	                return ret_val;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -3100,34 +3329,25 @@
 	    return _class;
 	}(mofron.effect.Base);
 
-	mofron.effect.fade_exec = false;
-
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	"use strict";
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * @file Theme.js
-	 * @attention this source is GPLv3 license 
+	 * @file tmpl/Base.js
 	 */
 	module.exports = function () {
 	    function _class() {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.colors = new Array(null, /* main color */
-	            null, /* secondary color */
-	            null /* thirdly color */
-	            );
-	            this.font = null;
+	            this.base = new mofron.parts.Base();
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -3135,28 +3355,9 @@
 	    }
 
 	    _createClass(_class, [{
-	        key: 'setColor',
-	        value: function setColor(col, idx) {
-	            try {
-	                var _idx = idx === undefined ? 0 : idx;
-	                if ('object' != (typeof col === 'undefined' ? 'undefined' : _typeof(col)) || 'number' != typeof _idx) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.colors[_idx] = col;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setFont',
-	        value: function setFont(ft) {
-	            try {
-	                if ('object' != (typeof ft === 'undefined' ? 'undefined' : _typeof(ft))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.font = ft;
-	            } catch (e) {
+	        key: "start",
+	        value: function start() {
+	            try {} catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
@@ -3165,7 +3366,6 @@
 
 	    return _class;
 	}();
-	/* end of file */
 
 /***/ }
 /******/ ]);
