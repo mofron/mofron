@@ -23,7 +23,12 @@ module.exports = class extends mofron.parts.Base {
             /* child parts is added at horizon layout */
             this.addLayout(new mofron.layout.Horizon());
             
-            this.setThemeColor();
+            if (undefined != mofron.theme) {
+                var clr = mofron.theme.getColor(0);
+                if (null !== clr) {
+                    this.color(clr);
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -32,8 +37,7 @@ module.exports = class extends mofron.parts.Base {
     
     setThemeColor () {
         try {
-            if ( (undefined != mofron.util.theme) &&
-                 (null !== mofron.util.theme) ) {
+            if (undefined != mofron.theme) {
                 var clr = mofron.util.theme.getColor(0);
                 if (null !== clr) {
                     this.color(clr);

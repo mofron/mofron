@@ -52,49 +52,44 @@
 
 	__webpack_require__(1);
 
-	try {
-	    __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"ewar\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	} catch (e) {}
-
 	/* util */
 	__webpack_require__(3);
-	__webpack_require__(4);
-	mofron.util.Vdom = __webpack_require__(5);
-	mofron.util.Style = __webpack_require__(6);
-	mofron.util.Color = __webpack_require__(7);
-	mofron.util.Font = __webpack_require__(8);
-	mofron.util.HeadConts = __webpack_require__(9);
+	mofron.util.Vdom = __webpack_require__(4);
+	mofron.util.Style = __webpack_require__(5);
+	mofron.util.Color = __webpack_require__(6);
+	mofron.util.Font = __webpack_require__(7);
+	mofron.util.HeadConts = __webpack_require__(8);
 
 	/* UI Parts */
-	mofron.parts.Base = __webpack_require__(10);
-	mofron.parts.Text = __webpack_require__(11);
-	mofron.parts.Button = __webpack_require__(12);
-	mofron.parts.InputText = __webpack_require__(13);
-	mofron.parts.Header = __webpack_require__(14);
-	mofron.parts.Frame = __webpack_require__(15);
-	mofron.parts.Image = __webpack_require__(16);
-	mofron.parts.Loading = __webpack_require__(17);
-	mofron.parts.Heading = __webpack_require__(18);
-	mofron.parts.Background = __webpack_require__(19);
+	mofron.parts.Base = __webpack_require__(9);
+	mofron.parts.Text = __webpack_require__(10);
+	mofron.parts.Button = __webpack_require__(11);
+	mofron.parts.InputText = __webpack_require__(12);
+	mofron.parts.Header = __webpack_require__(13);
+	mofron.parts.Frame = __webpack_require__(14);
+	mofron.parts.Image = __webpack_require__(15);
+	mofron.parts.Loading = __webpack_require__(16);
+	mofron.parts.Heading = __webpack_require__(17);
+	mofron.parts.Background = __webpack_require__(18);
 
 	/* Layout */
-	mofron.layout.Base = __webpack_require__(20);
-	mofron.layout.Horizon = __webpack_require__(21);
-	mofron.layout.HorizCenter = __webpack_require__(22);
-	mofron.layout.VertiCenter = __webpack_require__(23);
-	mofron.layout.Margin = __webpack_require__(24);
+	mofron.layout.Base = __webpack_require__(19);
+	mofron.layout.Horizon = __webpack_require__(20);
+	mofron.layout.HorizCenter = __webpack_require__(21);
+	mofron.layout.VertiCenter = __webpack_require__(22);
+	mofron.layout.Margin = __webpack_require__(23);
 
 	/* Event */
-	mofron.event.Base = __webpack_require__(25);
-	mofron.event.Click = __webpack_require__(26);
-	mofron.event.MouseOver = __webpack_require__(27);
+	mofron.event.Base = __webpack_require__(24);
+	mofron.event.Click = __webpack_require__(25);
+	mofron.event.MouseOver = __webpack_require__(26);
 
 	/* effect */
-	mofron.effect.Base = __webpack_require__(28);
-	mofron.effect.Fade = __webpack_require__(29);
+	mofron.effect.Base = __webpack_require__(27);
+	mofron.effect.Fade = __webpack_require__(28);
 
 	/* template */
-	mofron.tmpl.Base = __webpack_require__(30);
+	mofron.tmpl.Base = __webpack_require__(29);
 
 /***/ },
 /* 1 */
@@ -137,7 +132,6 @@
 	        effect: {},
 	        tmpl: {},
 	        util: {},
-	        theme: {},
 	        root: new Array()
 	    };
 	});
@@ -560,29 +554,6 @@
 
 	'use strict';
 
-	mofron.theme.getColor = function (idx) {
-	    try {
-	        var _idx = idx === undefined ? 0 : idx;
-	        if (undefined == mofron.theme.theme) {
-	            return null;
-	        }
-	        var thm = mofron.theme.theme;
-	        if ('number' !== typeof _idx) {
-	            throw new Error('invalid parameter');
-	        }
-	        return thm.getColor(_idx);
-	    } catch (e) {
-	        console.error(e.stack);
-	        throw new Error();
-	    }
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	'use strict';
-
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -929,7 +900,7 @@
 	}();
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -998,7 +969,7 @@
 	}();
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1052,7 +1023,7 @@
 	}();
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1187,7 +1158,7 @@
 	}();
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1288,7 +1259,7 @@
 	}();
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1597,7 +1568,7 @@
 	}();
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1774,7 +1745,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1904,7 +1875,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2018,7 +1989,7 @@
 	/* end of file */
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2067,7 +2038,12 @@
 	                /* child parts is added at horizon layout */
 	                this.addLayout(new mofron.layout.Horizon());
 
-	                this.setThemeColor();
+	                if (undefined != mofron.theme) {
+	                    var clr = mofron.theme.getColor(0);
+	                    if (null !== clr) {
+	                        this.color(clr);
+	                    }
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2077,7 +2053,7 @@
 	        key: 'setThemeColor',
 	        value: function setThemeColor() {
 	            try {
-	                if (undefined != mofron.util.theme && null !== mofron.util.theme) {
+	                if (undefined != mofron.theme) {
 	                    var clr = mofron.util.theme.getColor(0);
 	                    if (null !== clr) {
 	                        this.color(clr);
@@ -2164,7 +2140,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2311,7 +2287,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2371,7 +2347,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2454,7 +2430,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2561,7 +2537,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2640,7 +2616,7 @@
 	}(mofron.parts.Base);
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2717,7 +2693,7 @@
 	}();
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2772,7 +2748,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2827,7 +2803,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2884,7 +2860,7 @@
 	/* end of file */
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2956,7 +2932,7 @@
 	}(mofron.layout.Base);
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3030,7 +3006,7 @@
 	/* end of file */
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3087,7 +3063,7 @@
 	}(mofron.event.Base);
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3144,7 +3120,7 @@
 	}(mofron.event.Base);
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3258,7 +3234,7 @@
 	}();
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3330,7 +3306,7 @@
 	}(mofron.effect.Base);
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports) {
 
 	"use strict";
