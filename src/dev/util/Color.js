@@ -5,9 +5,9 @@
 module.exports = class {
     constructor (r,g,b,a) {
         try {
-            this.red   = (r === undefined) ? 255 : r;
-            this.green = (g === undefined) ? 255 : g;
-            this.blue  = (b === undefined) ? 255 : b;
+            this.red   = (r === undefined) ? null : r;
+            this.green = (g === undefined) ? null : g;
+            this.blue  = (b === undefined) ? null : b;
             this.alpha = (a === undefined) ? 1 : a;
         } catch (e) {
             console.error(e.stack);
@@ -17,6 +17,11 @@ module.exports = class {
     
     getRgba () {
         try {
+            if ( (null === this.red)   ||
+                 (null === this.green) ||
+                 (null === this.blue)   ) {
+                return 'none';
+            }
             return new Array(
                            this.red   ,
                            this.green ,
@@ -31,6 +36,11 @@ module.exports = class {
     
     getStyle () {
         try {
+            if ( (null === this.red)   &&
+                 (null === this.green) &&
+                 (null === this.blue) ) {
+                return 'none';
+            }
             return 'rgba('+ this.red +','+ this.green +','+ this.blue +','+ this.alpha +')';
         } catch (e) {
             console.error(e.stack);

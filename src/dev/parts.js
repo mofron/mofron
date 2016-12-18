@@ -12,7 +12,6 @@ module.exports = class {
             this.child     = new Array();
             this.event     = new Array();
             this.layout    = new Array();
-            //this.effect    = new Array();
             this.vdom      = new mofron.util.Vdom('div');
             this.state     = null;
             this.initContents(this.vdom, _prm);
@@ -23,6 +22,18 @@ module.exports = class {
     }
     
     /*** method ***/
+    
+    isInited () {
+        try {
+            if ('inited' === this.state) {
+                return true;
+            }
+            return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     
     getTarget () {
         try {
@@ -115,6 +126,22 @@ module.exports = class {
         }
     }
     
+    getStyle (key) {
+        try {
+            var _key = (key === undefined) ? null : key;
+            if (null === _key) {
+                return this.getStyleTgt().getStyle();
+            }
+            if ('string' !== (typeof _key)) {
+               throw new Error('invalid parameter');
+            }
+            return this.getStyleTgt().getStyle(_key);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     addEvent (evt) {
         try {
             if ( (undefined === evt) ||
@@ -197,9 +224,7 @@ module.exports = class {
                 if (false === _disp) {
                     this.vdom.setStyle('display', 'none');
                 }
-                //console.log(this.getVdom().getId() + ' -> pushDom()');
                 this.vdom.pushDom(init_tgt);
-                console.log("pushed");
                 
             }
             
@@ -224,13 +249,7 @@ module.exports = class {
         }
     }
     
-    initContents(vd, prm) {
-        try {
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    initContents(vd, prm) {}
     
     setVisible (flg, eff) {
         try  {

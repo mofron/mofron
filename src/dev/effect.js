@@ -4,17 +4,18 @@
 module.exports = class {
     constructor (tgt,spd) {
         try {
-            var _tgt = (tgt === undefined) ? null : tgt;
+            var _tgt    = (tgt === undefined) ? null : tgt;
             this.target = null;
             if (null != _tgt) {
                 this.setTarget(_tgt);
             }
             
-            var _spd = (spd === undefined) ? null : spd;
+            var _spd    = (spd === undefined) ? null : spd;
             this.speed  = 0.5;
             if (null != _spd) {
                 this.setSpeed(_spd);
             }
+            
             this.callback = new Array(null,null);
         } catch (e) {
             console.error(e.stack);

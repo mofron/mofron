@@ -60,36 +60,11 @@
 	mofron.util.Font = __webpack_require__(7);
 	mofron.util.HeadConts = __webpack_require__(8);
 
-	/* UI Parts */
-	mofron.parts.Base = __webpack_require__(9);
-	mofron.parts.Text = __webpack_require__(10);
-	mofron.parts.Button = __webpack_require__(11);
-	mofron.parts.InputText = __webpack_require__(12);
-	mofron.parts.Header = __webpack_require__(13);
-	mofron.parts.Frame = __webpack_require__(14);
-	mofron.parts.Image = __webpack_require__(15);
-	mofron.parts.Loading = __webpack_require__(16);
-	mofron.parts.Heading = __webpack_require__(17);
-	mofron.parts.Background = __webpack_require__(18);
-
-	/* Layout */
-	mofron.layout.Base = __webpack_require__(19);
-	mofron.layout.Horizon = __webpack_require__(20);
-	mofron.layout.HorizCenter = __webpack_require__(21);
-	mofron.layout.VertiCenter = __webpack_require__(22);
-	mofron.layout.Margin = __webpack_require__(23);
-
-	/* Event */
-	mofron.event.Base = __webpack_require__(24);
-	mofron.event.Click = __webpack_require__(25);
-	mofron.event.MouseOver = __webpack_require__(26);
-
-	/* effect */
-	mofron.effect.Base = __webpack_require__(27);
-	mofron.effect.Fade = __webpack_require__(28);
-
-	/* template */
-	mofron.tmpl.Base = __webpack_require__(29);
+	mofron.parts.Base = __webpack_require__(9); /* UI Parts */
+	mofron.layout.Base = __webpack_require__(10); /* Layout */
+	mofron.event.Base = __webpack_require__(11); /* Event */
+	mofron.effect.Base = __webpack_require__(12); /* Effect */
+	mofron.tmpl.Base = __webpack_require__(13); /* Template */
 
 /***/ },
 /* 1 */
@@ -634,7 +609,6 @@
 	        key: 'setStyle',
 	        value: function setStyle(key, val) {
 	            try {
-	                //console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
 	                this.style.set(key, val);
 	                this.value = null;
 	            } catch (e) {
@@ -658,7 +632,13 @@
 	            try {
 	                var _key = key === undefined ? null : key;
 	                var _val = val === undefined ? null : val;
+	                if (null === _key || null === _val || 'string' !== typeof _key) {
+	                    throw new Error('invalid parameter : ' + _key);
+	                }
 	                this.attr[_key] = _val;
+	                if (true === this.isPushed()) {
+	                    document.querySelector('#' + this.getId()).setAttribute(_key, val);
+	                }
 	                this.value = null;
 	            } catch (e) {
 	                console.error(e.stack);
@@ -987,9 +967,9 @@
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.red = r === undefined ? 255 : r;
-	            this.green = g === undefined ? 255 : g;
-	            this.blue = b === undefined ? 255 : b;
+	            this.red = r === undefined ? null : r;
+	            this.green = g === undefined ? null : g;
+	            this.blue = b === undefined ? null : b;
 	            this.alpha = a === undefined ? 1 : a;
 	        } catch (e) {
 	            console.error(e.stack);
@@ -1001,6 +981,9 @@
 	        key: 'getRgba',
 	        value: function getRgba() {
 	            try {
+	                if (null === this.red || null === this.green || null === this.blue) {
+	                    return 'none';
+	                }
 	                return new Array(this.red, this.green, this.blue, this.alpha);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1011,6 +994,9 @@
 	        key: 'getStyle',
 	        value: function getStyle() {
 	            try {
+	                if (null === this.red && null === this.green && null === this.blue) {
+	                    return 'none';
+	                }
 	                return 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1286,7 +1272,6 @@
 	            this.child = new Array();
 	            this.event = new Array();
 	            this.layout = new Array();
-	            //this.effect    = new Array();
 	            this.vdom = new mofron.util.Vdom('div');
 	            this.state = null;
 	            this.initContents(this.vdom, _prm);
@@ -1299,6 +1284,19 @@
 	    /*** method ***/
 
 	    _createClass(_class, [{
+	        key: 'isInited',
+	        value: function isInited() {
+	            try {
+	                if ('inited' === this.state) {
+	                    return true;
+	                }
+	                return false;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'getTarget',
 	        value: function getTarget() {
 	            try {
@@ -1395,6 +1393,23 @@
 	            }
 	        }
 	    }, {
+	        key: 'getStyle',
+	        value: function getStyle(key) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                if (null === _key) {
+	                    return this.getStyleTgt().getStyle();
+	                }
+	                if ('string' !== typeof _key) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return this.getStyleTgt().getStyle(_key);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'addEvent',
 	        value: function addEvent(evt) {
 	            try {
@@ -1477,9 +1492,7 @@
 	                    if (false === _disp) {
 	                        this.vdom.setStyle('display', 'none');
 	                    }
-	                    //console.log(this.getVdom().getId() + ' -> pushDom()');
 	                    this.vdom.pushDom(init_tgt);
-	                    console.log("pushed");
 	                }
 
 	                for (var idx in this.event) {
@@ -1503,12 +1516,7 @@
 	        }
 	    }, {
 	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
+	        value: function initContents(vd, prm) {}
 	    }, {
 	        key: 'setVisible',
 	        value: function setVisible(flg, eff) {
@@ -1569,1054 +1577,6 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Text.js
-	 * @brief  Base UI of Text
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                if ('string' != typeof prm) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                var text = new mofron.util.Vdom('div');
-	                text.setText(prm);
-	                vd.addChild(text);
-	                this.size(15);
-	                this.setTheme();
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'text',
-	        value: function text(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                if (null === _val) {
-	                    return this.getTarget().getText();
-	                }
-	                if ('string' !== typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.getTarget().setText(_val);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'size',
-	        value: function size(val) {
-	            try {
-	                if ('number' != typeof val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                var _val = val === undefined ? null : val;
-	                var txt = this.getTarget();
-	                if (null === _val) {
-	                    return txt.getStyle('font-size');
-	                }
-	                txt.setStyle('font-size', val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'align',
-	        value: function align(tp) {
-	            try {
-	                //var style = new mofron.other.Styles(this, ' .text-conts');
-	                //style.style('text-align', tp);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setLink',
-	        value: function setLink(url, tab) {
-	            try {
-	                var _tab = tab === undefined ? false : tab;
-	                this.style('cursor', 'pointer');
-	                var click = new mofron.event.Click();
-	                if (false === _tab) {
-	                    click = new mofron.event.Click(function () {
-	                        window.location.href = url;
-	                    });
-	                } else {
-	                    click = new mofron.event.Click(function () {
-	                        window.open(url, '_blank');
-	                    });
-	                }
-	                this.addEvent(click);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'color',
-	        value: function color(clr) {
-	            try {
-	                var _clr = clr === undefined ? null : clr;
-	                if (null === _clr) {
-	                    return this.getStyleTgt().getStyle('color');
-	                }
-	                if ('object' !== (typeof _clr === 'undefined' ? 'undefined' : _typeof(_clr))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.style('color', _clr.getStyle());
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'font',
-	        value: function font(fnt) {
-	            try {
-	                var _fnt = fnt === undefined ? null : fnt;
-	                if (null === _fnt) {
-	                    return this.getStyleTgt().getStyle('font-family');
-	                }
-	                if ('object' !== (typeof _fnt === 'undefined' ? 'undefined' : _typeof(_fnt))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.style('font-family', _fnt.getFontFamily());
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setTheme',
-	        value: function setTheme(idx) {
-	            try {
-	                var _idx = idx === undefined ? 0 : idx;
-	                this.getTarget().addClname('mofron-theme-font' + _idx);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Button.js
-	 * @author simpart
-	 */
-
-	/**
-	 * @class Button
-	 */
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class(cnt) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, cnt));
-
-	            if ('string' === typeof cnt) {
-	                _this.addChild(new mofron.parts.Text(cnt));
-	            } else if ('object' === (typeof cnt === 'undefined' ? 'undefined' : _typeof(cnt))) {
-	                _this.addChild(cnt);
-	            } else {
-	                throw new Error('invalid parameter');
-	            }
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                vd.addChild(new mofron.util.Vdom('button'));
-	                this.style('cursor', 'pointer');
-	                this.width(50);
-	                this.height(25);
-	                //this.style('display'        , 'flex');
-	                //this.style('align-items'    , 'center');
-	                //this.style('justify-content', 'center');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setClickEvent',
-	        value: function setClickEvent(func, prm) {
-	            try {
-	                if (null === func) {
-	                    throw new Error('invalid parameter');
-	                }
-	                var _prm = prm === undefined ? null : prm;
-	                var click = new mofron.event.Click();
-	                click.setCbfunc(func, _prm);
-	                this.addEvent(click);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'width',
-	        value: function width(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var btn = this.getTarget();
-	                if (null === _val) {
-	                    return btn.getStyle('width');
-	                }
-	                if ('number' != typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                btn.setStyle('width', _val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'height',
-	        value: function height(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var btn = this.getTarget();
-	                if (null === _val) {
-	                    return btn.getStyle('height');
-	                }
-	                if ('number' != typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                btn.setStyle('height', _val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Input.js
-	 * @brief  Base of UI InputText Class
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class(val) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, val));
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                vd.addChild(new mofron.util.Vdom('input'));
-	                this.width(200);
-	                this.height(25);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'width',
-	        value: function width(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var input = this.getTarget();
-	                if (null === _val) {
-	                    return input.getStyle('width');
-	                }
-	                if ('number' != typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                input.setStyle('width', val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'height',
-	        value: function height(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var input = this.getTarget();
-	                if (null === _val) {
-	                    return input.getStyle('height');
-	                }
-	                if ('number' != typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                input.setStyle('height', val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getText',
-	        value: function getText() {
-	            try {
-	                var vd = this.getTarget();
-	                if (false === vd.isPushed()) {
-	                    return null;
-	                }
-	                var dm = document.querySelector('#' + vd.getId());
-	                return dm.value;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-	/* end of file */
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Header.js
-	 * @brief  Base UI of Header
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                /* set header style */
-	                var hdr_conts = new mofron.util.Vdom('div');
-	                hdr_conts.setStyle('width', '100%');
-	                hdr_conts.setStyle('border-bottom', 'solid 1px lightgray');
-	                hdr_conts.setStyle('position', 'fixed');
-	                vd.addChild(hdr_conts);
-	                var hdr_pad = new mofron.util.Vdom('div');
-	                vd.addChild(hdr_pad);
-
-	                /* set default height */
-	                this.height(50);
-
-	                /* child parts is added at horizon layout */
-	                this.addLayout(new mofron.layout.Horizon());
-
-	                if (undefined != mofron.theme) {
-	                    var clr = mofron.theme.getColor(0);
-	                    if (null !== clr) {
-	                        this.color(clr);
-	                    }
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setThemeColor',
-	        value: function setThemeColor() {
-	            try {
-	                if (undefined != mofron.theme) {
-	                    var clr = mofron.util.theme.getColor(0);
-	                    if (null !== clr) {
-	                        this.color(clr);
-	                    }
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getEventTgt',
-	        value: function getEventTgt() {
-	            try {
-	                return this.vdom; //.getChild(1);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	        /**
-	         * set/get header height
-	         *
-	         * @param hei : (int) height (px)
-	         */
-
-	    }, {
-	        key: 'height',
-	        value: function height(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var hdr = this.getTarget();
-
-	                if (null === _val) {
-	                    return hdr.getStyle('height');
-	                }
-	                if ('number' != typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                hdr.setStyle('height', val + 'px');
-	                this.vdom.getChild(1).setStyle('height', val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set header background color
-	         *
-	         * col : (string) color
-	         */
-
-	    }, {
-	        key: 'color',
-	        value: function color(col) {
-	            try {
-	                if (null === col || col === undefined) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                if ('object' != (typeof col === 'undefined' ? 'undefined' : _typeof(col))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.style('background', col.getStyle());
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Frame.js
-	 * @brief  Base UI Frame class
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * initialize contents
-	         * 
-	         * @param disp : (bool) visible flag
-	         */
-
-	    }, {
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                var frame = new mofron.util.Vdom('div');
-	                frame.setStyle('border', 'solid 1px black');
-	                vd.addChild(frame);
-
-	                if ('number' === typeof prm) {
-	                    this.size(prm, prm);
-	                } else {
-	                    this.size(100, 100);
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'size',
-	        value: function size(hei, wid) {
-	            try {
-	                var _hei = hei === undefined ? null : hei;
-	                var _wid = wid === undefined ? null : wid;
-	                var style = this.getStyleTgt();
-
-	                if (null === _hei && null === _wid) {
-	                    return [style.getStyle('height'), style.getStyle('width')];
-	                }
-
-	                if ('number' != typeof _hei || 'number' != typeof _wid) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                style.setStyle('height', _hei + 'px');
-	                style.setStyle('width', _wid + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'radius',
-	        value: function radius(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var style = this.getStyleTgt();
-
-	                if (null === _val) {
-	                    var ret_val = style.getStyle('webkit-border-radius');
-	                    if (null != ret_val) {
-	                        return ret_val;
-	                    }
-	                    ret_val = style.getStyle('-moz-border-radius');
-	                    if (null != ret_val) {
-	                        return ret_val;
-	                    }
-	                    ret_val = style.getStyle('border-radius');
-	                    if (null != ret_val) {
-	                        return ret_val;
-	                    }
-	                    return null;
-	                }
-
-	                if ('number' != typeof val) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                style.setStyle('webkit-border-radius', _val + 'px');
-	                style.setStyle('-moz-border-radius', _val + 'px');
-	                style.setStyle('border-radius', _val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'shadow',
-	        value: function shadow(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                var style = this.getStyleTgt();
-
-	                if (null === _val) {
-	                    return style.getStyle('box-shadow');
-	                }
-
-	                if ('number' != typeof val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                style.setStyle('box-shadow', val / 2 + 'px ' + val / 2 + 'px ' + val + 'px ' + '0px gray');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Image.js
-	 * @brief  Base UI Image Class
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-
-
-	        //    constructor (url) {
-	        //        try {
-	        //            super(prm);
-	        //        } catch (e) {
-	        //            console.error(e.stack);
-	        //            throw e;
-	        //        }
-	        //    }
-
-	        value: function initContents(vd, prm) {
-	            try {
-	                if ('string' !== typeof prm) {
-	                    throw new Error('invalid parameter');
-	                }
-	                var image = new mofron.util.Vdom('img');
-	                image.setAttr('src', prm);
-	                vd.addChild(image);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Loading.js
-	 * @brief  Base UI Loading Class
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class(prm) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
-
-	            _this.timeout = 0;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-	    /**
-	     * 
-	     */
-
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-	        value: function initContents(vd, tgt) {
-	            try {
-	                var txt = new mofron.util.Vdom('div');
-	                txt.setText('Loading..');
-	                vd.addChild(txt);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'notifyTimeout',
-	        value: function notifyTimeout(cbf, to) {
-	            try {
-	                if (0 > to) {
-	                    throw new Error('invalid parameter');
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setVisible',
-	        value: function setVisible(flg, eff) {
-	            try {
-	                _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'setVisible', this).call(this, flg, eff);
-	                if (true === flg && 0 != this.timeout) {}
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Heading.js
-	 * @brief  Base UI of Heading
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class(txt, lv) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _lv = lv === undefined ? 1 : lv;
-	            if (null === txt || 'number' != typeof _lv) {
-	                throw new Error('invalid parameter');
-	            }
-	            if (1 > _lv || 6 < _lv) {
-	                throw new Error('invalid parameter');
-	            }
-
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, [txt, _lv]));
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.vdom.getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                // var frame = new mofron.parts.Frame();
-	                //frame.style('width', '100%');
-	                //frame.style('height', null);
-	                //this.addChild(frame);
-
-	                var conts = new mofron.util.Vdom('h' + prm[1]);
-	                conts.setStyle('margin', '0px');
-	                conts.setText(prm[0]);
-	                //frame.getTarget().addChild(conts);
-	                vd.addChild(conts);
-
-	                //var style = new mofron.other.Styles(this, ' div');
-	                //style.style('width'  , '100%');
-	                //style.style('height' , '35px');
-	                //style.style('border-left'  , 'solid 15px black');
-	                //style.style('border-bottom', 'solid 1px black');
-	                //if (null !== this.theme.colors[0]) {
-	                //    style.style('border-color', this.theme.colors[0].getStyle());
-	                //}
-	                //
-	                //var ttl_style = new mofron.other.Styles(this.title);
-	                //ttl_style.style('margin-left'  , '20px');
-	                //this.addChild(this.title,disp);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'marginLeft',
-	        value: function marginLeft(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                if (null === _val) {
-	                    return this.getTarget().getStyle('margin-left');
-	                }
-	                if ('number' !== typeof _val) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.style('margin-left', val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file   Background.js
-	 * @author simpart
-	 */
-
-	module.exports = function (_mofron$parts$Base) {
-	    _inherits(_class, _mofron$parts$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {
-	            try {
-	                var div = new mofron.util.Vdom('div');
-	                div.setStyle('height', '100%');
-	                div.setStyle('width', '100%');
-	                div.setStyle('position', 'fixed');
-	                vd.addChild(div);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getTarget',
-	        value: function getTarget() {
-	            try {
-	                return this.getVdom().getChild(0);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setColor',
-	        value: function setColor(clr) {
-	            try {
-	                //var style = new mofron.other.Styles(this);
-	                //style.style('background'    , clr.getStyle ());
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setShadow',
-	        value: function setShadow(val) {
-	            try {
-	                //var style = new mofron.other.Styles(this);
-	                //style.style('box-shadow'    , '0px '+ val/2 + 'px '+ val +'px '+ '0px gray');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.parts.Base);
-
-/***/ },
-/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2693,246 +1653,7 @@
 	}();
 
 /***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file Horizon.js
-	 */
-	module.exports = function (_mofron$layout$Base) {
-	    _inherits(_class, _mofron$layout$Base);
-
-	    function _class(rt) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
-
-	            _this.exec_flg = false;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'layout',
-	        value: function layout() {
-	            try {
-	                if (true === this.exec_flg) {
-	                    return;
-	                }
-
-	                this.target.style('display', '-webkit-flex');
-	                this.target.style('display', 'flex');
-	                this.exec_flg = true;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.layout.Base);
-
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file HorizCenter.js
-	 */
-	module.exports = function (_mofron$layout$Base) {
-	    _inherits(_class, _mofron$layout$Base);
-
-	    function _class(rt) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
-
-	            var _rt = rt === undefined ? 80 : rt;
-	            _this.rate = _rt;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'layout',
-	        value: function layout() {
-	            try {
-	                var child = this.target.getChild();
-	                for (var idx in child) {
-	                    child[idx].getVdom().setStyle('width', this.rate + '%');
-	                    child[idx].getVdom().setStyle('position', 'relative');
-	                    child[idx].getVdom().setStyle('left', (100 - this.rate) / 2 + '%');
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.layout.Base);
-
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file Center.js
-	 */
-
-	module.exports = function (_mofron$layout$Base) {
-	    _inherits(_class, _mofron$layout$Base);
-
-	    function _class(rt) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
-
-	            var _rt = rt === undefined ? 50 : rt;
-	            _this.rate = _rt;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'layout',
-	        value: function layout() {
-	            try {
-	                this.target.style('display', '-webkit-flex');
-
-	                var style = new mofron.other.Styles(tgt_chd);
-	                style.style('height', this.rate + '%');
-	                style.style('position', 'relative');
-	                style.style('top', (100 - this.rate) / 2 + '%');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.layout.Base);
-	/* end of file */
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file Margin.js
-	 */
-
-	module.exports = function (_mofron$layout$Base) {
-	    _inherits(_class, _mofron$layout$Base);
-
-	    function _class(tp, v) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
-
-	            if ('string' != typeof tp || '' != tp && 'top' != tp && 'right' != tp && 'bottom' != tp && 'left' != tp || 'number' != typeof v) {
-	                throw new Error('invalid parameter');
-	            }
-	            _this.type = tp;
-	            _this.val = v;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'layoutFunc',
-	        value: function layoutFunc(idx, tgt) {
-	            try {
-	                var mg = 'margin';
-	                if ('' !== this.type) {
-	                    mg += '-' + this.type;
-	                }
-	                tgt.getVdom().setStyle(mg, this.val + 'px');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'value',
-	        value: function value(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                if (null === _val) {
-	                    return this.val;
-	                }
-	                this.val = _val;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.layout.Base);
-
-/***/ },
-/* 24 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3006,121 +1727,7 @@
 	/* end of file */
 
 /***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file Click.js
-	 */
-	module.exports = function (_mofron$event$Base) {
-	    _inherits(_class, _mofron$event$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'event',
-	        value: function event() {
-	            try {
-	                var cbf = this.cb_func;
-	                var cbp = this.cb_parm;
-	                if (false === this.target.isPushed()) {
-	                    throw new Error('target is not ready');
-	                }
-	                //console.log('set click event -> ' + this.target.getId());
-	                var tgt_dom = document.querySelector('#' + this.target.getId());
-	                tgt_dom.addEventListener('click', function () {
-	                    try {
-	                        if (null != cbf) {
-	                            cbf(cbp);
-	                        }
-	                    } catch (e) {
-	                        console.error(e.stack);
-	                        throw e;
-	                    }
-	                }, false);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.event.Base);
-
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @file HoverOut.js
-	 */
-	module.exports = function (_mofron$event$Base) {
-	    _inherits(_class, _mofron$event$Base);
-
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	        key: 'event',
-	        value: function event() {
-	            try {
-	                var cbf = this.cb_func;
-	                var cbp = this.cb_parm;
-
-	                if (false === this.target.isPushed()) {
-	                    throw new Error('target is not ready');
-	                }
-	                var tgt_dom = document.querySelector('#' + this.target.getId());
-	                tgt_dom.addEventListener('mouseover', function () {
-	                    try {
-	                        if (null != cbf) {
-	                            cbf(cbp);
-	                        }
-	                    } catch (e) {
-	                        console.error(e.stack);
-	                        throw e;
-	                    }
-	                }, false);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.event.Base);
-
-/***/ },
-/* 27 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3150,6 +1757,7 @@
 	            if (null != _spd) {
 	                this.setSpeed(_spd);
 	            }
+
 	            this.callback = new Array(null, null);
 	        } catch (e) {
 	            console.error(e.stack);
@@ -3234,79 +1842,7 @@
 	}();
 
 /***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	module.exports = function (_mofron$effect$Base) {
-	    _inherits(_class, _mofron$effect$Base);
-
-	    function _class(tgt, spd) {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, tgt, spd));
-
-	            _this.exec = false;
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	        return _this;
-	    }
-
-	    _createClass(_class, [{
-	        key: 'effect_func',
-	        value: function effect_func(flg, vd) {
-	            try {
-	                if (false === this.exec) {
-	                    vd.setStyle('-webkit-transition', this.speed + 's all linear 0s');
-	                    vd.setStyle('-moz-transition', 'all ' + this.speed + 's');
-	                    vd.setStyle('-ms-transition', 'all ' + this.speed + 's');
-	                    vd.setStyle('-o-transition', 'all ' + this.speed + 's');
-	                    vd.setStyle('transtion', this.speed + 's all linear 0s');
-
-	                    if (true === flg) {
-	                        vd.setStyle('opacity', '0');
-	                    } else {
-	                        vd.setStyle('opacity', '1');
-	                    }
-	                }
-
-	                var disp = vd.getStyle('display');
-	                if ('none' == disp) {
-	                    vd.setStyle('display', null);
-	                }
-
-	                setTimeout(function (prm) {
-	                    if (true === prm[1]) {
-	                        prm[0].setStyle('opacity', '1');
-	                    } else {
-	                        prm[0].setStyle('opacity', '0');
-	                    }
-	                }, 200, [vd, flg]);
-	                this.exec = true;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}(mofron.effect.Base);
-
-/***/ },
-/* 29 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";

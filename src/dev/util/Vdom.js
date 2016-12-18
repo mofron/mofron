@@ -65,7 +65,6 @@ module.exports = class {
     
     setStyle(key, val) {
         try {
-            //console.log('set ' + this.tag + ' style-> ' + key + ':' + val);
             this.style.set(key,val);
             this.value = null;
         } catch (e) {
@@ -87,7 +86,15 @@ module.exports = class {
         try {
             var _key = (key === undefined) ? null : key;
             var _val = (val === undefined) ? null : val;
+            if ( (null     === _key) ||
+                 (null     === _val) ||
+                 ('string' !== (typeof _key)) ) {
+                throw new Error('invalid parameter : ' + _key);
+            }
             this.attr[_key] = _val;
+            if (true === this.isPushed()) {
+                document.querySelector('#' + this.getId()).setAttribute(_key, val);
+            }
             this.value = null;
         } catch (e) {
             console.error(e.stack);
