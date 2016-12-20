@@ -1,7 +1,8 @@
 /**
  * @file tmpl/Base.js
  */
-module.exports = class {
+
+mofron.tmpl.Base = class {
     constructor () {
         try {
             this.base = new mofron.parts.Base();

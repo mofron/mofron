@@ -1,7 +1,8 @@
 /**
  * @file effect/Base.js
  */
-module.exports = class {
+
+mofron.effect.Base = class {
     constructor (tgt,spd) {
         try {
             var _tgt    = (tgt === undefined) ? null : tgt;

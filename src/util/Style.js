@@ -1,7 +1,8 @@
 /**
  * @file Style.js
  */
-module.exports = class {
+
+mofron.util.Style = class {
     constructor (tgt) {
         try {
             if ('object' != (typeof tgt) ) {

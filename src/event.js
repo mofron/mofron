@@ -1,7 +1,8 @@
 /**
  * @file event/Base.js
  */
-module.exports = class {
+
+mofron.event.Base = class {
     constructor (cbf) {
         try {
             var _cbf = cbf === undefined ? null : cbf;

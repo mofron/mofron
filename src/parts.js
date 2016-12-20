@@ -4,7 +4,7 @@
  * @author simpart
  */
 
-module.exports = class {
+mofron.parts.Base = class {
     constructor (prm) {
         try {
             var _prm = (prm === undefined) ? null : prm;
@@ -13,6 +13,7 @@ module.exports = class {
             this.event     = new Array();
             this.layout    = new Array();
             this.vdom      = new mofron.util.Vdom('div');
+            this.target    = this.vdom;
             this.state     = null;
             this.initContents(this.vdom, _prm);
         } catch (e) {
@@ -35,9 +36,11 @@ module.exports = class {
         }
     }
     
+    initContents(vd, prm) {}
+    
     getTarget () {
         try {
-            return this.vdom;
+            return this.target;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -243,13 +246,15 @@ module.exports = class {
             }
             
             this.state    = "inited";
+            
+            this.afterInit();
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    initContents(vd, prm) {}
+    afterInit () {}
     
     setVisible (flg, eff) {
         try  {

@@ -3,7 +3,7 @@
  *
  */
 
-module.exports = class {
+mofron.util.HeadConts = class {
     constructor (tag) {
         try {
             if ('string' != (typeof tag)) {

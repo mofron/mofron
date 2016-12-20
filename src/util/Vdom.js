@@ -3,7 +3,7 @@
  *
  */
 
-module.exports = class {
+mofron.util.Vdom = class {
     constructor (tag) {
         try {
             if ('string' != (typeof tag)) {

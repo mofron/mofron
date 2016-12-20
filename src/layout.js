@@ -2,7 +2,8 @@
  * @file layout/Base.js
  * @brief Base class of layout
  */
-module.exports = class {
+
+mofron.layout.Base = class {
     constructor () {
         try {
             this.target   = null;

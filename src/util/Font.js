@@ -1,7 +1,8 @@
 /**
  * @file  Font.js
  */
-module.exports = class {
+
+mofron.util.Font = class {
     constructor (fnt) {
         try {
             if ('string' !== (typeof fnt)) {

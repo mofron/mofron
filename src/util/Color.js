@@ -2,7 +2,8 @@
  * @file  Color.js
  * @brief color abstructor
  */
-module.exports = class {
+
+mofron.util.Color = class {
     constructor (r,g,b,a) {
         try {
             this.red   = (r === undefined) ? null : r;
