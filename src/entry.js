@@ -1,7 +1,3 @@
-//if (typeof mofron != "undefined") {
-//    console.error('mofron is already defined');
-//}
-
 require('expose?mofron!./core.js');
 
 /* util */
@@ -18,3 +14,4 @@ require('./event.js');
 require('./effect.js');
 require('./template.js');
 
+export {mofron};

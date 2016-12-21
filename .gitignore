@@ -1,8 +1,2 @@
 *.swp
-build.sh
-dev_build.sh
 node_modules/
-/src/node_modules/
-/src/package.json
-webpack.config.*
-/dist/
