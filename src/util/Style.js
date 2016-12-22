@@ -26,9 +26,9 @@ mofron.util.Style = class {
             }
             if (true === this.target.isPushed()) {
                 var dom = document.querySelector('#' + this.target.getId());
-                dom.style[key] = val;
+                dom.style[key] = _val;
             }
-            this.conts[key] = val;
+            this.conts[key] = _val;
         } catch (e) {
             console.error(e.stack);
             throw e;
