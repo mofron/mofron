@@ -1,7 +1,7 @@
 {
   "name": "mofron",
-  "version": "0.1.14",
-  "description": "javascript front-end framework",
+  "version": "0.1.15",
+  "description": "front-end framework for javascript",
   "main": "./dist/mofron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
