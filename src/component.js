@@ -1,10 +1,10 @@
 /**
- * @file   parts/Base.js
- * @brief  Base of UI Parts Class
+ * @file   component.js
+ * @brief  Base of Component Class
  * @author simpart
  */
 
-mofron.parts.Base = class {
+mofron.comp.Base = class {
     constructor (prm) {
         try {
             var _prm = (prm === undefined) ? null : prm;
@@ -201,7 +201,7 @@ mofron.parts.Base = class {
     }
     
     /**
-     * create parts to DOM
+     * create DOM of component
      * 
      * @param disp (bool) : initial visible flag. default is true
      */

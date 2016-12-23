@@ -8,7 +8,7 @@ require('./util/Color.js');
 require('./util/Font.js');
 require('./util/HeadConts.js');
 
-require('./parts.js');
+require('./component.js');
 require('./layout.js');
 require('./event.js');
 require('./effect.js');

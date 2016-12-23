@@ -1,11 +1,11 @@
 /**
- * @file tmpl/Base.js
+ * @file template.js
  */
 
 mofron.tmpl.Base = class {
     constructor () {
         try {
-            this.base = new mofron.parts.Base();
+            this.base = new mofron.comp.Base();
         } catch (e) {
             console.error(e.stack);
             throw e;
