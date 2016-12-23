@@ -57,10 +57,21 @@ mofron.util.HeadConts = class {
     
     pushTag () {
         try {
-            var set_conts = '';
-            if (false === this.isSimpleTag(this.tag)) {
-                set_conts += '<' + this.tag + '>' + this.conts + '</' + this.tag + '>';
+            var set_conts  = '';
+            var attr_conts = '';
+            for (var key in this.attr) {
+                attr_conts += key;
+                if (null != this.attr[key]) {
+                    attr_conts += '="' +this.attr[key] + '" ';
+                }
             }
+            
+            if (false === this.isSimpleTag(this.tag)) {
+                set_conts += '<' + this.tag + ' '+ attr_conts +'>' + this.conts + '</' + this.tag + '>';
+            } else {
+                set_conts += '<' + this.tag + ' '+ attr_conts +'>' + this.conts;
+            }
+            
             document.head.insertAdjacentHTML('beforeend',set_conts);
         } catch (e) {
             console.error(e.stack);
@@ -70,6 +81,11 @@ mofron.util.HeadConts = class {
     
     isSimpleTag (tag) {
         try {
+            if ( ('link' === tag) ||
+                 ('meta' === tag) ||
+                 ('base' === tag) ) {
+                return true;
+            }
             return false;
         } catch (e) {
             console.error(e.stack);

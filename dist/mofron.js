@@ -101,8 +101,8 @@
 	})(typeof window !== "undefined" ? window : undefined, function (window, noGlobal) {
 	    "use strict";
 
-	    var mof = {
-	        parts: {},
+	    return {
+	        comp: {},
 	        layout: {},
 	        event: {},
 	        effect: {},
@@ -110,20 +110,6 @@
 	        util: {},
 	        root: new Array()
 	    };
-
-	    //mof.util.Vdom      = require('./util/Vdom.js');
-	    //mof.util.Style     = require('./util/Style.js');
-	    //mof.util.Color     = require('./util/Color.js');
-	    //mof.util.Font      = require('./util/Font.js');
-	    //mof.util.HeadConts = require('./util/HeadConts.js');
-
-	    //mof.parts.Base  = require('./parts.js');
-	    //mof.layout.Base = require('./layout.js');
-	    //mof.event.Base  = require('./event.js');
-	    //mof.effect.Base = require('./effect.js');
-	    //mof.tmpl.Base   = require('./template.js');
-
-	    return mof;
 	});
 
 /***/ },
@@ -1228,9 +1214,20 @@
 	        value: function pushTag() {
 	            try {
 	                var set_conts = '';
-	                if (false === this.isSimpleTag(this.tag)) {
-	                    set_conts += '<' + this.tag + '>' + this.conts + '</' + this.tag + '>';
+	                var attr_conts = '';
+	                for (var key in this.attr) {
+	                    attr_conts += key;
+	                    if (null != this.attr[key]) {
+	                        attr_conts += '="' + this.attr[key] + '" ';
+	                    }
 	                }
+
+	                if (false === this.isSimpleTag(this.tag)) {
+	                    set_conts += '<' + this.tag + ' ' + attr_conts + '>' + this.conts + '</' + this.tag + '>';
+	                } else {
+	                    set_conts += '<' + this.tag + ' ' + attr_conts + '>' + this.conts;
+	                }
+
 	                document.head.insertAdjacentHTML('beforeend', set_conts);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1241,6 +1238,9 @@
 	        key: 'isSimpleTag',
 	        value: function isSimpleTag(tag) {
 	            try {
+	                if ('link' === tag || 'meta' === tag || 'base' === tag) {
+	                    return true;
+	                }
 	                return false;
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1862,7 +1862,7 @@
 /* 13 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1885,7 +1885,23 @@
 	    }
 
 	    _createClass(_class, [{
-	        key: "start",
+	        key: 'title',
+	        value: function title(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                if (null === _val) {
+	                    return null;
+	                }
+	                var hc = new mofron.util.HeadConts('title');
+	                hc.addConts(_val);
+	                hc.pushTag();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'start',
 	        value: function start() {
 	            try {} catch (e) {
 	                console.error(e.stack);
