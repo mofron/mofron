@@ -1,46 +1,76 @@
 /**
- * @file event/Base.js
+ * @file event.js
+ * @author simpart
  */
 
+/**
+ * @class mofron.event.Base
+ * @brief base class of event
+ */
 mofron.event.Base = class {
-    constructor (cbf) {
+    /**
+     * initialize member
+     *
+     * @param fnc : (option) function for event listener
+     * @param prm : (option) function parameter
+     */
+    constructor (fnc, prm) {
         try {
-            var _cbf = cbf === undefined ? null : cbf;
+            var _fnc     = (fnc === undefined) ? null : fnc;
             this.target  = null;
-            this.cb_func = _cbf;
-            this.cb_parm = null;
+            this.func    = null;
+            this.parm    = null;
+            if (null !== _fnc) {
+                this.setEventFunc(_fnc, prm);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setTarget (parts) {
+    /**
+     * set event target component
+     *
+     * @param comp : component object
+     */
+    setTarget (comp) {
         try {
-            if ('object' != (typeof parts)) {
+            if ('object' != (typeof comp)) {
                 throw new Error('invalid parameter');
             }
-            this.target = parts.getEventTgt();
+            this.target = comp.getEventTgt();
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setCbfunc (cbf, cbp) {
+    /**
+     * set function for event listener
+     *
+     * @param fnc : function for event listener
+     * @param prm : (option) function parameter
+     */
+    setEventFunc (fnc, prm) {
         try {
-            if (null === cbf) {
+            var _fnc = (fnc === undefined) ? null : fnc;
+            var _prm = (prm === undefined) ? null : prm;
+            if (null === _fnc) {
                 throw new Error('invalid parameter');
             }
-            var _cbp = cbp === undefined ? null : cbp;
-            this.cb_func = cbf;
-            this.cb_parm = _cbp;
+            this.func = _fnc;
+            this.parm = _prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
+    /**
+     * this is interface function.
+     * extend class need implement event().
+     */
     event () {
         try {
             console.warn('not implement');
@@ -50,4 +80,3 @@ mofron.event.Base = class {
         }
     }
 }
-/* end of file */
