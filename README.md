@@ -21,6 +21,8 @@ you need webpack
 </html>
 ```
 
+example (button display)
+
 ```javascript
 require('mofron'); 
 require('mofron-comp-button');
