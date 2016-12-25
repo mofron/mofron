@@ -4,8 +4,15 @@
 
 mofron.util.getId = function(pf) {
     try {
-        var _pf    =  (pf === undefined) ? "aid" : pf;
-        return _pf + '-' + new Date().getTime();
+        var _pf    = (pf === undefined) ? "aid" : pf;
+        var ret_id = _pf + '-' + new Date().getTime() + '-';
+        var loop   = 0;
+        var val    = 0;
+        for (loop = 0; loop < 8; loop++) {
+            val = Math.random() * 16 | 0;
+            ret_id += (loop == 12 ? 4 : loop == 16 ? val & 3 | 8 : val).toString(16);
+        }
+        return ret_id;
     } catch (e) {
         console.error(e.stack);
         throw new Error();

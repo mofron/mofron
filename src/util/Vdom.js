@@ -17,8 +17,8 @@ mofron.util.Vdom = class {
             this.style      = new mofron.util.Style(this);
             this.attr       = {};
             this.text       = null;
-            this.push_flg   = false;
             this.value      = null;
+            this.entity     = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -93,7 +93,7 @@ mofron.util.Vdom = class {
             }
             this.attr[_key] = _val;
             if (true === this.isPushed()) {
-                document.querySelector('#' + this.getId()).setAttribute(_key, val);
+                this.getPushedDom().setAttribute(_key, val);
             }
             this.value = null;
         } catch (e) {
@@ -233,7 +233,7 @@ mofron.util.Vdom = class {
             if (null === this.parent) {
                 tgt_dom = document.body;
             } else {
-                tgt_dom = document.querySelector('#' + this.parent.getId());
+                tgt_dom = this.parent.getPushedDom();
             }
             tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
             
@@ -246,7 +246,10 @@ mofron.util.Vdom = class {
     
     isPushed () {
         try {
-            return this.push_flg;
+            if (null === this.entity) {
+                return false;
+            }
+            return true;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -260,7 +263,7 @@ mofron.util.Vdom = class {
                     this.child[chd_idx].setPushed();
                 }
             }
-            this.push_flg = true;
+            this.entity = document.querySelector('#' + this.getId());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -315,10 +318,12 @@ mofron.util.Vdom = class {
             if (false === this.isPushed()) {
                 throw new Error('invalid parameter');
             }
-            return document.querySelector('#' + this.getId());
+            return this.entity;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
+    
 }

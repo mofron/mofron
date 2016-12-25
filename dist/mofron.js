@@ -116,7 +116,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	/**
 	 * @file func.js
@@ -125,7 +125,14 @@
 	mofron.util.getId = function (pf) {
 	    try {
 	        var _pf = pf === undefined ? "aid" : pf;
-	        return _pf + '-' + new Date().getTime();
+	        var ret_id = _pf + '-' + new Date().getTime() + '-';
+	        var loop = 0;
+	        var val = 0;
+	        for (loop = 0; loop < 8; loop++) {
+	            val = Math.random() * 16 | 0;
+	            ret_id += (loop == 12 ? 4 : loop == 16 ? val & 3 | 8 : val).toString(16);
+	        }
+	        return ret_id;
 	    } catch (e) {
 	        console.error(e.stack);
 	        throw new Error();
@@ -547,8 +554,8 @@
 	            this.style = new mofron.util.Style(this);
 	            this.attr = {};
 	            this.text = null;
-	            this.push_flg = false;
 	            this.value = null;
+	            this.entity = null;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -628,7 +635,7 @@
 	                }
 	                this.attr[_key] = _val;
 	                if (true === this.isPushed()) {
-	                    document.querySelector('#' + this.getId()).setAttribute(_key, val);
+	                    this.getPushedDom().setAttribute(_key, val);
 	                }
 	                this.value = null;
 	            } catch (e) {
@@ -774,7 +781,7 @@
 	                if (null === this.parent) {
 	                    tgt_dom = document.body;
 	                } else {
-	                    tgt_dom = document.querySelector('#' + this.parent.getId());
+	                    tgt_dom = this.parent.getPushedDom();
 	                }
 	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
 
@@ -788,7 +795,10 @@
 	        key: 'isPushed',
 	        value: function isPushed() {
 	            try {
-	                return this.push_flg;
+	                if (null === this.entity) {
+	                    return false;
+	                }
+	                return true;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -803,7 +813,7 @@
 	                        this.child[chd_idx].setPushed();
 	                    }
 	                }
-	                this.push_flg = true;
+	                this.entity = document.querySelector('#' + this.getId());
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -859,7 +869,7 @@
 	                if (false === this.isPushed()) {
 	                    throw new Error('invalid parameter');
 	                }
-	                return document.querySelector('#' + this.getId());
+	                return this.entity;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1265,12 +1275,12 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * @file   parts/Base.js
-	 * @brief  Base of UI Parts Class
+	 * @file   component.js
+	 * @brief  Base of Component Class
 	 * @author simpart
 	 */
 
-	mofron.parts.Base = function () {
+	mofron.comp.Base = function () {
 	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
@@ -1476,7 +1486,7 @@
 	        }
 
 	        /**
-	         * create parts to DOM
+	         * create DOM of component
 	         * 
 	         * @param disp (bool) : initial visible flag. default is true
 	         */
@@ -1869,7 +1879,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * @file tmpl/Base.js
+	 * @file template.js
 	 */
 
 	mofron.tmpl.Base = function () {
@@ -1877,7 +1887,7 @@
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.base = new mofron.parts.Base();
+	            this.base = new mofron.comp.Base();
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
