@@ -47,6 +47,15 @@ mofron.comp.Base = class {
         }
     }
     
+    getStyleTgt () {
+        try {
+            return this.getTarget();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     getEventTgt () {
         try {
             return this.getTarget();
@@ -60,7 +69,7 @@ mofron.comp.Base = class {
         try {
             var _disp = (disp === undefined) ? true  : disp;
             var _tgt  = (tgt === undefined) ?  null : tgt;
-            chd.parent = this;
+            chd.setParent (this);
             this.child.push(chd);
             if ('inited' === this.state) {
                 chd.init(_disp);
@@ -103,9 +112,9 @@ mofron.comp.Base = class {
         }
     }
     
-    getStyleTgt () {
+    setParent (pnt) {
         try {
-            return this.getTarget();
+            this.parent = pnt;
         } catch (e) {
             console.error(e.stack);
             throw e;

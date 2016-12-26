@@ -49,8 +49,8 @@ mofron.event.Base = class {
     /**
      * set function for event listener
      *
-     * @param fnc : function for event listener
-     * @param prm : (option) function parameter
+     * @param fnc : (function) function for event listener
+     * @param prm : (mixed) function parameter (option)
      */
     setEventFunc (fnc, prm) {
         try {
@@ -69,7 +69,7 @@ mofron.event.Base = class {
     
     /**
      * this is interface function.
-     * extend class need implement event().
+     * extend class need implement this function.
      */
     event () {
         try {

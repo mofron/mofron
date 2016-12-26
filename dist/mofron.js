@@ -1329,6 +1329,16 @@
 	            }
 	        }
 	    }, {
+	        key: 'getStyleTgt',
+	        value: function getStyleTgt() {
+	            try {
+	                return this.getTarget();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'getEventTgt',
 	        value: function getEventTgt() {
 	            try {
@@ -1344,7 +1354,7 @@
 	            try {
 	                var _disp = disp === undefined ? true : disp;
 	                var _tgt = tgt === undefined ? null : tgt;
-	                chd.parent = this;
+	                chd.setParent(this);
 	                this.child.push(chd);
 	                if ('inited' === this.state) {
 	                    chd.init(_disp);
@@ -1388,10 +1398,10 @@
 	            }
 	        }
 	    }, {
-	        key: 'getStyleTgt',
-	        value: function getStyleTgt() {
+	        key: 'setParent',
+	        value: function setParent(pnt) {
 	            try {
-	                return this.getTarget();
+	                this.parent = pnt;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1690,52 +1700,88 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * @file event/Base.js
+	 * @file event.js
+	 * @author simpart
 	 */
 
+	/**
+	 * @class mofron.event.Base
+	 * @brief base class of event
+	 */
 	mofron.event.Base = function () {
-	    function _class(cbf) {
+	    /**
+	     * initialize member
+	     *
+	     * @param fnc : (option) function for event listener
+	     * @param prm : (option) function parameter
+	     */
+	    function _class(fnc, prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            var _cbf = cbf === undefined ? null : cbf;
+	            var _fnc = fnc === undefined ? null : fnc;
 	            this.target = null;
-	            this.cb_func = _cbf;
-	            this.cb_parm = null;
+	            this.func = null;
+	            this.parm = null;
+	            if (null !== _fnc) {
+	                this.setEventFunc(_fnc, prm);
+	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
 	    }
 
+	    /**
+	     * set event target component
+	     *
+	     * @param comp : component object
+	     */
+
+
 	    _createClass(_class, [{
 	        key: 'setTarget',
-	        value: function setTarget(parts) {
+	        value: function setTarget(comp) {
 	            try {
-	                if ('object' != (typeof parts === 'undefined' ? 'undefined' : _typeof(parts))) {
+	                if ('object' != (typeof comp === 'undefined' ? 'undefined' : _typeof(comp))) {
 	                    throw new Error('invalid parameter');
 	                }
-	                this.target = parts.getEventTgt();
+	                this.target = comp.getEventTgt();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * set function for event listener
+	         *
+	         * @param fnc : (function) function for event listener
+	         * @param prm : (mixed) function parameter (option)
+	         */
+
 	    }, {
-	        key: 'setCbfunc',
-	        value: function setCbfunc(cbf, cbp) {
+	        key: 'setEventFunc',
+	        value: function setEventFunc(fnc, prm) {
 	            try {
-	                if (null === cbf) {
+	                var _fnc = fnc === undefined ? null : fnc;
+	                var _prm = prm === undefined ? null : prm;
+	                if (null === _fnc) {
 	                    throw new Error('invalid parameter');
 	                }
-	                var _cbp = cbp === undefined ? null : cbp;
-	                this.cb_func = cbf;
-	                this.cb_parm = _cbp;
+	                this.func = _fnc;
+	                this.parm = _prm;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * this is interface function.
+	         * extend class need implement this function.
+	         */
+
 	    }, {
 	        key: 'event',
 	        value: function event() {
@@ -1750,7 +1796,6 @@
 
 	    return _class;
 	}();
-	/* end of file */
 
 /***/ },
 /* 12 */
