@@ -23,6 +23,7 @@
         effect    : {},
         tmpl      : {},
         util      : {},
+        theme     : null,
         root      : new Array(),
     };
 });

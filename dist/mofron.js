@@ -64,6 +64,7 @@
 	__webpack_require__(11);
 	__webpack_require__(12);
 	__webpack_require__(13);
+	__webpack_require__(14);
 
 	exports.mofron = mofron;
 
@@ -108,6 +109,7 @@
 	        effect: {},
 	        tmpl: {},
 	        util: {},
+	        theme: null,
 	        root: new Array()
 	    };
 	});
@@ -122,10 +124,15 @@
 	 * @file func.js
 	 */
 
-	mofron.util.getId = function (pf) {
+	mofron.util.getId = function (tgt) {
 	    try {
-	        var _pf = pf === undefined ? "aid" : pf;
-	        var ret_id = _pf + '-' + new Date().getTime() + '-';
+	        var _tgt = tgt === undefined ? null : tgt;
+	        var ipf = "aid";
+	        if (null !== _tgt) {
+	            console.log(_tgt);
+	            ipf = _tgt.name();
+	        }
+	        var ret_id = ipf + '-' + new Date().getTime() + '-';
 	        var loop = 0;
 	        var val = 0;
 	        for (loop = 0; loop < 8; loop++) {
@@ -535,11 +542,22 @@
 
 	/**
 	 * @file util/Vdom.js
-	 *
+	 * @author simpart
 	 */
 
+	/**
+	 * @class Vdom
+	 * @brief virtual dom defined
+	 */
 	mofron.util.Vdom = function () {
-	    function _class(tag) {
+
+	    /**
+	     * initialize member
+	     *
+	     * @param tag : (string) tag name
+	     * @param cmp : (object) component object
+	     */
+	    function _class(tag, cmp) {
 	        _classCallCheck(this, _class);
 
 	        try {
@@ -547,13 +565,14 @@
 	                throw new Error('invalid parameter');
 	            }
 	            this.id = null;
-	            this.tag = tag;
+	            this.comp = undefined === cmp ? null : cmp;
+	            this.m_tag = tag;
 	            this.clname = new Array();
-	            this.parent = null;
+	            this.m_parent = null;
 	            this.child = new Array();
-	            this.style = new mofron.util.Style(this);
-	            this.attr = {};
-	            this.text = null;
+	            this.m_style = new mofron.util.Style(this);
+	            this.m_attr = {};
+	            this.m_text = null;
 	            this.value = null;
 	            this.entity = null;
 	        } catch (e) {
@@ -562,25 +581,47 @@
 	        }
 	    }
 
+	    /**
+	     * tar name setter / getter
+	     * r('invalid parameter');
+	     *
+	     * @param tg : (string) tag name (option)
+	     * @return (string) tag name
+	     */
+
+
 	    _createClass(_class, [{
-	        key: 'chgTag',
-	        value: function chgTag(tag) {
+	        key: 'tag',
+	        value: function tag(tg) {
 	            try {
-	                if ('string' != typeof tag) {
+	                var _tg = undefined === tg ? null : tg;
+	                if (null === _tg) {
+	                    /* getter */
+	                    return this.m_tag;
+	                }
+	                if ('string' != typeof _tg) {
 	                    throw new Error('invalid parameter');
 	                }
-	                this.tag = tag;
+	                /* setter */
+	                this.m_tag = _tg;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * get tag id
+	         * 
+	         * @return (string) tag id
+	         */
+
 	    }, {
 	        key: 'getId',
 	        value: function getId() {
 	            try {
 	                if (null === this.id) {
-	                    this.id = mofron.util.getId();
+	                    this.id = mofron.util.getId(this.comp);
 	                }
 	                return this.id;
 	            } catch (e) {
@@ -588,6 +629,13 @@
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * add child vdom
+	         *
+	         * @param chd : (object) child vdom
+	         */
+
 	    }, {
 	        key: 'addChild',
 	        value: function addChild(chd) {
@@ -595,7 +643,7 @@
 	                if ('object' != (typeof chd === 'undefined' ? 'undefined' : _typeof(chd))) {
 	                    throw new Error('invalid parameter');
 	                }
-	                chd.setTarget(this);
+	                chd.parent(this);
 	                this.child.push(chd);
 	                this.value = null;
 	            } catch (e) {
@@ -603,248 +651,14 @@
 	                throw e;
 	            }
 	        }
-	    }, {
-	        key: 'setStyle',
-	        value: function setStyle(key, val) {
-	            try {
-	                this.style.set(key, val);
-	                this.value = null;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getStyle',
-	        value: function getStyle(key) {
-	            try {
-	                return this.style.get(key);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setAttr',
-	        value: function setAttr(key, val) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                var _val = val === undefined ? null : val;
-	                if (null === _key || null === _val || 'string' !== typeof _key) {
-	                    throw new Error('invalid parameter : ' + _key);
-	                }
-	                this.attr[_key] = _val;
-	                if (true === this.isPushed()) {
-	                    this.getPushedDom().setAttribute(_key, val);
-	                }
-	                this.value = null;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getAttr',
-	        value: function getAttr(val) {
-	            try {
-	                var _val = val === undefined ? null : val;
-	                if (null === _val) {
-	                    return this.attr;
-	                }
-	                return this.attr[_val];
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'addClname',
-	        value: function addClname(name) {
-	            try {
-	                if ('string' != typeof name) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.clname.push(name);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setText',
-	        value: function setText(txt) {
-	            try {
-	                if ('string' != typeof txt) {
-	                    throw new Error('invalid parameter');
-	                }
-	                if (true === this.isPushed()) {
-	                    this.getPushedDom().innerHTML = txt;
-	                }
-	                this.text = txt;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getText',
-	        value: function getText() {
-	            try {
-	                return this.text;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getValue',
-	        value: function getValue() {
-	            try {
-	                var ret_val = '';
-	                if (null != this.value) {
-	                    ret_val += this.value;
-	                } else {
-	                    //console.log(this.getId() + ' -> getValue()');
-	                    ret_val += '<' + this.tag + ' ';
 
-	                    /* set id attribute */
-	                    ret_val += 'id="' + this.getId() + '" ';
+	        /**
+	         * get child vdom object
+	         *
+	         * @param idx : (number) child index
+	         * @return (object) child vdom object
+	         */
 
-	                    /* set class attribute:*/
-	                    var clname_str = 'class="';
-	                    for (var idx in this.clname) {
-	                        clname_str += this.clname[idx] + ' ';
-	                    }
-	                    clname_str += '"';
-	                    if ('class=""' != clname_str) {
-	                        ret_val += clname_str;
-	                    }
-
-	                    /* set style attribute */
-	                    var style_conts = this.style.get();
-	                    var style = 'style="';
-	                    for (var key in style_conts) {
-	                        if (null === style_conts[key]) {
-	                            continue;
-	                        }
-	                        style += key + ':' + style_conts[key] + ';';
-	                    }
-	                    style += '"';
-	                    if ('style=""' != style) {
-	                        ret_val += style;
-	                    }
-
-	                    var attr_conts = '';
-	                    for (var key in this.attr) {
-	                        attr_conts += key;
-	                        if (null != this.attr[key]) {
-	                            attr_conts += '=' + this.attr[key] + ' ';
-	                        }
-	                    }
-	                    ret_val += attr_conts + '>';
-
-	                    this.value = ret_val;
-	                }
-
-	                /* get child value */
-	                if (0 != this.child.length) {
-	                    for (var chd_idx in this.child) {
-	                        ret_val += this.child[chd_idx].getValue();
-	                    }
-	                }
-
-	                if (null != this.text) {
-	                    ret_val += this.text;
-	                }
-
-	                if (false === this.isSimpleTag()) {
-	                    ret_val += '</' + this.tag + '>';
-	                }
-
-	                return ret_val;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'pushDom',
-	        value: function pushDom(tgt) {
-	            try {
-	                if (true === this.isPushed()) {
-	                    throw new Error('already pushed');
-	                }
-
-	                this.setTarget(tgt);
-
-	                var tgt_dom = null;
-	                if (null === this.parent) {
-	                    tgt_dom = document.body;
-	                } else {
-	                    tgt_dom = this.parent.getPushedDom();
-	                }
-	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
-
-	                this.setPushed();
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'isPushed',
-	        value: function isPushed() {
-	            try {
-	                if (null === this.entity) {
-	                    return false;
-	                }
-	                return true;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setPushed',
-	        value: function setPushed() {
-	            try {
-	                if (0 != this.child.length) {
-	                    for (var chd_idx in this.child) {
-	                        this.child[chd_idx].setPushed();
-	                    }
-	                }
-	                this.entity = document.querySelector('#' + this.getId());
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'isSimpleTag',
-	        value: function isSimpleTag() {
-	            try {
-	                if ('br' == this.tag || 'hr' == this.tag || 'input' == this.tag || 'img' == this.tag) {
-	                    return true;
-	                }
-	                return false;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setTarget',
-	        value: function setTarget(tgt) {
-	            try {
-	                if ('object' != (typeof tgt === 'undefined' ? 'undefined' : _typeof(tgt))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.parent = tgt;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
 	    }, {
 	        key: 'getChild',
 	        value: function getChild(idx) {
@@ -862,6 +676,329 @@
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * style setter / getter
+	         *
+	         * @param key : (string) style key (option)
+	         * @param val : (string) style value (option)
+	         * @return (string) : style value
+	         * @return (object) : style object
+	         */
+
+	    }, {
+	        key: 'style',
+	        value: function style(key, val) {
+	            try {
+	                if (undefined === val && 'string' === typeof key) {
+	                    /* getter */
+	                    return this.m_style.get(key);
+	                } else if ('string' === typeof key && ('string' === typeof val || null === val)) {
+	                    /* setter */
+	                    this.m_style.set(key, val);
+	                    this.value;
+	                } else if (undefined === key && undefined === val) {
+	                    /* getter */
+	                    return this.m_style;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * tag attribute setter / getter
+	         *
+	         * @param key : (string) attribute key (option)
+	         * @param val : (string) attribute value (option)
+	         * @return
+	         */
+
+	    }, {
+	        key: 'attr',
+	        value: function attr(key, val) {
+	            try {
+	                if ('string' === typeof key && ('string' === typeof val || null === val)) {
+	                    /* setter */
+	                    this.m_attr[key] = val;
+	                    if (true === this.isPushed()) {
+	                        this.getPushedDom().setAttribute(_key, val);
+	                    }
+	                    this.value = null;
+	                } else if ('string' === typeof key && undefined === val) {
+	                    /* getter */
+	                    return this.m_attr[key];
+	                } else if (undefined === key || undefined === val) {
+	                    /* getter */
+	                    return this.m_attr;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * add tag class name
+	         * 
+	         * @param name : (string) class name
+	         */
+
+	    }, {
+	        key: 'addClname',
+	        value: function addClname(name) {
+	            try {
+	                if ('string' != typeof name) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.clname.push(name);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * tag contents text setter / getter
+	         * 
+	         * @param cnt : (string) tag contents (option)
+	         * @return (string) tag contents
+	         */
+
+	    }, {
+	        key: 'text',
+	        value: function text(txt) {
+	            try {
+	                if ('string' === typeof txt) {
+	                    /* setter */
+	                    if (true === this.isPushed()) {
+	                        this.getPushedDom().innerHTML = txt;
+	                    }
+	                    this.m_text = txt;
+	                } else if (undefined === txt) {
+	                    /* getter */
+	                    return this.m_text;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get dom string
+	         *
+	         * @return (string) dom string
+	         */
+
+	    }, {
+	        key: 'getValue',
+	        value: function getValue() {
+	            try {
+	                var ret_val = '';
+	                if (null != this.value) {
+	                    ret_val += this.value;
+	                } else {
+	                    //console.log(this.getId() + ' -> getValue()');
+	                    ret_val += '<' + this.tag() + ' ';
+
+	                    /* set id attribute */
+	                    ret_val += 'id="' + this.getId() + '" ';
+
+	                    /* set class attribute:*/
+	                    var clname_str = 'class="';
+	                    for (var idx in this.clname) {
+	                        clname_str += this.clname[idx] + ' ';
+	                    }
+	                    clname_str += '"';
+	                    if ('class=""' != clname_str) {
+	                        ret_val += clname_str;
+	                    }
+
+	                    /* get style string */
+	                    var style_conts = this.m_style.get();
+	                    var style = 'style="';
+	                    for (var key in style_conts) {
+	                        if (null === style_conts[key]) {
+	                            continue;
+	                        }
+	                        style += key + ':' + style_conts[key] + ';';
+	                    }
+	                    style += '"';
+	                    if ('style=""' != style) {
+	                        ret_val += style;
+	                    }
+
+	                    /* get attribute string */
+	                    var attr_conts = '';
+	                    var attr_val = this.attr();
+	                    for (var key in attr_val) {
+	                        attr_conts += key;
+	                        if (null != attr_val[key]) {
+	                            attr_conts += '=' + attr_val[key] + ' ';
+	                        }
+	                    }
+	                    ret_val += attr_conts + '>';
+
+	                    this.value = ret_val;
+	                }
+
+	                /* get child value */
+	                if (0 != this.child.length) {
+	                    for (var chd_idx in this.child) {
+	                        ret_val += this.child[chd_idx].getValue();
+	                    }
+	                }
+
+	                if (null != this.text()) {
+	                    ret_val += this.text();
+	                }
+
+	                if (false === this.isSimpleTag()) {
+	                    ret_val += '</' + this.tag() + '>';
+	                }
+
+	                return ret_val;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * draw dom to target dom
+	         * 
+	         * @param tgt : (object) target dom
+	         */
+
+	    }, {
+	        key: 'pushDom',
+	        value: function pushDom(tgt) {
+	            try {
+	                if (true === this.isPushed()) {
+	                    throw new Error('already pushed');
+	                }
+
+	                this.parent(tgt);
+
+	                var tgt_dom = null;
+	                if (null === this.parent()) {
+	                    tgt_dom = document.body;
+	                } else {
+	                    tgt_dom = this.parent().getPushedDom();
+	                }
+	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
+
+	                this.setPushed();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get vdom status
+	         *
+	         * @return (boolean) true : this vdom had pushed
+	         * @return (boolean) false : this vdom had not pushed
+	         */
+
+	    }, {
+	        key: 'isPushed',
+	        value: function isPushed() {
+	            try {
+	                if (null === this.entity) {
+	                    return false;
+	                }
+	                return true;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * update vdom status
+	         * 
+	         * @note update status also child vdom
+	         */
+
+	    }, {
+	        key: 'setPushed',
+	        value: function setPushed() {
+	            try {
+	                if (0 != this.child.length) {
+	                    for (var chd_idx in this.child) {
+	                        this.child[chd_idx].setPushed();
+	                    }
+	                }
+	                this.entity = document.querySelector('#' + this.getId());
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * check whether tag name is simple tag
+	         *
+	         * @return (boolean) true  : this vdom is simple tag
+	         * @return (boolean) false : this vdom is not simple tag
+	         */
+
+	    }, {
+	        key: 'isSimpleTag',
+	        value: function isSimpleTag() {
+	            try {
+	                if ('br' == this.m_tag || 'hr' == this.m_tag || 'input' == this.m_tag || 'img' == this.m_tag) {
+	                    return true;
+	                }
+	                return false;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * parent vdom setter / getter
+	         * 
+	         * @param pnt : (object) parent vdom
+	         * @return (object) parant vdom
+	         */
+
+	    }, {
+	        key: 'parent',
+	        value: function parent(pnt) {
+	            try {
+	                if ('object' === (typeof pnt === 'undefined' ? 'undefined' : _typeof(pnt))) {
+	                    /* setter */
+	                    this.m_parent = pnt;
+	                } else if (undefined === pnt) {
+	                    /* getter */
+	                    return this.m_parent;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get pushed dom object
+	         *
+	         * @return (object) dom object
+	         */
+
 	    }, {
 	        key: 'getPushedDom',
 	        value: function getPushedDom() {
@@ -962,14 +1099,27 @@
 
 	/**
 	 * @file  Color.js
-	 * @brief color abstructor
+	 * @author simpart
 	 */
 
+	/**
+	 * @class Color
+	 * @brief Color Defined Class
+	 */
 	mofron.util.Color = function () {
+	    /**
+	     * initialize member
+	     *
+	     * @param r : (number 0-255) red value (option)
+	     * @param g : (number 0-255) green value (option)
+	     * @param b : (number 0-255) blue alue (option)
+	     * @param a : (number 0-1)   alpha value (option)
+	     */
 	    function _class(r, g, b, a) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            this.name = 'Color';
 	            this.red = r === undefined ? null : r;
 	            this.green = g === undefined ? null : g;
 	            this.blue = b === undefined ? null : b;
@@ -980,19 +1130,53 @@
 	        }
 	    }
 
+	    /**
+	     * get name
+	     *
+	     * @return (string) own name
+	     */
+
+
 	    _createClass(_class, [{
+	        key: 'getName',
+	        value: function getName() {
+	            try {
+	                return this.name;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get rgba value
+	         * 
+	         * @return (object) rgba array object
+	         *   [0] -> (number) red value
+	         *   [1] -> (number) green value
+	         *   [2] -> (number) blue value
+	         *   [3] -> (number) alpha value
+	         */
+
+	    }, {
 	        key: 'getRgba',
 	        value: function getRgba() {
 	            try {
-	                if (null === this.red || null === this.green || null === this.blue) {
-	                    return 'none';
-	                }
 	                return new Array(this.red, this.green, this.blue, this.alpha);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * get coloe style value
+	         *
+	         * @return (string) rgba(x,x,x,x)
+	         * @return (string) none
+	         * @note return 'none' if rgb is null.
+	         */
+
 	    }, {
 	        key: 'getStyle',
 	        value: function getStyle() {
@@ -1025,57 +1209,109 @@
 
 	/**
 	 * @file  Font.js
+	 * @author simpart
 	 */
 
+	/**
+	 * @class Font
+	 * @brief Font Defined Class
+	 */
 	mofron.util.Font = function () {
-	    function _class(fnt) {
+	    /**
+	     * initialize font
+	     *
+	     * @param fnt : (string) font name
+	     */
+	    function _class(fnt, pth) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            /* check parameter */
+	            var _pth = pth === undefined ? null : pth;
 	            if ('string' !== typeof fnt) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.family = {};
-	            this.font = fnt;
+
+	            /* initialize member */
+	            this.m_name = null;
+	            this.m_family = {};
+	            this.size = 15;
+	            this.thm_sel = 'mofron-theme-' + mofron.util.getId(this);
+	            this.thm_flg = false;
+
+	            /* initialize function */
+	            this.name('Font');
 	            this.addFamily(fnt);
+	            if (null !== _pth) {
+	                this.setFace(fnt, _pth);
+	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
 	    }
 
+	    /**
+	     * name 
+	     *
+	     * @return (string) own name
+	     */
+
+
 	    _createClass(_class, [{
+	        key: 'name',
+	        value: function name(nm) {
+	            try {
+	                if (undefined === nm) {
+	                    /* getter */
+	                    return this.m_name;
+	                }
+	                /* setter */
+	                if ('string' !== typeof nm) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_name = nm;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set @font-face
+	         * 
+	         * @param fnt : (string) font name
+	         * @param pth : (string) path to font file
+	         */
+
+	    }, {
 	        key: 'setFace',
-	        value: function setFace(url) {
+	        value: function setFace(fnt, pth) {
 	            try {
 	                var hc = new mofron.util.HeadConts('style');
-	                var fm = null;
-	                for (var idx in this.family) {
-	                    fm = idx;
-	                    break;
-	                }
-	                if ('string' !== typeof url) {
+
+	                if ('string' !== typeof pth || 'string' !== typeof fnt) {
 	                    throw new Error('invalid parameter');
 	                }
 
 	                /* format */
-	                var url_spt = url.split('.');
+	                var pth_spt = pth.split('.');
 	                var format = '';
-	                if ('woff' === url_spt[url_spt.length - 1]) {
+	                if ('woff' === pth_spt[pth_spt.length - 1]) {
 	                    format = "format('woff')";
-	                } else if ('ttf' === url_spt[url_spt.length - 1]) {
+	                } else if ('ttf' === pth_spt[pth_spt.length - 1]) {
 	                    format = "format('truetype')";
-	                } else if ('otf' === url_spt[url_spt.length - 1]) {
+	                } else if ('otf' === pth_spt[pth_spt.length - 1]) {
 	                    format = "format('opentype')";
-	                } else if ('eot' === url_spt[url_spt.length - 1]) {
+	                } else if ('eot' === pth_spt[pth_spt.length - 1]) {
 	                    format = "format('embedded-opentype')";
-	                } else if ('svg' === url_spt[url_spt.length - 1] || 'svgz' === url_spt[url_spt.length - 1]) {
+	                } else if ('svg' === pth_spt[pth_spt.length - 1] || 'svgz' === pth_spt[pth_spt.length - 1]) {
 	                    format = "format('svg')";
 	                }
 
 	                var style = {
-	                    'font-family': fm,
-	                    'src': "url('" + url + "') " + format
+	                    'font-family': fnt,
+	                    'src': "url('" + pth + "') " + format
 	                };
 	                hc.addConts(mofron.util.getStyleConts('@font-face', style));
 	                hc.pushTag();
@@ -1084,59 +1320,158 @@
 	                throw e;
 	            }
 	        }
-	    }, {
-	        key: 'setImport',
-	        value: function setImport(url) {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
+
+	        /**
+	         * add font family
+	         *
+	         * @param fm : (string) font family
+	         */
+
 	    }, {
 	        key: 'addFamily',
 	        value: function addFamily(fm) {
 	            try {
-	                if ('string' !== typeof fm && 'object' !== (typeof fm === 'undefined' ? 'undefined' : _typeof(fm))) {
+	                var _fm = fm === undefined ? null : fm;
+	                if ('string' !== typeof _fm) {
 	                    throw new Error('invalid parameter');
 	                }
-
-	                if ('string' === typeof fm) {
-	                    this.family['"' + fm + '"'] = null;
-	                } else if ('object' === (typeof fm === 'undefined' ? 'undefined' : _typeof(fm))) {
-	                    for (var idx in fm) {
-	                        if ('string' !== fm[idx]) {
-	                            throw new Error('invalid parameter');
-	                        }
-	                        this.family['"' + fm[idx] + '"'] = null;
-	                    }
-	                }
+	                this.m_family['"' + _fm + '"'] = null;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * get font family list
+	         * 
+	         * @param idx : (number) family index
+	         * @return (object) : font family
+	         */
+
 	    }, {
 	        key: 'getFamily',
-	        value: function getFamily() {
+	        value: function getFamily(idx) {
 	            try {
-	                return this.family;
+	                var _idx = idx === undefined ? null : idx;
+	                var ret_val = new Array();
+	                for (var idx in this.m_family) {
+	                    ret_val.push(idx);
+	                }
+
+	                if (null === _idx) {
+	                    return ret_val;
+	                } else {
+	                    if (-1 < _idx && ret_val.length > _idx) {
+	                        return ret_val[_idx];
+	                    }
+	                }
+	                return null;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
 	    }, {
-	        key: 'getFontFamily',
-	        value: function getFontFamily() {
+	        key: 'getFamilyStyle',
+	        value: function getFamilyStyle() {
 	            try {
+	                var fm = this.getFamily();
 	                var fm_str = '';
-	                for (var idx in this.family) {
+	                for (var idx in fm) {
 	                    if ('' !== fm_str) {
 	                        fm_str += ',';
 	                    }
-	                    fm_str += idx;
+	                    fm_str += fm[idx];
 	                }
 	                return fm_str;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * font size setter/getter
+	         * 
+	         * @param val : (number) font size
+	         * @return (number) font size
+	         */
+
+	    }, {
+	        key: 'size',
+	        value: function size(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                if (null === _val) {
+	                    return this.size;
+	                }
+	                if ('number' !== typeof _val || 0 > _val) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.size = _val;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set own font style to style tag.
+	         */
+
+	    }, {
+	        key: 'pushTheme',
+	        value: function pushTheme() {
+	            try {
+	                if (true === this.thm_flg) {
+	                    return;
+	                }
+	                var hc = new mofron.util.HeadConts('style');
+	                var style = {
+	                    'font-family': this.getFamilyStyle(),
+	                    'font-size': this.size + 'px'
+	                };
+	                hc.addConts(mofron.util.getStyleConts(this.thm_sel, style));
+	                hc.pushTag();
+	                this.thm_flg = true;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getThemeClass',
+	        value: function getThemeClass() {
+	            try {
+	                return this.thm_sel;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set font-family style to target component
+	         * 
+	         * @param (object) : target object
+	         */
+
+	    }, {
+	        key: 'setFont',
+	        value: function setFont(tgt) {
+	            try {
+	                var _tgt = tgt === undefined ? null : tgt;
+	                if (null === _tgt || 'object' !== (typeof _tgt === 'undefined' ? 'undefined' : _typeof(_tgt))) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if (true === this.thm_flg) {
+	                    tgt.getTarget().addClname(this.thm_sel);
+	                } else {
+	                    tgt.style('font-family', this.getFamilyStyle());
+	                    tgt.style('font-size', this.size + 'px');
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1276,24 +1611,66 @@
 
 	/**
 	 * @file   component.js
-	 * @brief  Base of Component Class
 	 * @author simpart
 	 */
 
+	/**
+	 * @class Base
+	 * @brief base component class
+	 */
 	mofron.comp.Base = function () {
-	    function _class(prm) {
+
+	    /**
+	     * initialize member, vdom
+	     *
+	     * @param prm : (object) initialize parameter (option)
+	     * @param opt : (object) initialize option (option)
+	     * @note parameter syntax -> [prm] | [opt] | prm, opt
+	     */
+	    function _class(prm, opt) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            var _prm = prm === undefined ? null : prm;
-	            this.parent = null;
+	            /* initialize member */
+	            this.m_parent = null;
 	            this.child = new Array();
 	            this.event = new Array();
 	            this.layout = new Array();
-	            this.vdom = new mofron.util.Vdom('div');
+	            this.vdom = new mofron.util.Vdom('div', this);
 	            this.target = this.vdom;
-	            this.state = null;
-	            this.initContents(this.vdom, _prm);
+	            this.m_theme = new mofron.Theme();
+	            this.m_state = null;
+	            this.m_name = 'Base';
+	            this.param = new Array(null, null);
+
+	            /* parameter check */
+	            var _prm = prm === undefined ? null : prm;
+	            var _opt = opt === undefined ? null : opt;
+	            if (null !== _prm && null === _opt) {
+	                if ('object' === (typeof _prm === 'undefined' ? 'undefined' : _typeof(_prm))) {
+	                    var hit = false;
+	                    for (var idx in _prm) {
+	                        hit = true;
+	                        break;
+	                    }
+	                    if (true === hit) {
+	                        this.param[1] = _prm;
+	                    } else {
+	                        this.param[0] = _prm;
+	                    }
+	                } else {
+	                    this.param[0] = _prm;
+	                }
+	            } else if (null === _prm && null !== _opt) {
+	                this.param[1] = _opt;
+	            }
+
+	            /* initialize virtual dom */
+	            this.initVdom(this.vdom, this.param[0]);
+	            if (null !== this.param[1]) {
+	                /* option */
+
+	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -1302,11 +1679,19 @@
 
 	    /*** method ***/
 
+	    /**
+	     * return init status
+	     *
+	     * @return (boolean) true : this component is initialized
+	     * @return (boolean) false : this component is not initialize
+	     */
+
+
 	    _createClass(_class, [{
 	        key: 'isInited',
 	        value: function isInited() {
 	            try {
-	                if ('inited' === this.state) {
+	                if ('inited' === this.m_state) {
 	                    return true;
 	                }
 	                return false;
@@ -1315,162 +1700,48 @@
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * state setter / getter
+	         *
+	         * @param sts : (string) vdom status
+	         * @return (string,null) vdom status
+	         */
+
 	    }, {
-	        key: 'initContents',
-	        value: function initContents(vd, prm) {}
+	        key: 'state',
+	        value: function state(sts) {
+	            try {
+	                if (undefined === sts) {
+	                    /* getter */
+	                    return this.m_state;
+	                }
+	                /* setter */
+	                if ('string' !== typeof sts) {
+	                    throw new Error('invalid parameter');
+	                }
+	                if ('init' === sts || 'inited' === sts) {
+	                    this.m_state = sts;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get common target vdom
+	         *
+	         * @return (object) vdom object
+	         */
+
 	    }, {
 	        key: 'getTarget',
 	        value: function getTarget() {
 	            try {
 	                return this.target;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getStyleTgt',
-	        value: function getStyleTgt() {
-	            try {
-	                return this.getTarget();
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getEventTgt',
-	        value: function getEventTgt() {
-	            try {
-	                return this.getTarget();
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'addChild',
-	        value: function addChild(chd, disp, tgt) {
-	            try {
-	                var _disp = disp === undefined ? true : disp;
-	                var _tgt = tgt === undefined ? null : tgt;
-	                chd.setParent(this);
-	                this.child.push(chd);
-	                if ('inited' === this.state) {
-	                    chd.init(_disp);
-	                    for (var idx in this.layout) {
-	                        this.layout[idx].layout();
-	                    }
-	                }
-
-	                /* set initial display of child */
-	                var chd_vdom = chd.getVdom();
-	                if (false === _disp) {
-	                    chd_vdom.setStyle('display', 'none');
-	                }
-
-	                /* set to target vdom */
-	                if (null === _tgt) {
-	                    this.getTarget().addChild(chd_vdom);
-	                } else {
-	                    _tgt.addChild(chd_vdom);
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getChild',
-	        value: function getChild(idx) {
-	            try {
-	                var _idx = idx === undefined ? null : idx;
-	                if (null === _idx) {
-	                    return this.child;
-	                }
-	                if (0 > _idx || this.child.length - 1 < _idx) {
-	                    throw new Error('invalid parameter');
-	                }
-	                return this.child[_idx];
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'setParent',
-	        value: function setParent(pnt) {
-	            try {
-	                this.parent = pnt;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'style',
-	        value: function style(key, val) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                var _val = val === undefined ? null : val;
-
-	                if (null === _key && null === _val) {
-	                    return this.vdom.getStyle();
-	                }
-	                var style_tgt = this.getStyleTgt();
-	                style_tgt.setStyle(key, val);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getStyle',
-	        value: function getStyle(key) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                if (null === _key) {
-	                    return this.getStyleTgt().getStyle();
-	                }
-	                if ('string' !== typeof _key) {
-	                    throw new Error('invalid parameter');
-	                }
-	                return this.getStyleTgt().getStyle(_key);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'addEvent',
-	        value: function addEvent(evt) {
-	            try {
-	                if (undefined === evt || null === evt || 'object' != (typeof evt === 'undefined' ? 'undefined' : _typeof(evt))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.event.push(evt);
-	                evt.setTarget(this);
-	                if ('inited' === this.state) {
-	                    evt.event();
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'addLayout',
-	        value: function addLayout(lo) {
-	            try {
-	                if (undefined === lo || null === lo || 'object' != (typeof lo === 'undefined' ? 'undefined' : _typeof(lo))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.layout.push(lo);
-	                lo.setTarget(this);
-
-	                if ('inited' === this.state) {
-	                    lo.layout();
-	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1494,39 +1765,318 @@
 	                throw e;
 	            }
 	        }
+	        /**
+	         * get style target vdom
+	         *
+	         * @return (object) vdom object
+	         */
+
+	    }, {
+	        key: 'getStyleTgt',
+	        value: function getStyleTgt() {
+	            try {
+	                return this.getTarget();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
 
 	        /**
-	         * create DOM of component
+	         * get event target vdom
+	         *
+	         * @return (object) vdom object
+	         */
+
+	    }, {
+	        key: 'getEventTgt',
+	        value: function getEventTgt() {
+	            try {
+	                return this.getTarget();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * add child component
+	         * 
+	         * @param chd : (object) child component
+	         * @paran disp : (boolean) child display flag
+	         */
+
+	    }, {
+	        key: 'addChild',
+	        value: function addChild(chd, disp) {
+	            try {
+	                var _disp = disp === undefined ? true : disp;
+
+	                chd.parent(this); // child's parent is me
+	                this.child.push(chd);
+
+	                /* set theme to child */
+	                chd.theme(this.m_theme);
+
+	                /* init child */
+	                if (true === this.isInited()) {
+	                    chd.initDom(_disp);
+	                    for (var idx in this.layout) {
+	                        this.layout[idx].layout();
+	                    }
+	                }
+
+	                /* set default display of child */
+	                var chd_vdom = chd.getVdom();
+	                if (false === _disp) {
+	                    chd_vdom.style('display', 'none');
+	                }
+
+	                /* link to target my vdom */
+	                this.getTarget().addChild(chd_vdom);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get child component
+	         * 
+	         * @param idx : (number) child index (option)
+	         * @return child component
+	         */
+
+	    }, {
+	        key: 'getChild',
+	        value: function getChild(idx) {
+	            try {
+	                var _idx = idx === undefined ? null : idx;
+	                if (null === _idx) {
+	                    return this.child;
+	                }
+	                if (0 > _idx || this.child.length - 1 < _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return this.child[_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * parent getter / setter
+	         *
+	         * @param pnt : (object) parent component
+	         */
+
+	    }, {
+	        key: 'parent',
+	        value: function parent(pnt) {
+	            try {
+	                if (undefined === pnt) {
+	                    return this.m_parent;
+	                }
+	                this.m_parent = pnt;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * style getter / setter
+	         *
+	         * @param key (string) style key
+	         * @param val (string) style value
+	         * @return (object) style object
+	         * @note parameter syntax
+	         *         key     : get style value of key
+	         *         key,val : set style value of key
+	         *         (none)  : get style object
+	         */
+
+	    }, {
+	        key: 'style',
+	        value: function style(key, val) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _val = val === undefined ? null : val;
+
+	                if (null === _key && null === _val) {
+	                    return this.getStyleTgt().style();
+	                } else if (null !== _key && undefined === val) {
+	                    return this.getStyleTgt.style(_key);
+	                } else if (null !== _key && null !== _val) {
+	                    this.getStyleTgt().style(_key, _val);
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * add component event 
+	         *
+	         * @param evt : (object) event object
+	         */
+
+	    }, {
+	        key: 'addEvent',
+	        value: function addEvent(evt) {
+	            try {
+	                if (undefined === evt || null === evt || 'object' != (typeof evt === 'undefined' ? 'undefined' : _typeof(evt))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.event.push(evt);
+	                evt.setTarget(this);
+	                if (true === this.isInited()) {
+	                    evt.event();
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get event object
+	         *
+	         * @param idx : (number) event index
+	         * @return (object) event object
+	         */
+
+	    }, {
+	        key: 'getEvent',
+	        value: function getEvent(idx) {
+	            try {
+	                var _idx = idx === undefined ? null : idx;
+	                if (null === _idx) {
+	                    return this.event;
+	                }
+
+	                if ('number' !== typeof _idx || 0 > _idx || this.event.length <= _idx) {
+	                    return null;
+	                }
+	                return this.event[_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * add component layout
+	         *
+	         * @param lo : (object) layout object
+	         */
+
+	    }, {
+	        key: 'addLayout',
+	        value: function addLayout(lo) {
+	            try {
+	                if (undefined === lo || null === lo || 'object' !== (typeof lo === 'undefined' ? 'undefined' : _typeof(lo))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.layout.push(lo);
+	                lo.setTarget(this);
+
+	                if (true === this.isInited()) {
+	                    lo.layout();
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get layout object
+	         *
+	         * @param idx : (number) layout index
+	         */
+
+	    }, {
+	        key: 'getLayout',
+	        value: function getLayout(idx) {
+	            try {
+	                var _idx = idx === undefined ? null : idx;
+	                if (null === _idx) {
+	                    return this.layout;
+	                }
+
+	                if ('number' !== typeof _idx || 0 > _idx || this.layout.length <= _idx) {
+	                    return null;
+	                }
+	                return this.layout[_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * theme setter / getter
+	         *
+	         * @param thm : (object) theme object
+	         * @return (object) theme object
+	         */
+
+	    }, {
+	        key: 'theme',
+	        value: function theme(thm) {
+	            try {
+	                var _thm = thm === undefined ? null : thm;
+	                if (null === _thm) {
+	                    return this.m_theme;
+	                }
+	                this.m_theme.setTheme(_thm);
+	                for (var idx in this.child) {
+	                    this.child[idx].theme(_thm);
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * create componrnt DOM
 	         * 
 	         * @param disp (bool) : initial visible flag. default is true
 	         */
 
 	    }, {
-	        key: 'init',
-	        value: function init(disp) {
+	        key: 'initDom',
+	        value: function initDom(disp) {
 	            try {
 
-	                if ('inited' === this.state) {
+	                if (true === this.isInited()) {
 	                    throw new Error('detect duplicate init');
 	                }
-	                this.state = 'init';
+	                this.state('init');
 	                var _disp = disp === undefined ? true : disp;
 
 	                /* set initialize target */
-	                if (null === this.parent || null === this.parent.state) {
+	                if (null === this.m_parent || null === this.m_parent.state()) {
 	                    var init_tgt = null;
-	                    if (null === this.parent) {
+	                    if (null === this.m_parent) {
 	                        mofron.root.push(this);
 	                    } else {
-	                        init_tgt = this.parent.getTarget();
+	                        init_tgt = this.m_parent.getTarget();
 	                    }
 
 	                    if (false === _disp) {
-	                        this.vdom.setStyle('display', 'none');
+	                        this.vdom.style('display', 'none');
 	                    }
 	                    this.vdom.pushDom(init_tgt);
 	                }
 
+	                /* set event */
 	                for (var idx in this.event) {
 	                    this.event[idx].event();
 	                }
@@ -1536,11 +2086,13 @@
 	                    this.layout[idx].layout();
 	                }
 
+	                /* initialize child component */
 	                for (var idx in this.child) {
-	                    this.child[idx].init(_disp);
+	                    this.child[idx].initDom(_disp);
 	                }
 
-	                this.state = "inited";
+	                /* finish state */
+	                this.state("inited");
 
 	                this.afterInit();
 	            } catch (e) {
@@ -1549,15 +2101,27 @@
 	            }
 	        }
 	    }, {
+	        key: 'initVdom',
+	        value: function initVdom(vd, prm) {}
+	    }, {
 	        key: 'afterInit',
 	        value: function afterInit() {}
 	    }, {
-	        key: 'setVisible',
-	        value: function setVisible(flg, eff) {
+	        key: 'destroy',
+	        value: function destroy() {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'visible',
+	        value: function visible(flg, eff) {
 	            try {
 	                var _flg = flg === undefined ? null : flg;
 	                var _eff = eff === undefined ? null : eff;
 
+	                /* parameter check */
 	                if (null === _flg) {
 	                    throw new Error('invalid parameter');
 	                }
@@ -1566,27 +2130,33 @@
 	                    throw new Error('invalid parameter');
 	                }
 
+	                /* initialize component */
+	                if (null === this.m_state) {
+	                    this.initDom(_flg);
+	                }
+
+	                /* set effect */
 	                if (null != _eff) {
 	                    eff.setTarget(this);
 	                    eff.setCallback(function (prm) {
 	                        try {
 	                            if (true === prm[1]) {
-	                                prm[0].setStyle('display', null);
+	                                prm[0].style('display', null);
 	                            } else {
-	                                prm[0].setStyle('display', 'none');
+	                                prm[0].style('display', 'none');
 	                            }
 	                        } catch (e) {
 	                            console.error(e.stack);
 	                            throw e;
 	                        }
 	                    }, [this.getVdom(), _flg]);
+
 	                    _eff.effect(_flg);
 	                } else {
-	                    var vd = this.getVdom();
 	                    if (true === _flg) {
-	                        vd.setStyle('display', null);
+	                        this.vdom.style('display', null);
 	                    } else {
-	                        vd.setStyle('display', 'none');
+	                        this.vdom.style('display', 'none');
 	                    }
 	                }
 	            } catch (e) {
@@ -1594,11 +2164,40 @@
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * get top vdom object
+	         * 
+	         * @return (object) vdom object
+	         */
+
 	    }, {
 	        key: 'getVdom',
 	        value: function getVdom() {
 	            try {
 	                return this.vdom;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * component name setter / getter
+	         *
+	         * @param nm : (string) component name
+	         * @return (string) component name
+	         * @note parameter syntax
+	         */
+
+	    }, {
+	        key: 'name',
+	        value: function name(nm) {
+	            try {
+	                if (undefined === nm) {
+	                    return this.m_name;
+	                }
+	                this.m_name = nm;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1928,11 +2527,15 @@
 	 */
 
 	mofron.tmpl.Base = function () {
-	    function _class() {
+	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            /* initialize member */
 	            this.base = new mofron.comp.Base();
+	            this.param = prm === undefined ? null : prm;
+	            this.m_title = null;
+	            this.m_theme = null;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -1940,24 +2543,360 @@
 	    }
 
 	    _createClass(_class, [{
-	        key: 'title',
-	        value: function title(val) {
+	        key: 'init',
+	        value: function init(disp) {
 	            try {
-	                var _val = val === undefined ? null : val;
-	                if (null === _val) {
-	                    return null;
+	                var _disp = disp === undefined ? true : disp;
+	                this.initTemplate(this.param);
+	                this.base.init(false);
+	                if (true === _disp) {
+	                    this.setVisible(true);
 	                }
-	                var hc = new mofron.util.HeadConts('title');
-	                hc.addConts(_val);
-	                hc.pushTag();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
 	    }, {
-	        key: 'start',
-	        value: function start() {
+	        key: 'initTemplate',
+	        value: function initTemplate(prm) {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'title',
+	        value: function title(val) {
+	            try {
+	                var _val = val === undefined ? null : val;
+	                if (null === _val) {
+	                    return this.m_title;
+	                }
+	                var hc = new mofron.util.HeadConts('title');
+	                hc.addConts(_val);
+	                hc.pushTag();
+	                this.m_title = _val;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'theme',
+	        value: function theme(thm) {
+	            try {
+	                var _thm = thm === undefined ? null : thm;
+	                if (null === _thm) {
+	                    return this.base.theme();
+	                }
+	                this.base.theme(_thm);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setVisible',
+	        value: function setVisible(flg, eff) {
+	            try {
+	                var _eff = eff === undefined ? new mofron.effect.Fade() : eff;
+	                this.base.setVisible(true, _eff);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}();
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @file theme.js
+	 * @author simpart
+	 */
+
+	/**
+	 * @class mofron.theme
+	 * @brief Theme Defined Class
+	 */
+	mofron.Theme = function () {
+	    /**
+	     * initialize member
+	     */
+	    function _class() {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            this.conts = {};
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	    }
+
+	    /**
+	     * set theme contents
+	     * 
+	     * @param thm : (mofron.theme object) theme
+	     * @param ovr : (bool) over ride flag (option)
+	     */
+
+
+	    _createClass(_class, [{
+	        key: 'setTheme',
+	        value: function setTheme(thm, ovr) {
+	            try {
+	                var _thm = thm === undefined ? null : thm;
+	                var _ovr = ovr === undefined ? true : ovr;
+
+	                if (null === _thm) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                var thm_cnt = thm.get();
+	                var cnt_buf = null;
+	                for (var cnt_key in thm_cnt) {
+	                    cnt_buf = this.get(cnt_key);
+	                    if (false === _ovr) {
+	                        if (null !== cnt_buf) {
+	                            continue;
+	                        }
+	                    }
+	                    for (var idx in thm_cnt[cnt_key]) {
+	                        this.set(cnt_key, thm_cnt[cnt_key][idx], parseInt(idx));
+	                    }
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set font theme
+	         *
+	         * @param fnt : (object) Font object
+	         * @param idx : (number) set index (option)
+	         */
+
+	    }, {
+	        key: 'setFont',
+	        value: function setFont(fnt, idx) {
+	            try {
+	                var _fnt = fnt === undefined ? null : fnt;
+	                var _idx = idx === undefined ? 0 : idx;
+	                if (null === _fnt || 'object' !== (typeof _fnt === 'undefined' ? 'undefined' : _typeof(_fnt)) || 'Font' !== _fnt.getName()) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                _fnt.pushTheme();
+	                this.set(_fnt.getName(), _fnt, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set color theme
+	         *
+	         * @param clr : (object) Color object
+	         * @param idx : (number) set index (option)
+	         */
+
+	    }, {
+	        key: 'setColor',
+	        value: function setColor(clr, idx) {
+	            try {
+	                var _clr = clr === undefined ? null : clr;
+	                var _idx = idx === undefined ? 0 : idx;
+	                if (null === _clr || 'object' !== (typeof _clr === 'undefined' ? 'undefined' : _typeof(_clr)) || 'Color' !== _clr.getName()) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                this.set(_clr.getName(), _clr, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set component theme
+	         *
+	         * @param comp : (object) component object
+	         * @param idx : (number) set index (option)
+	         */
+
+	    }, {
+	        key: 'setComp',
+	        value: function setComp(comp, idx) {
+	            try {
+	                var _comp = comp === undefined ? null : comp;
+	                var _idx = idx === undefined ? 0 : idx;
+	                if (null === _comp || 'object' !== (typeof _comp === 'undefined' ? 'undefined' : _typeof(_comp))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.set(_comp.getName(), _comp, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getComp',
+	        value: function getComp(cmp_nm, idx) {
+	            try {
+	                var _idx = idx === undefined ? 0 : idx;
+	                var _cmp_nm = cmp_nm === undefined ? null : cmp_nm;
+	                if (null === _cmp_nm || 'string' !== typeof _cmp_nm) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return this.get(_cmp_nm, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get theme contents
+	         * 
+	         * @param key : (string) theme identify key (option)
+	         * @param idx : (number) get index (option)
+	         * @return (object) theme value
+	         */
+
+	    }, {
+	        key: 'get',
+	        value: function get(key, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _idx = idx === undefined ? null : idx;
+
+	                if (null === _key) {
+	                    return this.conts;
+	                }
+
+	                var hit = false;
+	                for (var cnt_key in this.conts) {
+	                    if (cnt_key === _key) {
+	                        hit = true;
+	                        break;
+	                    }
+	                }
+	                if (false === hit) {
+	                    return null;
+	                }
+
+	                if (null === _idx) {
+	                    return this.conts[_key];
+	                }
+
+	                if (_idx >= this.conts[_key].length || _idx < 0) {
+	                    return null;
+	                }
+
+	                //for (var dbg_key in this.conts) {
+	                //    console.log(dbg_key); 
+	                //}
+	                return this.conts[_key][_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set theme contents
+	         * 
+	         * @param key : (string) theme contetent key
+	         * @param val : (object) theme element
+	         * @param idx : (number) set index
+	         */
+
+	    }, {
+	        key: 'set',
+	        value: function set(key, val, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _val = val === undefined ? null : val;
+	                var _idx = idx === undefined ? 0 : idx;
+
+	                if (null === _key || null === _val || 0 > _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if (undefined === this.conts[_key]) {
+	                    this.conts[_key] = new Array();
+	                }
+
+	                if (_idx === this.conts[_key].length) {
+	                    this.conts[_key].push(_val);
+	                } else if (_idx < this.conts[_key].length) {
+	                    this.conts[_key][_idx] = val;
+	                } else {
+	                    throw new Error('invalid parameter');
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * remove theme value
+	         *
+	         * @param key : (string) theme identify key
+	         * @param idx : (number) remove index
+	         */
+
+	    }, {
+	        key: 'del',
+	        value: function del(key, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _idx = idx === undefined ? 0 : idx;
+
+	                if (null === _key || 0 > _idx && this.conts.length <= _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                var cnt = 0;
+	                for (var cnt_key in this.conts) {
+	                    if (cnt_key === _key) {
+	                        this.conts[cnt_key].splice(_idx, 1);
+	                        if (0 === this.conts[cnt_key].length) {
+	                            this.conts.splice(cnt, 1);
+	                        }
+	                        return;
+	                    }
+	                    cnt++;
+	                }
+
+	                throw new Error('invalid parameter');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'addNotify',
+	        value: function addNotify(func) {
 	            try {} catch (e) {
 	                console.error(e.stack);
 	                throw e;

@@ -2,10 +2,15 @@
  * @file func.js
  */
 
-mofron.util.getId = function(pf) {
+mofron.util.getId = function(tgt) {
     try {
-        var _pf    = (pf === undefined) ? "aid" : pf;
-        var ret_id = _pf + '-' + new Date().getTime() + '-';
+        var _tgt = (tgt === undefined) ? null : tgt;
+        var ipf  = "aid";
+        if (null !== _tgt) {
+console.log(_tgt);
+            ipf = _tgt.name();
+        }
+        var ret_id = ipf + '-' + new Date().getTime() + '-';
         var loop   = 0;
         var val    = 0;
         for (loop = 0; loop < 8; loop++) {

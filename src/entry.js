@@ -13,5 +13,6 @@ require('./layout.js');
 require('./event.js');
 require('./effect.js');
 require('./template.js');
+require('./theme.js');
 
 export {mofron};
