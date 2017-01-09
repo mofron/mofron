@@ -28,11 +28,11 @@ require('mofron');
 require('mofron-comp-button');
 
 // simple use
-new mofron.comp.Button('test').init(); 
+new mofron.comp.Button('test').visible(true); 
 
 var btn = new mofron.comp.Button('size');
 btn.width(150);        // set width to 150px
-btn.init();                   // set to DOM
+btn.visible(true);       // set to DOM
 btn.height(30);         // enable changing after inited
 btn.style('background', 'white');  // css setting
 
@@ -40,7 +40,7 @@ var click = new mofron.comp.Button('click');
 click.setClickEvent(function() {
     alert('click');        // click event
 });
-click.init();
+click.visible(true);
 ```
 
 [more](http://qiita.com/Ki4mTaria/items/3d2ccc1c9867ee9270bf)
