@@ -7,7 +7,6 @@ mofron.util.getId = function(tgt) {
         var _tgt = (tgt === undefined) ? null : tgt;
         var ipf  = "aid";
         if (null !== _tgt) {
-console.log(_tgt);
             ipf = _tgt.name();
         }
         var ret_id = ipf + '-' + new Date().getTime() + '-';

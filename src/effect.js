@@ -40,7 +40,7 @@ mofron.effect.Base = class {
         try {
             var _flg = (flg === undefined) ? true : flg;
             var dom  = this.target.getVdom();
-            if (false ===  dom.isPushed()) {
+            if (false ===  dom.isRendered()) {
                 throw new Error('target is not ready');
             }
             this.effect_func(_flg,dom);

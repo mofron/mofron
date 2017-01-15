@@ -8,7 +8,6 @@
  * @brief virtual dom defined
  */
 mofron.util.Vdom = class {
-    
     /**
      * initialize member
      *
@@ -55,7 +54,7 @@ mofron.util.Vdom = class {
                 throw new Error('invalid parameter');
             }
             /* setter */
-            this.m_tag      = _tg;
+            this.m_tag = _tg;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -84,11 +83,12 @@ mofron.util.Vdom = class {
      *
      * @param chd : (object) child vdom
      */
-    addChild(chd) {
+    addChild (chd) {
         try {
             if ('object' != (typeof chd)) {
                 throw new Error('invalid parameter');
             }
+            
             chd.parent(this);
             this.child.push(chd);
             this.value = null;
@@ -104,7 +104,7 @@ mofron.util.Vdom = class {
      * @param idx : (number) child index
      * @return (object) child vdom object
      */
-    getChild(idx) {
+    getChild (idx) {
         try {
             var _idx = (idx === undefined) ? null : idx;
             if (null === _idx) {
@@ -128,7 +128,7 @@ mofron.util.Vdom = class {
      * @return (string) : style value
      * @return (object) : style object
      */
-    style(key, val) {
+    style (key, val) {
         try {
             if ( (undefined === val) &&
                  ('string'  === typeof key) ) {
@@ -153,6 +153,24 @@ mofron.util.Vdom = class {
     }
     
     /**
+     * set style object
+     * 
+     */
+    setStyle(sty) {
+        try {
+            if ('object' !== (typeof sty)) {
+                throw new Error('invalid parameter');
+            }
+            for (var key in sty) {
+                this.m_style.set(key, sty[key]);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
      * tag attribute setter / getter
      *
      * @param key : (string) attribute key (option)
@@ -165,8 +183,8 @@ mofron.util.Vdom = class {
                  (('string' === typeof val) || (null === val)) ) {
                 /* setter */
                 this.m_attr[key] = val;
-                if (true === this.isPushed()) {
-                    this.getPushedDom().setAttribute(_key, val);
+                if (true === this.isRendered()) {
+                    this.getDom().setAttribute(_key, val);
                 }
                 this.value = null;
             } else if ( ('string'  === typeof key) &&
@@ -213,8 +231,8 @@ mofron.util.Vdom = class {
         try {
             if ('string' === typeof txt) {
                 /* setter */
-                if (true === this.isPushed()) {
-                    this.getPushedDom().innerHTML = txt;
+                if (true === this.isRendered()) {
+                    this.getDom().innerHTML = txt;
                 }
                 this.m_text  = txt;
             } else if (undefined === txt) {
@@ -313,7 +331,7 @@ mofron.util.Vdom = class {
      */
     pushDom (tgt) {
         try {
-            if (true === this.isPushed()) {
+            if (true === this.isRendered()) {
                 throw new Error('already pushed');
             }
             
@@ -323,7 +341,7 @@ mofron.util.Vdom = class {
             if (null === this.parent()) {
                 tgt_dom = document.body;
             } else {
-                tgt_dom = this.parent().getPushedDom();
+                tgt_dom = this.parent().getDom();
             }
             tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
             
@@ -340,7 +358,7 @@ mofron.util.Vdom = class {
      * @return (boolean) true : this vdom had pushed
      * @return (boolean) false : this vdom had not pushed
      */
-    isPushed () {
+    isRendered () {
         try {
             if (null === this.entity) {
                 return false;
@@ -420,10 +438,10 @@ mofron.util.Vdom = class {
      *
      * @return (object) dom object
      */
-    getPushedDom () {
+    getDom () {
         try {
-            if (false === this.isPushed()) {
-                throw new Error('invalid parameter');
+            if (false === this.isRendered()) {
+                throw new Error('this vdom is not rendered yet');
             }
             return this.entity;
         } catch (e) {

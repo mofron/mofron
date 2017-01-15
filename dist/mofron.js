@@ -129,7 +129,6 @@
 	        var _tgt = tgt === undefined ? null : tgt;
 	        var ipf = "aid";
 	        if (null !== _tgt) {
-	            console.log(_tgt);
 	            ipf = _tgt.name();
 	        }
 	        var ret_id = ipf + '-' + new Date().getTime() + '-';
@@ -550,7 +549,6 @@
 	 * @brief virtual dom defined
 	 */
 	mofron.util.Vdom = function () {
-
 	    /**
 	     * initialize member
 	     *
@@ -643,6 +641,7 @@
 	                if ('object' != (typeof chd === 'undefined' ? 'undefined' : _typeof(chd))) {
 	                    throw new Error('invalid parameter');
 	                }
+
 	                chd.parent(this);
 	                this.child.push(chd);
 	                this.value = null;
@@ -710,6 +709,27 @@
 	        }
 
 	        /**
+	         * set style object
+	         * 
+	         */
+
+	    }, {
+	        key: 'setStyle',
+	        value: function setStyle(sty) {
+	            try {
+	                if ('object' !== (typeof sty === 'undefined' ? 'undefined' : _typeof(sty))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                for (var key in sty) {
+	                    this.m_style.set(key, sty[key]);
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
 	         * tag attribute setter / getter
 	         *
 	         * @param key : (string) attribute key (option)
@@ -724,8 +744,8 @@
 	                if ('string' === typeof key && ('string' === typeof val || null === val)) {
 	                    /* setter */
 	                    this.m_attr[key] = val;
-	                    if (true === this.isPushed()) {
-	                        this.getPushedDom().setAttribute(_key, val);
+	                    if (true === this.isRendered()) {
+	                        this.getDom().setAttribute(_key, val);
 	                    }
 	                    this.value = null;
 	                } else if ('string' === typeof key && undefined === val) {
@@ -776,8 +796,8 @@
 	            try {
 	                if ('string' === typeof txt) {
 	                    /* setter */
-	                    if (true === this.isPushed()) {
-	                        this.getPushedDom().innerHTML = txt;
+	                    if (true === this.isRendered()) {
+	                        this.getDom().innerHTML = txt;
 	                    }
 	                    this.m_text = txt;
 	                } else if (undefined === txt) {
@@ -882,7 +902,7 @@
 	        key: 'pushDom',
 	        value: function pushDom(tgt) {
 	            try {
-	                if (true === this.isPushed()) {
+	                if (true === this.isRendered()) {
 	                    throw new Error('already pushed');
 	                }
 
@@ -892,7 +912,7 @@
 	                if (null === this.parent()) {
 	                    tgt_dom = document.body;
 	                } else {
-	                    tgt_dom = this.parent().getPushedDom();
+	                    tgt_dom = this.parent().getDom();
 	                }
 	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
 
@@ -911,8 +931,8 @@
 	         */
 
 	    }, {
-	        key: 'isPushed',
-	        value: function isPushed() {
+	        key: 'isRendered',
+	        value: function isRendered() {
 	            try {
 	                if (null === this.entity) {
 	                    return false;
@@ -1000,11 +1020,11 @@
 	         */
 
 	    }, {
-	        key: 'getPushedDom',
-	        value: function getPushedDom() {
+	        key: 'getDom',
+	        value: function getDom() {
 	            try {
-	                if (false === this.isPushed()) {
-	                    throw new Error('invalid parameter');
+	                if (false === this.isRendered()) {
+	                    throw new Error('this vdom is not rendered yet');
 	                }
 	                return this.entity;
 	            } catch (e) {
@@ -1031,23 +1051,43 @@
 
 	/**
 	 * @file Style.js
+	 * @author simpart
 	 */
 
+	/**
+	 * @class Style
+	 * @brief component style class
+	 */
 	mofron.util.Style = function () {
+	    /**
+	     * initialize member
+	     *
+	     * @param tgt : (object) target vdom object
+	     */
 	    function _class(tgt) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            if ('object' != (typeof tgt === 'undefined' ? 'undefined' : _typeof(tgt))) {
+	            var _tgt = tgt === undefined ? null : tgt;
+	            if (null !== _tgt && 'object' !== (typeof _tgt === 'undefined' ? 'undefined' : _typeof(_tgt))) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.target = tgt;
+	            this.target = _tgt;
+	            this.m_protect = false;
 	            this.conts = {};
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
 	    }
+
+	    /**
+	     * set style
+	     *
+	     * @param key : (string) style key
+	     * @param val : (string) style value
+	     */
+
 
 	    _createClass(_class, [{
 	        key: 'set',
@@ -1058,16 +1098,27 @@
 	                if ('string' != typeof key || null != _val && 'string' != typeof _val) {
 	                    throw new Error('invalid parameter');
 	                }
-	                if (true === this.target.isPushed()) {
-	                    var dom = document.querySelector('#' + this.target.getId());
-	                    dom.style[key] = _val;
+
+	                if (false === this.m_protect || true === this.m_protect && undefined === this.conts[key]) {
+	                    this.conts[key] = _val;
+	                    if (null !== this.target && true === this.target.isRendered()) {
+	                        this.target.getDom().style[key] = _val;
+	                    }
 	                }
-	                this.conts[key] = _val;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * get style value
+	         *
+	         * @param key : (string) style key
+	         * @return (object) style contents
+	         * @return (string) style contents value
+	         */
+
 	    }, {
 	        key: 'get',
 	        value: function get(key) {
@@ -1082,6 +1133,49 @@
 	                throw e;
 	            }
 	        }
+
+	        /**
+	         * protect state setter / getter
+	         *
+	         * @param flg : (boolean) state flag
+	         * @return (boolean)
+	         */
+
+	    }, {
+	        key: 'protect',
+	        value: function protect(flg) {
+	            try {
+	                if (undefined === flg) {
+	                    /* getter */
+	                    return this.m_protect;
+	                }
+	                /* setter */
+	                if ('boolean' !== typeof flg) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_protect = flg;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getStyleStr',
+	        value: function getStyleStr() {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	        //    style () {
+	        //        try {
+	        //            
+	        //        } catch (e) {
+	        //            console.error(e.stack);
+	        //            throw e;
+	        //        }
+	        //    }
+
 	    }]);
 
 	    return _class;
@@ -1636,10 +1730,11 @@
 	            this.child = new Array();
 	            this.event = new Array();
 	            this.layout = new Array();
-	            this.vdom = new mofron.util.Vdom('div', this);
-	            this.target = this.vdom;
+	            this.vdom = null;
+	            this.target = null;
+	            this.m_style = new mofron.util.Style();
 	            this.m_theme = new mofron.Theme();
-	            this.m_state = null;
+	            this.init_flg = false;
 	            this.m_name = 'Base';
 	            this.param = new Array(null, null);
 
@@ -1666,7 +1761,7 @@
 	            }
 
 	            /* initialize virtual dom */
-	            this.initVdom(this.vdom, this.param[0]);
+	            //this.initVdom(this.vdom, this.param[0]);
 	            if (null !== this.param[1]) {
 	                /* option */
 
@@ -1680,7 +1775,7 @@
 	    /*** method ***/
 
 	    /**
-	     * return init status
+	     * return component status
 	     *
 	     * @return (boolean) true : this component is initialized
 	     * @return (boolean) false : this component is not initialize
@@ -1688,43 +1783,13 @@
 
 
 	    _createClass(_class, [{
-	        key: 'isInited',
-	        value: function isInited() {
+	        key: 'isRendered',
+	        value: function isRendered() {
 	            try {
-	                if ('inited' === this.m_state) {
-	                    return true;
+	                if (null === this.getVdom()) {
+	                    return false;
 	                }
-	                return false;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * state setter / getter
-	         *
-	         * @param sts : (string) vdom status
-	         * @return (string,null) vdom status
-	         */
-
-	    }, {
-	        key: 'state',
-	        value: function state(sts) {
-	            try {
-	                if (undefined === sts) {
-	                    /* getter */
-	                    return this.m_state;
-	                }
-	                /* setter */
-	                if ('string' !== typeof sts) {
-	                    throw new Error('invalid parameter');
-	                }
-	                if ('init' === sts || 'inited' === sts) {
-	                    this.m_state = sts;
-	                } else {
-	                    throw new Error('invalid parameter');
-	                }
+	                return this.getVdom().isRendered();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1741,30 +1806,16 @@
 	        key: 'getTarget',
 	        value: function getTarget() {
 	            try {
-	                return this.target;
+	                if (null !== this.target) {
+	                    return this.target;
+	                }
+	                return this.getVdom();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
-	    }, {
-	        key: 'getLayout',
-	        value: function getLayout(idx) {
-	            try {
-	                var _idx = idx === undefined ? null : idx;
-	                if (null === _idx) {
-	                    return this.layout;
-	                }
 
-	                if ('number' !== typeof _idx || 0 > _idx || this.layout.length <= _idx) {
-	                    return null;
-	                }
-	                return this.layout[_idx];
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
 	        /**
 	         * get style target vdom
 	         *
@@ -1819,7 +1870,7 @@
 	                chd.theme(this.m_theme);
 
 	                /* init child */
-	                if (true === this.isInited()) {
+	                if (true === this.isRendered()) {
 	                    chd.initDom(_disp);
 	                    for (var idx in this.layout) {
 	                        this.layout[idx].layout();
@@ -1828,6 +1879,11 @@
 
 	                /* set default display of child */
 	                var chd_vdom = chd.getVdom();
+	                if (null === chd_vdom) {
+	                    chd.initDomContsCtl();
+	                    chd_vdom = chd.getVdom();
+	                }
+
 	                if (false === _disp) {
 	                    chd_vdom.style('display', 'none');
 	                }
@@ -1905,11 +1961,17 @@
 	                var _val = val === undefined ? null : val;
 
 	                if (null === _key && null === _val) {
-	                    return this.getStyleTgt().style();
+	                    /* getter */
+	                    return this.m_style.get();
 	                } else if (null !== _key && undefined === val) {
-	                    return this.getStyleTgt.style(_key);
+	                    /* getter */
+	                    return this.m_style.get(_key);
 	                } else if (null !== _key && null !== _val) {
-	                    this.getStyleTgt().style(_key, _val);
+	                    /* setter */
+	                    this.m_style.set(_key, _val);
+	                    if (true === this.isRendered()) {
+	                        this.getStyleTgt().style(_key, _val);
+	                    }
 	                } else {
 	                    throw new Error('invalid parameter');
 	                }
@@ -1929,12 +1991,15 @@
 	        key: 'addEvent',
 	        value: function addEvent(evt) {
 	            try {
-	                if (undefined === evt || null === evt || 'object' != (typeof evt === 'undefined' ? 'undefined' : _typeof(evt))) {
+	                if ('object' !== (typeof evt === 'undefined' ? 'undefined' : _typeof(evt))) {
 	                    throw new Error('invalid parameter');
 	                }
 	                this.event.push(evt);
+	                if (null === this.vdom) {
+	                    this.initDomContsCtl();
+	                }
 	                evt.setTarget(this);
-	                if (true === this.isInited()) {
+	                if (true === this.isRendered()) {
 	                    evt.event();
 	                }
 	            } catch (e) {
@@ -1969,7 +2034,8 @@
 	            }
 	        }
 
-	        /**
+	        /**console.error(e.stack);
+	        *             throw e;
 	         * add component layout
 	         *
 	         * @param lo : (object) layout object
@@ -1983,9 +2049,12 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.layout.push(lo);
+	                if (null === this.vdom) {
+	                    this.initDomContsCtl();
+	                }
 	                lo.setTarget(this);
 
-	                if (true === this.isInited()) {
+	                if (true === this.isRendered()) {
 	                    lo.layout();
 	                }
 	            } catch (e) {
@@ -1998,6 +2067,7 @@
 	         * get layout object
 	         *
 	         * @param idx : (number) layout index
+	         * @return (object) layout object
 	         */
 
 	    }, {
@@ -2054,15 +2124,20 @@
 	        key: 'initDom',
 	        value: function initDom(disp) {
 	            try {
-
-	                if (true === this.isInited()) {
-	                    throw new Error('detect duplicate init');
+	                if (true === this.init_flg) {
+	                    throw new Error('detect initDom duplex');
 	                }
-	                this.state('init');
-	                var _disp = disp === undefined ? true : disp;
-
+	                this.init_flg = true;
 	                /* set initialize target */
-	                if (null === this.m_parent || null === this.m_parent.state()) {
+	                if (null === this.m_parent || null === this.m_parent.getVdom()) {
+	                    /* init vdom */
+	                    this.m_style.protect(true);
+	                    this.initDomContsCtl();
+	                    this.m_style.protect(false);
+
+	                    /* set style */
+	                    this.getTarget().setStyle(this.style());
+
 	                    var init_tgt = null;
 	                    if (null === this.m_parent) {
 	                        mofron.root.push(this);
@@ -2070,7 +2145,7 @@
 	                        init_tgt = this.m_parent.getTarget();
 	                    }
 
-	                    if (false === _disp) {
+	                    if (false === disp) {
 	                        this.vdom.style('display', 'none');
 	                    }
 	                    this.vdom.pushDom(init_tgt);
@@ -2088,11 +2163,11 @@
 
 	                /* initialize child component */
 	                for (var idx in this.child) {
-	                    this.child[idx].initDom(_disp);
+	                    this.child[idx].initDom(disp);
 	                }
 
 	                /* finish state */
-	                this.state("inited");
+	                //this.state("inited");
 
 	                this.afterInit();
 	            } catch (e) {
@@ -2101,8 +2176,22 @@
 	            }
 	        }
 	    }, {
-	        key: 'initVdom',
-	        value: function initVdom(vd, prm) {}
+	        key: 'initDomContsCtl',
+	        value: function initDomContsCtl() {
+	            try {
+	                if (null !== this.vdom) {
+	                    return;
+	                }
+	                this.vdom = new mofron.util.Vdom('div', this);
+	                this.initDomConts(this.vdom, this.param[0]);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'initDomConts',
+	        value: function initDomConts(vd, prm) {}
 	    }, {
 	        key: 'afterInit',
 	        value: function afterInit() {}
@@ -2123,7 +2212,15 @@
 
 	                /* parameter check */
 	                if (null === _flg) {
-	                    throw new Error('invalid parameter');
+	                    if (false === this.isRendered()) {
+	                        return false;
+	                    }
+	                    var disp = this.vdom.style('display');
+	                    if ('none' === disp) {
+	                        return false;
+	                    } else {
+	                        return true;
+	                    }
 	                }
 
 	                if ('boolean' != typeof _flg || null != _eff && 'object' != (typeof _eff === 'undefined' ? 'undefined' : _typeof(_eff))) {
@@ -2131,7 +2228,7 @@
 	                }
 
 	                /* initialize component */
-	                if (null === this.m_state) {
+	                if (false === this.init_flg) {
 	                    this.initDom(_flg);
 	                }
 
@@ -2375,6 +2472,19 @@
 	                throw e;
 	            }
 	        }
+	    }, {
+	        key: 'event',
+	        value: function event() {
+	            try {
+	                if (null === this.target || false === this.target.isRendered()) {
+	                    throw new Error('target is not ready');
+	                }
+	                this.eventFunc();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
 
 	        /**
 	         * this is interface function.
@@ -2382,8 +2492,8 @@
 	         */
 
 	    }, {
-	        key: 'event',
-	        value: function event() {
+	        key: 'eventFunc',
+	        value: function eventFunc() {
 	            try {
 	                console.warn('not implement');
 	            } catch (e) {
@@ -2455,7 +2565,7 @@
 	            try {
 	                var _flg = flg === undefined ? true : flg;
 	                var dom = this.target.getVdom();
-	                if (false === dom.isPushed()) {
+	                if (false === dom.isRendered()) {
 	                    throw new Error('target is not ready');
 	                }
 	                this.effect_func(_flg, dom);

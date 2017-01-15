@@ -67,11 +67,23 @@ mofron.event.Base = class {
         }
     }
     
+    event () {
+        try {
+            if ( (null === this.target) || (false === this.target.isRendered()) ) {
+                throw new Error('target is not ready');
+            }
+            this.eventFunc();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * this is interface function.
      * extend class need implement this function.
      */
-    event () {
+    eventFunc () {
         try {
             console.warn('not implement');
         } catch (e) {
