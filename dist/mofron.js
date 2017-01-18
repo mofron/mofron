@@ -1732,9 +1732,9 @@
 	            this.layout = new Array();
 	            this.vdom = null;
 	            this.target = null;
-	            this.m_style = new mofron.util.Style();
+	            //this.m_style  = new mofron.util.Style();
 	            this.m_theme = new mofron.Theme();
-	            this.init_flg = false;
+	            this.m_state = 'init';
 	            this.m_name = 'Base';
 	            this.param = new Array(null, null);
 
@@ -1786,10 +1786,26 @@
 	        key: 'isRendered',
 	        value: function isRendered() {
 	            try {
-	                if (null === this.getVdom()) {
+	                if (null === this.vdom) {
 	                    return false;
 	                }
 	                return this.getVdom().isRendered();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'state',
+	        value: function state(sts) {
+	            try {
+	                if (undefined === sts) {
+	                    return this.m_state;
+	                }
+	                if ('string' !== typeof sts) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_state = sts;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1809,7 +1825,11 @@
 	                if (null !== this.target) {
 	                    return this.target;
 	                }
-	                return this.getVdom();
+	                var ret = this.getVdom();
+	                if (null !== this.target) {
+	                    ret = this.target;
+	                }
+	                return ret;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1879,11 +1899,6 @@
 
 	                /* set default display of child */
 	                var chd_vdom = chd.getVdom();
-	                if (null === chd_vdom) {
-	                    chd.initDomContsCtl();
-	                    chd_vdom = chd.getVdom();
-	                }
-
 	                if (false === _disp) {
 	                    chd_vdom.style('display', 'none');
 	                }
@@ -1962,16 +1977,13 @@
 
 	                if (null === _key && null === _val) {
 	                    /* getter */
-	                    return this.m_style.get();
+	                    return this.getStyleTgt().style().get();
 	                } else if (null !== _key && undefined === val) {
 	                    /* getter */
-	                    return this.m_style.get(_key);
+	                    return this.getStyleTgt().style(_key);
 	                } else if (null !== _key && null !== _val) {
 	                    /* setter */
-	                    this.m_style.set(_key, _val);
-	                    if (true === this.isRendered()) {
-	                        this.getStyleTgt().style(_key, _val);
-	                    }
+	                    this.getStyleTgt().style(_key, _val);
 	                } else {
 	                    throw new Error('invalid parameter');
 	                }
@@ -1995,9 +2007,7 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.event.push(evt);
-	                if (null === this.vdom) {
-	                    this.initDomContsCtl();
-	                }
+	                this.getVdom();
 	                evt.setTarget(this);
 	                if (true === this.isRendered()) {
 	                    evt.event();
@@ -2049,9 +2059,7 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.layout.push(lo);
-	                if (null === this.vdom) {
-	                    this.initDomContsCtl();
-	                }
+	                this.getVdom();
 	                lo.setTarget(this);
 
 	                if (true === this.isRendered()) {
@@ -2076,6 +2084,7 @@
 	            try {
 	                var _idx = idx === undefined ? null : idx;
 	                if (null === _idx) {
+	                    this.state('initDom');
 	                    return this.layout;
 	                }
 
@@ -2124,19 +2133,21 @@
 	        key: 'initDom',
 	        value: function initDom(disp) {
 	            try {
-	                if (true === this.init_flg) {
+	                if ('initDom' === this.state()) {
 	                    throw new Error('detect initDom duplex');
 	                }
-	                this.init_flg = true;
+	                this.state('initDom');
 	                /* set initialize target */
-	                if (null === this.m_parent || null === this.m_parent.getVdom()) {
-	                    /* init vdom */
-	                    this.m_style.protect(true);
-	                    this.initDomContsCtl();
-	                    this.m_style.protect(false);
 
-	                    /* set style */
-	                    this.getTarget().setStyle(this.style());
+	                /* init vdom */
+	                this.getStyleTgt().style().protect(true);
+	                this.initDomContsCtl();
+	                this.getStyleTgt().style().protect(false);
+
+	                if (null === this.parent() || 'rendered' === this.parent().state()) {
+	                    if (false === disp) {
+	                        this.getVdom().style('display', 'none');
+	                    }
 
 	                    var init_tgt = null;
 	                    if (null === this.m_parent) {
@@ -2145,10 +2156,7 @@
 	                        init_tgt = this.m_parent.getTarget();
 	                    }
 
-	                    if (false === disp) {
-	                        this.vdom.style('display', 'none');
-	                    }
-	                    this.vdom.pushDom(init_tgt);
+	                    this.getVdom().pushDom(init_tgt);
 	                }
 
 	                /* set event */
@@ -2170,6 +2178,7 @@
 	                //this.state("inited");
 
 	                this.afterInit();
+	                this.state('rendered');
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2182,7 +2191,7 @@
 	                if (null !== this.vdom) {
 	                    return;
 	                }
-	                this.vdom = new mofron.util.Vdom('div', this);
+	                //this.vdom = new mofron.util.Vdom('div', this);
 	                this.initDomConts(this.vdom, this.param[0]);
 	            } catch (e) {
 	                console.error(e.stack);
@@ -2191,7 +2200,14 @@
 	        }
 	    }, {
 	        key: 'initDomConts',
-	        value: function initDomConts(vd, prm) {}
+	        value: function initDomConts(vd, prm) {
+	            try {
+	                this.vdom = new mofron.util.Vdom('div', this);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
 	    }, {
 	        key: 'afterInit',
 	        value: function afterInit() {}
@@ -2215,7 +2231,7 @@
 	                    if (false === this.isRendered()) {
 	                        return false;
 	                    }
-	                    var disp = this.vdom.style('display');
+	                    var disp = this.getVdom().style('display');
 	                    if ('none' === disp) {
 	                        return false;
 	                    } else {
@@ -2228,7 +2244,7 @@
 	                }
 
 	                /* initialize component */
-	                if (false === this.init_flg) {
+	                if ('init' === this.state()) {
 	                    this.initDom(_flg);
 	                }
 
@@ -2251,9 +2267,9 @@
 	                    _eff.effect(_flg);
 	                } else {
 	                    if (true === _flg) {
-	                        this.vdom.style('display', null);
+	                        this.getVdom().style('display', null);
 	                    } else {
-	                        this.vdom.style('display', 'none');
+	                        this.getVdom().style('display', 'none');
 	                    }
 	                }
 	            } catch (e) {
@@ -2272,6 +2288,9 @@
 	        key: 'getVdom',
 	        value: function getVdom() {
 	            try {
+	                if (null === this.vdom) {
+	                    this.initDomContsCtl();
+	                }
 	                return this.vdom;
 	            } catch (e) {
 	                console.error(e.stack);
