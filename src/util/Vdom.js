@@ -14,14 +14,11 @@ mofron.util.Vdom = class {
      * @param tag : (string) tag name
      * @param cmp : (object) component object
      */
-    constructor (tag, cmp) {
+    constructor (tg, cmp) {
         try {
-            if ('string' != (typeof tag)) {
-                throw new Error('invalid parameter');
-            }
             this.id       = null;
             this.comp     = (undefined === cmp) ? null : cmp;
-            this.m_tag    = tag;
+            this.m_tag    = null;
             this.clname   = new Array();
             this.m_parent = null;
             this.child    = new Array();
@@ -30,6 +27,11 @@ mofron.util.Vdom = class {
             this.m_text   = null;
             this.value    = null;
             this.entity   = null;
+            
+            this.tag(tg);
+            if (null !== this.comp) {
+                this.attr('component', this.comp.name());
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -69,7 +71,7 @@ mofron.util.Vdom = class {
     getId () {
         try {
             if (null === this.id) {
-                this.id = mofron.util.getId(this.comp);
+                this.id = mofron.util.getId();
             }
             return this.id;
         } catch (e) {
@@ -328,9 +330,15 @@ mofron.util.Vdom = class {
      * draw dom to target dom
      * 
      * @param tgt : (object) target dom
+     * @param upd : (boolean) update flag
      */
-    pushDom (tgt) {
+    pushDom (tgt, upd) {
         try {
+            var _upd = (undefined === upd) ? false : upd;
+            if ('boolean' !== typeof _upd) {
+                throw new Error('invalid parameter');
+            }
+            
             if (true === this.isRendered()) {
                 throw new Error('already pushed');
             }
@@ -343,8 +351,12 @@ mofron.util.Vdom = class {
             } else {
                 tgt_dom = this.parent().getDom();
             }
-            tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
             
+            if (false === _upd) {
+                tgt_dom.insertAdjacentHTML('beforeend',this.getValue());
+            } else {
+                tgt_dom.innerHTML = this.getValue();
+            }
             this.setPushed();
         } catch (e) {
             console.error(e.stack);

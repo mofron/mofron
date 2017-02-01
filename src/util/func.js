@@ -392,6 +392,47 @@ mofron.util.camelMap = {
     "remove-property" : "removeProperty"
 }
 
+mofron.util.getColorObj = function (sty) {
+    try {
+        if ('none' === sty) {
+            return new mofron.util.Color();
+        } else if (null === sty) {
+            return null;
+        }
+        
+        var color = null;
+        if (-1 !== sty.indexOf('rgba(') ) {
+            color = sty.substring(5);
+        } else if (-1 !== sty.indexOf('rgb(')) {
+            color = sty.substring(4);
+        } else {
+            return null;
+        }
+        
+        color = color.substring(0,color.length-1);
+        color = color.split(',');
+        if (3 === color.length) {
+            return new mofron.util.Color(
+                           parseInt(color[0]),
+                           parseInt(color[1]),
+                           parseInt(color[2])
+                       );
+        } else if (4 === color.length) {
+            return new mofron.util.Color(
+                           parseInt(color[0]),
+                           parseInt(color[1]),
+                           parseInt(color[2]),
+                           parseInt(color[3])
+                       );
+        } else {
+            return null;
+        }
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
 mofron.util.getStyleConts = function (sel,cnt) {
     try {
         var ret_val = sel + '{';

@@ -45,6 +45,9 @@ mofron.Theme = class {
                     }
                 }
                 for (var idx in thm_cnt[cnt_key]) {
+                    if (null === thm_cnt[cnt_key][parseInt(idx)]) {
+                        continue;
+                    }
                     this.set(cnt_key, thm_cnt[cnt_key][idx], parseInt(idx));
                 }
             }
@@ -206,13 +209,19 @@ mofron.Theme = class {
                 this.conts[_key] = new Array();
             }
             
-            if (_idx === this.conts[_key].length) {
-                this.conts[_key].push(_val);
-            } else if (_idx < this.conts[_key].length) {
-                this.conts[_key][_idx] = val;
-            } else {
-                throw new Error('invalid parameter');
+            var loop = 0;
+            for (;loop < 10; loop++) {
+                if (_idx === this.conts[_key].length) {
+                    this.conts[_key].push(_val);
+                    return;
+                } else if (_idx < this.conts[_key].length) {
+                    this.conts[_key][_idx] = val;
+                    return;
+                } else {
+                    this.conts[_key].push(null);
+                }
             }
+            throw new Error('invalid parameter');
         } catch (e) {
             console.error(e.stack);
             throw e;

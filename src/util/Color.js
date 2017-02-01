@@ -18,12 +18,30 @@ mofron.util.Color = class {
      */
     constructor (r,g,b,a) {
         try {
-            this.name    = 'Color';
-            this.red     = (r === undefined) ? null : r;
-            this.green   = (g === undefined) ? null : g;
-            this.blue    = (b === undefined) ? null : b;
-            this.alpha   = (a === undefined) ? 1 : a;
+            var _r = (r === undefined) ? null : r;
+            var _g = (g === undefined) ? null : g;
+            var _b = (b === undefined) ? null : b;
+            var _a = (a === undefined) ?    1 : a;
             
+            if ( (null === _r) && (null === _g) && (null === _b) ) {
+                
+            } else if ( (null !== _r) && (null !== _g) && (null !== _b) ) {
+                if ( ('number' !== typeof _r) ||
+                     ('number' !== typeof _g) ||
+                     ('number' !== typeof _b) ) {
+                    throw new Error('invalid parameter');
+                }
+            } else {
+                throw new Error('invalid parameter');
+            }
+            this.name    = 'Color';
+            this.red     = _r;
+            this.green   = _g;
+            this.blue    = _b;
+            if ('number' !== typeof _a) {
+                throw new Error('invalid parameter');
+            }
+            this.alpha   = _a;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -56,10 +74,10 @@ mofron.util.Color = class {
     getRgba () {
         try {
             return new Array(
-                           this.red   ,
-                           this.green ,
-                           this.blue  ,
-                           this.alpha
+                           (null === this.red) ?   0 : this.red  ,
+                           (null === this.green) ? 0 : this.green,
+                           (null === this.blue) ?  0 : this.blue ,
+                           (null === this.alpha) ? 0 : this.alpha
                        );
         } catch (e) {
             console.error(e.stack);

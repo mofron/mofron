@@ -100,21 +100,4 @@ mofron.util.Style = class {
             throw e;
         }
     }
-    
-    getStyleStr () {
-        try {
-            
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-//    style () {
-//        try {
-//            
-//        } catch (e) {
-//            console.error(e.stack);
-//            throw e;
-//        }
-//    }
 }

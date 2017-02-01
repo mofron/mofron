@@ -514,6 +514,38 @@
 	    "remove-property": "removeProperty"
 	};
 
+	mofron.util.getColorObj = function (sty) {
+	    try {
+	        if ('none' === sty) {
+	            return new mofron.util.Color();
+	        } else if (null === sty) {
+	            return null;
+	        }
+
+	        var color = null;
+	        if (-1 !== sty.indexOf('rgba(')) {
+	            color = sty.substring(5);
+	        } else if (-1 !== sty.indexOf('rgb(')) {
+	            color = sty.substring(4);
+	        } else {
+	            return null;
+	        }
+
+	        color = color.substring(0, color.length - 1);
+	        color = color.split(',');
+	        if (3 === color.length) {
+	            return new mofron.util.Color(parseInt(color[0]), parseInt(color[1]), parseInt(color[2]));
+	        } else if (4 === color.length) {
+	            return new mofron.util.Color(parseInt(color[0]), parseInt(color[1]), parseInt(color[2]), parseInt(color[3]));
+	        } else {
+	            return null;
+	        }
+	    } catch (e) {
+	        console.error(e.stack);
+	        throw new Error();
+	    }
+	};
+
 	mofron.util.getStyleConts = function (sel, cnt) {
 	    try {
 	        var ret_val = sel + '{';
@@ -555,16 +587,13 @@
 	     * @param tag : (string) tag name
 	     * @param cmp : (object) component object
 	     */
-	    function _class(tag, cmp) {
+	    function _class(tg, cmp) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            if ('string' != typeof tag) {
-	                throw new Error('invalid parameter');
-	            }
 	            this.id = null;
 	            this.comp = undefined === cmp ? null : cmp;
-	            this.m_tag = tag;
+	            this.m_tag = null;
 	            this.clname = new Array();
 	            this.m_parent = null;
 	            this.child = new Array();
@@ -573,6 +602,11 @@
 	            this.m_text = null;
 	            this.value = null;
 	            this.entity = null;
+
+	            this.tag(tg);
+	            if (null !== this.comp) {
+	                this.attr('component', this.comp.name());
+	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -619,7 +653,7 @@
 	        value: function getId() {
 	            try {
 	                if (null === this.id) {
-	                    this.id = mofron.util.getId(this.comp);
+	                    this.id = mofron.util.getId();
 	                }
 	                return this.id;
 	            } catch (e) {
@@ -896,12 +930,18 @@
 	         * draw dom to target dom
 	         * 
 	         * @param tgt : (object) target dom
+	         * @param upd : (boolean) update flag
 	         */
 
 	    }, {
 	        key: 'pushDom',
-	        value: function pushDom(tgt) {
+	        value: function pushDom(tgt, upd) {
 	            try {
+	                var _upd = undefined === upd ? false : upd;
+	                if ('boolean' !== typeof _upd) {
+	                    throw new Error('invalid parameter');
+	                }
+
 	                if (true === this.isRendered()) {
 	                    throw new Error('already pushed');
 	                }
@@ -914,8 +954,12 @@
 	                } else {
 	                    tgt_dom = this.parent().getDom();
 	                }
-	                tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
 
+	                if (false === _upd) {
+	                    tgt_dom.insertAdjacentHTML('beforeend', this.getValue());
+	                } else {
+	                    tgt_dom.innerHTML = this.getValue();
+	                }
 	                this.setPushed();
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1159,23 +1203,6 @@
 	                throw e;
 	            }
 	        }
-	    }, {
-	        key: 'getStyleStr',
-	        value: function getStyleStr() {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	        //    style () {
-	        //        try {
-	        //            
-	        //        } catch (e) {
-	        //            console.error(e.stack);
-	        //            throw e;
-	        //        }
-	        //    }
-
 	    }]);
 
 	    return _class;
@@ -1213,11 +1240,26 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _r = r === undefined ? null : r;
+	            var _g = g === undefined ? null : g;
+	            var _b = b === undefined ? null : b;
+	            var _a = a === undefined ? 1 : a;
+
+	            if (null === _r && null === _g && null === _b) {} else if (null !== _r && null !== _g && null !== _b) {
+	                if ('number' !== typeof _r || 'number' !== typeof _g || 'number' !== typeof _b) {
+	                    throw new Error('invalid parameter');
+	                }
+	            } else {
+	                throw new Error('invalid parameter');
+	            }
 	            this.name = 'Color';
-	            this.red = r === undefined ? null : r;
-	            this.green = g === undefined ? null : g;
-	            this.blue = b === undefined ? null : b;
-	            this.alpha = a === undefined ? 1 : a;
+	            this.red = _r;
+	            this.green = _g;
+	            this.blue = _b;
+	            if ('number' !== typeof _a) {
+	                throw new Error('invalid parameter');
+	            }
+	            this.alpha = _a;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -1256,7 +1298,7 @@
 	        key: 'getRgba',
 	        value: function getRgba() {
 	            try {
-	                return new Array(this.red, this.green, this.blue, this.alpha);
+	                return new Array(null === this.red ? 0 : this.red, null === this.green ? 0 : this.green, null === this.blue ? 0 : this.blue, null === this.alpha ? 0 : this.alpha);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1718,10 +1760,9 @@
 	     * initialize member, vdom
 	     *
 	     * @param prm : (object) initialize parameter (option)
-	     * @param opt : (object) initialize option (option)
 	     * @note parameter syntax -> [prm] | [opt] | prm, opt
 	     */
-	    function _class(prm, opt) {
+	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
@@ -1730,106 +1771,69 @@
 	            this.child = new Array();
 	            this.event = new Array();
 	            this.layout = new Array();
-	            this.vdom = null;
-	            this.target = null;
-	            //this.m_style  = new mofron.util.Style();
+	            this.m_style = new mofron.util.Vdom('div');
+	            this.m_vdom = null;
+	            this.m_target = null;
 	            this.m_theme = new mofron.Theme();
-	            this.m_state = 'init';
 	            this.m_name = 'Base';
-	            this.param = new Array(null, null);
-
-	            /* parameter check */
-	            var _prm = prm === undefined ? null : prm;
-	            var _opt = opt === undefined ? null : opt;
-	            if (null !== _prm && null === _opt) {
-	                if ('object' === (typeof _prm === 'undefined' ? 'undefined' : _typeof(_prm))) {
-	                    var hit = false;
-	                    for (var idx in _prm) {
-	                        hit = true;
-	                        break;
-	                    }
-	                    if (true === hit) {
-	                        this.param[1] = _prm;
-	                    } else {
-	                        this.param[0] = _prm;
-	                    }
-	                } else {
-	                    this.param[0] = _prm;
-	                }
-	            } else if (null === _prm && null !== _opt) {
-	                this.param[1] = _opt;
-	            }
-
-	            /* initialize virtual dom */
-	            //this.initVdom(this.vdom, this.param[0]);
-	            if (null !== this.param[1]) {
-	                /* option */
-
-	            }
+	            this.param = prm === undefined ? null : prm;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
 	    }
 
-	    /*** method ***/
-
-	    /**
-	     * return component status
-	     *
-	     * @return (boolean) true : this component is initialized
-	     * @return (boolean) false : this component is not initialize
-	     */
-
-
 	    _createClass(_class, [{
-	        key: 'isRendered',
-	        value: function isRendered() {
+	        key: 'option',
+	        value: function option(opt) {
 	            try {
-	                if (null === this.vdom) {
-	                    return false;
+	                if (null !== opt && 'object' === (typeof opt === 'undefined' ? 'undefined' : _typeof(opt))) {
+	                    /* option */
+	                    for (var opt_idx in opt) {
+	                        if ('function' === typeof this[opt_idx]) {
+	                            this[opt_idx](opt[opt_idx]);
+	                        }
+	                    }
 	                }
-	                return this.getVdom().isRendered();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
 	            }
 	        }
-	    }, {
-	        key: 'state',
-	        value: function state(sts) {
-	            try {
-	                if (undefined === sts) {
-	                    return this.m_state;
-	                }
-	                if ('string' !== typeof sts) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.m_state = sts;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
+
+	        /*** method ***/
 
 	        /**
-	         * get common target vdom
+	         * return component status
 	         *
-	         * @return (object) vdom object
+	         * @return (boolean) true : this component is initialized
+	         * @return (boolean) false : this component is not initialize
 	         */
 
 	    }, {
-	        key: 'getTarget',
-	        value: function getTarget() {
+	        key: 'isRendered',
+	        value: function isRendered() {
 	            try {
-	                if (null !== this.target) {
-	                    return this.target;
+	                if (null === this.m_vdom) {
+	                    return false;
 	                }
-	                var ret = this.getVdom();
-	                if (null !== this.target) {
-	                    ret = this.target;
+	                return this.vdom().isRendered();
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'target',
+	        value: function target(tgt) {
+	            try {
+	                if (undefined === tgt) {
+	                    return this.m_target;
 	                }
-	                return ret;
+	                if (null === tgt || 'object' !== (typeof tgt === 'undefined' ? 'undefined' : _typeof(tgt))) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_target = tgt;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1838,7 +1842,8 @@
 
 	        /**
 	         * get style target vdom
-	         *
+	         *console.error(e.stack);
+	                throw e;
 	         * @return (object) vdom object
 	         */
 
@@ -1846,7 +1851,7 @@
 	        key: 'getStyleTgt',
 	        value: function getStyleTgt() {
 	            try {
-	                return this.getTarget();
+	                return this.target();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1863,7 +1868,7 @@
 	        key: 'getEventTgt',
 	        value: function getEventTgt() {
 	            try {
-	                return this.getTarget();
+	                return this.target();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1884,8 +1889,22 @@
 	                var _disp = disp === undefined ? true : disp;
 
 	                chd.parent(this); // child's parent is me
-	                this.child.push(chd);
-
+	                if (null !== this.vdom() && false === this.isRendered()) {
+	                    //this.child.push([chd, disp]);
+	                    var set_flg = false;
+	                    for (var chd_idx in this.child) {
+	                        if (false === this.child[chd_idx][2]) {
+	                            this.child.splice(chd_idx - 1, 0, [chd, disp, true]);
+	                            set_flg = true;
+	                            break;
+	                        }
+	                    }
+	                    if (false === set_flg) {
+	                        this.child.push([chd, disp, true]);
+	                    }
+	                } else {
+	                    this.child.push([chd, disp, false]);
+	                }
 	                /* set theme to child */
 	                chd.theme(this.m_theme);
 
@@ -1896,15 +1915,6 @@
 	                        this.layout[idx].layout();
 	                    }
 	                }
-
-	                /* set default display of child */
-	                var chd_vdom = chd.getVdom();
-	                if (false === _disp) {
-	                    chd_vdom.style('display', 'none');
-	                }
-
-	                /* link to target my vdom */
-	                this.getTarget().addChild(chd_vdom);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1924,12 +1934,16 @@
 	            try {
 	                var _idx = idx === undefined ? null : idx;
 	                if (null === _idx) {
-	                    return this.child;
+	                    var ret_val = new Array();
+	                    for (var ret_idx in this.child) {
+	                        ret_val.push(this.child[ret_idx][0]);
+	                    }
+	                    return ret_val;
 	                }
 	                if (0 > _idx || this.child.length - 1 < _idx) {
 	                    throw new Error('invalid parameter');
 	                }
-	                return this.child[_idx];
+	                return this.child[_idx][0];
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -1975,15 +1989,22 @@
 	                var _key = key === undefined ? null : key;
 	                var _val = val === undefined ? null : val;
 
+	                var tgt = null;
+	                if (null === this.getStyleTgt()) {
+	                    tgt = this.m_style;
+	                } else {
+	                    tgt = this.getStyleTgt();
+	                }
+
 	                if (null === _key && null === _val) {
 	                    /* getter */
-	                    return this.getStyleTgt().style().get();
+	                    return tgt.style().get();
 	                } else if (null !== _key && undefined === val) {
 	                    /* getter */
-	                    return this.getStyleTgt().style(_key);
-	                } else if (null !== _key && null !== _val) {
+	                    return tgt.style(_key);
+	                } else if (null !== _key && undefined !== _val) {
 	                    /* setter */
-	                    this.getStyleTgt().style(_key, _val);
+	                    tgt.style(_key, _val);
 	                } else {
 	                    throw new Error('invalid parameter');
 	                }
@@ -2007,7 +2028,6 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.event.push(evt);
-	                this.getVdom();
 	                evt.setTarget(this);
 	                if (true === this.isRendered()) {
 	                    evt.event();
@@ -2059,7 +2079,6 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.layout.push(lo);
-	                this.getVdom();
 	                lo.setTarget(this);
 
 	                if (true === this.isRendered()) {
@@ -2084,7 +2103,6 @@
 	            try {
 	                var _idx = idx === undefined ? null : idx;
 	                if (null === _idx) {
-	                    this.state('initDom');
 	                    return this.layout;
 	                }
 
@@ -2092,6 +2110,22 @@
 	                    return null;
 	                }
 	                return this.layout[_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setEffect',
+	        value: function setEffect(eff, flg) {
+	            try {
+	                var _eff = undefined === eff ? null : eff;
+	                var _flg = undefined === flg ? true : flg;
+	                if (null === _eff) {
+	                    throw new Error('invalid parameter');
+	                }
+	                _eff.setTarget(this);
+	                _eff.effect(_flg);
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2130,55 +2164,73 @@
 	         */
 
 	    }, {
-	        key: 'initDom',
-	        value: function initDom(disp) {
+	        key: 'render',
+	        value: function render(disp) {
 	            try {
-	                if ('initDom' === this.state()) {
-	                    throw new Error('detect initDom duplex');
+	                if (null !== this.vdom()) {
+	                    throw new Error('detect duplex render');
 	                }
-	                this.state('initDom');
-	                /* set initialize target */
-
-	                /* init vdom */
-	                this.getStyleTgt().style().protect(true);
+	                /* initialize component contents */
 	                this.initDomContsCtl();
-	                this.getStyleTgt().style().protect(false);
 
-	                if (null === this.parent() || 'rendered' === this.parent().state()) {
-	                    if (false === disp) {
-	                        this.getVdom().style('display', 'none');
-	                    }
-
-	                    var init_tgt = null;
-	                    if (null === this.m_parent) {
-	                        mofron.root.push(this);
-	                    } else {
-	                        init_tgt = this.m_parent.getTarget();
-	                    }
-
-	                    this.getVdom().pushDom(init_tgt);
+	                /* setting component visible */
+	                if (false === disp) {
+	                    this.vdom().style('display', 'none');
 	                }
 
-	                /* set event */
+	                /* push contents to DOM */
+	                var init_tgt = null;
+	                if (null === this.parent()) {
+	                    mofron.root.push(this);
+	                } else {
+	                    init_tgt = this.parent().target();
+	                }
+	                this.vdom().pushDom(init_tgt);
+
+	                this.setCompConf();
+
+	                //this.state('rendered');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'setCompConf',
+	        value: function setCompConf() {
+	            try {
+	                /* set event config */
 	                for (var idx in this.event) {
 	                    this.event[idx].event();
 	                }
 
-	                /* set layout */
+	                /* set layout config */
 	                for (var idx in this.layout) {
 	                    this.layout[idx].layout();
 	                }
 
-	                /* initialize child component */
-	                for (var idx in this.child) {
-	                    this.child[idx].initDom(disp);
+	                /* set child config */
+	                for (var chd_idx in this.child) {
+	                    this.child[chd_idx][0].setCompConf();
 	                }
-
-	                /* finish state */
-	                //this.state("inited");
-
-	                this.afterInit();
-	                this.state('rendered');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'update',
+	        value: function update() {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'destroy',
+	        value: function destroy() {
+	            try {
+	                this.vdom().getDom().innerHTML = null;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2188,11 +2240,27 @@
 	        key: 'initDomContsCtl',
 	        value: function initDomContsCtl() {
 	            try {
-	                if (null !== this.vdom) {
+	                if (null !== this.vdom()) {
 	                    return;
 	                }
-	                //this.vdom = new mofron.util.Vdom('div', this);
-	                this.initDomConts(this.vdom, this.param[0]);
+	                this.vdom(new mofron.util.Vdom('div', this));
+	                this.initDomConts(this.param);
+
+	                for (var chd_idx in this.child) {
+	                    /* initialize DOM contents */
+	                    this.child[chd_idx][0].initDomContsCtl();
+	                    /* setting visible of child component */
+	                    if (false === this.child[chd_idx][1]) {
+	                        this.child[chd_idx][0].vdom().style('display', 'none');
+	                    }
+	                    /* setting parent-child relation */
+	                    this.target().addChild(this.child[chd_idx][0].vdom());
+	                }
+
+	                var sty_buf = this.m_style.style().get();
+	                for (var sty_idx in sty_buf) {
+	                    this.style(sty_idx, sty_buf[sty_idx]);
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2200,25 +2268,7 @@
 	        }
 	    }, {
 	        key: 'initDomConts',
-	        value: function initDomConts(vd, prm) {
-	            try {
-	                this.vdom = new mofron.util.Vdom('div', this);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'afterInit',
-	        value: function afterInit() {}
-	    }, {
-	        key: 'destroy',
-	        value: function destroy() {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
+	        value: function initDomConts(prm) {}
 	    }, {
 	        key: 'visible',
 	        value: function visible(flg, eff) {
@@ -2231,7 +2281,7 @@
 	                    if (false === this.isRendered()) {
 	                        return false;
 	                    }
-	                    var disp = this.getVdom().style('display');
+	                    var disp = this.vdom().style('display');
 	                    if ('none' === disp) {
 	                        return false;
 	                    } else {
@@ -2244,32 +2294,20 @@
 	                }
 
 	                /* initialize component */
-	                if ('init' === this.state()) {
-	                    this.initDom(_flg);
+	                if (null === this.vdom()) {
+	                    this.render(_flg);
 	                }
 
 	                /* set effect */
 	                if (null != _eff) {
-	                    eff.setTarget(this);
-	                    eff.setCallback(function (prm) {
-	                        try {
-	                            if (true === prm[1]) {
-	                                prm[0].style('display', null);
-	                            } else {
-	                                prm[0].style('display', 'none');
-	                            }
-	                        } catch (e) {
-	                            console.error(e.stack);
-	                            throw e;
-	                        }
-	                    }, [this.getVdom(), _flg]);
-
-	                    _eff.effect(_flg);
+	                    _eff.speed(0.5);
+	                    _eff.setVisible(true);
+	                    this.setEffect(_eff, _flg);
 	                } else {
 	                    if (true === _flg) {
-	                        this.getVdom().style('display', null);
+	                        this.vdom().style('display', null);
 	                    } else {
-	                        this.getVdom().style('display', 'none');
+	                        this.vdom().style('display', 'none');
 	                    }
 	                }
 	            } catch (e) {
@@ -2285,13 +2323,17 @@
 	         */
 
 	    }, {
-	        key: 'getVdom',
-	        value: function getVdom() {
+	        key: 'vdom',
+	        value: function vdom(vd) {
 	            try {
-	                if (null === this.vdom) {
-	                    this.initDomContsCtl();
+	                if (undefined === vd) {
+	                    return this.m_vdom;
 	                }
-	                return this.vdom;
+
+	                if ('object' !== (typeof vd === 'undefined' ? 'undefined' : _typeof(vd))) {
+	                    throw new Error('invalid parameter : ' + (typeof vd === 'undefined' ? 'undefined' : _typeof(vd)));
+	                }
+	                this.m_vdom = vd;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2379,7 +2421,7 @@
 	                    if (idx < this.exec_cnt) {
 	                        continue;
 	                    }
-	                    this.layoutFunc(idx, tgt_chd[idx]);
+	                    this.layoutConts(idx, tgt_chd[idx]);
 	                    this.exec_cnt++;
 	                }
 	            } catch (e) {
@@ -2388,8 +2430,8 @@
 	            }
 	        }
 	    }, {
-	        key: 'layoutFunc',
-	        value: function layoutFunc(idx, tgt) {
+	        key: 'layoutConts',
+	        value: function layoutConts(idx, tgt) {
 	            try {
 	                console.warn('layout is not implements');
 	            } catch (e) {
@@ -2458,10 +2500,10 @@
 	        key: 'setTarget',
 	        value: function setTarget(comp) {
 	            try {
-	                if ('object' != (typeof comp === 'undefined' ? 'undefined' : _typeof(comp))) {
+	                if (null === comp || 'object' !== (typeof comp === 'undefined' ? 'undefined' : _typeof(comp))) {
 	                    throw new Error('invalid parameter');
 	                }
-	                this.target = comp.getEventTgt();
+	                this.target = comp;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2498,7 +2540,8 @@
 	                if (null === this.target || false === this.target.isRendered()) {
 	                    throw new Error('target is not ready');
 	                }
-	                this.eventFunc();
+	                this.target = this.target.getEventTgt();
+	                this.eventConts();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2511,8 +2554,8 @@
 	         */
 
 	    }, {
-	        key: 'eventFunc',
-	        value: function eventFunc() {
+	        key: 'eventConts',
+	        value: function eventConts() {
 	            try {
 	                console.warn('not implement');
 	            } catch (e) {
@@ -2542,22 +2585,16 @@
 	 */
 
 	mofron.effect.Base = function () {
-	    function _class(tgt, spd) {
+	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            var _tgt = tgt === undefined ? null : tgt;
+	            this.param = undefined === prm ? null : prm;
 	            this.target = null;
-	            if (null != _tgt) {
-	                this.setTarget(_tgt);
-	            }
-
-	            var _spd = spd === undefined ? null : spd;
-	            this.speed = 0.5;
-	            if (null != _spd) {
-	                this.setSpeed(_spd);
-	            }
-
+	            this.tgt_vd = null;
+	            this.m_speed = 0;
+	            this.v_flg = false;
+	            this.exec = false;
 	            this.callback = new Array(null, null);
 	        } catch (e) {
 	            console.error(e.stack);
@@ -2566,6 +2603,19 @@
 	    }
 
 	    _createClass(_class, [{
+	        key: 'setVisible',
+	        value: function setVisible(flg) {
+	            try {
+	                if ('boolean' !== typeof flg) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.v_flg = flg;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
 	        key: 'setTarget',
 	        value: function setTarget(tgt) {
 	            try {
@@ -2573,6 +2623,7 @@
 	                    throw new Error('invalid parameter');
 	                }
 	                this.target = tgt;
+	                this.tgt_vd = tgt.vdom();
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2583,14 +2634,28 @@
 	        value: function effect(flg) {
 	            try {
 	                var _flg = flg === undefined ? true : flg;
-	                var dom = this.target.getVdom();
-	                if (false === dom.isRendered()) {
-	                    throw new Error('target is not ready');
+
+	                if (0 === this.speed()) {
+	                    this.effectConts(_flg, this);
+	                } else {
+	                    if (false === this.target.isRendered()) {
+	                        throw new Error('target is not ready');
+	                    }
+	                    if (false === this.exec) {
+	                        this.exec = true;
+	                        this.initEffect(_flg, this);
+	                        this.tgt_vd.style('-webkit-transition', 1000 * this.speed() - 200 + 'ms all linear 0s');
+	                        this.tgt_vd.style('-moz-transition', 'all ' + (1000 * this.speed() - 200) + 'ms');
+	                        this.tgt_vd.style('-ms-transition', 'all ' + (1000 * this.speed() - 200) + 'ms');
+	                        this.tgt_vd.style('-o-transition', 'all ' + (1000 * this.speed() - 200) + 'ms');
+	                        this.tgt_vd.style('transtion', 1000 * this.speed() - 200 + 'ms all linear 0s');
+	                    }
+
+	                    setTimeout(this.effectConts, 200, _flg, this);
 	                }
-	                this.effect_func(_flg, dom);
 
 	                if (null != this.callback[0]) {
-	                    setTimeout(this.callback[0], 1000 * this.speed, this.callback[1]);
+	                    setTimeout(this.callback[0], 1000 * this.speed() - 200, this.callback[1]);
 	                }
 	            } catch (e) {
 	                console.error(e.stack);
@@ -2598,21 +2663,26 @@
 	            }
 	        }
 	    }, {
-	        key: 'effect_func',
-	        value: function effect_func(flg, vd) {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
+	        key: 'initEffect',
+	        value: function initEffect(flg) {}
 	    }, {
-	        key: 'setSpeed',
-	        value: function setSpeed(spd) {
+	        key: 'effectConts',
+	        value: function effectConts(flg) {}
+	    }, {
+	        key: 'speed',
+	        value: function speed(spd) {
 	            try {
+	                if (undefined === spd) {
+	                    return this.m_speed;
+	                }
 	                if ('number' != typeof spd) {
 	                    throw new Error('invalid parameter');
 	                }
-	                this.speed = spd;
+	                if (spd < 0.5) {
+	                    this.m_speed = 0;
+	                } else {
+	                    this.m_speed = spd;
+	                }
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2665,6 +2735,7 @@
 	            this.param = prm === undefined ? null : prm;
 	            this.m_title = null;
 	            this.m_theme = null;
+	            this.m_name = 'Base';
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
@@ -2672,29 +2743,6 @@
 	    }
 
 	    _createClass(_class, [{
-	        key: 'init',
-	        value: function init(disp) {
-	            try {
-	                var _disp = disp === undefined ? true : disp;
-	                this.initTemplate(this.param);
-	                this.base.init(false);
-	                if (true === _disp) {
-	                    this.setVisible(true);
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'initTemplate',
-	        value: function initTemplate(prm) {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
 	        key: 'title',
 	        value: function title(val) {
 	            try {
@@ -2726,11 +2774,44 @@
 	            }
 	        }
 	    }, {
-	        key: 'setVisible',
-	        value: function setVisible(flg, eff) {
+	        key: 'initTmplConts',
+	        value: function initTmplConts(prm) {
 	            try {
-	                var _eff = eff === undefined ? new mofron.effect.Fade() : eff;
-	                this.base.setVisible(true, _eff);
+	                console.log('not implements');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'visible',
+	        value: function visible(flg, eff) {
+	            try {
+	                if (undefined === flg && undefined === eff) {
+	                    return this.base.visible();
+	                }
+	                var _eff = eff === undefined ? null : eff;
+	                if (false === this.base.isRendered()) {
+	                    this.initTmplConts(this.param);
+	                }
+	                this.base.vdom().attr('template', this.name());
+	                this.base.visible(true, _eff);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'name',
+	        value: function name(nm) {
+	            try {
+	                if (undefined === nm) {
+	                    return this.m_name;
+	                }
+	                if ('string' !== typeof nm) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_name = nm;
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2806,6 +2887,9 @@
 	                        }
 	                    }
 	                    for (var idx in thm_cnt[cnt_key]) {
+	                        if (null === thm_cnt[cnt_key][parseInt(idx)]) {
+	                            continue;
+	                        }
 	                        this.set(cnt_key, thm_cnt[cnt_key][idx], parseInt(idx));
 	                    }
 	                }
@@ -2974,13 +3058,19 @@
 	                    this.conts[_key] = new Array();
 	                }
 
-	                if (_idx === this.conts[_key].length) {
-	                    this.conts[_key].push(_val);
-	                } else if (_idx < this.conts[_key].length) {
-	                    this.conts[_key][_idx] = val;
-	                } else {
-	                    throw new Error('invalid parameter');
+	                var loop = 0;
+	                for (; loop < 10; loop++) {
+	                    if (_idx === this.conts[_key].length) {
+	                        this.conts[_key].push(_val);
+	                        return;
+	                    } else if (_idx < this.conts[_key].length) {
+	                        this.conts[_key][_idx] = val;
+	                        return;
+	                    } else {
+	                        this.conts[_key].push(null);
+	                    }
 	                }
+	                throw new Error('invalid parameter');
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;

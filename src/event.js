@@ -16,10 +16,10 @@ mofron.event.Base = class {
      */
     constructor (fnc, prm) {
         try {
-            var _fnc     = (fnc === undefined) ? null : fnc;
-            this.target  = null;
-            this.func    = null;
-            this.parm    = null;
+            var _fnc    = (fnc === undefined) ? null : fnc;
+            this.target = null;
+            this.func   = null;
+            this.parm   = null;
             if (null !== _fnc) {
                 this.setEventFunc(_fnc, prm);
             }
@@ -36,10 +36,10 @@ mofron.event.Base = class {
      */
     setTarget (comp) {
         try {
-            if ('object' != (typeof comp)) {
+            if ((null === comp) || ('object' !== (typeof comp))) {
                 throw new Error('invalid parameter');
             }
-            this.target = comp.getEventTgt();
+            this.target = comp;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -72,7 +72,8 @@ mofron.event.Base = class {
             if ( (null === this.target) || (false === this.target.isRendered()) ) {
                 throw new Error('target is not ready');
             }
-            this.eventFunc();
+            this.target = this.target.getEventTgt();
+            this.eventConts();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -83,7 +84,7 @@ mofron.event.Base = class {
      * this is interface function.
      * extend class need implement this function.
      */
-    eventFunc () {
+    eventConts () {
         try {
             console.warn('not implement');
         } catch (e) {

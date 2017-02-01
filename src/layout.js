@@ -36,7 +36,7 @@ mofron.layout.Base = class {
                 if (idx < this.exec_cnt) {
                     continue;
                 }
-                this.layoutFunc(idx,tgt_chd[idx]);
+                this.layoutConts(idx,tgt_chd[idx]);
                 this.exec_cnt++;
             }
         } catch (e) {
@@ -45,7 +45,7 @@ mofron.layout.Base = class {
         }
     }
     
-    layoutFunc (idx, tgt) {
+    layoutConts (idx, tgt) {
         try {
             console.warn('layout is not implements');
         } catch (e) {

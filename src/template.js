@@ -10,29 +10,7 @@ mofron.tmpl.Base = class {
             this.param   = (prm === undefined) ? null : prm;
             this.m_title = null;
             this.m_theme = null;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    init (disp) {
-        try {
-            var _disp = (disp === undefined) ? true : disp;
-            this.initTemplate(this.param);
-            this.base.init(false);
-            if (true === _disp) {
-                this.setVisible(true);
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    initTemplate (prm) {
-        try {
-            
+            this.m_name  = 'Base';
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -68,10 +46,41 @@ mofron.tmpl.Base = class {
         }
     }
     
-    setVisible (flg, eff) {
+    initTmplConts (prm) {
         try {
-            var _eff = (eff === undefined) ? new mofron.effect.Fade() : eff;
-            this.base.setVisible (true, _eff);
+            console.log('not implements');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    visible (flg, eff) {
+        try {
+            if ((undefined === flg) && (undefined === eff)) {
+                return this.base.visible();
+            }
+            var _eff = (eff === undefined) ? null : eff;
+            if (false === this.base.isRendered()) {
+                this.initTmplConts (this.param);
+            }
+            this.base.vdom().attr('template', this.name());
+            this.base.visible(true, _eff);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    name (nm) {
+        try {
+            if (undefined === nm) {
+                return this.m_name;
+            }
+            if ('string' !== typeof nm) {
+                throw new Error('invalid parameter');
+            }
+            this.m_name = nm;
         } catch (e) {
             console.error(e.stack);
             throw e;
