@@ -3,9 +3,12 @@
  *
  */
 
-mofron.util.HeadConts = class {
+mofron.util.HeadConts = class extends mofron.Base {
     constructor (tag) {
         try {
+            super();
+            this.name('HeadConts');
+            
             if ('string' != (typeof tag)) {
                 throw new Error('invalid parameter');
             }

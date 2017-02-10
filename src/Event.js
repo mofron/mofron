@@ -7,7 +7,7 @@
  * @class mofron.event.Base
  * @brief base class of event
  */
-mofron.event.Base = class {
+mofron.Event = class extends mofron.Base {
     /**
      * initialize member
      *
@@ -16,6 +16,9 @@ mofron.event.Base = class {
      */
     constructor (fnc, prm) {
         try {
+            super();
+            this.setBaseName('Event');
+            this.name('Event');
             var _fnc    = (fnc === undefined) ? null : fnc;
             this.target = null;
             this.func   = null;

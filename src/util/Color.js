@@ -7,7 +7,7 @@
  * @class Color
  * @brief Color Defined Class
  */
-mofron.util.Color = class {
+mofron.util.Color = class extends mofron.Base {
     /**
      * initialize member
      *
@@ -18,6 +18,9 @@ mofron.util.Color = class {
      */
     constructor (r,g,b,a) {
         try {
+            super();
+            this.name('Color');
+            
             var _r = (r === undefined) ? null : r;
             var _g = (g === undefined) ? null : g;
             var _b = (b === undefined) ? null : b;
@@ -34,7 +37,6 @@ mofron.util.Color = class {
             } else {
                 throw new Error('invalid parameter');
             }
-            this.name    = 'Color';
             this.red     = _r;
             this.green   = _g;
             this.blue    = _b;
@@ -42,20 +44,6 @@ mofron.util.Color = class {
                 throw new Error('invalid parameter');
             }
             this.alpha   = _a;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * get name
-     *
-     * @return (string) own name
-     */
-    getName () {
-        try {
-            return this.name;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -105,6 +93,4 @@ mofron.util.Color = class {
             throw e;
         }
     }
-    
-    
 }

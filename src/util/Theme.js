@@ -7,12 +7,14 @@
  * @class mofron.theme
  * @brief Theme Defined Class
  */
-mofron.Theme = class {
+mofron.util.Theme = class extends mofron.Base{
     /**
      * initialize member
      */
     constructor () {
         try {
+            super();
+            this.name('Theme');
             this.conts  = {};
         } catch (e) {
             console.error(e.stack);
@@ -69,13 +71,23 @@ mofron.Theme = class {
             var _idx = (idx === undefined) ?    0 : idx;
             if ( (null === _fnt)              ||
                  ('object' !== (typeof _fnt)) ||
-                 ('Font'   !== _fnt.getName()) ) {
+                 ('Font'   !== _fnt.name()) ) {
                 throw new Error('invalid parameter');
             }
             
             _fnt.pushTheme();
-            this.set(_fnt.getName(), _fnt, _idx);
+            this.set(_fnt.name(), _fnt, _idx);
             
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getFont (idx) {
+        try {
+            var _idx    = (idx    === undefined) ? 0    : idx;
+            return this.get('Font', _idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -94,32 +106,21 @@ mofron.Theme = class {
             var _idx = (idx === undefined) ?    0 : idx;
             if ( (null === _clr)              ||
                  ('object' !== (typeof _clr)) ||
-                 ('Color'  !== _clr.getName()) ) {
+                 ('Color'  !== _clr.name()) ) {
                 throw new Error('invalid parameter');
             }
             
-            this.set(_clr.getName(), _clr, _idx);
+            this.set(_clr.name(), _clr, _idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    /**
-     * set component theme
-     *
-     * @param comp : (object) component object
-     * @param idx : (number) set index (option)
-     */
-    setComp (comp, idx) {
+    getColor (idx) {
         try {
-            var _comp = (comp === undefined) ? null : comp;
-            var _idx  = (idx === undefined)  ?    0 : idx;
-            if ( (null === _comp)              ||
-                 ('object' !== (typeof _comp)) ) {
-                throw new Error('invalid parameter');
-            }
-            this.set(_comp.getName(), _comp, _idx);
+            var _idx    = (idx    === undefined) ? 0    : idx;
+            return this.get('Color', _idx);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -1,5 +1,5 @@
 /**
- * @file util/Vdom.js
+ * @file Vdom.js
  * @author simpart
  */
 
@@ -7,7 +7,7 @@
  * @class Vdom
  * @brief virtual dom defined
  */
-mofron.util.Vdom = class {
+mofron.util.Vdom = class extends mofron.Base {
     /**
      * initialize member
      *
@@ -16,6 +16,9 @@ mofron.util.Vdom = class {
      */
     constructor (tg, cmp) {
         try {
+            super();
+            this.name('Vdom');
+            
             this.id       = null;
             this.comp     = (undefined === cmp) ? null : cmp;
             this.m_tag    = null;
@@ -71,7 +74,7 @@ mofron.util.Vdom = class {
     getId () {
         try {
             if (null === this.id) {
-                this.id = mofron.util.getId();
+                this.id = mofron.func.getId();
             }
             return this.id;
         } catch (e) {
@@ -186,7 +189,7 @@ mofron.util.Vdom = class {
                 /* setter */
                 this.m_attr[key] = val;
                 if (true === this.isRendered()) {
-                    this.getDom().setAttribute(_key, val);
+                    this.getDom().setAttribute(key, val);
                 }
                 this.value = null;
             } else if ( ('string'  === typeof key) &&

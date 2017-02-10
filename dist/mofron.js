@@ -50,21 +50,19 @@
 	  value: true
 	});
 	__webpack_require__(1);
-
-	/* util */
 	__webpack_require__(3);
 	__webpack_require__(4);
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
 	__webpack_require__(8);
-
 	__webpack_require__(9);
 	__webpack_require__(10);
 	__webpack_require__(11);
 	__webpack_require__(12);
 	__webpack_require__(13);
 	__webpack_require__(14);
+	__webpack_require__(15);
 
 	exports.mofron = mofron;
 
@@ -109,6 +107,7 @@
 	        effect: {},
 	        tmpl: {},
 	        util: {},
+	        func: {},
 	        theme: null,
 	        root: new Array()
 	    };
@@ -120,11 +119,95 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	mofron.Base = function () {
+	    function _class() {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            this.m_name = new Array();
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	    }
+
+	    /**
+	     * component name setter / getter
+	     *
+	     * @param nm : (string) component name
+	     * @return (string) component name
+	     * @note parameter syntax
+	     */
+
+
+	    _createClass(_class, [{
+	        key: 'name',
+	        value: function name(nm) {
+	            try {
+	                if (undefined === nm) {
+	                    if (0 === this.m_name.length) {
+	                        return null;
+	                    }
+	                    return this.m_name[this.m_name.length - 1];
+	                }
+	                if ('string' !== typeof nm) {
+	                    throw new Error('invalid parameter');
+	                }
+	                this.m_name.push(nm);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getNameList',
+	        value: function getNameList() {
+	            try {
+	                return this.m_name;
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'option',
+	        value: function option(opt) {
+	            try {
+	                if (null !== opt && 'object' === (typeof opt === 'undefined' ? 'undefined' : _typeof(opt))) {
+	                    /* option */
+	                    for (var opt_idx in opt) {
+	                        if ('function' === typeof this[opt_idx]) {
+	                            this[opt_idx](opt[opt_idx]);
+	                        }
+	                    }
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}();
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
 	/**
 	 * @file func.js
 	 */
 
-	mofron.util.getId = function (tgt) {
+	mofron.func.getId = function (tgt) {
 	    try {
 	        var _tgt = tgt === undefined ? null : tgt;
 	        var ipf = "aid";
@@ -141,380 +224,51 @@
 	        return ret_id;
 	    } catch (e) {
 	        console.error(e.stack);
-	        throw new Error();
+	        throw new e();
 	    }
 	};
 
-	mofron.util.camelMap = {
-	    "align-items": "alignItems",
-	    "align-self": "alignSelf",
-	    "alignment-baseline": "alignmentBaseline",
-	    "all": "all",
-	    "animation": "animation",
-	    "animation-delay": "animationDelay",
-	    "animation-direction": "animationDirection",
-	    "animation-duration": "animationDuration",
-	    "animation-fillMode": "animationFillMode",
-	    "animation-iteration-count": "animationIterationCount",
-	    "animation-name": "animationName",
-	    "animation-play-state": "animationPlayState",
-	    "animation-timing-function": "animationTimingFunction",
-	    "backface-visibility": "backfaceVisibility",
-	    "background": "background",
-	    "background-attachment": "backgroundAttachment",
-	    "background-blend-mode": "backgroundBlendMode",
-	    "background-clip": "backgroundClip",
-	    "background-color": "backgroundColor",
-	    "background-image": "backgroundImage",
-	    "background-origin": "backgroundOrigin",
-	    "background-position": "backgroundPosition",
-	    "background-position-x": "backgroundPositionX",
-	    "background-position-y": "backgroundPositionY",
-	    "background-repeat": "backgroundRepeat",
-	    "background-repeat-x": "backgroundRepeatX",
-	    "background-repeat-y": "backgroundRepeatY",
-	    "background-size": "backgroundSize",
-	    "baseline-shift": "baselineShift",
-	    "border": "border",
-	    "border-bottom": "borderBottom",
-	    "border-bottom-color": "borderBottomColor",
-	    "border-bottom-left-radius": "borderBottomLeftRadius",
-	    "border-bottom-right-radius": "borderBottomRightRadius",
-	    "border-bottom-style": "borderBottomStyle",
-	    "border-bottom-width": "borderBottomWidth",
-	    "border-collapse": "borderCollapse",
-	    "border-color": "borderColor",
-	    "border-image": "borderImage",
-	    "border-image-outset": "borderImageOutset",
-	    "border-image-repeat": "borderImageRepeat",
-	    "border-image-slice": "borderImageSlice",
-	    "border-image-source": "borderImageSource",
-	    "border-image-width": "borderImageWidth",
-	    "border-left": "borderLeft",
-	    "border-left-color": "borderLeftColor",
-	    "border-left-style": "borderLeftStyle",
-	    "border-left-width": "borderLeftWidth",
-	    "border-radius": "borderRadius",
-	    "border-right": "borderRight",
-	    "border-right-color": "borderRightColor",
-	    "border-right-style": "borderRightStyle",
-	    "border-right-width": "borderRightWidth",
-	    "border-spacing": "borderSpacing",
-	    "border-style": "borderStyle",
-	    "border-top": "borderTop",
-	    "border-top-color": "borderTopColor",
-	    "border-top-leftRadius": "borderTopLeftRadius",
-	    "border-top-rightRadius": "borderTopRightRadius",
-	    "border-top-style": "borderTopStyle",
-	    "border-top-width": "borderTopWidth",
-	    "border-width": "borderWidth",
-	    "bottom": "bottom",
-	    "box-shadow": "boxShadow",
-	    "box-sizing": "boxSizing",
-	    "break-after": "breakAfter",
-	    "break-before": "breakBefore",
-	    "break-inside": "breakInside",
-	    "buffered-rendering": "bufferedRendering",
-	    "caption-side": "captionSide",
-	    "clear": "clear",
-	    "clip": "clip",
-	    "clip-path": "clipPath",
-	    "clip-rule": "clipRule",
-	    "color": "color",
-	    "color-interpolation": "colorInterpolation",
-	    "color-interpolation-filters": "colorInterpolationFilters",
-	    "color-rendering": "colorRendering",
-	    "column-count": "columnCount",
-	    "column-fill": "columnFill",
-	    "column-gap": "columnGap",
-	    "column-rule": "columnRule",
-	    "column-rule-color": "columnRuleColor",
-	    "column-rule-style": "columnRuleStyle",
-	    "column-rule-width": "columnRuleWidth",
-	    "column-span": "columnSpan",
-	    "column-width": "columnWidth",
-	    "columns": "columns",
-	    "content": "content",
-	    "counter-increment": "counterIncrement",
-	    "counter-reset": "counterReset",
-	    "cursor": "cursor",
-	    "cx": "cx",
-	    "cy": "cy",
-	    "direction": "direction",
-	    "display": "display",
-	    "dominant-baseline": "dominantBaseline",
-	    "empty-cells": "emptyCells",
-	    "fill": "fill",
-	    "fill-opacity": "fillOpacity",
-	    "fill-rule": "fillRule",
-	    "filter": "filter",
-	    "flex": "flex",
-	    "flex-basis": "flexBasis",
-	    "flex-direction": "flexDirection",
-	    "flex-flow": "flexFlow",
-	    "flex-grow": "flexGrow",
-	    "flex-shrink": "flexShrink",
-	    "flex-wrap": "flexWrap",
-	    "float": "float",
-	    "flood-color": "floodColor",
-	    "flood-opacity": "floodOpacity",
-	    "font": "font",
-	    "font-family": "fontFamily",
-	    "font-featureSettings": "fontFeatureSettings",
-	    "font-kerning": "fontKerning",
-	    "font-size": "fontSize",
-	    "font-stretch": "fontStretch",
-	    "font-style": "fontStyle",
-	    "font-variant": "fontVariant",
-	    "font-variant-ligatures": "fontVariantLigatures",
-	    "font-weight": "fontWeight",
-	    "height": "height",
-	    "image-rendering": "imageRendering",
-	    "isolation": "isolation",
-	    "justify-content": "justifyContent",
-	    "left": "left",
-	    "letter-spacing": "letterSpacing",
-	    "lighting-color": "lightingColor",
-	    "line-height": "lineHeight",
-	    "list-style": "listStyle",
-	    "list-style-image": "listStyleImage",
-	    "list-style-position": "listStylePosition",
-	    "list-style-type": "listStyleType",
-	    "margin": "margin",
-	    "margin-bottom": "marginBottom",
-	    "margin-left": "marginLeft",
-	    "margin-right": "marginRight",
-	    "margin-top": "marginTop",
-	    "marker": "marker",
-	    "marker-end": "markerEnd",
-	    "marker-mid": "markerMid",
-	    "marker-start": "markerStart",
-	    "mask": "mask",
-	    "mask-type": "maskType",
-	    "max-height": "maxHeight",
-	    "max-width": "maxWidth",
-	    "max-zoom": "maxZoom",
-	    "min-height": "minHeight",
-	    "min-width": "minWidth",
-	    "min-zoom": "minZoom",
-	    "mix-blend-mode": "mixBlendMode",
-	    "motion": "motion",
-	    "motion-offset": "motionOffset",
-	    "motion-path": "motionPath",
-	    "motion-rotation": "motionRotation",
-	    "object-fit": "objectFit",
-	    "object-position": "objectPosition",
-	    "opacity": "opacity",
-	    "order": "order",
-	    "orientation": "orientation",
-	    "orphans": "orphans",
-	    "outline": "outline",
-	    "outline-color": "outlineColor",
-	    "outline-offset": "outlineOffset",
-	    "outline-style": "outlineStyle",
-	    "outline-width": "outlineWidth",
-	    "overflow": "overflow",
-	    "overflow-wrap": "overflowWrap",
-	    "overflow-x": "overflowX",
-	    "overflow-y": "overflowY",
-	    "padding": "padding",
-	    "padding-bottom": "paddingBottom",
-	    "padding-left": "paddingLeft",
-	    "padding-right": "paddingRight",
-	    "padding-top": "paddingTop",
-	    "page": "page",
-	    "page-break-after": "pageBreakAfter",
-	    "page-break-before": "pageBreakBefore",
-	    "page-break-inside": "pageBreakInside",
-	    "paint-order": "paintOrder",
-	    "perspective": "perspective",
-	    "perspective-origin": "perspectiveOrigin",
-	    "pointer-events": "pointerEvents",
-	    "position": "position",
-	    "quotes": "quotes",
-	    "r": "r",
-	    "resize": "resize",
-	    "right": "right",
-	    "rx": "rx",
-	    "ry": "ry",
-	    "shape-image-threshold": "shapeImageThreshold",
-	    "shape-margin": "shapeMargin",
-	    "shape-outside": "shapeOutside",
-	    "shape-rendering": "shapeRendering",
-	    "size": "size",
-	    "speak": "speak",
-	    "src": "src",
-	    "stop-color": "stopColor",
-	    "stop-opacity": "stopOpacity",
-	    "stroke": "stroke",
-	    "stroke-dasharray": "strokeDasharray",
-	    "stroke-dashoffset": "strokeDashoffset",
-	    "stroke-linecap": "strokeLinecap",
-	    "stroke-linejoin": "strokeLinejoin",
-	    "stroke-miterlimit": "strokeMiterlimit",
-	    "stroke-opacity": "strokeOpacity",
-	    "stroke-width": "strokeWidth",
-	    "tab-size": "tabSize",
-	    "table-layout": "tableLayout",
-	    "text-align": "textAlign",
-	    "text-alignLast": "textAlignLast",
-	    "text-anchor": "textAnchor",
-	    "text-combineUpright": "textCombineUpright",
-	    "text-decoration": "textDecoration",
-	    "text-indent": "textIndent",
-	    "text-orientation": "textOrientation",
-	    "text-overflow": "textOverflow",
-	    "text-rendering": "textRendering",
-	    "text-shadow": "textShadow",
-	    "text-transform": "textTransform",
-	    "top": "top",
-	    "touch-action": "touchAction",
-	    "transform": "transform",
-	    "transform-origin": "transformOrigin",
-	    "transform-style": "transformStyle",
-	    "transition": "transition",
-	    "transition-delay": "transitionDelay",
-	    "transition-duration": "transitionDuration",
-	    "transition-property": "transitionProperty",
-	    "transition-timing-function": "transitionTimingFunction",
-	    "unicode-bidi": "unicodeBidi",
-	    "unicode-range": "unicodeRange",
-	    "user-zoom": "userZoom",
-	    "vector-effect": "vectorEffect",
-	    "vertical-align": "verticalAlign",
-	    "visibility": "visibility",
-	    "webkit-app-region": "webkitAppRegion",
-	    "webkit-appearance": "webkitAppearance",
-	    "webkit-background-clip": "webkitBackgroundClip",
-	    "webkit-background-origin": "webkitBackgroundOrigin",
-	    "webkit-border-after": "webkitBorderAfter",
-	    "webkit-border-after-color": "webkitBorderAfterColor",
-	    "webkit-border-after-style": "webkitBorderAfterStyle",
-	    "webkit-border-after-width": "webkitBorderAfterWidth",
-	    "webkit-border-before": "webkitBorderBefore",
-	    "webkit-border-before-color": "webkitBorderBeforeColor",
-	    "webkit-border-before-style": "webkitBorderBeforeStyle",
-	    "webkit-border-before-width": "webkitBorderBeforeWidth",
-	    "webkit-border-end": "webkitBorderEnd",
-	    "webkit-border-end-color": "webkitBorderEndColor",
-	    "webkit-border-end-style": "webkitBorderEndStyle",
-	    "webkit-border-end-width": "webkitBorderEndWidth",
-	    "webkit-border-horizontal-spacing": "webkitBorderHorizontalSpacing",
-	    "webkit-border-image": "webkitBorderImage",
-	    "webkit-border-start": "webkitBorderStart",
-	    "webkit-border-start-color": "webkitBorderStartColor",
-	    "webkit-border-start-style": "webkitBorderStartStyle",
-	    "webkit-border-start-width": "webkitBorderStartWidth",
-	    "webkit-border-vertical-spacing": "webkitBorderVerticalSpacing",
-	    "webkit-box-align": "webkitBoxAlign",
-	    "webkit-box-decoration-break": "webkitBoxDecorationBreak",
-	    "webkit-box-direction": "webkitBoxDirection",
-	    "webkit-box-flex": "webkitBoxFlex",
-	    "webkit-box-flex-group": "webkitBoxFlexGroup",
-	    "webkit-box-lines": "webkitBoxLines",
-	    "webkit-box-ordinal-group": "webkitBoxOrdinalGroup",
-	    "webkit-box-orient": "webkitBoxOrient",
-	    "webkit-box-pack": "webkitBoxPack",
-	    "webkit-box-reflect": "webkitBoxReflect",
-	    "webkit-clip-path": "webkitClipPath",
-	    "webkit-column-break-after": "webkitColumnBreakAfter",
-	    "webkit-column-break-before": "webkitColumnBreakBefore",
-	    "webkit-column-break-inside": "webkitColumnBreakInside",
-	    "webkit-filter": "webkitFilter",
-	    "webkit-font-size-delta": "webkitFontSizeDelta",
-	    "webkit-font-smoothing": "webkitFontSmoothing",
-	    "webkit-highlight": "webkitHighlight",
-	    "webkit-hyphenate-character": "webkitHyphenateCharacter",
-	    "webkit-line-break": "webkitLineBreak",
-	    "webkit-line-clamp": "webkitLineClamp",
-	    "webkit-locale": "webkitLocale",
-	    "webkit-logical-height": "webkitLogicalHeight",
-	    "webkit-logical-width": "webkitLogicalWidth",
-	    "webkit-margin-after": "webkitMarginAfter",
-	    "webkit-margin-after-collapse": "webkitMarginAfterCollapse",
-	    "webkit-margin-before": "webkitMarginBefore",
-	    "webkit-margin-before-collapse": "webkitMarginBeforeCollapse",
-	    "webkit-margin-bottom-collapse": "webkitMarginBottomCollapse",
-	    "webkit-margin-collapse": "webkitMarginCollapse",
-	    "webkit-margin-end": "webkitMarginEnd",
-	    "webkit-margin-start": "webkitMarginStart",
-	    "webkit-margin-top-collapse": "webkitMarginTopCollapse",
-	    "webkit-mask": "webkitMask",
-	    "webkit-mask-box-image": "webkitMaskBoxImage",
-	    "webkit-mask-box-image-outset": "webkitMaskBoxImageOutset",
-	    "webkit-mask-box-image-repeat": "webkitMaskBoxImageRepeat",
-	    "webkit-mask-box-image-slice": "webkitMaskBoxImageSlice",
-	    "webkit-mask-box-image-source": "webkitMaskBoxImageSource",
-	    "webkit-mask-box-image-width": "webkitMaskBoxImageWidth",
-	    "webkit-mask-clip": "webkitMaskClip",
-	    "webkit-mask-composite": "webkitMaskComposite",
-	    "webkit-mask-image": "webkitMaskImage",
-	    "webkit-mask-origin": "webkitMaskOrigin",
-	    "webkit-mask-position": "webkitMaskPosition",
-	    "webkit-mask-positionX": "webkitMaskPositionX",
-	    "webkit-mask-positionY": "webkitMaskPositionY",
-	    "webkit-mask-repeat": "webkitMaskRepeat",
-	    "webkit-mask-repeatX": "webkitMaskRepeatX",
-	    "webkit-mask-repeatY": "webkitMaskRepeatY",
-	    "webkit-mask-size": "webkitMaskSize",
-	    "webkit-max-logical-height": "webkitMaxLogicalHeight",
-	    "webkit-max-logical-width": "webkitMaxLogicalWidth",
-	    "webkit-min-logical-height": "webkitMinLogicalHeight",
-	    "webkit-min-logical-width": "webkitMinLogicalWidth",
-	    "webkit-padding-after": "webkitPaddingAfter",
-	    "webkit-padding-before": "webkitPaddingBefore",
-	    "webkit-padding-end": "webkitPaddingEnd",
-	    "webkit-padding-start": "webkitPaddingStart",
-	    "webkit-perspective-origin-x": "webkitPerspectiveOriginX",
-	    "webkit-perspective-origin-y": "webkitPerspectiveOriginY",
-	    "webkit-print-color-adjust": "webkitPrintColorAdjust",
-	    "webkit-rtl-ordering": "webkitRtlOrdering",
-	    "webkit-ruby-position": "webkitRubyPosition",
-	    "webkit-tap-highlight-color": "webkitTapHighlightColor",
-	    "webkit-text-combine": "webkitTextCombine",
-	    "webkit-text-decorations-in-effect": "webkitTextDecorationsInEffect",
-	    "webkit-text-emphasis": "webkitTextEmphasis",
-	    "webkit-text-emphasis-color": "webkitTextEmphasisColor",
-	    "webkit-text-emphasis-position": "webkitTextEmphasisPosition",
-	    "webkit-text-emphasis-style": "webkitTextEmphasisStyle",
-	    "webkit-text-fillColor": "webkitTextFillColor",
-	    "webkit-text-orientation": "webkitTextOrientation",
-	    "webkit-text-security": "webkitTextSecurity",
-	    "webkit-text-stroke": "webkitTextStroke",
-	    "webkit-text-stroke-color": "webkitTextStrokeColor",
-	    "webkit-text-stroke-width": "webkitTextStrokeWidth",
-	    "webkit-transition": "webkitTransition",
-	    "webkit-transform-origin-x": "webkitTransformOriginX",
-	    "webkit-transform-origin-y": "webkitTransformOriginY",
-	    "webkit-transform-origin-z": "webkitTransformOriginZ",
-	    "webkit-user-drag": "webkitUserDrag",
-	    "webkit-user-modify": "webkitUserModify",
-	    "webkit-user-select": "webkitUserSelect",
-	    "webkit-writing-mode": "webkitWritingMode",
-	    "white-space": "whiteSpace",
-	    "widows": "widows",
-	    "width": "width",
-	    "will-change": "willChange",
-	    "word-break": "wordBreak",
-	    "word-spacing": "wordSpacing",
-	    "word-wrap": "wordWrap",
-	    "writing-mode": "writingMode",
-	    "x": "x",
-	    "y": "y",
-	    "z-index": "zIndex",
-	    "zoom": "zoom",
-	    "css-text": "cssText",
-	    "length": "length",
-	    "parent-rule": "parentRule",
-	    "css-float": "cssFloat",
-	    "item": "item",
-	    "get-property-value": "getPropertyValue",
-	    "get-property-priority": "getPropertyPriority",
-	    "set-property": "setProperty",
-	    "remove-property": "removeProperty"
+	mofron.func.getCamelStyle = function (sty) {
+	    try {
+	        if ('string' !== typeof sty) {
+	            throw new Error('invalid parameter');
+	        }
+
+	        if (sty.length - 1 === sty.lastIndexOf('-')) {
+	            throw new Error('invalid parameter');
+	        }
+
+	        var skip = false;
+	        if (0 === sty.indexOf('-')) {
+	            skip = true;
+	        }
+
+	        var ret_val = sty;
+	        var ret_buf = null;
+	        var up_str = null;
+	        var idx = null;
+	        while (true) {
+	            idx = ret_val.indexOf('-');
+	            if (-1 === idx) {
+	                break;
+	            }
+	            up_str = ret_val.charAt(idx + 1).toUpperCase();
+	            ret_buf = ret_val.substr(0, idx);
+	            if (true === skip) {
+	                skip = false;
+	                ret_val = ret_buf + ret_val.substr(idx + 1);
+	            } else {
+	                ret_val = ret_buf + up_str + ret_val.substr(idx + 2);
+	            }
+	        }
+	        return ret_val;
+	    } catch (e) {
+	        console.error(e.stack);
+	        throw e;
+	    }
 	};
 
-	mofron.util.getColorObj = function (sty) {
+	mofron.func.getColorObj = function (sty) {
 	    try {
 	        if ('none' === sty) {
 	            return new mofron.util.Color();
@@ -546,7 +300,7 @@
 	    }
 	};
 
-	mofron.util.getStyleConts = function (sel, cnt) {
+	mofron.func.getStyleConts = function (sel, cnt) {
 	    try {
 	        var ret_val = sel + '{';
 	        for (var idx in cnt) {
@@ -560,7 +314,7 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -571,8 +325,12 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
-	 * @file util/Vdom.js
+	 * @file Vdom.js
 	 * @author simpart
 	 */
 
@@ -580,7 +338,9 @@
 	 * @class Vdom
 	 * @brief virtual dom defined
 	 */
-	mofron.util.Vdom = function () {
+	mofron.util.Vdom = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    /**
 	     * initialize member
 	     *
@@ -591,26 +351,31 @@
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.id = null;
-	            this.comp = undefined === cmp ? null : cmp;
-	            this.m_tag = null;
-	            this.clname = new Array();
-	            this.m_parent = null;
-	            this.child = new Array();
-	            this.m_style = new mofron.util.Style(this);
-	            this.m_attr = {};
-	            this.m_text = null;
-	            this.value = null;
-	            this.entity = null;
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
 
-	            this.tag(tg);
-	            if (null !== this.comp) {
-	                this.attr('component', this.comp.name());
+	            _this.name('Vdom');
+
+	            _this.id = null;
+	            _this.comp = undefined === cmp ? null : cmp;
+	            _this.m_tag = null;
+	            _this.clname = new Array();
+	            _this.m_parent = null;
+	            _this.child = new Array();
+	            _this.m_style = new mofron.util.Style(_this);
+	            _this.m_attr = {};
+	            _this.m_text = null;
+	            _this.value = null;
+	            _this.entity = null;
+
+	            _this.tag(tg);
+	            if (null !== _this.comp) {
+	                _this.attr('component', _this.comp.name());
 	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
@@ -653,7 +418,7 @@
 	        value: function getId() {
 	            try {
 	                if (null === this.id) {
-	                    this.id = mofron.util.getId();
+	                    this.id = mofron.func.getId();
 	                }
 	                return this.id;
 	            } catch (e) {
@@ -779,7 +544,7 @@
 	                    /* setter */
 	                    this.m_attr[key] = val;
 	                    if (true === this.isRendered()) {
-	                        this.getDom().setAttribute(_key, val);
+	                        this.getDom().setAttribute(key, val);
 	                    }
 	                    this.value = null;
 	                } else if ('string' === typeof key && undefined === val) {
@@ -1079,10 +844,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1093,6 +858,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file Style.js
 	 * @author simpart
@@ -1102,7 +871,9 @@
 	 * @class Style
 	 * @brief component style class
 	 */
-	mofron.util.Style = function () {
+	mofron.util.Style = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    /**
 	     * initialize member
 	     *
@@ -1112,17 +883,22 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Style');
+
 	            var _tgt = tgt === undefined ? null : tgt;
 	            if (null !== _tgt && 'object' !== (typeof _tgt === 'undefined' ? 'undefined' : _typeof(_tgt))) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.target = _tgt;
-	            this.m_protect = false;
-	            this.conts = {};
+	            _this.target = _tgt;
+	            _this.m_protect = false;
+	            _this.conts = {};
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
@@ -1146,7 +922,7 @@
 	                if (false === this.m_protect || true === this.m_protect && undefined === this.conts[key]) {
 	                    this.conts[key] = _val;
 	                    if (null !== this.target && true === this.target.isRendered()) {
-	                        this.target.getDom().style[key] = _val;
+	                        this.target.getDom().style[mofron.func.getCamelStyle(key)] = _val;
 	                    }
 	                }
 	            } catch (e) {
@@ -1206,10 +982,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1217,6 +993,10 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
 	 * @file  Color.js
@@ -1227,7 +1007,9 @@
 	 * @class Color
 	 * @brief Color Defined Class
 	 */
-	mofron.util.Color = function () {
+	mofron.util.Color = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    /**
 	     * initialize member
 	     *
@@ -1240,6 +1022,10 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Color');
+
 	            var _r = r === undefined ? null : r;
 	            var _g = g === undefined ? null : g;
 	            var _b = b === undefined ? null : b;
@@ -1252,49 +1038,32 @@
 	            } else {
 	                throw new Error('invalid parameter');
 	            }
-	            this.name = 'Color';
-	            this.red = _r;
-	            this.green = _g;
-	            this.blue = _b;
+	            _this.red = _r;
+	            _this.green = _g;
+	            _this.blue = _b;
 	            if ('number' !== typeof _a) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.alpha = _a;
+	            _this.alpha = _a;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
-	     * get name
-	     *
-	     * @return (string) own name
+	     * get rgba value
+	     * 
+	     * @return (object) rgba array object
+	     *   [0] -> (number) red value
+	     *   [1] -> (number) green value
+	     *   [2] -> (number) blue value
+	     *   [3] -> (number) alpha value
 	     */
 
 
 	    _createClass(_class, [{
-	        key: 'getName',
-	        value: function getName() {
-	            try {
-	                return this.name;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * get rgba value
-	         * 
-	         * @return (object) rgba array object
-	         *   [0] -> (number) red value
-	         *   [1] -> (number) green value
-	         *   [2] -> (number) blue value
-	         *   [3] -> (number) alpha value
-	         */
-
-	    }, {
 	        key: 'getRgba',
 	        value: function getRgba() {
 	            try {
@@ -1329,10 +1098,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1343,6 +1112,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file  Font.js
 	 * @author simpart
@@ -1352,7 +1125,9 @@
 	 * @class Font
 	 * @brief Font Defined Class
 	 */
-	mofron.util.Font = function () {
+	mofron.util.Font = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    /**
 	     * initialize font
 	     *
@@ -1362,6 +1137,10 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Font');
+
 	            /* check parameter */
 	            var _pth = pth === undefined ? null : pth;
 	            if ('string' !== typeof fnt) {
@@ -1369,58 +1148,32 @@
 	            }
 
 	            /* initialize member */
-	            this.m_name = null;
-	            this.m_family = {};
-	            this.size = 15;
-	            this.thm_sel = 'mofron-theme-' + mofron.util.getId(this);
-	            this.thm_flg = false;
+	            _this.m_family = {};
+	            _this.size = 15;
+	            _this.thm_sel = 'mofron-theme-' + mofron.func.getId(_this);
+	            _this.thm_flg = false;
 
 	            /* initialize function */
-	            this.name('Font');
-	            this.addFamily(fnt);
+	            _this.addFamily(fnt);
 	            if (null !== _pth) {
-	                this.setFace(fnt, _pth);
+	                _this.setFace(fnt, _pth);
 	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
-	     * name 
-	     *
-	     * @return (string) own name
+	     * set @font-face
+	     * 
+	     * @param fnt : (string) font name
+	     * @param pth : (string) path to font file
 	     */
 
 
 	    _createClass(_class, [{
-	        key: 'name',
-	        value: function name(nm) {
-	            try {
-	                if (undefined === nm) {
-	                    /* getter */
-	                    return this.m_name;
-	                }
-	                /* setter */
-	                if ('string' !== typeof nm) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.m_name = nm;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set @font-face
-	         * 
-	         * @param fnt : (string) font name
-	         * @param pth : (string) path to font file
-	         */
-
-	    }, {
 	        key: 'setFace',
 	        value: function setFace(fnt, pth) {
 	            try {
@@ -1449,7 +1202,7 @@
 	                    'font-family': fnt,
 	                    'src': "url('" + pth + "') " + format
 	                };
-	                hc.addConts(mofron.util.getStyleConts('@font-face', style));
+	                hc.addConts(mofron.func.getStyleConts('@font-face', style));
 	                hc.pushTag();
 	            } catch (e) {
 	                console.error(e.stack);
@@ -1568,7 +1321,7 @@
 	                    'font-family': this.getFamilyStyle(),
 	                    'font-size': this.size + 'px'
 	                };
-	                hc.addConts(mofron.util.getStyleConts(this.thm_sel, style));
+	                hc.addConts(mofron.func.getStyleConts('.' + this.thm_sel, style));
 	                hc.pushTag();
 	                this.thm_flg = true;
 	            } catch (e) {
@@ -1616,10 +1369,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1628,26 +1381,37 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file HeadConts.js
 	 *
 	 */
 
-	mofron.util.HeadConts = function () {
+	mofron.util.HeadConts = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    function _class(tag) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('HeadConts');
+
 	            if ('string' != typeof tag) {
 	                throw new Error('invalid parameter');
 	            }
-	            this.tag = tag;
-	            this.attr = {};
-	            this.conts = '';
+	            _this.tag = tag;
+	            _this.attr = {};
+	            _this.conts = '';
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    _createClass(_class, [{
@@ -1731,10 +1495,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1745,6 +1509,323 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @file theme.js
+	 * @author simpart
+	 */
+
+	/**
+	 * @class mofron.theme
+	 * @brief Theme Defined Class
+	 */
+	mofron.util.Theme = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
+	    /**
+	     * initialize member
+	     */
+	    function _class() {
+	        _classCallCheck(this, _class);
+
+	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Theme');
+	            _this.conts = {};
+	        } catch (e) {
+	            console.error(e.stack);
+	            throw e;
+	        }
+	        return _this;
+	    }
+
+	    /**
+	     * set theme contents
+	     * 
+	     * @param thm : (mofron.theme object) theme
+	     * @param ovr : (bool) over ride flag (option)
+	     */
+
+
+	    _createClass(_class, [{
+	        key: 'setTheme',
+	        value: function setTheme(thm, ovr) {
+	            try {
+	                var _thm = thm === undefined ? null : thm;
+	                var _ovr = ovr === undefined ? true : ovr;
+
+	                if (null === _thm) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                var thm_cnt = thm.get();
+	                var cnt_buf = null;
+	                for (var cnt_key in thm_cnt) {
+	                    cnt_buf = this.get(cnt_key);
+	                    if (false === _ovr) {
+	                        if (null !== cnt_buf) {
+	                            continue;
+	                        }
+	                    }
+	                    for (var idx in thm_cnt[cnt_key]) {
+	                        if (null === thm_cnt[cnt_key][parseInt(idx)]) {
+	                            continue;
+	                        }
+	                        this.set(cnt_key, thm_cnt[cnt_key][idx], parseInt(idx));
+	                    }
+	                }
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set font theme
+	         *
+	         * @param fnt : (object) Font object
+	         * @param idx : (number) set index (option)
+	         */
+
+	    }, {
+	        key: 'setFont',
+	        value: function setFont(fnt, idx) {
+	            try {
+	                var _fnt = fnt === undefined ? null : fnt;
+	                var _idx = idx === undefined ? 0 : idx;
+	                if (null === _fnt || 'object' !== (typeof _fnt === 'undefined' ? 'undefined' : _typeof(_fnt)) || 'Font' !== _fnt.name()) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                _fnt.pushTheme();
+	                this.set(_fnt.name(), _fnt, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getFont',
+	        value: function getFont(idx) {
+	            try {
+	                var _idx = idx === undefined ? 0 : idx;
+	                return this.get('Font', _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set color theme
+	         *
+	         * @param clr : (object) Color object
+	         * @param idx : (number) set index (option)
+	         */
+
+	    }, {
+	        key: 'setColor',
+	        value: function setColor(clr, idx) {
+	            try {
+	                var _clr = clr === undefined ? null : clr;
+	                var _idx = idx === undefined ? 0 : idx;
+	                if (null === _clr || 'object' !== (typeof _clr === 'undefined' ? 'undefined' : _typeof(_clr)) || 'Color' !== _clr.name()) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                this.set(_clr.name(), _clr, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getColor',
+	        value: function getColor(idx) {
+	            try {
+	                var _idx = idx === undefined ? 0 : idx;
+	                return this.get('Color', _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'getComp',
+	        value: function getComp(cmp_nm, idx) {
+	            try {
+	                var _idx = idx === undefined ? 0 : idx;
+	                var _cmp_nm = cmp_nm === undefined ? null : cmp_nm;
+	                if (null === _cmp_nm || 'string' !== typeof _cmp_nm) {
+	                    throw new Error('invalid parameter');
+	                }
+	                return this.get(_cmp_nm, _idx);
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * get theme contents
+	         * 
+	         * @param key : (string) theme identify key (option)
+	         * @param idx : (number) get index (option)
+	         * @return (object) theme value
+	         */
+
+	    }, {
+	        key: 'get',
+	        value: function get(key, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _idx = idx === undefined ? null : idx;
+
+	                if (null === _key) {
+	                    return this.conts;
+	                }
+
+	                var hit = false;
+	                for (var cnt_key in this.conts) {
+	                    if (cnt_key === _key) {
+	                        hit = true;
+	                        break;
+	                    }
+	                }
+	                if (false === hit) {
+	                    return null;
+	                }
+
+	                if (null === _idx) {
+	                    return this.conts[_key];
+	                }
+
+	                if (_idx >= this.conts[_key].length || _idx < 0) {
+	                    return null;
+	                }
+
+	                //for (var dbg_key in this.conts) {
+	                //    console.log(dbg_key); 
+	                //}
+	                return this.conts[_key][_idx];
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * set theme contents
+	         * 
+	         * @param key : (string) theme contetent key
+	         * @param val : (object) theme element
+	         * @param idx : (number) set index
+	         */
+
+	    }, {
+	        key: 'set',
+	        value: function set(key, val, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _val = val === undefined ? null : val;
+	                var _idx = idx === undefined ? 0 : idx;
+
+	                if (null === _key || null === _val || 0 > _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                if (undefined === this.conts[_key]) {
+	                    this.conts[_key] = new Array();
+	                }
+
+	                var loop = 0;
+	                for (; loop < 10; loop++) {
+	                    if (_idx === this.conts[_key].length) {
+	                        this.conts[_key].push(_val);
+	                        return;
+	                    } else if (_idx < this.conts[_key].length) {
+	                        this.conts[_key][_idx] = val;
+	                        return;
+	                    } else {
+	                        this.conts[_key].push(null);
+	                    }
+	                }
+	                throw new Error('invalid parameter');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+
+	        /**
+	         * remove theme value
+	         *
+	         * @param key : (string) theme identify key
+	         * @param idx : (number) remove index
+	         */
+
+	    }, {
+	        key: 'del',
+	        value: function del(key, idx) {
+	            try {
+	                var _key = key === undefined ? null : key;
+	                var _idx = idx === undefined ? 0 : idx;
+
+	                if (null === _key || 0 > _idx && this.conts.length <= _idx) {
+	                    throw new Error('invalid parameter');
+	                }
+
+	                var cnt = 0;
+	                for (var cnt_key in this.conts) {
+	                    if (cnt_key === _key) {
+	                        this.conts[cnt_key].splice(_idx, 1);
+	                        if (0 === this.conts[cnt_key].length) {
+	                            this.conts.splice(cnt, 1);
+	                        }
+	                        return;
+	                    }
+	                    cnt++;
+	                }
+
+	                throw new Error('invalid parameter');
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }, {
+	        key: 'addNotify',
+	        value: function addNotify(func) {
+	            try {} catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
+	    }]);
+
+	    return _class;
+	}(mofron.Base);
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file   component.js
 	 * @author simpart
@@ -1754,7 +1835,8 @@
 	 * @class Base
 	 * @brief base component class
 	 */
-	mofron.comp.Base = function () {
+	mofron.Component = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
 
 	    /**
 	     * initialize member, vdom
@@ -1766,51 +1848,38 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Base');
+
 	            /* initialize member */
-	            this.m_parent = null;
-	            this.child = new Array();
-	            this.event = new Array();
-	            this.layout = new Array();
-	            this.m_style = new mofron.util.Vdom('div');
-	            this.m_vdom = null;
-	            this.m_target = null;
-	            this.m_theme = new mofron.Theme();
-	            this.m_name = 'Base';
-	            this.param = prm === undefined ? null : prm;
+	            _this.m_parent = null;
+	            _this.child = new Array();
+	            _this.event = new Array();
+	            _this.layout = new Array();
+	            _this.m_style = new mofron.util.Vdom('div');
+	            _this.m_vdom = null;
+	            _this.m_target = null;
+	            _this.m_theme = new mofron.util.Theme();
+	            _this.param = prm === undefined ? null : prm;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
+	    /*** method ***/
+
+	    /**
+	     * return component status
+	     *
+	     * @return (boolean) true : this component is initialized
+	     * @return (boolean) false : this component is not initialize
+	     */
+
+
 	    _createClass(_class, [{
-	        key: 'option',
-	        value: function option(opt) {
-	            try {
-	                if (null !== opt && 'object' === (typeof opt === 'undefined' ? 'undefined' : _typeof(opt))) {
-	                    /* option */
-	                    for (var opt_idx in opt) {
-	                        if ('function' === typeof this[opt_idx]) {
-	                            this[opt_idx](opt[opt_idx]);
-	                        }
-	                    }
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /*** method ***/
-
-	        /**
-	         * return component status
-	         *
-	         * @return (boolean) true : this component is initialized
-	         * @return (boolean) false : this component is not initialize
-	         */
-
-	    }, {
 	        key: 'isRendered',
 	        value: function isRendered() {
 	            try {
@@ -1910,7 +1979,7 @@
 
 	                /* init child */
 	                if (true === this.isRendered()) {
-	                    chd.initDom(_disp);
+	                    chd.render(_disp);
 	                    for (var idx in this.layout) {
 	                        this.layout[idx].layout();
 	                    }
@@ -2148,8 +2217,9 @@
 	                    return this.m_theme;
 	                }
 	                this.m_theme.setTheme(_thm);
-	                for (var idx in this.child) {
-	                    this.child[idx].theme(_thm);
+	                var chdlen = this.getChild();
+	                for (var idx in chdlen) {
+	                    chdlen[idx].theme(_thm);
 	                }
 	            } catch (e) {
 	                console.error(e.stack);
@@ -2268,7 +2338,14 @@
 	        }
 	    }, {
 	        key: 'initDomConts',
-	        value: function initDomConts(prm) {}
+	        value: function initDomConts(prm) {
+	            try {
+	                this.target(this.vdom());
+	            } catch (e) {
+	                console.error(e.stack);
+	                throw e;
+	            }
+	        }
 	    }, {
 	        key: 'visible',
 	        value: function visible(flg, eff) {
@@ -2339,35 +2416,13 @@
 	                throw e;
 	            }
 	        }
-
-	        /**
-	         * component name setter / getter
-	         *
-	         * @param nm : (string) component name
-	         * @return (string) component name
-	         * @note parameter syntax
-	         */
-
-	    }, {
-	        key: 'name',
-	        value: function name(nm) {
-	            try {
-	                if (undefined === nm) {
-	                    return this.m_name;
-	                }
-	                this.m_name = nm;
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2376,22 +2431,32 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file layout/Base.js
 	 * @brief Base class of layout
 	 */
 
-	mofron.layout.Base = function () {
+	mofron.Layout = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    function _class() {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.target = null;
-	            this.exec_cnt = 0;
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Layout');
+	            _this.target = null;
+	            _this.exec_cnt = 0;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
@@ -2442,10 +2507,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2456,6 +2521,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file event.js
 	 * @author simpart
@@ -2465,7 +2534,9 @@
 	 * @class mofron.event.Base
 	 * @brief base class of event
 	 */
-	mofron.event.Base = function () {
+	mofron.Event = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    /**
 	     * initialize member
 	     *
@@ -2476,17 +2547,22 @@
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.setBaseName('Event');
+	            _this.name('Event');
 	            var _fnc = fnc === undefined ? null : fnc;
-	            this.target = null;
-	            this.func = null;
-	            this.parm = null;
+	            _this.target = null;
+	            _this.func = null;
+	            _this.parm = null;
 	            if (null !== _fnc) {
-	                this.setEventFunc(_fnc, prm);
+	                _this.setEventFunc(_fnc, prm);
 	            }
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    /**
@@ -2566,10 +2642,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2580,26 +2656,36 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file effect/Base.js
 	 */
 
-	mofron.effect.Base = function () {
+	mofron.Effect = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
-	            this.param = undefined === prm ? null : prm;
-	            this.target = null;
-	            this.tgt_vd = null;
-	            this.m_speed = 0;
-	            this.v_flg = false;
-	            this.exec = false;
-	            this.callback = new Array(null, null);
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Effect');
+	            _this.param = undefined === prm ? null : prm;
+	            _this.target = null;
+	            _this.tgt_vd = null;
+	            _this.m_speed = 0;
+	            _this.v_flg = false;
+	            _this.exec = false;
+	            _this.callback = new Array(null, null);
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    _createClass(_class, [{
@@ -2709,10 +2795,10 @@
 	    }]);
 
 	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2721,25 +2807,34 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	/**
 	 * @file template.js
 	 */
 
-	mofron.tmpl.Base = function () {
+	mofron.Template = function (_mofron$Base) {
+	    _inherits(_class, _mofron$Base);
+
 	    function _class(prm) {
 	        _classCallCheck(this, _class);
 
 	        try {
+	            var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+	            _this.name('Template');
 	            /* initialize member */
-	            this.base = new mofron.comp.Base();
-	            this.param = prm === undefined ? null : prm;
-	            this.m_title = null;
-	            this.m_theme = null;
-	            this.m_name = 'Base';
+	            _this.base = new mofron.Component();
+	            _this.param = prm === undefined ? null : prm;
+	            _this.m_title = null;
+	            _this.m_theme = null;
 	        } catch (e) {
 	            console.error(e.stack);
 	            throw e;
 	        }
+	        return _this;
 	    }
 
 	    _createClass(_class, [{
@@ -2794,24 +2889,8 @@
 	                if (false === this.base.isRendered()) {
 	                    this.initTmplConts(this.param);
 	                }
-	                this.base.vdom().attr('template', this.name());
 	                this.base.visible(true, _eff);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'name',
-	        value: function name(nm) {
-	            try {
-	                if (undefined === nm) {
-	                    return this.m_name;
-	                }
-	                if ('string' !== typeof nm) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.m_name = nm;
+	                this.base.vdom().attr('template', this.name());
 	            } catch (e) {
 	                console.error(e.stack);
 	                throw e;
@@ -2820,311 +2899,7 @@
 	    }]);
 
 	    return _class;
-	}();
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @file theme.js
-	 * @author simpart
-	 */
-
-	/**
-	 * @class mofron.theme
-	 * @brief Theme Defined Class
-	 */
-	mofron.Theme = function () {
-	    /**
-	     * initialize member
-	     */
-	    function _class() {
-	        _classCallCheck(this, _class);
-
-	        try {
-	            this.conts = {};
-	        } catch (e) {
-	            console.error(e.stack);
-	            throw e;
-	        }
-	    }
-
-	    /**
-	     * set theme contents
-	     * 
-	     * @param thm : (mofron.theme object) theme
-	     * @param ovr : (bool) over ride flag (option)
-	     */
-
-
-	    _createClass(_class, [{
-	        key: 'setTheme',
-	        value: function setTheme(thm, ovr) {
-	            try {
-	                var _thm = thm === undefined ? null : thm;
-	                var _ovr = ovr === undefined ? true : ovr;
-
-	                if (null === _thm) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                var thm_cnt = thm.get();
-	                var cnt_buf = null;
-	                for (var cnt_key in thm_cnt) {
-	                    cnt_buf = this.get(cnt_key);
-	                    if (false === _ovr) {
-	                        if (null !== cnt_buf) {
-	                            continue;
-	                        }
-	                    }
-	                    for (var idx in thm_cnt[cnt_key]) {
-	                        if (null === thm_cnt[cnt_key][parseInt(idx)]) {
-	                            continue;
-	                        }
-	                        this.set(cnt_key, thm_cnt[cnt_key][idx], parseInt(idx));
-	                    }
-	                }
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set font theme
-	         *
-	         * @param fnt : (object) Font object
-	         * @param idx : (number) set index (option)
-	         */
-
-	    }, {
-	        key: 'setFont',
-	        value: function setFont(fnt, idx) {
-	            try {
-	                var _fnt = fnt === undefined ? null : fnt;
-	                var _idx = idx === undefined ? 0 : idx;
-	                if (null === _fnt || 'object' !== (typeof _fnt === 'undefined' ? 'undefined' : _typeof(_fnt)) || 'Font' !== _fnt.getName()) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                _fnt.pushTheme();
-	                this.set(_fnt.getName(), _fnt, _idx);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set color theme
-	         *
-	         * @param clr : (object) Color object
-	         * @param idx : (number) set index (option)
-	         */
-
-	    }, {
-	        key: 'setColor',
-	        value: function setColor(clr, idx) {
-	            try {
-	                var _clr = clr === undefined ? null : clr;
-	                var _idx = idx === undefined ? 0 : idx;
-	                if (null === _clr || 'object' !== (typeof _clr === 'undefined' ? 'undefined' : _typeof(_clr)) || 'Color' !== _clr.getName()) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                this.set(_clr.getName(), _clr, _idx);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set component theme
-	         *
-	         * @param comp : (object) component object
-	         * @param idx : (number) set index (option)
-	         */
-
-	    }, {
-	        key: 'setComp',
-	        value: function setComp(comp, idx) {
-	            try {
-	                var _comp = comp === undefined ? null : comp;
-	                var _idx = idx === undefined ? 0 : idx;
-	                if (null === _comp || 'object' !== (typeof _comp === 'undefined' ? 'undefined' : _typeof(_comp))) {
-	                    throw new Error('invalid parameter');
-	                }
-	                this.set(_comp.getName(), _comp, _idx);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'getComp',
-	        value: function getComp(cmp_nm, idx) {
-	            try {
-	                var _idx = idx === undefined ? 0 : idx;
-	                var _cmp_nm = cmp_nm === undefined ? null : cmp_nm;
-	                if (null === _cmp_nm || 'string' !== typeof _cmp_nm) {
-	                    throw new Error('invalid parameter');
-	                }
-	                return this.get(_cmp_nm, _idx);
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * get theme contents
-	         * 
-	         * @param key : (string) theme identify key (option)
-	         * @param idx : (number) get index (option)
-	         * @return (object) theme value
-	         */
-
-	    }, {
-	        key: 'get',
-	        value: function get(key, idx) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                var _idx = idx === undefined ? null : idx;
-
-	                if (null === _key) {
-	                    return this.conts;
-	                }
-
-	                var hit = false;
-	                for (var cnt_key in this.conts) {
-	                    if (cnt_key === _key) {
-	                        hit = true;
-	                        break;
-	                    }
-	                }
-	                if (false === hit) {
-	                    return null;
-	                }
-
-	                if (null === _idx) {
-	                    return this.conts[_key];
-	                }
-
-	                if (_idx >= this.conts[_key].length || _idx < 0) {
-	                    return null;
-	                }
-
-	                //for (var dbg_key in this.conts) {
-	                //    console.log(dbg_key); 
-	                //}
-	                return this.conts[_key][_idx];
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * set theme contents
-	         * 
-	         * @param key : (string) theme contetent key
-	         * @param val : (object) theme element
-	         * @param idx : (number) set index
-	         */
-
-	    }, {
-	        key: 'set',
-	        value: function set(key, val, idx) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                var _val = val === undefined ? null : val;
-	                var _idx = idx === undefined ? 0 : idx;
-
-	                if (null === _key || null === _val || 0 > _idx) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                if (undefined === this.conts[_key]) {
-	                    this.conts[_key] = new Array();
-	                }
-
-	                var loop = 0;
-	                for (; loop < 10; loop++) {
-	                    if (_idx === this.conts[_key].length) {
-	                        this.conts[_key].push(_val);
-	                        return;
-	                    } else if (_idx < this.conts[_key].length) {
-	                        this.conts[_key][_idx] = val;
-	                        return;
-	                    } else {
-	                        this.conts[_key].push(null);
-	                    }
-	                }
-	                throw new Error('invalid parameter');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-
-	        /**
-	         * remove theme value
-	         *
-	         * @param key : (string) theme identify key
-	         * @param idx : (number) remove index
-	         */
-
-	    }, {
-	        key: 'del',
-	        value: function del(key, idx) {
-	            try {
-	                var _key = key === undefined ? null : key;
-	                var _idx = idx === undefined ? 0 : idx;
-
-	                if (null === _key || 0 > _idx && this.conts.length <= _idx) {
-	                    throw new Error('invalid parameter');
-	                }
-
-	                var cnt = 0;
-	                for (var cnt_key in this.conts) {
-	                    if (cnt_key === _key) {
-	                        this.conts[cnt_key].splice(_idx, 1);
-	                        if (0 === this.conts[cnt_key].length) {
-	                            this.conts.splice(cnt, 1);
-	                        }
-	                        return;
-	                    }
-	                    cnt++;
-	                }
-
-	                throw new Error('invalid parameter');
-	            } catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }, {
-	        key: 'addNotify',
-	        value: function addNotify(func) {
-	            try {} catch (e) {
-	                console.error(e.stack);
-	                throw e;
-	            }
-	        }
-	    }]);
-
-	    return _class;
-	}();
+	}(mofron.Base);
 
 /***/ }
 /******/ ]);

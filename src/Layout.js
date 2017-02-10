@@ -3,9 +3,11 @@
  * @brief Base class of layout
  */
 
-mofron.layout.Base = class {
+mofron.Layout = class extends mofron.Base {
     constructor () {
         try {
+            super();
+            this.name('Layout');
             this.target   = null;
             this.exec_cnt = 0;
         } catch (e) {

@@ -23,6 +23,7 @@
         effect    : {},
         tmpl      : {},
         util      : {},
+        func      : {},
         theme     : null,
         root      : new Array(),
     };

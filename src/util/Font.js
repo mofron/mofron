@@ -7,7 +7,7 @@
  * @class Font
  * @brief Font Defined Class
  */
-mofron.util.Font = class {
+mofron.util.Font = class extends mofron.Base {
     /**
      * initialize font
      *
@@ -15,6 +15,9 @@ mofron.util.Font = class {
      */
     constructor (fnt, pth) {
         try {
+            super();
+            this.name('Font');
+            
             /* check parameter */
             var _pth = (pth === undefined) ? null : pth;
             if ('string' !== (typeof fnt)) {
@@ -22,40 +25,16 @@ mofron.util.Font = class {
             }
             
             /* initialize member */
-            this.m_name   = null;
             this.m_family = {};
             this.size     = 15;
-            this.thm_sel  = 'mofron-theme-' + mofron.util.getId(this);
+            this.thm_sel  = 'mofron-theme-' + mofron.func.getId(this);
             this.thm_flg  = false; 
             
             /* initialize function */
-            this.name('Font');
             this.addFamily(fnt);
             if (null !== _pth) {
                 this.setFace(fnt, _pth);
             }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * name 
-     *
-     * @return (string) own name
-     */
-    name (nm) {
-        try {
-            if (undefined === nm) {
-                /* getter */
-                return this.m_name;
-            }
-            /* setter */
-            if ('string' !== typeof nm) {
-                throw new Error('invalid parameter');
-            }
-            this.m_name = nm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -96,7 +75,7 @@ mofron.util.Font = class {
                 'font-family' : fnt,
                 'src' : "url('" + pth + "') " + format
             };
-            hc.addConts(mofron.util.getStyleConts('@font-face',style));
+            hc.addConts(mofron.func.getStyleConts('@font-face',style));
             hc.pushTag();
         } catch (e) {
             console.error(e.stack);
@@ -204,7 +183,12 @@ mofron.util.Font = class {
                 'font-family' : this.getFamilyStyle(),
                 'font-size'   : this.size + 'px'
             };
-            hc.addConts(mofron.util.getStyleConts(this.thm_sel ,style));
+            hc.addConts(
+                mofron.func.getStyleConts(
+                    '.' + this.thm_sel ,
+                    style
+                )
+            );
             hc.pushTag();
             this.thm_flg = true;
         } catch (e) {

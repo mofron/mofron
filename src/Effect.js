@@ -2,10 +2,12 @@
  * @file effect/Base.js
  */
 
-mofron.effect.Base = class {
+mofron.Effect = class extends mofron.Base {
     
     constructor (prm) {
         try {
+            super();
+            this.name('Effect');
             this.param    = (undefined === prm) ? null : prm;
             this.target   = null;
             this.tgt_vd   = null;

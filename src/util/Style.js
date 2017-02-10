@@ -7,7 +7,7 @@
  * @class Style
  * @brief component style class
  */
-mofron.util.Style = class {
+mofron.util.Style = class extends mofron.Base {
     /**
      * initialize member
      *
@@ -15,6 +15,9 @@ mofron.util.Style = class {
      */
     constructor (tgt) {
         try {
+            super();
+            this.name('Style');
+            
             var _tgt = (tgt === undefined) ? null : tgt;
             if ( (null     !== _tgt) &&
                  ('object' !== (typeof _tgt)) ) {
@@ -49,7 +52,7 @@ mofron.util.Style = class {
                 this.conts[key] = _val;
                 if ( (null !== this.target) &&
                      (true === this.target.isRendered()) ) {
-                    this.target.getDom().style[key] = _val;
+                    this.target.getDom().style[mofron.func.getCamelStyle(key)] = _val;
                 }
             }
         } catch (e) {

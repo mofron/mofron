@@ -2,15 +2,16 @@
  * @file template.js
  */
 
-mofron.tmpl.Base = class {
+mofron.Template = class extends mofron.Base {
     constructor (prm) {
         try {
+            super();
+            this.name('Template');
             /* initialize member */
-            this.base    = new mofron.comp.Base();
+            this.base    = new mofron.Component();
             this.param   = (prm === undefined) ? null : prm;
             this.m_title = null;
             this.m_theme = null;
-            this.m_name  = 'Base';
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -64,23 +65,8 @@ mofron.tmpl.Base = class {
             if (false === this.base.isRendered()) {
                 this.initTmplConts (this.param);
             }
-            this.base.vdom().attr('template', this.name());
             this.base.visible(true, _eff);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    name (nm) {
-        try {
-            if (undefined === nm) {
-                return this.m_name;
-            }
-            if ('string' !== typeof nm) {
-                throw new Error('invalid parameter');
-            }
-            this.m_name = nm;
+            this.base.vdom().attr('template', this.name());
         } catch (e) {
             console.error(e.stack);
             throw e;
