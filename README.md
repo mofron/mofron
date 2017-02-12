@@ -32,12 +32,21 @@ require('mofron-comp-button');
 // simple use
 new mofron.comp.Button('test').visible(true); 
 
+// set size setting
 var btn = new mofron.comp.Button('size');
 btn.width(150);        // set width to 150px
 btn.visible(true);       // set to DOM
-btn.height(30);         // enable changing after inited
+btn.height(30);         // enable changing after display
 btn.style('background', 'white');  // css setting
 
+// simple code
+new mofron.comp.Button('simple code', {
+    width  : 150,
+    height : 30,
+    visible : true
+});
+
+// set click event function
 var click = new mofron.comp.Button('click');
 click.setClickEvent(function() {
     alert('click');        // click event
