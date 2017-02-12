@@ -52,7 +52,7 @@ mofron.util.Style = class extends mofron.Base {
                 this.conts[key] = _val;
                 if ( (null !== this.target) &&
                      (true === this.target.isRendered()) ) {
-                    this.target.getDom().style[mofron.func.getCamelStyle(key)] = _val;
+                    this.target.getRawDom().style[mofron.func.getCamelStyle(key)] = _val;
                 }
             }
         } catch (e) {

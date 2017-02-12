@@ -1,5 +1,5 @@
 /**
- * @file   component.js
+ * @file   Component.js
  * @author simpart
  */
 
@@ -25,7 +25,7 @@ mofron.Component = class extends mofron.Base {
             this.child    = new Array();
             this.event    = new Array();
             this.layout   = new Array();
-            this.m_style  = new mofron.util.Vdom('div');
+            this.m_style  = new mofron.util.Dom();
             this.m_vdom   = null;
             this.m_target = null;
             this.m_theme  = new mofron.util.Theme();
@@ -420,18 +420,16 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    update () {
-        try {
-            
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     destroy () {
         try {
-            this.vdom().getDom().innerHTML = null;
+            if (false === this.isRendered()) {
+                throw new Error('not render yet');
+            }
+            var del_tgt = this.vdom().getChild();
+            
+            for (var idx_del in del_tgt) {
+                del_tgt[idx_del].getRawDom().remove();
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -443,7 +441,7 @@ mofron.Component = class extends mofron.Base {
             if (null !== this.vdom()) {
                 return;
             }
-            this.vdom(new mofron.util.Vdom('div',this));
+            this.vdom(new mofron.util.Vdom());
             this.initDomConts(this.param);
             
             for (var chd_idx in this.child) {
@@ -470,6 +468,7 @@ mofron.Component = class extends mofron.Base {
     initDomConts(prm) {
         try {
             this.target(this.vdom());
+            this.vdom().addChild(new mofron.util.Dom('div',this));
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -483,6 +482,7 @@ mofron.Component = class extends mofron.Base {
             
             /* parameter check */
             if (null === _flg) {
+                /* getter */
                 if (false === this.isRendered()) {
                     return false;
                 }

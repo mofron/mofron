@@ -220,7 +220,7 @@ mofron.util.Font = class extends mofron.Base {
             }
             
             if (true === this.thm_flg) {
-                tgt.getTarget().addClname(this.thm_sel);
+                tgt.getTarget().addClass(this.thm_sel);
             } else {
                 tgt.style('font-family', this.getFamilyStyle());
                 tgt.style('font-size'  , this.size + 'px');

@@ -1,0 +1,15 @@
+require('expose-loader?mofron!./src/core.js');
+require('./src/Base.js');
+require('./src/function.js');
+require('./src/util/Dom.js');
+require('./src/util/Vdom.js');
+require('./src/util/Style.js');
+require('./src/util/Color.js');
+require('./src/util/Font.js');
+require('./src/util/HeadConts.js')
+require('./src/util/Theme.js');
+require('./src/Component.js');
+require('./src/Layout.js');
+require('./src/Event.js');
+require('./src/Effect.js');
+require('./src/Template.js');

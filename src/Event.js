@@ -17,7 +17,6 @@ mofron.Event = class extends mofron.Base {
     constructor (fnc, prm) {
         try {
             super();
-            this.setBaseName('Event');
             this.name('Event');
             var _fnc    = (fnc === undefined) ? null : fnc;
             this.target = null;
