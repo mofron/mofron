@@ -4,14 +4,12 @@ mofron is JavaScript Framework for Web UI.<br>
 It encapsulations the elements of the front-end (html, css, etc. ..) and provides APIs like Swing and .NET. <br>
 If you have developed a GUI with Swing or .NET, you can do web development smoothly.<br>
 
-# Install
+# Quick Start
+need webpack babel expose-loader
 
 ```bash
-npm install --save-dev mofron 
+npm install --save-dev webpack expose-loader babel-core babel-loader babel-preset-es2015 mofron 
 ```
-
-# Quick Start
-you need webpack
 
 ```html
 <html>
