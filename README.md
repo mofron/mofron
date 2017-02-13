@@ -1,8 +1,7 @@
 # mofron
 
 mofron is JavaScript Framework for Web UI.<br>
-It encapsulations the elements of the front-end (html, css, etc. ..) and provides APIs like Swing and .NET. <br>
-If you have developed a GUI with Swing or .NET, you can do web development smoothly.<br>
+mofron has interface like Swing, .NET so it makes front-end development  possible by only javascript.
 
 # Quick Start
 
