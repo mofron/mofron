@@ -3,13 +3,14 @@
 mofron is JavaScript Framework for Web UI.<br>
 mofron has interface like Swing, .NET so it makes front-end development  possible by only javascript.
 
-# Quick Start
-
+## Install
 mofron dependencies webpack babel expose-loader
 
 ```bash
 npm install mofron 
 ```
+
+## Quick Start
 
 create ./index.html
 
