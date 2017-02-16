@@ -18,12 +18,15 @@ mofron.Event = class extends mofron.Base {
         try {
             super();
             this.name('Event');
-            var _fnc    = (fnc === undefined) ? null : fnc;
-            this.target = null;
-            this.func   = null;
-            this.parm   = null;
-            if (null !== _fnc) {
-                this.setEventFunc(_fnc, prm);
+            
+            this.m_target  = null;
+            this.m_evtfunc = new Array(
+                                 null,  /* function */
+                                 null   /* parameter */
+                             );
+            
+            if (undefined !== fnc) {
+                this.eventFunc(fnc,prm);
             }
         } catch (e) {
             console.error(e.stack);
@@ -36,12 +39,17 @@ mofron.Event = class extends mofron.Base {
      *
      * @param comp : component object
      */
-    setTarget (comp) {
+    target (comp) {
         try {
+            if (undefined === comp) {
+                /* getter */
+                return this.m_target;
+            }
+            /* setter */
             if ((null === comp) || ('object' !== (typeof comp))) {
                 throw new Error('invalid parameter');
             }
-            this.target = comp;
+            this.m_target = comp;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -54,15 +62,18 @@ mofron.Event = class extends mofron.Base {
      * @param fnc : (function) function for event listener
      * @param prm : (mixed) function parameter (option)
      */
-    setEventFunc (fnc, prm) {
+    eventFunc (fnc, prm) {
         try {
-            var _fnc = (fnc === undefined) ? null : fnc;
-            var _prm = (prm === undefined) ? null : prm;
-            if (null === _fnc) {
+            if (undefined === fnc) {
+                /* getter */
+                return this.m_evtfunc;
+            }
+            /* setter */
+            if ('function' !== typeof fnc) {
                 throw new Error('invalid parameter');
             }
-            this.func = _fnc;
-            this.parm = _prm;
+            this.m_evtfunc[0] = fnc;
+            this.m_evtfunc[1] = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -71,11 +82,10 @@ mofron.Event = class extends mofron.Base {
     
     event () {
         try {
-            if ( (null === this.target) || (false === this.target.isRendered()) ) {
+            if ( (null === this.target()) || (false === this.target().isRendered()) ) {
                 throw new Error('target is not ready');
             }
-            this.target = this.target.getEventTgt();
-            this.eventConts();
+            this.eventConts(this.target().eventTgt());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -84,7 +94,7 @@ mofron.Event = class extends mofron.Base {
     
     /**
      * this is interface function.
-     * extend class need implement this function.
+     * extend class needs to implement this function.
      */
     eventConts () {
         try {

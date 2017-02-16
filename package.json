@@ -1,12 +1,19 @@
 {
   "name": "mofron",
-  "version": "0.6.1",
+  "version": "0.7.5",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "babel": "",
+    "babel-core": "",
+    "babel-loader": "",
+    "babel-preset-es2015": "",
+    "expose-loader": "",
+    "webpack": "",
+    
     "mofron-comp-accordion": "",
     "mofron-comp-button": "",
     "mofron-comp-carousel": "",
@@ -53,11 +60,5 @@
   },
   "homepage": "https://github.com/simpart/mofron#readme",
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-core": "^6.22.1",
-    "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.22.0",
-    "expose-loader": "^0.7.1",
-    "webpack": "^2.2.1"
   }
 }

@@ -4,42 +4,38 @@
 
 mofron.Effect = class extends mofron.Base {
     
-    constructor (prm) {
+    constructor (prm, vis) {
         try {
             super();
             this.name('Effect');
-            this.param    = (undefined === prm) ? null : prm;
-            this.target   = null;
-            this.tgt_vd   = null;
+            
+            this.m_target = null;
             this.m_speed  = 0;
-            this.v_flg    = false;
-            this.exec     = false;
-            this.callback = new Array(null,null);
+            this.m_vis    = (undefined === vis) ? false : vis;
+            this.m_exec   = false;
+            this.m_cb     = new Array(
+                                null,  /* function */
+                                null   /* parameter */
+                            );
+            
+            this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setVisible (flg) {
+    target (tgt) {
         try {
-            if ('boolean' !== typeof flg) {
-                throw new Error('invalid parameter');
+            if (undefined === tgt) {
+                /* getter */
+                return this.m_target;
             }
-            this.v_flg = flg;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setTarget (tgt) {
-        try {
+            /* setter */
             if ('object' != (typeof tgt)) {
                 throw new Error('invalid parameter');
             }
-            this.target = tgt;
-            this.tgt_vd = tgt.vdom();
+            this.m_target = tgt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -53,17 +49,18 @@ mofron.Effect = class extends mofron.Base {
             if (0 === this.speed()) {
                 this.effectConts(_flg, this);
             } else {
-                if (false ===  this.target.isRendered()) {
+                if (false ===  this.target().isRendered()) {
                     throw new Error('target is not ready');
                 }
                 if (false === this.exec) {
                     this.exec = true;
-                    this.initEffect(_flg, this)
-                    this.tgt_vd.style('-webkit-transition',          ((1000 * this.speed()) - 200) + 'ms all linear 0s');
-                    this.tgt_vd.style('-moz-transition'   , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    this.tgt_vd.style('-ms-transition'    , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    this.tgt_vd.style('-o-transition'     , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    this.tgt_vd.style('transtion'         ,          ((1000 * this.speed()) - 200) + 'ms all linear 0s');
+                    this.initEffect(_flg, this);
+                    var vdom = this.target().vdom();
+                    vdom.style('-webkit-transition', ((1000 * this.speed()) - 200) + 'ms all linear 0s');
+                    vdom.style('-moz-transition'   , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                    vdom.style('-ms-transition'    , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                    vdom.style('-o-transition'     , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                    vdom.style('transtion'         , ((1000 * this.speed()) - 200) + 'ms all linear 0s');
                 }
                 
                 setTimeout(
@@ -74,11 +71,11 @@ mofron.Effect = class extends mofron.Base {
                 );
             }
             
-            if (null != this.callback[0]) {
+            if (null != this.m_cb[0]) {
                 setTimeout(
-                    this.callback[0],
+                    this.m_cb[0],
                     (1000 * this.speed()-200),
-                    this.callback[1]
+                    this.m_cb[1]
                 );
             }
         } catch (e) {
@@ -115,10 +112,10 @@ mofron.Effect = class extends mofron.Base {
             if ('function' != (typeof cbf)) {
                 throw new Error('invalid parameter');
             }
-            this.callback[0] = cbf;
+            this.m_cb[0] = cbf;
             
             if (null != _cbp) {
-                this.callback[1] = _cbp;
+                this.m_cb[1] = _cbp;
             }
         } catch (e) {
             console.error(e.stack);

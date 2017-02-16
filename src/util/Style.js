@@ -18,14 +18,29 @@ mofron.util.Style = class extends mofron.Base {
             super();
             this.name('Style');
             
-            var _tgt = (tgt === undefined) ? null : tgt;
-            if ( (null     !== _tgt) &&
-                 ('object' !== (typeof _tgt)) ) {
+            this.m_target  = null;
+            this.m_protect = false;
+            this.m_conts   = {};
+            
+            this.target(tgt);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    target (tgt) {
+        try {
+            if (undefined === tgt) {
+                /* getter */
+                return this.m_target;
+            }
+            /* setter */
+            if ( (null     !== tgt) &&
+                 ('object' !== (typeof tgt)) ) {
                 throw new Error('invalid parameter');
             }
-            this.target    = _tgt;
-            this.m_protect = false;
-            this.conts     = {};
+            this.m_target = tgt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -48,11 +63,11 @@ mofron.util.Style = class extends mofron.Base {
             }
             
             if ( (false === this.m_protect) ||
-                 ((true === this.m_protect) && (undefined === this.conts[key])) ) {
-                this.conts[key] = _val;
-                if ( (null !== this.target) &&
-                     (true === this.target.isRendered()) ) {
-                    this.target.getRawDom().style[mofron.func.getCamelStyle(key)] = _val;
+                 ((true === this.m_protect) && (undefined === this.m_conts[key])) ) {
+                this.m_conts[key] = _val;
+                if ( (null !== this.target()) &&
+                     (true === this.target().isRendered()) ) {
+                    this.target().getRawDom().style[mofron.func.getCamelStyle(key)] = _val;
                 }
             }
         } catch (e) {
@@ -72,9 +87,9 @@ mofron.util.Style = class extends mofron.Base {
         try {
             var _key = (key === undefined) ? null : key;
             if (null === _key) {
-                return this.conts;
+                return this.m_conts;
             }
-            return (this.conts[_key] === undefined) ? null : this.conts[_key];
+            return (this.m_conts[_key] === undefined) ? null : this.m_conts[_key];
         } catch (e) {
             console.error(e.stack);
             throw e;

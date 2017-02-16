@@ -26,9 +26,8 @@ mofron.util.Font = class extends mofron.Base {
             
             /* initialize member */
             this.m_family = {};
-            this.size     = 15;
-            this.thm_sel  = 'mofron-theme-' + mofron.func.getId(this);
-            this.thm_flg  = false; 
+            this.m_class  = 'mofron-theme-' + mofron.func.getId(this);
+            this.m_theme  = false; 
             
             /* initialize function */
             this.addFamily(fnt);
@@ -83,47 +82,22 @@ mofron.util.Font = class extends mofron.Base {
         }
     }
     
-    /**
-     * add font family
-     *
-     * @param fm : (string) font family
-     */
-    addFamily (fm) {
+    
+    family (fm) {
         try {
-            var _fm = (fm === undefined) ? null : fm;
-            if ('string' !== (typeof _fm)) {
+            if (undefined === fm) {
+                /* getter */
+                var ret_val = new array();
+                for (var idx in this.m_family) {
+                    ret_val.push(this.m_family[idx]);
+                }
+                return ret_val;
+            }
+            /* setter */
+            if ('string' !== (typeof fm)) {
                 throw new Error('invalid parameter');
             }
-            this.m_family['"' + _fm + '"'] = null;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * get font family list
-     * 
-     * @param idx : (number) family index
-     * @return (object) : font family
-     */
-    getFamily (idx) {
-        try {
-            var _idx = (idx === undefined) ? null : idx;
-            var ret_val = new Array();
-            for (var idx in this.m_family) {
-                ret_val.push(idx);
-            }
-            
-            if (null === _idx) {
-                return ret_val;
-            } else {
-                if ( (-1 < _idx) &&
-                     (ret_val.length > _idx)) {
-                    return ret_val[_idx];
-                }
-            }
-            return null;
+            this.m_family['"' + fm + '"'] = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -132,7 +106,7 @@ mofron.util.Font = class extends mofron.Base {
     
     getFamilyStyle () {
         try {
-            var fm     = this.getFamily();
+            var fm     = this.family();
             var fm_str = '';
             for(var idx in fm) {
                 if ('' !== fm_str) {
@@ -148,58 +122,42 @@ mofron.util.Font = class extends mofron.Base {
     }
     
     /**
-     * font size setter/getter
-     * 
-     * @param val : (number) font size
-     * @return (number) font size
-     */
-    size (val) {
-        try {
-            var _val = (val === undefined) ? null : val;
-            if (null === _val) {
-                return this.size;
-            }
-            if ( ('number' !== (typeof _val)) ||
-                 (0         >  _val) ) {
-                throw new Error('invalid parameter');
-            }
-            this.size = _val;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-   
-    /**
      * set own font style to style tag.
      */ 
     pushTheme () {
         try {
-            if (true === this.thm_flg) {
+            if (true === this.m_theme) {
                 return;
             }
             var hc    = new mofron.util.HeadConts('style');
             var style = {
-                'font-family' : this.getFamilyStyle(),
-                'font-size'   : this.size + 'px'
+                'font-family' : this.getFamilyStyle()
             };
             hc.addConts(
                 mofron.func.getStyleConts(
-                    '.' + this.thm_sel ,
-                    style
+                    '.' + this.m_class ,
+                    {'font-family' : this.getFamilyStyle()}
                 )
             );
             hc.pushTag();
-            this.thm_flg = true;
+            this.m_theme = true;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getThemeClass () {
+    className (cls) {
         try {
-            return this.thm_sel;
+            if (undefined === cls) {
+                /* getter */
+                return this.m_class;
+            }
+            /* setter */
+            if ('string' !== typeof cls) {
+                throw new Error('invalid parameter')
+            }
+            this.m_class = cls;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -219,11 +177,10 @@ mofron.util.Font = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            if (true === this.thm_flg) {
-                tgt.getTarget().addClass(this.thm_sel);
+            if (true === this.m_theme) {
+                tgt.target().className(this.className());
             } else {
                 tgt.style('font-family', this.getFamilyStyle());
-                tgt.style('font-size'  , this.size + 'px');
             }
         } catch (e) {
             console.error(e.stack);

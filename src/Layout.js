@@ -8,8 +8,9 @@ mofron.Layout = class extends mofron.Base {
         try {
             super();
             this.name('Layout');
-            this.target   = null;
-            this.exec_cnt = 0;
+            
+            this.m_target = null;
+            this.m_execnt = 0;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -17,11 +18,18 @@ mofron.Layout = class extends mofron.Base {
     }
     
     /**
-     * @param tgt : (object) layout target Parts
+     * @param tgt : (object) layout target component
      */
-    setTarget(tgt) {
+    target(tgt) {
         try {
-            this.target = tgt;
+            if (undefined === tgt) {
+                /* getter */
+                return this.m_target;
+            }
+            if ('object' === typeof tgt) {
+                throw new Error('invalid parameter');
+            }
+            this.m_target = tgt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -30,16 +38,16 @@ mofron.Layout = class extends mofron.Base {
     
     layout () {
         try {
-            if (null === this.target) {
+            if (null === this.target()) {
                 throw new Error('target is null');
             }
-            var tgt_chd = this.target.getChild();
+            var tgt_chd = this.target().child();
             for (var idx in tgt_chd) {
-                if (idx < this.exec_cnt) {
+                if (idx < this.m_execnt) {
                     continue;
                 }
                 this.layoutConts(idx,tgt_chd[idx]);
-                this.exec_cnt++;
+                this.m_execnt++;
             }
         } catch (e) {
             console.error(e.stack);
@@ -47,7 +55,7 @@ mofron.Layout = class extends mofron.Base {
         }
     }
     
-    layoutConts (idx, tgt) {
+    loutConts (idx, tgt) {
         try {
             console.warn('layout is not implements');
         } catch (e) {

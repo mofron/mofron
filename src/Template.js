@@ -7,11 +7,13 @@ mofron.Template = class extends mofron.Base {
         try {
             super();
             this.name('Template');
+            
             /* initialize member */
-            this.base    = new mofron.Component();
-            this.param   = (prm === undefined) ? null : prm;
-            this.m_title = null;
+            this.m_base  = new mofron.Component();
+            this.m_title = new Array(null,false);
             this.m_theme = null;
+            
+            this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -20,14 +22,18 @@ mofron.Template = class extends mofron.Base {
     
     title (val) {
         try {
-            var _val = (val === undefined) ? null : val;
-            if (null === _val) {
-                return this.m_title;
+            if (undefined === val) {
+                /* getter */
+                return this.m_title[0];
             }
-            var hc   = new mofron.util.HeadConts('title');
-            hc.addConts(_val);
+            /* setter */
+            if ('string' !== typeof val) {
+                throw new Error('invalid parameter');
+            }
+            var hc = new mofron.util.HeadConts('title');
+            hc.addConts(val);
             hc.pushTag();
-            this.m_title = _val;
+            this.m_title[0] = _val;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -38,9 +44,9 @@ mofron.Template = class extends mofron.Base {
         try {
             var _thm = (thm === undefined) ? null : thm;
             if (null === _thm) {
-                return this.base.theme();
+                return this.m_base.theme();
             }
-            this.base.theme(_thm);
+            this.m_base.theme(_thm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -59,14 +65,15 @@ mofron.Template = class extends mofron.Base {
     visible (flg, eff) {
         try {
             if ((undefined === flg) && (undefined === eff)) {
-                return this.base.visible();
+                return this.m_base.visible();
             }
             var _eff = (eff === undefined) ? null : eff;
-            if (false === this.base.isRendered()) {
-                this.initTmplConts (this.param);
+            if (false === this.m_base.isRendered()) {
+                this.initTmplConts (this.m_param);
             }
-            this.base.visible(true, _eff);
-            this.base.vdom().attr('template', this.name());
+            
+            this.m_base.visible(true, _eff);
+            this.m_base.vdom().attr('template', this.name());
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -14,11 +14,12 @@ mofron.util.Vdom = class extends mofron.util.Dom {
      * @param tag : (string) tag name
      * @param cmp : (object) component object
      */
-    constructor () {
+    constructor (prm_opt) {
         try {
             super();
             this.m_style = {};
             this.name('Vdom');
+            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -34,7 +35,7 @@ mofron.util.Vdom = class extends mofron.util.Dom {
     tag (tg) {
         try {
             var _tg = (undefined === tg) ? null : tg;
-            var chd = this.getChild();
+            var chd = this.child();
             if (null === _tg) {
                 /* getter */
                 if ((0 === chd.length) || (null === this.m_tag)) {
@@ -84,7 +85,7 @@ mofron.util.Vdom = class extends mofron.util.Dom {
                         (('string' === typeof val) || (null === val)) ) {
                 /* setter */
                 this.m_style[key] = val;
-                var chd = this.getChild();
+                var chd = this.child();
                 for (var idx in chd) {
                     chd[idx].style(key, val);
                 }
@@ -120,7 +121,7 @@ mofron.util.Vdom = class extends mofron.util.Dom {
                 }
             } else if ('string' === (typeof key)) {
                 /* setter */
-                var chd = this.getChild();
+                var chd = this.child();
                 for (var idx in chd) {
                     chd[idx].attr(key, val);
                 }
@@ -139,14 +140,14 @@ mofron.util.Vdom = class extends mofron.util.Dom {
      * 
      * @param name : (string) class name
      */
-    addClass(name) {
+    className (name) {
         try {
             if ('string' != (typeof name)) {
                 throw new Error('invalid parameter');
             }
-            var chd = this.getChild();
+            var chd = this.child();
             for (var idx in chd) {
-                chd[idx].addClass(name);
+                chd[idx].className(name);
             }
             this.m_class.push(name);
         } catch (e) {
@@ -165,7 +166,7 @@ mofron.util.Vdom = class extends mofron.util.Dom {
         try {
             if ('string' === typeof txt) {
                 /* setter */
-                var chd = this.getChild();
+                var chd = this.child();
                 for (var idx in chd) {
                     chd[idx].text(txt);
                 }
@@ -187,14 +188,17 @@ mofron.util.Vdom = class extends mofron.util.Dom {
      *
      * @return (string) dom string
      */
-    getValue () {
+    value (val) {
         try {
+            if (undefined !== val) {
+                return;
+            }
             var ret_val = '';
             
             /* get child value */
-            if (0 != this.child.length) {
-                for(var chd_idx in this.child) {
-                    ret_val += this.child[chd_idx].getValue();
+            if (0 != this.m_child.length) {
+                for(var chd_idx in this.m_child) {
+                    ret_val += this.m_child[chd_idx].value();
                 }
             }
             
@@ -215,17 +219,16 @@ mofron.util.Vdom = class extends mofron.util.Dom {
         try {
             var pnt = this.parent();
             if (null === pnt) {
-                this.entity = document.body;
+                this.m_rawdom = document.body;
             } else {
-                this.entity = pnt.getRawDom();
+                this.m_rawdom = pnt.getRawDom();
             }
             
-            if (0 != this.child.length) {
-                for(var chd_idx in this.child) {
-                    this.child[chd_idx].setPushed();
+            if (0 != this.m_child.length) {
+                for(var chd_idx in this.m_child) {
+                    this.m_child[chd_idx].setPushed();
                 }
             }
-            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -242,7 +245,7 @@ mofron.util.Vdom = class extends mofron.util.Dom {
             if (false === this.isRendered()) {
                 throw new Error('this vdom is not rendered yet');
             }
-            return this.entity;
+            return this.m_rawdom;
         } catch (e) {
             console.error(e.stack);
             throw e;

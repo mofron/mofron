@@ -1,9 +1,17 @@
+/**
+ * @file Base.js
+ * @author simpart
+ */
 
-
+/**
+ * @class Base
+ * @brief top of mofron parent class
+ */
 mofron.Base = class {
     constructor () {
         try {
-            this.m_name = new Array();
+            this.m_name  = new Array();
+            this.m_param = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -44,12 +52,33 @@ mofron.Base = class {
         }
     }
     
-    option (opt) {
+    prmOpt (prm_opt) {
         try {
+            if ((undefined === prm_opt) || (null === prm_opt)) {
+                return;
+            }
+            if ('object' === typeof prm_opt) {
+                if ((undefined  !== typeof prm_opt[0]) &&
+                    ('function' === typeof prm_opt['name'])) {
+                    this.m_param = prm_opt;
+                    return;
+                }
+            } else {
+                this.m_param = prm_opt;
+                return;
+            }
+            /* prm is option */
+            var opt = prm_opt;
             if ((null !== opt) && ('object' === typeof opt)) {
                 /* option */
                 for (var opt_idx in opt) {
-                    if ('function' === typeof this[opt_idx]) {
+                    if ('param' === opt_idx) {
+                        this.m_param = opt[opt_idx];
+                    } else if ('function' === typeof this[opt_idx]) {
+                        if (('option' === this[opt_idx]) ||
+                            ('name'   === this[opt_idx])) {
+                            throw new Error('invalid option');
+                        }
                         this[opt_idx](opt[opt_idx]);
                     }
                 }

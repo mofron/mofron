@@ -5,9 +5,9 @@
 
 /**
  * @class mofron.theme
- * @brief Theme Defined Class
+ * @brief theme defined class
  */
-mofron.util.Theme = class extends mofron.Base{
+mofron.util.Theme = class extends mofron.Base {
     /**
      * initialize member
      */
@@ -15,7 +15,8 @@ mofron.util.Theme = class extends mofron.Base{
         try {
             super();
             this.name('Theme');
-            this.conts  = {};
+            
+            this.m_conts  = {};
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -154,11 +155,11 @@ mofron.util.Theme = class extends mofron.Base{
             var _idx = (idx === undefined) ? null  : idx;
             
             if (null === _key) {
-                return this.conts;
+                return this.m_conts;
             }
             
             var hit = false;
-            for (var cnt_key in this.conts) {
+            for (var cnt_key in this.m_conts) {
                 if (cnt_key === _key) {
                     hit = true;
                     break;
@@ -169,7 +170,7 @@ mofron.util.Theme = class extends mofron.Base{
             }
             
             if (null === _idx) {
-                return this.conts[_key];
+                return this.m_conts[_key];
             }
             
             if ( (_idx >= this.conts[_key].length) ||
@@ -180,7 +181,7 @@ mofron.util.Theme = class extends mofron.Base{
             //for (var dbg_key in this.conts) {
             //    console.log(dbg_key); 
             //}
-            return this.conts[_key][_idx];
+            return this.m_conts[_key][_idx];
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -206,20 +207,20 @@ mofron.util.Theme = class extends mofron.Base{
                 throw new Error('invalid parameter');
             }
             
-            if (undefined === this.conts[_key]) {
-                this.conts[_key] = new Array();
+            if (undefined === this.m_conts[_key]) {
+                this.m_conts[_key] = new Array();
             }
             
             var loop = 0;
             for (;loop < 10; loop++) {
-                if (_idx === this.conts[_key].length) {
-                    this.conts[_key].push(_val);
+                if (_idx === this.m_conts[_key].length) {
+                    this.m_conts[_key].push(_val);
                     return;
-                } else if (_idx < this.conts[_key].length) {
-                    this.conts[_key][_idx] = val;
+                } else if (_idx < this.m_conts[_key].length) {
+                    this.m_conts[_key][_idx] = val;
                     return;
                 } else {
-                    this.conts[_key].push(null);
+                    this.m_conts[_key].push(null);
                 }
             }
             throw new Error('invalid parameter');
@@ -246,11 +247,11 @@ mofron.util.Theme = class extends mofron.Base{
             }
             
             var cnt = 0;
-            for (var cnt_key in this.conts) {
+            for (var cnt_key in this.m_conts) {
                 if (cnt_key === _key) {
-                    this.conts[cnt_key].splice(_idx,1);
-                    if (0 === this.conts[cnt_key].length) {
-                        this.conts.splice(cnt, 1);
+                    this.m_conts[cnt_key].splice(_idx,1);
+                    if (0 === this.m_conts[cnt_key].length) {
+                        this.m_conts.splice(cnt, 1);
                     }
                     return;
                 }
@@ -258,15 +259,6 @@ mofron.util.Theme = class extends mofron.Base{
             }
             
             throw new Error('invalid parameter');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    addNotify (func) {
-        try {
-            
         } catch (e) {
             console.error(e.stack);
             throw e;

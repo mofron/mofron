@@ -21,29 +21,13 @@ mofron.util.Color = class extends mofron.Base {
             super();
             this.name('Color');
             
-            var _r = (r === undefined) ? null : r;
-            var _g = (g === undefined) ? null : g;
-            var _b = (b === undefined) ? null : b;
-            var _a = (a === undefined) ?    1 : a;
-            
-            if ( (null === _r) && (null === _g) && (null === _b) ) {
-                
-            } else if ( (null !== _r) && (null !== _g) && (null !== _b) ) {
-                if ( ('number' !== typeof _r) ||
-                     ('number' !== typeof _g) ||
-                     ('number' !== typeof _b) ) {
-                    throw new Error('invalid parameter');
-                }
-            } else {
-                throw new Error('invalid parameter');
-            }
-            this.red     = _r;
-            this.green   = _g;
-            this.blue    = _b;
-            if ('number' !== typeof _a) {
-                throw new Error('invalid parameter');
-            }
-            this.alpha   = _a;
+            this.m_rgba = new Array(
+                              null,  /* red */
+                              null,  /* green */
+                              null,  /* blue */
+                              null   /* alpha */
+                          );
+            this.rgba(r,g,b,a);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -59,14 +43,38 @@ mofron.util.Color = class extends mofron.Base {
      *   [2] -> (number) blue value
      *   [3] -> (number) alpha value
      */
-    getRgba () {
+    rgba (red, green, blue, alpha) {
         try {
-            return new Array(
-                           (null === this.red) ?   0 : this.red  ,
-                           (null === this.green) ? 0 : this.green,
-                           (null === this.blue) ?  0 : this.blue ,
-                           (null === this.alpha) ? 0 : this.alpha
-                       );
+            if (undefined === red) {
+                /* getter */
+                return this.m_rgba;
+            }
+            /* setter */
+            var _red   = (red   === undefined) ? null : red;
+            var _green = (green === undefined) ? null : green;
+            var _blue  = (blue  === undefined) ? null : blue;
+            var _alpha = (alpha === undefined) ?    1 : alpha;
+            
+            if ( (null === _red) && (null === _green) && (null === _blue) ) {
+
+            } else if ( (null !== _red) && (null !== _green) && (null !== _blue) ) {
+                if ( ('number' !== typeof _red) ||
+                     ('number' !== typeof _green) ||
+                     ('number' !== typeof _blue) ) {
+                    throw new Error('invalid parameter');
+                }
+            } else {
+                throw new Error('invalid parameter');
+            }
+
+            if ('number' !== typeof _alpha) {
+                throw new Error('invalid parameter');
+            }
+            
+            this.m_rgba[0] = _red;
+            this.m_rgba[0] = _green;
+            this.m_rgba[0] = _blue;
+            this.m_rgba[0] = _alpha;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -82,12 +90,18 @@ mofron.util.Color = class extends mofron.Base {
      */
     getStyle () {
         try {
-            if ( (null === this.red)   &&
-                 (null === this.green) &&
-                 (null === this.blue) ) {
+            rgba = this.rgba();
+            var red   = rgba[0];
+            var green = rgba[1];
+            var blue  = rgba[2];
+            var alpha = rgba[3];
+            
+            if ( (null === red)   &&
+                 (null === green) &&
+                 (null === blue) ) {
                 return 'none';
             }
-            return 'rgba('+ this.red +','+ this.green +','+ this.blue +','+ this.alpha +')';
+            return 'rgba('+ red +','+ green +','+ blue +','+ alpha +')';
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -1,57 +1,84 @@
 /**
  * @file HeadConts.js
- *
+ * @author simpart
  */
 
+/**
+ * @class HeadConts
+ * @brief head tag contents
+ */
 mofron.util.HeadConts = class extends mofron.Base {
     constructor (tag) {
         try {
             super();
             this.name('HeadConts');
             
-            if ('string' != (typeof tag)) {
+            this.m_tag   = null;
+            this.m_attr  = {};
+            this.m_conts = '';
+            
+            this.tag(tag);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    tag (tg) {
+        try {
+            if (undefined === tg) {
+                /* getter */
+                return this.m_tag;
+            }
+            /* setter */
+            if ('string' != (typeof tg)) {
                 throw new Error('invalid parameter');
             }
-            this.tag        = tag;
-            this.attr       = {};
-            this.conts      = '';
+            this.m_tag = tg;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setAttr (key, val) {
+    attr (key, val) {
         try {
-            var _key = (key === undefined) ? null : key;
-            var _val = (val === undefined) ? null : val;
-            this.attr[_key] = _val;
-            this.value = null;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    getAttr (val) {
-        try {
-            var _val = (val === undefined) ? null : val;
-            if (null === _val) {
-                return this.attr;
+            if (undefined === key) {
+                /* getter */
+                return this.m_attr;
+            } else {
+                if ('string' !== typeof key) {
+                    throw new Error('invalid parameter');
+                } 
+                if (undefined === val) {
+                    /* getter */
+                    if (undefined === this.m_attr[key]) {
+                        return null;
+                    }
+                    return this.m_attr[key];
+                }
+                /* setter */
+                if ('string' !== typeof val) {
+                    throw new Error('invalid parameter');
+                }
+                this.m_attr[key] = val;
             }
-            return this.attr[_val];
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    addConts (txt) {
+    contents (txt) {
         try {
+            if (undefined === txt) {
+                /* getter */
+                return this.m_conts;
+            }
             if ('string' !== (typeof txt)) {
                 throw new Error('invalid parameter');
             }
-            this.conts += txt;
+            this.m_conts = txt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -62,17 +89,18 @@ mofron.util.HeadConts = class extends mofron.Base {
         try {
             var set_conts  = '';
             var attr_conts = '';
-            for (var key in this.attr) {
+            var attr = this.attr();
+            for (var key in attr) {
                 attr_conts += key;
-                if (null != this.attr[key]) {
-                    attr_conts += '="' +this.attr[key] + '" ';
+                if (null != attr[key]) {
+                    attr_conts += '="' + attr[key] + '" ';
                 }
             }
             
-            if (false === this.isSimpleTag(this.tag)) {
-                set_conts += '<' + this.tag + ' '+ attr_conts +'>' + this.conts + '</' + this.tag + '>';
+            if (false === this.isSimpleTag(this.tag())) {
+                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.conts() + '</' + this.tag() + '>';
             } else {
-                set_conts += '<' + this.tag + ' '+ attr_conts +'>' + this.conts;
+                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.conts();
             }
             
             document.head.insertAdjacentHTML('beforeend',set_conts);
