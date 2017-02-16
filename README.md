@@ -5,11 +5,10 @@ mofron has interface like Swing, .NET so it makes front-end development  possibl
 
 # Quick Start
 
-mofron require webpack babel expose-loader
+mofron dependencies webpack babel expose-loader
 
 ```bash
-npm init
-npm install --save-dev webpack expose-loader babel-core babel-loader babel-preset-es2015 mofron 
+npm install mofron 
 ```
 
 create ./index.html
