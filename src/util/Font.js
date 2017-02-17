@@ -30,7 +30,7 @@ mofron.util.Font = class extends mofron.Base {
             this.m_theme  = false; 
             
             /* initialize function */
-            this.addFamily(fnt);
+            this.family(fnt);
             if (null !== _pth) {
                 this.setFace(fnt, _pth);
             }
@@ -87,9 +87,9 @@ mofron.util.Font = class extends mofron.Base {
         try {
             if (undefined === fm) {
                 /* getter */
-                var ret_val = new array();
+                var ret_val = new Array();
                 for (var idx in this.m_family) {
-                    ret_val.push(this.m_family[idx]);
+                    ret_val.push(idx);
                 }
                 return ret_val;
             }
@@ -97,7 +97,7 @@ mofron.util.Font = class extends mofron.Base {
             if ('string' !== (typeof fm)) {
                 throw new Error('invalid parameter');
             }
-            this.m_family['"' + fm + '"'] = null;
+            this.m_family[fm] = null;
         } catch (e) {
             console.error(e.stack);
             throw e;

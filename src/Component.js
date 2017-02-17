@@ -95,6 +95,9 @@ mofron.Component = class extends mofron.Base {
             if (undefined === tgt) {
                 /* getter */
                 if (null === this.m_target[1]) {
+                    if (null === this.target()) {
+                        return null;
+                    }
                     this.target(this.target(),1);
                 }
                 return this.m_target[1];
@@ -119,6 +122,8 @@ mofron.Component = class extends mofron.Base {
                 /* getter */
                 if (this.target().getId() === this.vdom().getId()) {
                     this.target(this.vdom().child()[0], 2);
+                } else if (null === this.m_target[2]) {
+                    return this.target();
                 }
                 return this.m_target[2];
             }
@@ -156,7 +161,7 @@ mofron.Component = class extends mofron.Base {
     addChild (chd, disp) {
         try {
             var _disp  = (disp === undefined) ? true : disp;
-            if ('object' !== typeof comp) {
+            if ('object' !== typeof chd) {
                 throw new Error('invalid parameter');
             }
             
@@ -295,7 +300,7 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_event.push(evt);
-            evt.setTarget(this);
+            evt.target(this);
             if (true === this.isRendered()) {
                 evt.event();
             }
@@ -340,7 +345,7 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_layout.push(lo);
-            lo.setTarget(this);
+            lo.target(this);
             
             if (true === this.isRendered()) {
                 lo.layout();
@@ -358,7 +363,7 @@ mofron.Component = class extends mofron.Base {
             if (null === _eff) {
                 throw new Error('invalid parameter');
             }
-            _eff.setTarget(this);
+            _eff.target(this);
             _eff.effect(_flg);
         } catch (e) {
             console.error(e.stack);

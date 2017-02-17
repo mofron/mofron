@@ -73,7 +73,7 @@ mofron.Event = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_evtfunc[0] = fnc;
-            this.m_evtfunc[1] = prm;
+            this.m_evtfunc[1] = (undefined === prm) ? null : prm;
         } catch (e) {
             console.error(e.stack);
             throw e;

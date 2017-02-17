@@ -178,9 +178,6 @@ mofron.util.Theme = class extends mofron.Base {
                 return null;
             }
             
-            //for (var dbg_key in this.conts) {
-            //    console.log(dbg_key); 
-            //}
             return this.m_conts[_key][_idx];
         } catch (e) {
             console.error(e.stack);

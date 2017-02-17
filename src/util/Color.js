@@ -72,9 +72,9 @@ mofron.util.Color = class extends mofron.Base {
             }
             
             this.m_rgba[0] = _red;
-            this.m_rgba[0] = _green;
-            this.m_rgba[0] = _blue;
-            this.m_rgba[0] = _alpha;
+            this.m_rgba[1] = _green;
+            this.m_rgba[2] = _blue;
+            this.m_rgba[3] = _alpha;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -90,7 +90,7 @@ mofron.util.Color = class extends mofron.Base {
      */
     getStyle () {
         try {
-            rgba = this.rgba();
+            var rgba = this.rgba();
             var red   = rgba[0];
             var green = rgba[1];
             var blue  = rgba[2];
