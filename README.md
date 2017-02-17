@@ -31,7 +31,7 @@ require('mofron-comp-button');
 // simple use
 new mofron.comp.Button('test').visible(true); 
 
-// swing style conding
+// swing style coding
 var btn = new mofron.comp.Button('swing');
 btn.width(150);          // set width to 150px
 btn.visible(true);       // set to DOM
@@ -77,7 +77,7 @@ module.exports = {
 packed
 
 ```bash
-`npm bin`/webpack   # create dist/app.js
+`npm bin`/webpack   # makes dist/app.js
 ```
 
 
