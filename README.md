@@ -26,23 +26,23 @@ create ./src/sample.js (button display sample)
 
 ```javascript
 require('mofron'); 
-require('mofron-comp-button');
+let Button = require('mofron-comp-button');
 
 // simple use
-new mofron.comp.Button('test').visible(true); 
+new Button('test').visible(true); 
 
 // swing style coding
-var btn = new mofron.comp.Button('swing');
+var btn = new Button('swing');
 btn.width(150);          // set width to 150px
 btn.visible(true);       // set to DOM
 btn.clickEvent(function () {  // set click event
     alert();
 });
 btn.height(30);          // enable changing after display
-btn.style('background', 'white');  // css setting
+btn.style('background', 'lightblue');  // css setting
 
 // key-value style coding
-new mofron.comp.Button({
+new Button({
     param  : 'key-val'
     width  : 150,
     height : 30,
