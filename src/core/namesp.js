@@ -1,3 +1,6 @@
+/**
+ *
+ */
 ( function( global, factory ) {
     "use strict";
     if ( //(typeof module         === "object") && 
@@ -22,7 +25,6 @@
         event     : {},
         effect    : {},
         tmpl      : {},
-        util      : {},
         func      : {},
         theme     : null,
         root      : new Array(),

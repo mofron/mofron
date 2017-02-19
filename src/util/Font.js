@@ -7,7 +7,7 @@
  * @class Font
  * @brief Font Defined Class
  */
-mofron.util.Font = class extends mofron.Base {
+mofron.Font = class extends mofron.Base {
     /**
      * initialize font
      *
@@ -48,7 +48,7 @@ mofron.util.Font = class extends mofron.Base {
      */
     setFace (fnt, pth) {
         try {
-            var hc = new mofron.util.HeadConts('style');
+            var hc = new mofron.HeadConts('style');
             
             if ( ('string' !== (typeof pth)) ||
                  ('string' !== (typeof fnt)) ) {
@@ -129,7 +129,7 @@ mofron.util.Font = class extends mofron.Base {
             if (true === this.m_theme) {
                 return;
             }
-            var hc    = new mofron.util.HeadConts('style');
+            var hc    = new mofron.HeadConts('style');
             var style = {
                 'font-family' : this.getFamilyStyle()
             };

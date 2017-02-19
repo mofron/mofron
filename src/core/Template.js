@@ -30,8 +30,8 @@ mofron.Template = class extends mofron.Base {
             if ('string' !== typeof val) {
                 throw new Error('invalid parameter');
             }
-            var hc = new mofron.util.HeadConts('title');
-            hc.addConts(val);
+            var hc = new mofron.HeadConts('title');
+            hc.contents(val);
             hc.pushTag();
             this.m_title[0] = _val;
         } catch (e) {

@@ -26,7 +26,8 @@ mofron.Layout = class extends mofron.Base {
                 /* getter */
                 return this.m_target;
             }
-            if ('object' === typeof tgt) {
+            /* setter */
+            if ('object' !== typeof tgt) {
                 throw new Error('invalid parameter');
             }
             this.m_target = tgt;

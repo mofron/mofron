@@ -24,14 +24,14 @@ mofron.Component = class extends mofron.Base {
             this.m_child  = new Array();
             this.m_event  = new Array();
             this.m_layout = new Array();
-            this.m_style  = new mofron.util.Dom();
+            this.m_style  = new mofron.Dom();
             this.m_vdom   = null;
             this.m_target = new Array(
                                 null, /* child target */
                                 null, /* style target */
                                 null  /* event target */
                             );
-            this.m_theme  = new mofron.util.Theme();
+            this.m_theme  = new mofron.Theme();
             this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
@@ -147,7 +147,11 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                return this.m_child;
+                var ret_val = new Array();
+                for (var idx in this.m_child) {
+                    ret_val.push(this.m_child[idx][0]);
+                }
+                return ret_val;
             }
             
             /* setter */
@@ -473,7 +477,7 @@ mofron.Component = class extends mofron.Base {
             if (null !== this.vdom()) {
                 return;
             }
-            this.vdom(new mofron.util.Vdom());
+            this.vdom(new mofron.Vdom());
             this.initDomConts(this.m_param);
             
             for (var chd_idx in this.m_child) {
@@ -500,7 +504,7 @@ mofron.Component = class extends mofron.Base {
     initDomConts(prm) {
         try {
             this.target(this.vdom());
-            this.vdom().addChild(new mofron.util.Dom('div',this));
+            this.vdom().addChild(new mofron.Dom('div',this));
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -539,8 +543,7 @@ mofron.Component = class extends mofron.Base {
             /* set effect */
             if (null != _eff) {
                 _eff.speed(0.5);
-                _eff.setVisible(true);
-                this.setEffect(_eff, _flg);
+                this.effect(_eff, _flg);
             } else {
                 if (true === _flg) {
                     this.vdom().style('display', null);

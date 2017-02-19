@@ -4,14 +4,13 @@
 
 mofron.Effect = class extends mofron.Base {
     
-    constructor (prm, vis) {
+    constructor (prm) {
         try {
             super();
             this.name('Effect');
             
             this.m_target = null;
             this.m_speed  = 0;
-            this.m_vis    = (undefined === vis) ? false : vis;
             this.m_exec   = false;
             this.m_cb     = new Array(
                                 null,  /* function */
@@ -52,8 +51,8 @@ mofron.Effect = class extends mofron.Base {
                 if (false ===  this.target().isRendered()) {
                     throw new Error('target is not ready');
                 }
-                if (false === this.exec) {
-                    this.exec = true;
+                if (false === this.m_exec) {
+                    this.m_exec = true;
                     this.initEffect(_flg, this);
                     var vdom = this.target().vdom();
                     vdom.style('-webkit-transition', ((1000 * this.speed()) - 200) + 'ms all linear 0s');
@@ -71,11 +70,11 @@ mofron.Effect = class extends mofron.Base {
                 );
             }
             
-            if (null != this.m_cb[0]) {
+            if (null != this.callback()[0]) {
                 setTimeout(
-                    this.m_cb[0],
+                    this.callback()[0],
                     (1000 * this.speed()-200),
-                    this.m_cb[1]
+                    this.callback()[1]
                 );
             }
         } catch (e) {
@@ -106,16 +105,20 @@ mofron.Effect = class extends mofron.Base {
         }
     }
     
-    setCallback (cbf, cbp) {
+    callback (cbf, cbp) {
         try {
-            var _cbp = (cbp === undefined) ? null : cbp;
+            if (undefined === cbf) {
+                /* getter */
+                return this.m_cb;
+            }
+            /* setter */
             if ('function' != (typeof cbf)) {
                 throw new Error('invalid parameter');
             }
             this.m_cb[0] = cbf;
             
-            if (null != _cbp) {
-                this.m_cb[1] = _cbp;
+            if (null != cbp) {
+                this.m_cb[1] = cbp;
             }
         } catch (e) {
             console.error(e.stack);

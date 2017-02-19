@@ -7,7 +7,7 @@
  * @class mofron.theme
  * @brief theme defined class
  */
-mofron.util.Theme = class extends mofron.Base {
+mofron.Theme = class extends mofron.Base {
     /**
      * initialize member
      */

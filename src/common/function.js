@@ -1,8 +1,16 @@
 /**
- * @file func.js
+ * @file function.js
+ * @brief util functions
+ * @author simpart
  */
 
-mofron.func.getId = function(tgt) {
+/**
+ * get unique id
+ *
+ * @param tgt : (object) target mofron object
+ * @return (string) unique id
+ */
+mofron.func.getId = function (tgt) {
     try {
         var _tgt = (tgt === undefined) ? null : tgt;
         var ipf  = "aid";
@@ -23,7 +31,7 @@ mofron.func.getId = function(tgt) {
     }
 }
 
-mofron.func.getCamelStyle = function(sty) {
+mofron.func.getCamel = function(sty) {
     try {
         if ('string' !== (typeof sty)) {
             throw new Error('invalid parameter');
@@ -63,10 +71,10 @@ mofron.func.getCamelStyle = function(sty) {
     }
 }
 
-mofron.func.getColorObj = function (sty) {
+mofron.func.getColor = function (sty) {
     try {
         if ('none' === sty) {
-            return new mofron.util.Color();
+            return new mofron.Color();
         } else if (null === sty) {
             return null;
         }
@@ -83,13 +91,13 @@ mofron.func.getColorObj = function (sty) {
         color = color.substring(0,color.length-1);
         color = color.split(',');
         if (3 === color.length) {
-            return new mofron.util.Color(
+            return new mofron.Color(
                            parseInt(color[0]),
                            parseInt(color[1]),
                            parseInt(color[2])
                        );
         } else if (4 === color.length) {
-            return new mofron.util.Color(
+            return new mofron.Color(
                            parseInt(color[0]),
                            parseInt(color[1]),
                            parseInt(color[2]),
@@ -98,6 +106,15 @@ mofron.func.getColorObj = function (sty) {
         } else {
             return null;
         }
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
+mofron.func.getLength = function (val) {
+    try {
+        
     } catch (e) {
         console.error(e.stack);
         throw new Error();

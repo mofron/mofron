@@ -7,7 +7,7 @@
  * @class Vdom
  * @brief virtual dom class
  */
-mofron.util.Vdom = class extends mofron.util.Dom {
+mofron.Vdom = class extends mofron.Dom {
     /**
      * initialize member
      *

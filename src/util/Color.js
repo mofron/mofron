@@ -7,7 +7,7 @@
  * @class Color
  * @brief Color Defined Class
  */
-mofron.util.Color = class extends mofron.Base {
+mofron.Color = class extends mofron.Base {
     /**
      * initialize member
      *

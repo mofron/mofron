@@ -7,7 +7,7 @@
  * @class HeadConts
  * @brief head tag contents
  */
-mofron.util.HeadConts = class extends mofron.Base {
+mofron.HeadConts = class extends mofron.Base {
     constructor (tag) {
         try {
             super();
@@ -98,9 +98,9 @@ mofron.util.HeadConts = class extends mofron.Base {
             }
             
             if (false === this.isSimpleTag(this.tag())) {
-                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.conts() + '</' + this.tag() + '>';
+                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.contents() + '</' + this.tag() + '>';
             } else {
-                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.conts();
+                set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.contents();
             }
             
             document.head.insertAdjacentHTML('beforeend',set_conts);

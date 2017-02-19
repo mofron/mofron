@@ -7,7 +7,7 @@
  * @class Dom
  * @brief Dom class
  */
-mofron.util.Dom = class extends mofron.Base {
+mofron.Dom = class extends mofron.Base {
     /**
      * initialize member
      *
@@ -25,7 +25,7 @@ mofron.util.Dom = class extends mofron.Base {
             this.m_class  = new Array();
             this.m_parent = null;
             this.m_child  = new Array();
-            this.m_style  = new mofron.util.Style(this);
+            this.m_style  = new mofron.Style(this);
             this.m_attr   = {};
             this.m_text   = null;
             this.m_value  = null;
