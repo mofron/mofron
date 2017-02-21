@@ -17,13 +17,14 @@ mofron.Component = class extends mofron.Base {
     constructor (prm_opt) {
         try {
             super();
-            this.name('Base');
+            this.name('Component');
             
             /* initialize member */
             this.m_parent = null;
             this.m_child  = new Array();
             this.m_event  = new Array();
             this.m_layout = new Array();
+            this.m_effect = new Array();
             this.m_style  = new mofron.Dom();
             this.m_vdom   = null;
             this.m_target = new Array(
@@ -156,6 +157,7 @@ mofron.Component = class extends mofron.Base {
             
             /* setter */
             this.addChild(chd, disp);
+            return this;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -232,13 +234,14 @@ mofron.Component = class extends mofron.Base {
      *
      * @param key (string) style key
      * @param val (string) style value
+     * @param los (boolean) loose flag
      * @return (object) style object
      * @note parameter syntax
      *         key     : get style value of key
      *         key,val : set style value of key
      *         (none)  : get style object
      */
-    style (key, val) {
+    style (key, val, los) {
         try {
             var _key  = (key === undefined) ? null : key;
             var _val  = (val === undefined) ? null : val;
@@ -261,7 +264,7 @@ mofron.Component = class extends mofron.Base {
             } else if ( (null      !== _key) &&
                         (undefined !== _val) ) {
                 /* setter */
-                tgt.style(_key, _val);
+                tgt.style(_key, _val, los);
             } else {
                 throw new Error('invalid parameter');
             }
@@ -362,13 +365,56 @@ mofron.Component = class extends mofron.Base {
     
     effect (eff, flg) {
         try {
-            var _eff = (undefined === eff) ? null : eff;
+            if (undefined === eff) {
+                /* getter */
+                return this.m_effect;
+            }
+            /* setter */
+            this.addEffect(eff, flg);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    addEffect (eff, flg) {
+        try {
             var _flg = (undefined === flg) ? true : flg;
-            if (null === _eff) {
+            if (undefined !== eff[0]) {
+                /* set child array */
+                for (var idx in eff) {
+                    this.addEffect(eff[idx], _flg);
+                }
+                return;
+            }
+            /* setter */
+            var eff_lst = this.effect();
+            if ('string' === typeof eff) {
+                for (var idx in eff_lst) {
+                    if (eff === eff_lst[idx][0].name()) {
+                        eff_lst[idx][0].effect(_flg);
+                    }
+                }
+            } else if ('object' === typeof eff) {
+                eff.target(this);
+                var hit = false;
+                for (var idx in eff_lst) {
+                    if (eff === eff_lst[idx][0].name()) {
+                        this.m_effect[idx] = [eff,_flg];
+                    }
+                }
+                if (false === hit) {
+                    this.m_effect.push([
+                        eff,   /* effect object */
+                        _flg   /* enable / disable */
+                    ]);
+                }
+                if (true === this.isRendered()) {
+                    eff.effect(_flg);
+                }
+            } else {
                 throw new Error('invalid parameter');
             }
-            _eff.target(this);
-            _eff.effect(_flg);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -450,6 +496,12 @@ mofron.Component = class extends mofron.Base {
             /* set child config */
             for (var chd_idx in this.m_child) {
                 this.m_child[chd_idx][0].initConfig();
+            }
+            
+            /* effect config */
+            var eff_lst = this.effect();
+            for (var eff_idx in eff_lst) {
+                eff_lst[eff_idx][0].effect(eff_lst[eff_idx][1]);
             }
         } catch (e) {
             console.error(e.stack);
@@ -542,7 +594,7 @@ mofron.Component = class extends mofron.Base {
             
             /* set effect */
             if (null != _eff) {
-                _eff.speed(0.5);
+                _eff.speed(1);
                 this.effect(_eff, _flg);
             } else {
                 if (true === _flg) {

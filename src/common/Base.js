@@ -79,7 +79,11 @@ mofron.Base = class {
                             ('name'   === this[opt_idx])) {
                             throw new Error('invalid option');
                         }
-                        this[opt_idx](opt[opt_idx]);
+                        if (true === mofron.func.isObject(opt[opt_idx],'Param')) {
+                            opt[opt_idx].call(this,opt_idx);
+                        } else {
+                            this[opt_idx](opt[opt_idx]);
+                        }
                     }
                 }
             }

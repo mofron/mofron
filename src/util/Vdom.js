@@ -62,17 +62,18 @@ mofron.Vdom = class extends mofron.Dom {
     /**
      * style setter / getter to(from) children
      *
-     * @param key : (string) style key (option)
-     * @param val : (string) style value (option)
+     * @param key : (string) style key (not require)
+     * @param val : (string) style value (not require)
+     * @param los : (boolean) loose flag (not require)
      * @return (string) : style value
      * @return (object) : style object
      */
-    style (key, val) {
+    style (key, val, los) {
         try {
             if (undefined === val) {
                 /* getter */
                 if ('string' === (typeof key)) {
-                    if (undefined === this.m_style[kay]) {
+                    if (undefined === this.m_style[key]) {
                         return null;
                     }
                     return this.m_style[key];
@@ -87,7 +88,7 @@ mofron.Vdom = class extends mofron.Dom {
                 this.m_style[key] = val;
                 var chd = this.child();
                 for (var idx in chd) {
-                    chd[idx].style(key, val);
+                    chd[idx].style(key, val, los);
                 }
             } else {
                 throw new Error('invalid parameter');

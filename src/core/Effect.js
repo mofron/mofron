@@ -11,7 +11,6 @@ mofron.Effect = class extends mofron.Base {
             
             this.m_target = null;
             this.m_speed  = 0;
-            this.m_exec   = false;
             this.m_cb     = new Array(
                                 null,  /* function */
                                 null   /* parameter */
@@ -44,38 +43,89 @@ mofron.Effect = class extends mofron.Base {
     effect (flg) {
         try {
             var _flg = (flg === undefined) ? true : flg;
+            if ('boolean' !== typeof _flg) {
+                throw new Error('invalid paramter');
+            }
             
             if (0 === this.speed()) {
-                this.effectConts(_flg, this);
+                if (true === _flg) {
+                    this.enable(this.target());
+                } else {
+                    this.disable(this.target());
+                }
             } else {
                 if (false ===  this.target().isRendered()) {
                     throw new Error('target is not ready');
                 }
-                if (false === this.m_exec) {
-                    this.m_exec = true;
-                    this.initEffect(_flg, this);
-                    var vdom = this.target().vdom();
-                    vdom.style('-webkit-transition', ((1000 * this.speed()) - 200) + 'ms all linear 0s');
-                    vdom.style('-moz-transition'   , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    vdom.style('-ms-transition'    , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    vdom.style('-o-transition'     , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
-                    vdom.style('transtion'         , ((1000 * this.speed()) - 200) + 'ms all linear 0s');
+                /* set initial style */
+                if (true === _flg) {
+                    this.disable(this.target());
+                } else {
+                    this.enable(this.target());
                 }
                 
+                this.setConf(true);
+                
                 setTimeout(
-                    this.effectConts,
+                    function (eff,flg) {
+                        try {
+                            if (true === flg) {
+                                eff.enable(eff.target());
+                            } else {
+                                eff.disable(eff.target());
+                            }
+                            //eff.setConf(false);
+                        } catch (e) {
+                            console.error(e.stack);
+                            throw e;
+                        }
+                    },
                     200,
-                    _flg,
-                    this
+                    this,
+                    flg
                 );
             }
             
-            if (null != this.callback()[0]) {
-                setTimeout(
-                    this.callback()[0],
-                    (1000 * this.speed()-200),
-                    this.callback()[1]
-                );
+            setTimeout(
+                function (eff) {
+                    try {
+                        if (null != eff.callback()[0]) {
+                            eff.callback()[0](eff.callback()[1]);
+                        }
+                        eff.setConf(false);
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                },
+                (1000 * this.speed()-200),
+                this
+            );
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setConf (en) {
+        try {
+            if ('boolean' !== typeof en) {
+                throw new Error('invalid paramter');
+            }
+            
+            var vdom = this.target().vdom();
+            if (true === en) {
+                vdom.style('-webkit-transition', ((1000 * this.speed()) - 200) + 'ms all linear 0s');
+                vdom.style('-moz-transition'   , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                vdom.style('-ms-transition'    , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                vdom.style('-o-transition'     , 'all ' + ((1000 * this.speed()) - 200) + 'ms');
+                vdom.style('transtion'         , ((1000 * this.speed()) - 200) + 'ms all linear 0s');
+            } else {
+                vdom.style('-webkit-transition', null);
+                vdom.style('-moz-transition'   , null);
+                vdom.style('-ms-transition'    , null);
+                vdom.style('-o-transition'     , null);
+                vdom.style('transtion'         , null);
             }
         } catch (e) {
             console.error(e.stack);
@@ -83,8 +133,13 @@ mofron.Effect = class extends mofron.Base {
         }
     }
     
-    initEffect (flg) {}
-    effectConts (flg) {}
+    enable (tgt) {
+        console.warn('not implement');
+    }
+    
+    disable (tgt) {
+        console.warn('not implement');
+    }
     
     speed (spd) {
         try {

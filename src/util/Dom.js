@@ -97,6 +97,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.addChild(chd);
+            return this;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -138,7 +139,7 @@ mofron.Dom = class extends mofron.Base {
      * @return (string) : style value
      * @return (object) : style object
      */
-    style (key, val) {
+    style (key, val, los) {
         try {
             if ( (undefined === val) &&
                  ('string'  === typeof key) ) {
@@ -147,7 +148,14 @@ mofron.Dom = class extends mofron.Base {
             } else if ( ('string' === typeof key) &&
                         (('string' === typeof val) || (null === val)) ) {
                 /* setter */
-                this.m_style.set(key, val);
+                var _los = (undefined === los) ? false : los;
+                if (false === _los) {
+                    this.m_style.set(key, val);
+                } else {
+                    this.m_style.protect(true);
+                    this.m_style.set(key, val);
+                    this.m_style.protect(false);
+                }
                 this.value(null);
             } else if ( (undefined === key) &&
                         (undefined === val) ) {

@@ -114,7 +114,13 @@ mofron.func.getColor = function (sty) {
 
 mofron.func.getLength = function (val) {
     try {
-        
+        if ('string' !== typeof val) {
+            return null;
+        }
+        if ((val.length-2) === val.indexOf('px')) {
+            return parseInt(val.split('px')[0]);
+        }
+        return val;
     } catch (e) {
         console.error(e.stack);
         throw new Error();
@@ -128,6 +134,51 @@ mofron.func.getStyleConts = function (sel,cnt) {
             ret_val += idx + ':' + cnt[idx] + ';';
         }
         return ret_val + '}';
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
+mofron.func.isInclude = function (obj, nm) {
+    try {
+        if ((null === obj) || ('object' !== typeof obj)) {
+            return false;
+        }
+        if ('function' !== typeof obj.name) {
+            return false;
+        }
+        if ('string' !== typeof nm) {
+            throw new Error('invalid parameter');
+        }
+        var name_lst = obj.getNameList();
+        for (var idx in name_lst) {
+            if(nm === name_lst[idx]) {
+                return true;
+            }
+        }
+        return false;
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
+mofron.func.isObject = function (obj, nm) {
+    try {
+        if ((null === obj) || ('object' !== typeof obj)) {
+            return false;
+        }
+        if ('function' !== typeof obj.name) {
+            return false;
+        }
+        if ('string' !== typeof nm) {
+            throw new Error('invalid parameter');
+        }
+        if (nm === obj.name()) {
+            return true;
+        }
+        return false;
     } catch (e) {
         console.error(e.stack);
         throw new Error();
