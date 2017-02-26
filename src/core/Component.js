@@ -319,7 +319,7 @@ mofron.Component = class extends mofron.Base {
     
     layout (lo) {
         try {
-            if (undefined === evt) {
+            if (undefined === lo) {
                 /* getter */
                 return this.m_layout;
             }
@@ -555,8 +555,8 @@ mofron.Component = class extends mofron.Base {
     
     initDomConts(prm) {
         try {
-            this.target(this.vdom());
-            this.vdom().addChild(new mofron.Dom('div',this));
+            this.target(new mofron.Dom('div',this));
+            this.vdom().addChild(this.target());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -598,7 +598,9 @@ mofron.Component = class extends mofron.Base {
                 this.effect(_eff, _flg);
             } else {
                 if (true === _flg) {
-                    this.vdom().style('display', null);
+                    if ('none' === this.vdom().style('display')) {
+                        this.vdom().style('display', null);
+                    }
                 } else {
                     this.vdom().style('display', 'none');
                 }
