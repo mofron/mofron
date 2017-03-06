@@ -173,7 +173,7 @@ mofron.Theme = class extends mofron.Base {
                 return this.m_conts[_key];
             }
             
-            if ( (_idx >= this.conts[_key].length) ||
+            if ( (_idx >= this.m_conts[_key].length) ||
                  (_idx <  0) ) {
                 return null;
             }
@@ -239,7 +239,7 @@ mofron.Theme = class extends mofron.Base {
             var _idx = (idx === undefined) ? 0    : idx;
             
             if ( (null === _key) ||
-                 ((0    >   _idx) && (this.conts.length <= _idx)) ) {
+                 ((0    >   _idx) && (this.m_conts.length <= _idx)) ) {
                 throw new Error('invalid parameter');
             }
             

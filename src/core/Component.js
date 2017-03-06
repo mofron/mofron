@@ -555,7 +555,11 @@ mofron.Component = class extends mofron.Base {
     
     initDomConts(prm) {
         try {
-            this.target(new mofron.Dom('div',this));
+            var tag = 'div';
+            if ('string' === typeof prm) {
+                tag = prm;
+            }
+            this.target(new mofron.Dom(tag,this));
             this.vdom().addChild(this.target());
         } catch (e) {
             console.error(e.stack);

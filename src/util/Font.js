@@ -74,7 +74,7 @@ mofron.Font = class extends mofron.Base {
                 'font-family' : fnt,
                 'src' : "url('" + pth + "') " + format
             };
-            hc.addConts(mofron.func.getStyleConts('@font-face',style));
+            hc.contents(mofron.func.getStyleConts('@font-face',style));
             hc.pushTag();
         } catch (e) {
             console.error(e.stack);
@@ -133,7 +133,7 @@ mofron.Font = class extends mofron.Base {
             var style = {
                 'font-family' : this.getFamilyStyle()
             };
-            hc.addConts(
+            hc.contents(
                 mofron.func.getStyleConts(
                     '.' + this.m_class ,
                     {'font-family' : this.getFamilyStyle()}

@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "0.8.6",
+  "version": "0.8.9",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "mofron-comp-header": "",
     "mofron-comp-heading": "",
     "mofron-comp-image": "",
-    "mofron-comp-inputtext": "",
+    "mofron-comp-input": "",
     "mofron-comp-loading": "",
     "mofron-comp-menu": "",
     "mofron-comp-message": "",

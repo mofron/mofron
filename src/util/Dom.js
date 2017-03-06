@@ -48,8 +48,7 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * tar name setter / getter
-     * r('invalid parameter');
+     * tag name setter / getter
      *
      * @param tg : (string) tag name (option)
      * @return (string) tag name
