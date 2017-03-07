@@ -169,29 +169,27 @@ mofron.Dom = class extends mofron.Base {
      */
     style (key, val, los) {
         try {
-            if ( (undefined === val) &&
-                 ('string'  === typeof key) ) {
+            if (undefined === val) {
                 /* getter */
-                return this.m_style.get(key);
-            } else if ( ('string' === typeof key) &&
-                        (('string' === typeof val) || (null === val)) ) {
-                /* setter */
-                var _los = (undefined === los) ? false : los;
-                if (false === _los) {
-                    this.m_style.set(key, val);
+                if (undefined === key) {
+                    return this.m_style;
                 } else {
-                    this.m_style.protect(true);
-                    this.m_style.set(key, val);
-                    this.m_style.protect(false);
+                    return this.m_style.get(key);
                 }
-                this.value(null);
-            } else if ( (undefined === key) &&
-                        (undefined === val) ) {
-                /* getter */
-                return this.m_style;
-            } else {
-                throw new Error('invalid parameter');
             }
+            /* setter */
+            if ('object' === typeof key) {
+                mofrom.func.keyValSetter(this.style, key);
+                return;
+            }
+            if (true === los) {
+                this.m_style.protect(true);
+                this.m_style.set(key, val);
+                this.m_style.protect(false);
+            } else {
+                this.m_style.set(key, val);
+            }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -225,25 +223,30 @@ mofron.Dom = class extends mofron.Base {
      */
     attr (key, val) {
         try {
-            if ( ('string' === typeof key) &&
-                 (('string' === typeof val) || (null === val)) ) {
-                /* setter */
-                this.m_attr[key] = val;
-                if (true === this.isRendered()) {
-                    this.getRawDom().setAttribute(key, val);
+            if (undefined === val) {
+                /* getter */
+                if (undefined === typeof key) {
+                    return this.m_attr;
+                } else if ('string' === typeof key) {
+                    if (undefined === this.m_attr[key]) {
+                        return null;
+                    }
+                    return this.m_attr[key];
+                } else {
+                    throw new Error('invalid parameter');
                 }
-                this.value(null);
-            } else if ( ('string'  === typeof key) &&
-                        (undefined === val) ) {
-                /* getter */
-                return this.m_attr[key];
-            } else if ( (undefined === key) ||
-                        (undefined === val) ) {
-                /* getter */
-                return this.m_attr;
-            } else {
-                throw new Error('invalid parameter');
             }
+            /* setter */
+            if ('object' === typeof key) {
+                mofron.func.keyValueSetter(this.attr, key);
+                return;
+            }
+            
+            this.m_attr[key] = val;
+            if (true === this.isRendered()) {
+                this.getRawDom().setAttribute(key, val);
+            }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -278,6 +281,11 @@ mofron.Dom = class extends mofron.Base {
                 }
             }
             /* setter */
+            if ('object' === typeof key) {
+                mofron.func.keyValSetter(this.prop, key);
+                return;
+            }
+            
             if ('string' !== typeof key) {
                 throw new Error('invalid parameter');
             }

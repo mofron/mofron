@@ -243,9 +243,6 @@ mofron.Component = class extends mofron.Base {
      */
     style (key, val, los) {
         try {
-            var _key  = (key === undefined) ? null : key;
-            var _val  = (val === undefined) ? null : val;
-            
             var tgt   = null;
             if (null === this.styleTgt()) {
                 tgt = this.m_style;
@@ -253,21 +250,20 @@ mofron.Component = class extends mofron.Base {
                 tgt = this.styleTgt();
             }
             
-            if ( (null === _key) &&
-                 (null === _val) ) {
+            if (undefined === val) {
                 /* getter */
-                return tgt.style().get();
-            } else if ( (null      !== _key) &&
-                        (undefined === val) ) {
-                /* getter */
-                return tgt.style(_key);
-            } else if ( (null      !== _key) &&
-                        (undefined !== _val) ) {
-                /* setter */
-                tgt.style(_key, _val, los);
-            } else {
-                throw new Error('invalid parameter');
+                if (undefined === key) {
+                    return tgt.style();
+                } else {
+                    return tgt.style(key);
+                }
             }
+            /* setter */
+            if ('object' === typeof key) {
+                mofron.func.keyValSetter(this.style, key);
+                return;
+            }
+            tgt.style(key, val, los);
         } catch (e) {
             console.error(e.stack);
             throw e;

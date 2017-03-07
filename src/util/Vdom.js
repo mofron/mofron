@@ -72,27 +72,25 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === val) {
                 /* getter */
-                if ('string' === (typeof key)) {
+                if (undefined === key) {
+                    return this.m_style;
+                } else {
                     if (undefined === this.m_style[key]) {
                         return null;
                     }
                     return this.m_style[key];
-                } else if (undefined === key) {
-                    return this.m_style;
-                } else {
-                    throw new Error('invalid parameter');
                 }
-            } else if ( ('string' === typeof key) &&
-                        (('string' === typeof val) || (null === val)) ) {
-                /* setter */
-                this.m_style[key] = val;
-                var chd = this.child();
-                for (var idx in chd) {
-                    chd[idx].style(key, val, los);
-                }
-            } else {
-                throw new Error('invalid parameter');
             }
+            /* setter */
+            if ('object' === typeof key) {
+                mofrom.func.keyValSetter(this.style, key);
+                return;
+            }
+            this.m_style[key] = val;
+            for (var idx in m_child) {
+                m_child[idx].style(key, val, los);
+            }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -120,16 +118,16 @@ mofron.Vdom = class extends mofron.Dom {
                 } else {
                     throw new Error('invalid parameter');
                 }
-            } else if ('string' === (typeof key)) {
-                /* setter */
-                var chd = this.child();
-                for (var idx in chd) {
-                    chd[idx].attr(key, val);
-                }
-                this.m_attr[key] = val;
-            } else {
-                throw new Error('invalid parameter');
             }
+            /* setter */
+            if ('object' === typeof key) {
+                mofron.func.keyValueSetter(this.attr, key);
+                return;
+            }
+            for (var idx in this.m_child) {
+                m_child[idx].attr(key, val);
+            }
+            this.m_attr[key] = val;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -156,6 +154,11 @@ mofron.Vdom = class extends mofron.Dom {
                 }
             }
             /* setter */
+            if ('object' === typeof key) {
+                mofron.func.keyValSetter(this.prop, key);
+                return;
+            }
+            
             if ('string' !== typeof key) {
                 throw new Error('invalid parameter');
             }
