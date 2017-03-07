@@ -137,6 +137,53 @@ mofron.Vdom = class extends mofron.Dom {
     }
     
     /**
+     * dom property setter / getter
+     * 
+     * @param key (string) property key
+     * @param val (mix) property value
+     */
+    prop (key, val) {
+        try {
+            if (undefined === val) {
+                /* getter */
+                if ( (undefined !== key) &&
+                     ('string'  === typeof key) ) {
+                    return this.m_prop[key];
+                } else if (undefined === key) {
+                    return this.m_prop;
+                } else {
+                    throw new Error('invalid parameter');
+                }
+            }
+            /* setter */
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === val) {
+                throw new Error('invalid parameter');
+            }
+
+            if (true === this.isRendered()) {
+                if (undefined === this.getRawDom()[key]) {
+                    throw new Error(key + ' is unknown property');
+                }
+                var chd = this.child();
+                for (var idx in chd) {
+                    if (undefined === chd[idx].getRawDom()[key]) {
+                        throw new Error(key + ' is unknown property');
+                    }
+                    chd[idx].getRawDom()[key] = val;
+                }
+            } else {
+                this.m_prop[key] = val;
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
      * add tag class name
      * 
      * @param name : (string) class name
@@ -218,11 +265,17 @@ mofron.Vdom = class extends mofron.Dom {
      */
     setPushed () {
         try {
-            var pnt = this.parent();
-            if (null === pnt) {
+            /* set rawdom */
+            if (null === this.parent()) {
                 this.m_rawdom = document.body;
             } else {
                 this.m_rawdom = pnt.getRawDom();
+            }
+            
+            /* set property */
+            var prop = this.m_prop;
+            for (var idx in prop) {
+                this.prop(idx, prop[idx]);
             }
             
             if (0 != this.m_child.length) {

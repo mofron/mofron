@@ -20,26 +20,31 @@ mofron.Dom = class extends mofron.Base {
             this.name('Dom');
             
             this.m_id     = null;
-            this.m_comp   = (undefined === cmp) ? null : cmp;
+            this.m_comp   = null;
             this.m_tag    = null;
             this.m_class  = new Array();
             this.m_parent = null;
             this.m_child  = new Array();
             this.m_style  = new mofron.Style(this);
             this.m_attr   = {};
+            this.m_prop   = {};
             this.m_text   = null;
             this.m_value  = null;
             this.m_rawdom = null;
             
-            if (undefined !== tg) {
-                if ('string' !== (typeof tg)) {
-                    throw new Error('invalid parameter');
-                }
+            /* check tag */
+            if ('string' === typeof tg) {
                 this.tag(tg);
             }
             
-            if (null !== this.m_comp) {
-                this.attr('component', this.m_comp.name());
+            /* check component */
+            if (undefined === cmp) {
+                this.component(cmp);
+            }
+            
+            /* check option */
+            if ('array' === typeof tg) {
+                this.prmOpt(tg);
             }
         } catch (e) {
             console.error(e.stack);
@@ -65,6 +70,30 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_tag = _tg;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
+     * component getter / setter
+     * 
+     * @param cmp (object) mofron.Component
+     * @return (object) mofron.Component
+     */
+    component (cmp) {
+        try {
+            if (undefined === cmp) {
+                /* getter */
+                return this.m_comp;
+            }
+            /* setter */
+            if (false === mofron.func.isInclude(cmp,'Component')) {
+                throw new Error('invalid parameter');
+            }
+            this.m_comp = cmp;
+            this.attr('component', cmp.name());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -214,6 +243,55 @@ mofron.Dom = class extends mofron.Base {
                 return this.m_attr;
             } else {
                 throw new Error('invalid parameter');
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
+     * dom property setter / getter
+     * 
+     * @param key (string) property key
+     * @param val (mix) property value
+     */
+    prop (key, val) {
+        try {
+            if (undefined === val) {
+                /* getter */
+                if ( (undefined !== key) &&
+                     ('string'  === typeof key) ) {
+                    if (true === this.isRendered()) {
+                        return this.getRawDom()[key];
+                    } else {
+                        return this.m_prop[key];
+                    }
+                } else if (undefined === key) {
+                    if (true === this.isRendered()) {
+                        return this.getRawDom();
+                    } else {
+                        return this.m_prop;
+                    }
+                } else {
+                    throw new Error('invalid parameter');
+                }
+            }
+            /* setter */
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === val) {
+                throw new Error('invalid parameter');
+            }
+            
+            if (true === this.isRendered()) {
+                if (undefined === this.getRawDom()[key]) {
+                    throw new Error(key + ' is unknown property');
+                }
+                this.getRawDom()[key] = val; 
+            } else {
+                this.m_prop[key] = val;
             }
         } catch (e) {
             console.error(e.stack);
@@ -412,10 +490,17 @@ mofron.Dom = class extends mofron.Base {
      */
     setPushed () {
         try {
+            /* set rawdom */
             if (null === this.parent()) {
                 this.m_rawdom = document.querySelector('#' + this.getId());
             } else {
                 this.m_rawdom = this.parent().getRawDom().querySelector('#' + this.getId());
+            }
+            
+            /* set property */
+            var prop = this.m_prop;
+            for (var idx in prop) {
+                this.prop(idx, prop[idx]);
             }
             
             if (0 != this.m_child.length) {
