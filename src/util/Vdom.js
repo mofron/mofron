@@ -34,25 +34,23 @@ mofron.Vdom = class extends mofron.Dom {
      */
     tag (tg) {
         try {
-            var _tg = (undefined === tg) ? null : tg;
-            var chd = this.child();
-            if (null === _tg) {
+            if (undefined === tg) {
                 /* getter */
-                if ((0 === chd.length) || (null === this.m_tag)) {
-                    return null;
-                }
                 return this.m_tag;
             }
-            if ('string' != (typeof _tg)) {
+            /* setter */
+            if ('string' != (typeof tg)) {
                 throw new Error('invalid parameter');
             } else if (0 === chd.length) {
-                throw new Error('there are no child in vdom');
+                throw new Error('there is no child in this vdom');
             }
+            
+            var chd = this.child();
             /* setter */
             for (var idx in chd) {
-                chd[idx].tag(_tg);
+                chd[idx].tag(tg);
             }
-            this.m_tag = _tg;
+            this.m_tag = tg;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -70,15 +68,13 @@ mofron.Vdom = class extends mofron.Dom {
      */
     style (key, val, los) {
         try {
-            if (undefined === val) {
+            if ( (undefined === val) &&
+                 ('object'  !== typeof key) ) {
                 /* getter */
                 if (undefined === key) {
                     return this.m_style;
                 } else {
-                    if (undefined === this.m_style[key]) {
-                        return null;
-                    }
-                    return this.m_style[key];
+                    return (undefined === this.m_style[key]) ? null : this.m_style[key];
                 }
             }
             /* setter */
@@ -106,17 +102,13 @@ mofron.Vdom = class extends mofron.Dom {
      */
     attr (key, val) {
         try {
-            if (undefined === val) {
+            if ( (undefined === val) &&
+                 ('object'  !== typeof key) ) {
                 /* getter */
-                if ('string' === (typeof key)) {
-                    if (undefined === this.m_attr[key]) {
-                        return null;
-                    }
-                    return this.m_attr[key];
-                } else if (undefined === kay) {
+                if (undefined === kay) {
                     return this.m_attr;
                 } else {
-                    throw new Error('invalid parameter');
+                    return (undefined === this.m_attr[key]) ? null : this.m_attr[key]; 
                 }
             }
             /* setter */
@@ -124,10 +116,13 @@ mofron.Vdom = class extends mofron.Dom {
                 mofron.func.keyValueSetter(this.attr, key);
                 return;
             }
-            for (var idx in this.m_child) {
-                m_child[idx].attr(key, val);
+            
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].attr(key, val);
             }
             this.m_attr[key] = val;
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -142,15 +137,13 @@ mofron.Vdom = class extends mofron.Dom {
      */
     prop (key, val) {
         try {
-            if (undefined === val) {
+            if ( (undefined === val) &&
+                 ('object'  !== typeof key) ) {
                 /* getter */
-                if ( (undefined !== key) &&
-                     ('string'  === typeof key) ) {
-                    return this.m_prop[key];
-                } else if (undefined === key) {
+                if (undefined === key) {
                     return this.m_prop;
                 } else {
-                    throw new Error('invalid parameter');
+                    return (undefined === this.m_prop[key]) ? null : this.m_prop[key];
                 }
             }
             /* setter */
@@ -159,17 +152,7 @@ mofron.Vdom = class extends mofron.Dom {
                 return;
             }
             
-            if ('string' !== typeof key) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === val) {
-                throw new Error('invalid parameter');
-            }
-
             if (true === this.isRendered()) {
-                if (undefined === this.getRawDom()[key]) {
-                    throw new Error(key + ' is unknown property');
-                }
                 var chd = this.child();
                 for (var idx in chd) {
                     if (undefined === chd[idx].getRawDom()[key]) {
@@ -215,19 +198,20 @@ mofron.Vdom = class extends mofron.Dom {
      */
     text (txt) {
         try {
-            if ('string' === typeof txt) {
-                /* setter */
-                var chd = this.child();
-                for (var idx in chd) {
-                    chd[idx].text(txt);
-                }
-                this.m_text = txt;
-            } else if (undefined === txt) {
+            if (undefined === txt) {
                 /* getter */
                 return this.m_text;
-            } else {
+            }
+            /* setter */
+            if ('string' !== typeof txt) {
                 throw new Error('invalid parameter');
             }
+            
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].text(txt);
+            }
+            this.m_text = txt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -269,11 +253,7 @@ mofron.Vdom = class extends mofron.Dom {
     setPushed () {
         try {
             /* set rawdom */
-            if (null === this.parent()) {
-                this.m_rawdom = document.body;
-            } else {
-                this.m_rawdom = pnt.getRawDom();
-            }
+            this.m_rawdom = (null === this.parent()) ? document.body : this.parent().getRawDom();
             
             /* set property */
             var prop = this.m_prop;
