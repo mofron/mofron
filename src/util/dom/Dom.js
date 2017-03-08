@@ -172,7 +172,7 @@ mofron.Dom = class extends mofron.Base {
             if ( (undefined === val) &&
                  ('object'  !== typeof key) ) {
                 /* getter */
-                return this.m_style.get(key);
+                return (undefined === key) ? this.m_style : this.m_style.get(key);
             }
             /* setter */
             if ('object' === typeof key) {
@@ -233,7 +233,7 @@ mofron.Dom = class extends mofron.Base {
                 return;
             }
             
-            this.m_attr.set(val);
+            this.m_attr.set(key, val);
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -433,7 +433,7 @@ mofron.Dom = class extends mofron.Base {
             }
             
             /* set property */
-            var prop = this.m_prop;
+            var prop = this.m_prop.get();
             for (var idx in prop) {
                 this.prop(idx, prop[idx]);
             }
