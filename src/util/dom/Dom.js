@@ -43,9 +43,7 @@ mofron.Dom = class extends mofron.Base {
             }
             
             /* check option */
-            if ('array' === typeof tg) {
-                this.prmOpt(tg);
-            }
+            this.prmOpt(tg);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -223,13 +221,13 @@ mofron.Dom = class extends mofron.Base {
     attr (key, val) {
         try {
             if ( (undefined === val) &&
-                 ('object'  !== key) ) {
+                 ('object'  !== typeof key) ) {
                 /* getter */
                 return this.m_attr.get();
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValueSetter(this.attr, key);
+                mofron.func.keyValSetter(this.attr, key);
                 return;
             }
             

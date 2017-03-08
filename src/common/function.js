@@ -196,7 +196,7 @@ mofron.func.keyValSetter = function (set_fnc, set_obj) {
         }
         
         for (var idx in set_obj) {
-            set_func(idx, set_obj[idx]);
+            set_fnc(idx, set_obj[idx]);
         }
     } catch (e) {
         console.error(e.stack);
