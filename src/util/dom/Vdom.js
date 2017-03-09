@@ -17,8 +17,13 @@ mofron.Vdom = class extends mofron.Dom {
     constructor (prm_opt) {
         try {
             super();
-            this.m_style = {};
             this.name('Vdom');
+            
+            this.m_style   = {};
+            this.m_classnm = {};
+            this.m_attr    = {};
+            this.m_prop    = {};
+            
             this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
@@ -79,7 +84,7 @@ mofron.Vdom = class extends mofron.Dom {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofrom.func.keyValSetter(this.style, key);
+                mofrom.func.keyValSetter(this, 'style', key);
                 return;
             }
             this.m_style[key] = val;
@@ -148,7 +153,7 @@ mofron.Vdom = class extends mofron.Dom {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValSetter(this.prop, key);
+                mofron.func.keyValSetter(this, 'prop', key);
                 return;
             }
             
@@ -183,7 +188,7 @@ mofron.Vdom = class extends mofron.Dom {
             for (var idx in chd) {
                 chd[idx].className(name);
             }
-            this.m_class.push(name);
+            this.m_classnm.push(name);
         } catch (e) {
             console.error(e.stack);
             throw e;

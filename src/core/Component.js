@@ -260,7 +260,7 @@ mofron.Component = class extends mofron.Base {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValSetter(this.style, key);
+                mofron.func.keyValSetter(this, 'style', key);
                 return;
             }
             tgt.style(key, val, los);
