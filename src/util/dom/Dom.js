@@ -174,7 +174,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofrom.func.keyValSetter(this.style, key);
+                mofrom.func.keyValSetter(this, 'style', key);
                 return;
             }
             if (true === los) {
@@ -227,7 +227,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValSetter(this.attr, key);
+                mofron.func.keyValSetter(this, 'attr', key);
                 return;
             }
             
@@ -254,7 +254,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValSetter(this.prop, key);
+                mofron.func.keyValSetter(this, 'prop', key);
                 return;
             }
             this.m_prop.set(key, val);

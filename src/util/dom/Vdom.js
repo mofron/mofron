@@ -84,7 +84,7 @@ mofron.Vdom = class extends mofron.Dom {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofrom.func.keyValSetter(this.style, key);
+                mofrom.func.keyValSetter(this, 'style', key);
                 return;
             }
             this.m_style[key] = val;
@@ -153,7 +153,7 @@ mofron.Vdom = class extends mofron.Dom {
             }
             /* setter */
             if ('object' === typeof key) {
-                mofron.func.keyValSetter(this.prop, key);
+                mofron.func.keyValSetter(this, 'prop', key);
                 return;
             }
             
