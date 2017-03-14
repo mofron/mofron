@@ -3,45 +3,24 @@
  * @brief Base class of layout
  */
 
-mofron.Layout = class extends mofron.Base {
-    constructor () {
+mofron.Layout = class extends mofron.CompConf {
+    constructor (prm_opt) {
         try {
             super();
             this.name('Layout');
             
-            this.m_target = null;
+            /* member */
             this.m_execnt = 0;
+            
+            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    /**
-     * @param tgt : (object) layout target component
-     */
-    target(tgt) {
+    execute () {
         try {
-            if (undefined === tgt) {
-                /* getter */
-                return this.m_target;
-            }
-            /* setter */
-            if ('object' !== typeof tgt) {
-                throw new Error('invalid parameter');
-            }
-            this.m_target = tgt;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    layout () {
-        try {
-            if (null === this.target()) {
-                throw new Error('target is null');
-            }
             var tgt_chd = this.target().child();
             for (var idx in tgt_chd) {
                 if (idx < this.m_execnt) {

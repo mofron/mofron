@@ -3,12 +3,13 @@ require('./src/common/Base.js');
 require('./src/common/Param.js');
 require('./src/common/function.js');
 
-require('./src/util/domconf/DomConf.js');
-require('./src/util/domconf/Attr.js');
-require('./src/util/domconf/ClassName.js');
-require('./src/util/domconf/DomConf.js');
-require('./src/util/domconf/Prop.js');
-require('./src/util/domconf/Style.js');
+require('./src/util/conf/DomConf.js');
+require('./src/util/conf/Attr.js');
+require('./src/util/conf/ClassName.js');
+require('./src/util/conf/DomConf.js');
+require('./src/util/conf/Prop.js');
+require('./src/util/conf/Style.js');
+require('./src/util/conf/CompConf.js');
 
 require('./src/util/dom/Dom.js');
 require('./src/util/dom/Vdom.js');

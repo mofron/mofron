@@ -300,7 +300,7 @@ mofron.Dom = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_text = txt;
-            if (true === this.isRendered()) {
+            if (true === this.isPushed()) {
                 this.getRawDom().innerHTML = txt;
             }
         } catch (e) {
@@ -360,8 +360,9 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_value = val;
-            if ( (null === val) && (true === this.isRendered()) ) {
+            if ( (null === val) && (true === this.isPushed()) ) {
                 // update dom contents
+                this.getRawDom().innerHTML = this.value();
             }
         } catch (e) {
             console.error(e.stack);
@@ -382,7 +383,7 @@ mofron.Dom = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            if (true === this.isRendered()) {
+            if (true === this.isPushed()) {
                 throw new Error('already pushed');
             }
             
@@ -407,7 +408,7 @@ mofron.Dom = class extends mofron.Base {
      * @return (boolean) true : this vdom had pushed
      * @return (boolean) false : this vdom had not pushed
      */
-    isRendered () {
+    isPushed () {
         try {
             return (null === this.m_rawdom) ? false : true;
         } catch (e) {
@@ -498,7 +499,7 @@ mofron.Dom = class extends mofron.Base {
      */
     getRawDom () {
         try {
-            if (false === this.isRendered()) {
+            if (false === this.isPushed()) {
                 throw new Error('this dom is not rendered yet');
             }
             return this.m_rawdom;

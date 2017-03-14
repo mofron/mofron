@@ -88,8 +88,9 @@ mofron.Vdom = class extends mofron.Dom {
                 return;
             }
             this.m_style[key] = val;
-            for (var idx in m_child) {
-                m_child[idx].style(key, val, los);
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].style(key, val, los);
             }
             this.value(null);
         } catch (e) {
@@ -157,7 +158,7 @@ mofron.Vdom = class extends mofron.Dom {
                 return;
             }
             
-            if (true === this.isRendered()) {
+            if (true === this.isPushed()) {
                 var chd = this.child();
                 for (var idx in chd) {
                     if (undefined === chd[idx].getRawDom()[key]) {
@@ -181,7 +182,7 @@ mofron.Vdom = class extends mofron.Dom {
      */
     className (name) {
         try {
-            if ('string' != (typeof name)) {
+            if ('string' !== typeof name) {
                 throw new Error('invalid parameter');
             }
             var chd = this.child();
@@ -211,7 +212,6 @@ mofron.Vdom = class extends mofron.Dom {
             if ('string' !== typeof txt) {
                 throw new Error('invalid parameter');
             }
-            
             var chd = this.child();
             for (var idx in chd) {
                 chd[idx].text(txt);
@@ -234,14 +234,13 @@ mofron.Vdom = class extends mofron.Dom {
                 return;
             }
             var ret_val = '';
-            
             /* get child value */
-            if (0 != this.m_child.length) {
-                for(var chd_idx in this.m_child) {
-                    ret_val += this.m_child[chd_idx].value();
+            if (0 != this.child().length) {
+                var chd = this.child();
+                for(var idx in chd) {
+                    ret_val += chd[idx].value();
                 }
             }
-            
             return ret_val;
         } catch (e) {
             console.error(e.stack);
@@ -266,9 +265,10 @@ mofron.Vdom = class extends mofron.Dom {
                 this.prop(idx, prop[idx]);
             }
             
-            if (0 != this.m_child.length) {
-                for(var chd_idx in this.m_child) {
-                    this.m_child[chd_idx].setPushed();
+            if (0 != this.child().length) {
+                var chd = this.child();
+                for(var idx in chd) {
+                    chd[idx].setPushed();
                 }
             }
         } catch (e) {
@@ -284,7 +284,7 @@ mofron.Vdom = class extends mofron.Dom {
      */
     getRawDom () {
         try {
-            if (false === this.isRendered()) {
+            if (false === this.isPushed()) {
                 throw new Error('this vdom is not rendered yet');
             }
             return this.m_rawdom;

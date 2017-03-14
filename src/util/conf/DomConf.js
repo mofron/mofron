@@ -33,8 +33,7 @@ mofron.DomConf = class extends mofron.Base {
                 return this.m_target;
             }
             /* setter */
-            if ( (false === mofron.func.isInclude(tgt, 'Dom')) &&
-                 (false === mofron.func.isInclude(tgt, 'Component')) ) {
+            if (false === mofron.func.isInclude(tgt, 'Dom')) {
                 throw new Error('invalid parameter');
             }
             this.m_target = tgt;
@@ -61,7 +60,7 @@ mofron.DomConf = class extends mofron.Base {
             }
             this.m_conts[key] = val;
             
-            if (true === this.target().isRendered()) {
+            if (true === this.target().isPushed()) {
                 /* target is already rendered */
                 this.rset(key, val);
             }
@@ -73,7 +72,7 @@ mofron.DomConf = class extends mofron.Base {
     
     get (key) {
         try {
-            if (false === this.target().isRendered()) {
+            if (false === this.target().isPushed()) {
                 if (undefined === key) {
                     return this.m_conts;
                 }
