@@ -184,23 +184,4 @@ mofron.func.isObject = function (obj, nm) {
         throw new Error();
     }
 }
-
-mofron.func.keyValSetter = function (obj, set_fnc, set_obj) {
-    try {
-        /* parameter check */
-        if ('object' !== typeof set_obj) {
-            throw new Error('invalid parameter');
-        }
-        if ('string' !== typeof set_fnc) {
-            throw new Error('invalid parameter');
-        }
-        
-        for (var idx in set_obj) {
-            obj[set_fnc](idx, set_obj[idx]);
-        }
-    } catch (e) {
-        console.error(e.stack);
-        throw new Error();
-    }
-}
 /* end of file */
