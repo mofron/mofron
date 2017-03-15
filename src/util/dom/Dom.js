@@ -160,29 +160,20 @@ mofron.Dom = class extends mofron.Base {
     /**
      * style setter / getter
      *
-     * @param key : (string) style key (option)
-     * @param val : (string) style value (option)
+     * @param kv : (object) key value object
      * @return (string) : style value
      * @return (object) : style object
      */
-    style (key, val, los) {
+    style (kv, los) {
         try {
-            if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
-                /* getter */
-                return (undefined === key) ? this.m_style : this.m_style.get(key);
-            }
-            /* setter */
-            if ('object' === typeof key) {
-                mofrom.func.keyValSetter(this, 'style', key);
-                return;
-            }
-            if (true === los) {
+            if (true === typeof los) {
                 this.m_style.protect(true);
-                this.m_style.set(key, val);
+                this.m_style.set(kv);
                 this.m_style.protect(false);
+            } else if ('object' === typeof kv) {
+                this.m_style.set(kv);
             } else {
-                this.m_style.set(key, val);
+                return this.m_style.get(kv);
             }
             this.value(null);
         } catch (e) {
@@ -192,46 +183,18 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * set style object
-     * 
-     * @param sty (mofron.Style) style object
-     */
-    setStyle(sty) {
-        try {
-            if (true !== mofron.func.isObject(sty, 'Style')) {
-                throw new Error('invalid parameter');
-            }
-            var sty_cnt = sty.get();
-            for (var key in sty_cnt) {
-                this.style(key, sty[key]);
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
      * tag attribute setter / getter
      *
-     * @param key : (string) attribute key (option)
-     * @param val : (string) attribute value (option)
+     * @param kv : (object) attribute key value object
      * @return
      */
-    attr (key, val) {
+    attr (kv) {
         try {
-            if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
+            if (undefined === kv) {
                 /* getter */
                 return this.m_attr.get();
             }
-            /* setter */
-            if ('object' === typeof key) {
-                mofron.func.keyValSetter(this, 'attr', key);
-                return;
-            }
-            
-            this.m_attr.set(key, val);
+            this.m_attr.set(kv);
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -242,22 +205,16 @@ mofron.Dom = class extends mofron.Base {
     /**
      * dom property setter / getter
      * 
-     * @param key (string) property key
-     * @param val (mix) property value
+     * @param kv (object) key value object
      */
-    prop (key, val) {
+    prop (kv) {
         try {
-            if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
+            if (undefined === kv) {
                 /* getter */
-                return this.m_prop.get(key);
+                return this.m_prop.get(kv);
             }
             /* setter */
-            if ('object' === typeof key) {
-                mofron.func.keyValSetter(this, 'prop', key);
-                return;
-            }
-            this.m_prop.set(key, val);
+            this.m_prop.set(kv);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -277,6 +234,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_classnm.add(name);
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -303,6 +261,7 @@ mofron.Dom = class extends mofron.Base {
             if (true === this.isPushed()) {
                 this.getRawDom().innerHTML = txt;
             }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;

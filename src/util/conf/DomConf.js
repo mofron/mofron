@@ -43,26 +43,25 @@ mofron.DomConf = class extends mofron.Base {
         }
     }
     
-    set (key, val) {
+    set (kv) {
         try {
-            if ( (undefined === key) ||
-                 (undefined === val) ) {
+            if (undefined === kv) {
                 throw new Error('invalid parameter');
             }
-            if ( ('string' !== typeof key) &&
-                 ('number' !== typeof key) ) {
+            if ('object' !== typeof kv) {
                 throw new Error('invalid parameter');
             }
             
-            if ( (true      === this.protect())   &&
-                 (undefined !== this.m_conts[key]) ) {
-                return;
-            }
-            this.m_conts[key] = val;
-            
-            if (true === this.target().isPushed()) {
-                /* target is already rendered */
-                this.rset(key, val);
+            for (var idx in kv) {
+                if ( (true      === this.protect())   &&
+                     (undefined !== this.m_conts[idx]) ) {
+                    return;
+                }
+                this.m_conts[kv] = kv[idx];
+                if (true === this.target().isPushed()) {
+                    /* target is already rendered */
+                    this.rset(idx, kv[idx]);
+                }
             }
         } catch (e) {
             console.error(e.stack);

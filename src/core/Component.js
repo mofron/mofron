@@ -217,27 +217,18 @@ mofron.Component = class extends mofron.Base {
     /**
      * style getter / setter
      *
-     * @param key (string) style key
-     * @param val (string) style value
+     * @param kv (object) 
      * @param los (boolean) loose flag
      * @return (object) style object
-     * @note parameter syntax
-     *         key     : get style value of key
-     *         key,val : set style value of key
-     *         (none)  : get style object
      */
-    style (key, val, los) {
+    style (kv, los) {
         try {
             if (undefined === val) {
                 /* getter */
-                return (undefined === key) ? this.styleTgt().style() : this.styleTgt().style(key);
+                return (undefined === kv) ? this.styleTgt().style() : this.styleTgt().style(kv);
             }
             /* setter */
-            if ('object' === typeof key) {
-                mofron.func.keyValSetter(this, 'style', key);
-                return;
-            }
-            this.styleTgt().style(key, val, los);
+            this.styleTgt().style(kv, los);
         } catch (e) {
             console.error(e.stack);
             throw e;
