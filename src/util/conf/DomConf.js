@@ -45,10 +45,8 @@ mofron.DomConf = class extends mofron.Base {
     
     set (kv) {
         try {
-            if (undefined === kv) {
-                throw new Error('invalid parameter');
-            }
-            if ('object' !== typeof kv) {
+            if ( (undefined === kv) ||
+                 ('object' !== typeof kv) ) {
                 throw new Error('invalid parameter');
             }
             
@@ -57,7 +55,7 @@ mofron.DomConf = class extends mofron.Base {
                      (undefined !== this.m_conts[idx]) ) {
                     return;
                 }
-                this.m_conts[kv] = kv[idx];
+                this.m_conts[idx] = kv[idx];
                 if (true === this.target().isPushed()) {
                     /* target is already rendered */
                     this.rset(idx, kv[idx]);
@@ -107,8 +105,10 @@ mofron.DomConf = class extends mofron.Base {
     protect (prt) {
         try {
             if (undefined === prt) {
+                /* getter */
                 return this.m_protect;
             }
+            /* setter */
             if ('boolean' !== typeof prt) {
                 throw new Error('invalid parameter');
             }

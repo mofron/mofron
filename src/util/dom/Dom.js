@@ -160,8 +160,8 @@ mofron.Dom = class extends mofron.Base {
     /**
      * style setter / getter
      *
-     * @param kv : (object) key value object
-     * @return (string) : style value
+     * @param kv : (object) key-value object
+     * @return (string) : value of style
      * @return (object) : style object
      */
     style (kv, los) {
@@ -185,16 +185,25 @@ mofron.Dom = class extends mofron.Base {
     /**
      * tag attribute setter / getter
      *
-     * @param kv : (object) attribute key value object
+     * @param kv  : (object/string) key-value object / key of attribute
+     * @param val : (object) value of attribute
      * @return
      */
-    attr (kv) {
+    attr (kv, val) {
         try {
-            if (undefined === kv) {
+            if ( (undefined === val) &&
+                 ('object'  !== kv) ) {
                 /* getter */
-                return this.m_attr.get();
+                return this.m_attr.get(kv);
             }
-            this.m_attr.set(kv);
+            /* setter */
+            if ('string' === typeof kv) {
+                var set_obj = {};
+                set_obj[kv] = val;
+                this.m_attr.set(set_obj);
+            } else {
+                this.m_attr.set(kv);
+            }
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -205,16 +214,25 @@ mofron.Dom = class extends mofron.Base {
     /**
      * dom property setter / getter
      * 
-     * @param kv (object) key value object
+     * @param kv  : (object/string) key-value object / key of
+     * @param val : (object)  value of property
      */
-    prop (kv) {
+    prop (kv, val) {
         try {
-            if (undefined === kv) {
+            if ( (undefined === val) &&
+                 ('object'  !== kv) ) {
                 /* getter */
                 return this.m_prop.get(kv);
             }
             /* setter */
-            this.m_prop.set(kv);
+            if ('string' === typeof kv) {
+                var set_obj = {};
+                set_obj[kv] = val;
+                this.m_prop.set(set_obj);
+            } else {
+                this.m_prop.set(kv);
+            }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;

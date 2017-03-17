@@ -223,7 +223,7 @@ mofron.Component = class extends mofron.Base {
      */
     style (kv, los) {
         try {
-            if (undefined === val) {
+            if (undefined === kv) {
                 /* getter */
                 return (undefined === kv) ? this.styleTgt().style() : this.styleTgt().style(kv);
             }

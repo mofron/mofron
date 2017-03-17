@@ -102,7 +102,7 @@ mofron.Vdom = class extends mofron.Dom {
      * @param kv : (object) key value object
      * @return (string,null) attribute value 
      */
-    attr (kv) {
+    attr (kv, val) {
         try {
             if ('object' === typeof kv) {
                 for (var idx in kv) {
@@ -110,7 +110,7 @@ mofron.Vdom = class extends mofron.Dom {
                 }
                 var chd = this.child();
                 for (var idx in chd) {
-                    chd[idx].attr(kv);
+                    chd[idx].attr(kv, val);
                 }
             } else {
                 if (undefined === kv) {
