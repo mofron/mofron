@@ -337,10 +337,6 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_value = val;
-            if ( (null === val) && (true === this.isPushed()) ) {
-                // update dom contents
-                this.getRawDom().innerHTML = this.value();
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;

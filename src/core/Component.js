@@ -385,7 +385,7 @@ mofron.Component = class extends mofron.Base {
         try {
             /* setting component visible */
             if (false === disp) {
-                this.vdom().style('display', 'none');
+                this.vdom().style({'display' : 'none'});
             }
             
             /* push contents to DOM */
