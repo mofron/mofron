@@ -33,8 +33,7 @@ mofron.DomConf = class extends mofron.Base {
                 return this.m_target;
             }
             /* setter */
-            if ( (false === mofron.func.isInclude(tgt, 'Dom')) &&
-                 (false === mofron.func.isInclude(tgt, 'Component')) ) {
+            if (false === mofron.func.isInclude(tgt, 'Dom')) {
                 throw new Error('invalid parameter');
             }
             this.m_target = tgt;
@@ -44,26 +43,23 @@ mofron.DomConf = class extends mofron.Base {
         }
     }
     
-    set (key, val) {
+    set (kv) {
         try {
-            if ( (undefined === key) ||
-                 (undefined === val) ) {
-                throw new Error('invalid parameter');
-            }
-            if ( ('string' !== typeof key) &&
-                 ('number' !== typeof key) ) {
+            if ( (undefined === kv) ||
+                 ('object' !== typeof kv) ) {
                 throw new Error('invalid parameter');
             }
             
-            if ( (true      === this.protect())   &&
-                 (undefined !== this.m_conts[key]) ) {
-                return;
-            }
-            this.m_conts[key] = val;
-            
-            if (true === this.target().isRendered()) {
-                /* target is already rendered */
-                this.rset(key, val);
+            for (var idx in kv) {
+                if ( (true      === this.protect())   &&
+                     (undefined !== this.m_conts[idx]) ) {
+                    return;
+                }
+                this.m_conts[idx] = kv[idx];
+                if (true === this.target().isPushed()) {
+                    /* target is already rendered */
+                    this.rset(idx, kv[idx]);
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -73,7 +69,7 @@ mofron.DomConf = class extends mofron.Base {
     
     get (key) {
         try {
-            if (false === this.target().isRendered()) {
+            if (false === this.target().isPushed()) {
                 if (undefined === key) {
                     return this.m_conts;
                 }
@@ -109,8 +105,10 @@ mofron.DomConf = class extends mofron.Base {
     protect (prt) {
         try {
             if (undefined === prt) {
+                /* getter */
                 return this.m_protect;
             }
+            /* setter */
             if ('boolean' !== typeof prt) {
                 throw new Error('invalid parameter');
             }

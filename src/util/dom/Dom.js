@@ -160,29 +160,20 @@ mofron.Dom = class extends mofron.Base {
     /**
      * style setter / getter
      *
-     * @param key : (string) style key (option)
-     * @param val : (string) style value (option)
-     * @return (string) : style value
+     * @param kv : (object) key-value object
+     * @return (string) : value of style
      * @return (object) : style object
      */
-    style (key, val, los) {
+    style (kv, los) {
         try {
-            if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
-                /* getter */
-                return (undefined === key) ? this.m_style : this.m_style.get(key);
-            }
-            /* setter */
-            if ('object' === typeof key) {
-                mofrom.func.keyValSetter(this, 'style', key);
-                return;
-            }
-            if (true === los) {
+            if (true === typeof los) {
                 this.m_style.protect(true);
-                this.m_style.set(key, val);
+                this.m_style.set(kv);
                 this.m_style.protect(false);
+            } else if ('object' === typeof kv) {
+                this.m_style.set(kv);
             } else {
-                this.m_style.set(key, val);
+                return this.m_style.get(kv);
             }
             this.value(null);
         } catch (e) {
@@ -192,46 +183,27 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * set style object
-     * 
-     * @param sty (mofron.Style) style object
-     */
-    setStyle(sty) {
-        try {
-            if (true !== mofron.func.isObject(sty, 'Style')) {
-                throw new Error('invalid parameter');
-            }
-            var sty_cnt = sty.get();
-            for (var key in sty_cnt) {
-                this.style(key, sty[key]);
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
      * tag attribute setter / getter
      *
-     * @param key : (string) attribute key (option)
-     * @param val : (string) attribute value (option)
+     * @param kv  : (object/string) key-value object / key of attribute
+     * @param val : (object) value of attribute
      * @return
      */
-    attr (key, val) {
+    attr (kv, val) {
         try {
             if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
+                 ('object'  !== kv) ) {
                 /* getter */
-                return this.m_attr.get();
+                return this.m_attr.get(kv);
             }
             /* setter */
-            if ('object' === typeof key) {
-                mofron.func.keyValSetter(this, 'attr', key);
-                return;
+            if ('string' === typeof kv) {
+                var set_obj = {};
+                set_obj[kv] = val;
+                this.m_attr.set(set_obj);
+            } else {
+                this.m_attr.set(kv);
             }
-            
-            this.m_attr.set(key, val);
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -242,22 +214,25 @@ mofron.Dom = class extends mofron.Base {
     /**
      * dom property setter / getter
      * 
-     * @param key (string) property key
-     * @param val (mix) property value
+     * @param kv  : (object/string) key-value object / key of
+     * @param val : (object)  value of property
      */
-    prop (key, val) {
+    prop (kv, val) {
         try {
             if ( (undefined === val) &&
-                 ('object'  !== typeof key) ) {
+                 ('object'  !== kv) ) {
                 /* getter */
-                return this.m_prop.get(key);
+                return this.m_prop.get(kv);
             }
             /* setter */
-            if ('object' === typeof key) {
-                mofron.func.keyValSetter(this, 'prop', key);
-                return;
+            if ('string' === typeof kv) {
+                var set_obj = {};
+                set_obj[kv] = val;
+                this.m_prop.set(set_obj);
+            } else {
+                this.m_prop.set(kv);
             }
-            this.m_prop.set(key, val);
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -277,6 +252,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_classnm.add(name);
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -300,9 +276,10 @@ mofron.Dom = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_text = txt;
-            if (true === this.isRendered()) {
+            if (true === this.isPushed()) {
                 this.getRawDom().innerHTML = txt;
             }
+            this.value(null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -360,9 +337,6 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_value = val;
-            if ( (null === val) && (true === this.isRendered()) ) {
-                // update dom contents
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -382,7 +356,7 @@ mofron.Dom = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            if (true === this.isRendered()) {
+            if (true === this.isPushed()) {
                 throw new Error('already pushed');
             }
             
@@ -407,7 +381,7 @@ mofron.Dom = class extends mofron.Base {
      * @return (boolean) true : this vdom had pushed
      * @return (boolean) false : this vdom had not pushed
      */
-    isRendered () {
+    isPushed () {
         try {
             return (null === this.m_rawdom) ? false : true;
         } catch (e) {
@@ -498,7 +472,7 @@ mofron.Dom = class extends mofron.Base {
      */
     getRawDom () {
         try {
-            if (false === this.isRendered()) {
+            if (false === this.isPushed()) {
                 throw new Error('this dom is not rendered yet');
             }
             return this.m_rawdom;
