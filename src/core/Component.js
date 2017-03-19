@@ -357,6 +357,7 @@ mofron.Component = class extends mofron.Base {
                 /* getter */
                 if (null === this.m_theme) { 
                     this.m_theme = new mofron.Theme();
+                    this.m_theme.target(this);
                 }
                 return this.m_theme;
             }
@@ -366,8 +367,6 @@ mofron.Component = class extends mofron.Base {
             for (var idx in chdlen) {
                 chdlen[idx].theme(thm);
             }
-            
-            this.themeConts();
         } catch (e) {
             console.error(e.stack);
             throw e;

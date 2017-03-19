@@ -161,7 +161,14 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === name) {
                 /* getter */
-                return this.m_classnm;
+                var ret_val = '';
+                for (var idx in this.m_classnm) {
+                    if ('' === ret_val) {
+                        ret_val += ' ';
+                    }
+                    ret_val += this.m_classnm[idx];
+                }
+                return ret_val;
             }
             /* setter */
             if ('string' !== typeof name) {
@@ -171,7 +178,7 @@ mofron.Vdom = class extends mofron.Dom {
             for (var idx in chd) {
                 chd[idx].className(name);
             }
-            this.m_classnm.push(name);
+            this.m_classnm[name] = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
