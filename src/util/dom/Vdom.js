@@ -72,23 +72,21 @@ mofron.Vdom = class extends mofron.Dom {
      */
     style (kv, los) {
         try {
-            if (true === typeof los) {
-                this.m_style.protect(true);
-                this.m_style.set(kv);
-                this.m_style.protect(false);
-            } else if ('object' === typeof kv) {
-                for (var idx in kv) {
-                    this.m_style[idx] = kv[idx];
-                }
-                var chd = this.child();
-                for (var idx in chd) {
-                    chd[idx].style(kv, los);
-                }
-            } else {
-                if (undefined === kv) {
-                    return this.m_style;
-                }
+            if (undefined === kv) {
+                /* getter */ 
+                return m_style;
+            }
+            if ('string' === typeof kv) {
+                /* getter */
                 return (undefined === this.m_style[kv]) ? null : this.m_style[kv];
+            }
+            /* setter */
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].style(kv, los);
+            }
+            for (var idx in kv) {
+                this.m_style[idx] = kv[idx];
             }
         } catch (e) {
             console.error(e.stack);

@@ -35,7 +35,7 @@ mofron.Layout = class extends mofron.CompConf {
         }
     }
     
-    loutConts (idx, tgt) {
+    layoutConts (idx, tgt) {
         try {
             console.warn('layout is not implements');
         } catch (e) {

@@ -166,14 +166,17 @@ mofron.Dom = class extends mofron.Base {
      */
     style (kv, los) {
         try {
-            if (true === typeof los) {
+            if ( (undefined === kv) || ('string' === typeof kv) ) {
+                /* getter */
+                return this.m_style.get(kv);
+            }
+            /* setter */
+            if (true === los) {
                 this.m_style.protect(true);
                 this.m_style.set(kv);
                 this.m_style.protect(false);
             } else if ('object' === typeof kv) {
                 this.m_style.set(kv);
-            } else {
-                return this.m_style.get(kv);
             }
             this.value(null);
         } catch (e) {
