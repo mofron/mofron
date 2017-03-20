@@ -51,28 +51,32 @@ mofron.Theme = class extends mofron.Base {
             if (false === mofron.func.isObject(thm, 'Theme')) {
                 throw new Error('invalid parameter');
             }
-            
+            var _ovr    = (undefined === ovr) ? false : ovr;
             var thm_cnt = thm.get();
-            var cnt_buf = null;
+            var set_flg = false;
             for (var cnt_key in thm_cnt) {
-                if (true === ovr) {} else {
-                    if (null !== this.get(cnt_key)) {
-                        continue;
-                    }
-                }
                 for (var idx in thm_cnt[cnt_key]) {
-                    if (null === thm_cnt[cnt_key][parseInt(idx)]) {
+                    var _idx = parseInt(idx);
+                    if (null === thm_cnt[cnt_key][_idx]) {
+                        /* skip null contents */
                         continue;
                     }
+
+                    if ( (false === _ovr) &&
+                         (null  !== this.get(cnt_key, _idx)) ) {
+                        continue;
+                    }
+
                     this.set(
                         cnt_key,
-                        thm_cnt[cnt_key][idx],
-                        parseInt(idx),
+                        thm_cnt[cnt_key][_idx],
+                        _idx,
                         false
                     );
+                    set_flg = true;
                 }
             }
-            if (null  !== this.target()) {
+            if ( (null  !== this.target()) && (true === set_flg)) {
                 this.target().themeConts();
             }
         } catch (e) {
@@ -195,6 +199,9 @@ mofron.Theme = class extends mofron.Base {
             if (null === _idx) {
                 return (undefined === this.m_conts[key]) ? null : this.m_conts[key];
             } else {
+                if (undefined === this.m_conts[key]) {
+                    return null;
+                }
                 return (undefined === this.m_conts[key][_idx]) ? null : this.m_conts[key][_idx];
             }
         } catch (e) {

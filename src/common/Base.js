@@ -75,8 +75,8 @@ mofron.Base = class {
                     if ('param' === opt_idx) {
                         this.m_param = opt[opt_idx];
                     } else if ('function' === typeof this[opt_idx]) {
-                        if (('option' === this[opt_idx]) ||
-                            ('name'   === this[opt_idx])) {
+                        if ( ('option' === this[opt_idx]) ||
+                             ('name'   === this[opt_idx]) ) {
                             throw new Error('invalid option');
                         }
                         if (true === mofron.func.isObject(opt[opt_idx],'Param')) {
