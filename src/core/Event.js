@@ -21,6 +21,8 @@ mofron.Event = class extends mofron.CompConf {
             
             if (undefined !== fnc) {
                 this.handler(fnc,prm);
+            } else {
+                this.prmOpt(fnc);
             }
         } catch (e) {
             console.error(e.stack);

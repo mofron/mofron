@@ -195,7 +195,7 @@ mofron.Dom = class extends mofron.Base {
     attr (kv, val) {
         try {
             if ( (undefined === val) &&
-                 ('object'  !== kv) ) {
+                 ('object'  !== typeof kv) ) {
                 /* getter */
                 return this.m_attr.get(kv);
             }
@@ -223,7 +223,7 @@ mofron.Dom = class extends mofron.Base {
     prop (kv, val) {
         try {
             if ( (undefined === val) &&
-                 ('object'  !== kv) ) {
+                 ('object'  !== typeof kv) ) {
                 /* getter */
                 return this.m_prop.get(kv);
             }
