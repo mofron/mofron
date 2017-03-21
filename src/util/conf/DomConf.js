@@ -76,7 +76,7 @@ mofron.DomConf = class extends mofron.Base {
                 return (undefined === this.m_conts[key]) ? null : this.m_conts[key];
             } else {
                  /* target is already rendered */
-                return this.rget();
+                return (undefined == this.rget(key)) ? null : this.rget(key);
             }
         } catch (e) {
             console.error(e.stack);
