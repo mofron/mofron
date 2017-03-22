@@ -41,21 +41,9 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === tg) {
                 /* getter */
-                return this.m_tag;
+                return (null === this.parent()) ? null : this.parent().tag();
             }
-            /* setter */
-            if ('string' != (typeof tg)) {
-                throw new Error('invalid parameter');
-            } else if (0 === chd.length) {
-                throw new Error('there is no child in this vdom');
-            }
-            
-            var chd = this.child();
-            /* setter */
-            for (var idx in chd) {
-                chd[idx].tag(tg);
-            }
-            this.m_tag = tg;
+            throw new Error('tag set is not supported at vdom');
         } catch (e) {
             console.error(e.stack);
             throw e;

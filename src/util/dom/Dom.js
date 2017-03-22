@@ -333,7 +333,7 @@ mofron.Dom = class extends mofron.Base {
                     ret_val += child[chd_idx].value();
                 }
             
-                if (false === this.isSimpleTag()) {
+                if (false === this.isSimple()) {
                     ret_val += '</'+ this.tag() +'>';
                 }
                 return ret_val;
@@ -401,10 +401,18 @@ mofron.Dom = class extends mofron.Base {
     setPushed () {
         try {
             /* set rawdom */
-            if (null === this.parent()) {
+            var tgt_pnt = this.parent();
+            while (tgt_pnt) {
+                if (true === tgt_pnt.isSimple()) {
+                    tgt_pnt = tgt_pnt.parent();
+                } else {
+                    break;
+                }
+            }
+            if (null === tgt_pnt) {
                 this.m_rawdom = document.querySelector('#' + this.getId());
             } else {
-                this.m_rawdom = this.parent().getRawDom().querySelector('#' + this.getId());
+                this.m_rawdom = tgt_pnt.getRawDom().querySelector('#' + this.getId());
             }
             
             /* set property */
@@ -430,15 +438,24 @@ mofron.Dom = class extends mofron.Base {
      * @return (boolean) true  : this vdom is simple tag
      * @return (boolean) false : this vdom is not simple tag
      */
-    isSimpleTag () {
+    isSimple (flg) {
         try {
-            if ( ('br'    == this.m_tag) ||
-                 ('hr'    == this.m_tag) ||
-                 ('input' == this.m_tag) ||
-                 ('img'   == this.m_tag)) {
-                return true;
+            if (undefined === flg) {
+                /* getter */
+                if (undefined === this.m_simple) {
+                    return ( ('br'    == this.tag()) ||
+                             ('hr'    == this.tag()) ||
+                             ('input' == this.tag()) ||
+                             ('img'   == this.tag()) ) ? true : false;
+                } else {
+                    return this.m_simple;
+                }
             }
-            return false;
+            /* setter */
+            if ('boolean' !== typeof flg) {
+                throw new Error('invalid parameter');
+            }
+            this.m_simple = flg;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -476,7 +493,7 @@ mofron.Dom = class extends mofron.Base {
     getRawDom () {
         try {
             if (false === this.isPushed()) {
-                throw new Error('this dom is not rendered yet');
+                throw new Error('this dom is not pushed yet');
             }
             return this.m_rawdom;
         } catch (e) {
