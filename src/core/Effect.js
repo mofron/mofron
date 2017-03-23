@@ -30,20 +30,29 @@ mofron.Effect = class extends mofron.CompConf {
             }
             
             if (0 === this.speed()) {
-               var exec = (true === _flg) ? this.enable : this.disable;
-               exec(this.target());
+               if (true === _flg) {
+                   this.enable(this.target());
+               } else {
+                   this.disable(this.target());
+               }
             } else {
                 /* init exec */
-                var init = (true === _flg) ? this.disable : this.enable;
-                init(this.target());
+                if (true === _flg) {
+                    this.disable(this.target());
+                } else {
+                    this.enable(this.target());
+                }
                 
                 this.setConf(true);
                 
                 setTimeout(
                     function (eff,flg) {
                         try {
-                            var exec = (true === flg) ? eff.enable : eff.disable;
-                            exec(eff.target());
+                            if (true === flg) {
+                                eff.enable(eff.target());
+                            } else {
+                                eff.disable(eff.target());
+                            }
                         } catch (e) {
                             console.error(e.stack);
                             throw e;
