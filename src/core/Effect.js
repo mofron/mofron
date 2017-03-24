@@ -61,21 +61,25 @@ mofron.Effect = class extends mofron.CompConf {
                 );
             }
             
+            var cb_time = (0 > (1000 * this.speed()-200)) ? 0 : (1000 * this.speed()-200);
             setTimeout(
                 function (eff) {
                     try {
                         if (null != eff.callback()[0]) {
                             eff.callback()[0](eff.callback()[1]);
                         }
-                        eff.setConf(false);
+                        if (0 < eff.speed()) {
+                            eff.setConf(false);
+                        }
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
                     }
                 },
-                (1000 * this.speed()-200),
+                cb_time,
                 this
             );
+            
         } catch (e) {
             console.error(e.stack);
             throw e;

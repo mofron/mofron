@@ -516,7 +516,7 @@ mofron.Component = class extends mofron.Base {
             }
             
             if ( (undefined !== eff) &&
-                 (true      === mofron.func.isObject(eff, 'Effect')) ) {
+                 (true      === mofron.func.isInclude(eff, 'Effect')) ) {
                 /* set effect */
                 eff.speed(1);
                 this.execute(eff, flg);
