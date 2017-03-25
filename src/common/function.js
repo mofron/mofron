@@ -184,4 +184,50 @@ mofron.func.isObject = function (obj, nm) {
         throw new Error();
     }
 }
+
+mofron.func.addHeadConts = function (opt) {
+    try {
+        if ( ('object' === typeof opt) || (null === opt) ) {
+            throw new Error('invalid parameter');
+        }
+        
+        if (undefined === opt.tag) {
+            throw new Error("could not find 'tag' option");
+        }
+        var tag = opt.tag;
+        
+        /* get attr contents */
+        var set_conts  = '';
+        var attr_conts = '';
+        var attr = (undefined === opt.attr) ? null : opt.attr;
+        for (var key in attr) {
+            attr_conts += key;
+            if (null != attr[key]) {
+                attr_conts += '="' + attr[key] + '" ';
+            }
+        }
+        
+        /* check simple tag */
+        var simple = false;
+        if (undefined === opt.simple) {
+            simple = ( ('link' === tag) ||
+                       ('meta' === tag) ||
+                       ('base' === tag) ) ? true : false;
+        } else {
+            simple = opt.simple;
+        }
+        
+        /* add tag */
+        var contents  = (undefined === opt.contents) ? '' : opt.contents;
+        if (false === simple) {
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents + '</' + tag + '>';
+        } else {
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents;
+        }
+        document.head.insertAdjacentHTML('beforeend',add_conts);
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
 /* end of file */
