@@ -8,16 +8,14 @@
  * @brief head tag contents
  */
 mofron.HeadConts = class extends mofron.Base {
-    constructor (tag) {
+    constructor (prm) {
         try {
             super();
             this.name('HeadConts');
-            
-            this.m_tag   = null;
-            this.m_attr  = {};
-            this.m_conts = '';
-            
-            this.tag(tag);
+            this.m_attr = {};
+            this.prmOpt(
+                ('string' === typeof tag) ? {tag : prm} : prm
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -28,7 +26,7 @@ mofron.HeadConts = class extends mofron.Base {
         try {
             if (undefined === tg) {
                 /* getter */
-                return this.m_tag;
+                return (undefined === this.m_tag) ? null : this.m_tag;
             }
             /* setter */
             if ('string' != (typeof tg)) {
@@ -43,26 +41,18 @@ mofron.HeadConts = class extends mofron.Base {
     
     attr (key, val) {
         try {
-            if (undefined === key) {
+            if (undefined === val) {
                 /* getter */
-                return this.m_attr;
-            } else {
-                if ('string' !== typeof key) {
-                    throw new Error('invalid parameter');
-                } 
-                if (undefined === val) {
-                    /* getter */
-                    if (undefined === this.m_attr[key]) {
-                        return null;
-                    }
-                    return this.m_attr[key];
+                if (undefined === key) {
+                    return this.m_attr;
                 }
-                /* setter */
-                if ('string' !== typeof val) {
-                    throw new Error('invalid parameter');
-                }
-                this.m_attr[key] = val;
+                return (undefined === this.m_attr[key]) ? null : this.m_attr[key];
             }
+            /* setter */
+            if ( ('string' !== typeof key) || ('string' !== typeof val) ) {
+                throw new Error('invalid parameter');
+            }
+            this.m_attr[key] = val;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -73,9 +63,10 @@ mofron.HeadConts = class extends mofron.Base {
         try {
             if (undefined === txt) {
                 /* getter */
-                return this.m_conts;
+                return (undefined === this.m_conts) ? '' : this.m_conts;
             }
-            if ('string' !== (typeof txt)) {
+            /* setter */
+            if ('string' !== typeof txt) {
                 throw new Error('invalid parameter');
             }
             this.m_conts = txt;
@@ -97,7 +88,7 @@ mofron.HeadConts = class extends mofron.Base {
                 }
             }
             
-            if (false === this.isSimpleTag(this.tag())) {
+            if (false === this.isSimple()) {
                 set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.contents() + '</' + this.tag() + '>';
             } else {
                 set_conts += '<' + this.tag() + ' '+ attr_conts +'>' + this.contents();
@@ -110,14 +101,23 @@ mofron.HeadConts = class extends mofron.Base {
         }
     }
     
-    isSimpleTag (tag) {
+    isSimple (flg) {
         try {
-            if ( ('link' === tag) ||
-                 ('meta' === tag) ||
-                 ('base' === tag) ) {
-                return true;
+            if (undefined === flg) {
+                /* getter */
+                if (undefined === this.m_simple) {
+                    return ( ('link'    == this.tag()) ||
+                             ('meta'    == this.tag()) ||
+                             ('base' == this.tag()) ) ? true : false;
+                } else {
+                    return this.m_simple;
+                }
             }
-            return false;
+            /* setter */
+            if ('boolean' !== typeof flg) {
+                throw new Error('invalid parameter');
+            }
+            this.m_simple = flg;
         } catch (e) {
             console.error(e.stack);
             throw e;

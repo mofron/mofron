@@ -1,5 +1,6 @@
 /**
- * @file template.js
+ * @file Template.js
+ * @author simpart
  */
 
 mofron.Template = class extends mofron.Base {
@@ -7,13 +8,6 @@ mofron.Template = class extends mofron.Base {
         try {
             super();
             this.name('Template');
-            
-            /* initialize member */
-            this.m_base  = null;
-            this.m_title = new Array(null,false);
-            this.m_theme = null;
-            this.base(new mofron.Component());
-            
             this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
@@ -25,8 +19,12 @@ mofron.Template = class extends mofron.Base {
         try {
             if (undefined === bs) {
                 /* getter */
+                if (undefined === this.m_base) {
+                    this.m_base = new mofron.Component();
+                }
                 return this.m_base;
             }
+            /* setter */
             if (false === mofron.func.isInclude(bs,'Component')) {
                 throw new Error('invalid parameter');
             }
@@ -41,7 +39,7 @@ mofron.Template = class extends mofron.Base {
         try {
             if (undefined === val) {
                 /* getter */
-                return this.m_title[0];
+                return (undefined === this.m_title) ? null : this.m_title;
             }
             /* setter */
             if ('string' !== typeof val) {
@@ -50,7 +48,7 @@ mofron.Template = class extends mofron.Base {
             var hc = new mofron.HeadConts('title');
             hc.contents(val);
             hc.pushTag();
-            this.m_title[0] = val;
+            this.m_title = val;
         } catch (e) {
             console.error(e.stack);
             throw e;

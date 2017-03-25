@@ -15,9 +15,7 @@ mofron.Theme = class extends mofron.Base {
         try {
             super();
             this.name('Theme');
-            
-            this.m_target = null;
-            this.m_conts  = {};
+            this.m_conts = {};
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -28,7 +26,7 @@ mofron.Theme = class extends mofron.Base {
         try {
             if (undefined === tgt) {
                 /* getter */
-                return this.m_target;
+                return (undefined === this.m_target) ? null : this.m_target;
             }
             /* setter */
             if (false === mofron.func.isInclude(tgt, 'Component')) {

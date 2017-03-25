@@ -8,12 +8,10 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             super();
             this.name('Effect');
-            
-            this.m_speed = 0;
-            this.m_cb    = new Array(
-                               null,  /* function */
-                               null   /* parameter */
-                           );
+            this.m_cb = new Array(
+                            null,  /* function */
+                            null   /* parameter */
+                        );
             
             this.prmOpt(prm);
         } catch (e) {
@@ -128,7 +126,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             if (undefined === spd) {
                 /* getter */
-                return this.m_speed;
+                return (undefined === this.m_speed) ? 0 : this.m_speed;
             }
             /* setter */
             if ('number' != (typeof spd)) {

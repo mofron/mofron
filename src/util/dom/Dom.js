@@ -19,17 +19,11 @@ mofron.Dom = class extends mofron.Base {
             super();
             this.name('Dom');
             
-            this.m_id      = null;
-            this.m_comp    = null;
-            this.m_tag     = null;
             this.m_classnm = new mofron.ClassName(this);
-            this.m_parent  = null;
             this.m_child   = new Array();
             this.m_style   = new mofron.Style(this);
             this.m_attr    = new mofron.Attr(this);
             this.m_prop    = new mofron.Prop(this);
-            this.m_text    = '';
-            this.m_value   = null;
             this.m_rawdom  = null;
             
             /* check tag */
@@ -60,7 +54,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === tg) {
                 /* getter */
-                return this.m_tag;
+                return (undefined === this.m_tag) ? null : this.m_tag;
             }
             /* setter */
             if ('string' !== typeof tg) {
@@ -83,7 +77,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === cmp) {
                 /* getter */
-                return this.m_comp;
+                return (undefined === this.m_comp) ? null : this.m_comp;
             }
             /* setter */
             if (false === mofron.func.isInclude(cmp,'Component')) {
@@ -104,7 +98,7 @@ mofron.Dom = class extends mofron.Base {
      */
     getId () {
         try {
-            if (null === this.m_id) {
+            if (undefined === this.m_id) {
                 this.m_id = mofron.func.getId();
             }
             return this.m_id;
@@ -119,7 +113,7 @@ mofron.Dom = class extends mofron.Base {
             if (undefined === chd) {
                 /* getter */
                 return this.m_child;
-            }
+            }m_parent
             /* setter */
             if ('object' !== typeof chd) {
                 throw new Error('invalid parameter');
@@ -272,7 +266,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === txt) {
                 /* getter */
-                return this.m_text;
+                return (undefined === this.m_text) ? '' : this.m_text;
             }
             /* setter */
             if ('string' !== typeof txt) {
@@ -298,7 +292,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === val) {
                 /* getter */
-                if (null !== this.m_value) {
+                if ( (undefined !== this.m_value) && ('string' === typeof this.m_value) ) {
                     return this.m_value;
                 }
                 
@@ -472,7 +466,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === pnt) {
                 /* getter */
-                return this.m_parent;
+                return (undefined === this.m_parent) ? null : this.m_parent;
             }
             /* setter */
             if ('object' !== typeof pnt) {
