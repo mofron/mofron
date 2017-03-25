@@ -518,8 +518,8 @@ mofron.Component = class extends mofron.Base {
             if ( (undefined !== eff) &&
                  (true      === mofron.func.isInclude(eff, 'Effect')) ) {
                 /* set effect */
-                eff.speed(1);
-                this.execute(eff, flg);
+                eff.speed( (0 === eff.speed()) ? 0.5 : eff.speed());
+                this.addEffect(eff, flg);
             } else {
                 if (true === flg) {
                     this.vdom().style(
