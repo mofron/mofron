@@ -13,11 +13,7 @@ mofron.CompConf = class extends mofron.Base {
         try {
             super();
             this.name('CompConf');
-            
-            /* member */
-            this.m_target = null;
-            this.m_func   = new Array(null, null);
-            
+            this.m_func = new Array(null, null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -28,7 +24,7 @@ mofron.CompConf = class extends mofron.Base {
         try {
             if (undefined === tgt) {
                 /* getter */
-                return this.m_target;
+                return (undefined === this.m_target) ? null : this.m_target;
             }
             /* setter */
             if (false === mofron.func.isInclude(tgt, 'Component') ) {

@@ -19,7 +19,6 @@ mofron.Component = class extends mofron.Base {
             this.name('Component');
             
             /* initialize member */
-            this.m_parent = null;
             this.m_child  = new Array();
             this.m_vdom   = null;
             this.m_conf   = new Array(
@@ -32,7 +31,6 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            this.m_theme  = null;
             
             if (undefined !== prm_opt) {
                 this.prmOpt(prm_opt);
@@ -227,7 +225,10 @@ mofron.Component = class extends mofron.Base {
     parent (pnt) {
         try {
             if (undefined === pnt) {
-                return this.m_parent;
+                return (undefined === this.m_parent) ? null : this.m_parent;
+            }
+            if (('object' !== typeof pnt) && (null !== pnt)) {
+                throw new Error('invalid parameter');
             }
             this.m_parent = pnt;
         } catch (e) {
@@ -378,7 +379,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === thm) {
                 /* getter */
-                if (null === this.m_theme) { 
+                if (undefined === this.m_theme) { 
                     this.m_theme = new mofron.Theme();
                     this.m_theme.target(this);
                 }
@@ -517,10 +518,10 @@ mofron.Component = class extends mofron.Base {
             }
             
             if ( (undefined !== eff) &&
-                 (true      === mofron.func.isObject(eff, 'Effect')) ) {
+                 (true      === mofron.func.isInclude(eff, 'Effect')) ) {
                 /* set effect */
-                eff.speed(1);
-                this.execute(eff, flg);
+                eff.speed( (0 === eff.speed()) ? 0.5 : eff.speed());
+                this.addEffect(eff, flg);
             } else {
                 if (true === flg) {
                     this.vdom().style(

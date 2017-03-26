@@ -62,7 +62,7 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === kv) {
                 /* getter */ 
-                return m_style;
+                return this.m_style;
             }
             if ('string' === typeof kv) {
                 /* getter */
@@ -181,7 +181,7 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === txt) {
                 /* getter */
-                return this.m_text;
+                return (undefined === this.m_text) ? '' : this.m_text;
             }
             /* setter */
             if ('string' !== typeof txt) {
