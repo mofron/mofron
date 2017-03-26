@@ -245,9 +245,10 @@ mofron.Component = class extends mofron.Base {
      */
     style (kv, los) {
         try {
-            if (undefined === kv) {
+            if ( ('string'  === typeof kv) ||
+                 (undefined === kv) ) {
                 /* getter */
-                return (undefined === kv) ? this.styleTgt().style() : this.styleTgt().style(kv);
+                return this.styleTgt().style(kv);
             }
             /* setter */
             this.styleTgt().style(kv, los);
