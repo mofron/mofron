@@ -16,7 +16,6 @@ require('./src/util/dom/Vdom.js');
 
 require('./src/util/Color.js');
 require('./src/util/Font.js');
-require('./src/util/HeadConts.js')
 require('./src/util/Theme.js');
 
 require('./src/core/Component.js');

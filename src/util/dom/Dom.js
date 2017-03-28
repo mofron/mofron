@@ -113,7 +113,7 @@ mofron.Dom = class extends mofron.Base {
             if (undefined === chd) {
                 /* getter */
                 return this.m_child;
-            }m_parent
+            }
             /* setter */
             if ('object' !== typeof chd) {
                 throw new Error('invalid parameter');
@@ -407,6 +407,10 @@ mofron.Dom = class extends mofron.Base {
                 this.m_rawdom = document.querySelector('#' + this.getId());
             } else {
                 this.m_rawdom = tgt_pnt.getRawDom().querySelector('#' + this.getId());
+            }
+            
+            if (null === this.m_rawdom) {
+                throw new Error('could not find rawdom');
             }
             
             /* set property */
