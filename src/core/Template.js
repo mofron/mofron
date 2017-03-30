@@ -8,6 +8,10 @@ mofron.Template = class extends mofron.Base {
         try {
             super();
             this.name('Template');
+            
+            this.initTmplConts(
+                ((undefined !== prm) && (undefined !== prm.param)) ? prm.param : null
+            );
             this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
@@ -21,6 +25,7 @@ mofron.Template = class extends mofron.Base {
                 /* getter */
                 if (undefined === this.m_base) {
                     this.m_base = new mofron.Component();
+                    this.m_base.vdom().attr('template', this.name());
                 }
                 return this.m_base;
             }
@@ -28,6 +33,7 @@ mofron.Template = class extends mofron.Base {
             if (false === mofron.func.isInclude(bs,'Component')) {
                 throw new Error('invalid parameter');
             }
+            bs.vdom().attr('template', this.name());
             this.m_base = bs;
         } catch (e) {
             console.error(e.stack);
@@ -80,16 +86,7 @@ mofron.Template = class extends mofron.Base {
     
     visible (flg, eff) {
         try {
-            if ((undefined === flg) && (undefined === eff)) {
-                return this.base().visible();
-            }
-            var _eff = (eff === undefined) ? null : eff;
-            if (false === this.base().isRendered()) {
-                this.initTmplConts (this.m_param);
-            }
-            
-            this.base().visible(true, _eff);
-            this.base().vdom().attr('template', this.name());
+            return this.base().visible(flg, eff);
         } catch (e) {
             console.error(e.stack);
             throw e;

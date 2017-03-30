@@ -34,8 +34,8 @@ mofron.Component = class extends mofron.Base {
             
             if (undefined !== prm_opt) {
                 this.prmOpt(prm_opt);
-                this.vdom();
             }
+            this.vdom();
         } catch (e) {
             console.error(e.stack);
             throw e;
