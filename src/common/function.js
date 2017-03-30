@@ -187,14 +187,17 @@ mofron.func.isObject = function (obj, nm) {
 
 mofron.func.addHeadConts = function (opt) {
     try {
-        if ( ('object' === typeof opt) || (null === opt) ) {
+        if ( ('object' !== typeof opt) || (null === opt) ) {
             throw new Error('invalid parameter');
         }
         
-        if (undefined === opt.tag) {
-            throw new Error("could not find 'tag' option");
+        var tag       = opt.tag;
+        var contents  = (undefined === opt.contents) ? '' : opt.contents;
+        if ( (undefined === tag)       ||
+             ('string' !== typeof tag) ||
+             ('string' !== typeof contents) ) {
+            throw new Error("invalid parameter");
         }
-        var tag = opt.tag;
         
         /* get attr contents */
         var set_conts  = '';
@@ -218,7 +221,6 @@ mofron.func.addHeadConts = function (opt) {
         }
         
         /* add tag */
-        var contents  = (undefined === opt.contents) ? '' : opt.contents;
         if (false === simple) {
             var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents + '</' + tag + '>';
         } else {
