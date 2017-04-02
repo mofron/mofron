@@ -83,95 +83,100 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    /**
-     * set font theme
-     *
-     * @param fnt : (object) Font object
-     * @param idx : (number) set index (option)
-     */
-    setFont (fnt, idx) {
+    style (kv, idx) {
         try {
-            if (false === mofron.func.isObject(fnt, 'Font')) {
+            if (undefined === kv) {
+                /* getter */
+                return this.get('Style');
+            }
+            /* setter */
+            if ('object' !== typeof kv) {
                 throw new Error('invalid parameter');
             }
-            fnt.pushTheme();
-            this.set(
-                fnt.name(),
-                fnt,
-                (idx === undefined) ? 0 : idx
-            );
+            var style = this.get('Style');
+            for (var kv_idx in kv) {
+                style[kv_idx] = kv[kv_idx];
+            }
+            this.set('Style', style, idx, false);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getFont (idx) {
+    color (clr, idx) {
         try {
-            return this.get('Font', (idx === undefined) ? 0 : idx);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * set color theme
-     *
-     * @param clr : (object) Color object
-     * @param idx : (number) set index (option)
-     */
-    setColor (clr, idx, bind) {
-        try {
+            if (undefined === clr) {
+                /* getter */
+                return this.get('Color');
+            }
+            /* setter */
             if (false === mofron.func.isObject(clr, 'Color') ) {
                 throw new Error('invalid parameter');
             }
-            this.set(
-                clr.name(),
-                clr,
-                (idx === undefined) ? 0 : idx
-            );
+            this.set('Color', clr, idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getColor (idx) {
+    component (key, cmp, idx) {
         try {
-            return this.get('Color',(idx    === undefined) ? 0 : idx);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setComp (cmp, idx, bind) {
-        try {
-            if ('object' !== typeof cmp) {
+            if (undefined === cmp) {
+                /* getter */
+                var thm_cmp = this.get(key);
+                if (null !== thm_cmp) {
+                    return thm_cmp;
+                }
+                var sp_key  = key.split('-');
+                var pfx     = sp_key[sp_key.length-1][0].toUpperCase();
+                var ret_cmp = mofron.comp;
+                var tgt_cmp = null;
+                for (var kidx in sp_key) {
+                    tgt_cmp = sp_key[kidx];
+                    if ((kidx == 0) || (kidx == 1)) {
+                        continue;
+                    }
+                    if (kidx == sp_key.length-1) {
+                        var tgt_cmp = pfx;
+                        for (var pidx in sp_key[sp_key.length-1]) {
+                            if (0 == pidx) {
+                                continue;
+                            }
+                            tgt_cmp += sp_key[sp_key.length-1][pidx];
+                        }
+                    }
+                    if (undefined === ret_cmp[tgt_cmp]) {
+                        throw new Error('invalid key');
+                    }
+                    ret_cmp = ret_cmp[tgt_cmp];
+                }
+                return ret_cmp;
+            }
+            /* setter */
+            if (false === mofron.func.isInclude(cmp, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            var cmp_obj = new cmp();
-            if (false === mofron.func.isInclude(cmp_obj, 'Component')) {
-                throw new Error('invalid parameter');
-            }
-            this.set(
-                cmp_obj.name(),
-                cmp_obj,
-                (idx === undefined) ? 0 : idx
-            );
+            this.set(key, cmp, idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getComp (cmp_nm, idx) {
+    font (fnt, idx) {
         try {
-            return this.get(
-                       (cmp_nm === undefined) ? null : cmp_nm,
-                       (idx    === undefined) ?    0 : idx
-                   );
+            if (undefined === fnt) {
+                /* getter */
+                return this.get('Font');
+            }
+            /* setter */
+            if (false === mofron.func.isInclude(fnt, 'Font')) {
+                throw new Error('invalid parameter');
+            }
+            fnt.pushTheme();
+            this.set('Font', fnt);
         } catch (e) {
             console.error(e.stack);
             throw e;

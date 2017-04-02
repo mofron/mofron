@@ -50,6 +50,23 @@ mofron.Vdom = class extends mofron.Dom {
         }
     }
     
+    addChild (chd) {
+        try {
+            if (true === mofron.func.isObject(chd, 'Dom')) {
+                /* set config */
+                chd.attr(this.attr());
+                chd.style(this.style());
+                chd.prop(this.prop());
+                chd.className(('' === this.className()) ? undefined : this.className());
+                chd.text(('' === this.text()) ? undefined : this.text());
+            }
+            super.addChild(chd);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * style setter / getter to(from) children
      *
@@ -208,6 +225,7 @@ mofron.Vdom = class extends mofron.Dom {
             if (undefined !== val) {
                 return;
             }
+            
             var ret_val = '';
             /* get child value */
             if (0 != this.child().length) {

@@ -420,6 +420,7 @@ mofron.Component = class extends mofron.Base {
             if (null === this.parent()) {
                 mofron.root.push(this);
             }
+            
             this.vdom().pushDom((null === this.parent()) ? null : this.parent().target());
             this.rendered();
             this.initConfig();
@@ -439,6 +440,7 @@ mofron.Component = class extends mofron.Base {
                 chd[idx].initConfig();
             }
             
+            /* set config */
             for (var idx_1 in this.m_conf) {
                 for (var idx_2 in this.m_conf[idx_1]) {
                     this.m_conf[idx_1][idx_2][0].execute(this.m_conf[idx_1][idx_2][1]);

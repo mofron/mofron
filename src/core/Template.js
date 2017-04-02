@@ -8,10 +8,30 @@ mofron.Template = class extends mofron.Base {
         try {
             super();
             this.name('Template');
+            var bs_cmp = class extends mofron.Component {
+                             initTmplConts (p) {
+                                 try {
+                                     p[0].initTmplConts(p[1]);
+                                 } catch (e) {
+                                     console.error(e.stack);
+                                     throw e;
+                                 }
+                             }
+                         };
+            this.base(new bs_cmp());
+            this.base().initTmplConts([this,prm]);
             
-            this.initTmplConts(
-                ((undefined !== prm) && (undefined !== prm.param)) ? prm.param : null
-            );
+            var tmp     = this.getNameList();
+            var tmp_str = '';
+            for (var tidx in tmp) {
+                if (0 == tidx) {
+                    continue;
+                } else if (1 != tidx) {
+                    tmp_str += '-';
+                }
+                tmp_str += tmp[tidx];
+            }
+            this.base().target().attr('template', tmp_str);
             this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
@@ -23,17 +43,12 @@ mofron.Template = class extends mofron.Base {
         try {
             if (undefined === bs) {
                 /* getter */
-                if (undefined === this.m_base) {
-                    this.m_base = new mofron.Component();
-                    this.m_base.vdom().attr('template', this.name());
-                }
-                return this.m_base;
+                return (undefined === this.m_base) ? null : this.m_base;
             }
             /* setter */
             if (false === mofron.func.isInclude(bs,'Component')) {
                 throw new Error('invalid parameter');
             }
-            bs.vdom().attr('template', this.name());
             this.m_base = bs;
         } catch (e) {
             console.error(e.stack);

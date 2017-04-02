@@ -148,13 +148,19 @@ mofron.func.isInclude = function (obj, nm) {
         if ('function' !== typeof obj.name) {
             return false;
         }
-        if ('string' !== typeof nm) {
-            throw new Error('invalid parameter');
-        }
+        var chk_nm  = ('string' === typeof nm) ? [nm] : nm;
+        var chk_idx = 0;
         var name_lst = obj.getNameList();
         for (var idx in name_lst) {
-            if(nm === name_lst[idx]) {
-                return true;
+            if(chk_nm[chk_idx] === name_lst[idx]) {
+                chk_idx++;
+                if (chk_nm.length === chk_idx) {
+                    return true;
+                }
+                continue;
+            }
+            if (0 < chk_idx) {
+                break;
             }
         }
         return false;
@@ -175,6 +181,7 @@ mofron.func.isObject = function (obj, nm) {
         if ('string' !== typeof nm) {
             throw new Error('invalid parameter');
         }
+        
         if (nm === obj.name()) {
             return true;
         }

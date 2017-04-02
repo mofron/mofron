@@ -80,11 +80,25 @@ mofron.Dom = class extends mofron.Base {
                 return (undefined === this.m_comp) ? null : this.m_comp;
             }
             /* setter */
-            if (false === mofron.func.isInclude(cmp,'Component')) {
+            if (false === mofron.func.isInclude(cmp, 'Component')) {
                 throw new Error('invalid parameter');
             }
             this.m_comp = cmp;
-            this.attr('component', cmp.name());
+            
+            /* set component attribute */
+            var nm_lst  = cmp.getNameList();
+            var cmp_str = '';
+            for (var cidx in nm_lst) {
+                if (0 == cidx) {
+                    continue;
+                } else if (1 != cidx) {
+                    cmp_str += '-';
+                }
+                cmp_str += nm_lst[cidx];
+            }
+            if ('' !== cmp_str) {
+                cmp.vdom().attr({'component' : cmp_str});
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

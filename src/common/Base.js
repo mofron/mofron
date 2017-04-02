@@ -69,11 +69,22 @@ mofron.Base = class {
             }
             /* prm is option */
             var opt = prm_opt;
+            var thm = false;
             if ((null !== opt) && ('object' === typeof opt)) {
                 /* option */
+                if (undefined !== opt.param) {
+                    this.m_param = opt.param;
+                }
+                if ( (undefined !== opt.theme) &&
+                     (true      === mofron.func.isInclude(this, 'Component')) ) {
+                    this.theme(opt.theme);
+                    thm = true;
+                }
                 for (var opt_idx in opt) {
                     if ('param' === opt_idx) {
-                        this.m_param = opt[opt_idx];
+                        continue;
+                    } else if ( ('theme' === opt_idx) || (thm === true) ) {
+                        continue;
                     } else if ('function' === typeof this[opt_idx]) {
                         if ( ('option' === this[opt_idx]) ||
                              ('name'   === this[opt_idx]) ) {
