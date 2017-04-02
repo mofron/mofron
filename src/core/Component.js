@@ -51,6 +51,12 @@ mofron.Component = class extends mofron.Base {
                 return super.name();
             }
             super.name(nm);
+            if ((undefined !== this.m_vdom) && (null !== this.m_vdom)) {
+                var cmp_atr = this.vdom().attr('component');
+                if (null !== cmp_atr) {
+                    this.vdom().attr({'component' : cmp_atr + '-' + nm});
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
