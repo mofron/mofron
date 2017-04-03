@@ -39,6 +39,15 @@ mofron.Template = class extends mofron.Base {
         }
     }
     
+    name (nm) {
+        try {
+           super.name(nm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     base (bs) {
         try {
             if (undefined === bs) {

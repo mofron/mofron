@@ -53,8 +53,14 @@ mofron.Component = class extends mofron.Base {
             super.name(nm);
             if ((undefined !== this.m_vdom) && (null !== this.m_vdom)) {
                 var cmp_atr = this.vdom().attr('component');
+                var set_nm  = null;
                 if (null !== cmp_atr) {
-                    this.vdom().attr({'component' : cmp_atr + '-' + nm});
+                    if ('i' !== 'I'.toLowerCase()) {
+                        set_nm = nm.replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
+                    } else {
+                        set_nm = nm.toLowerCase();
+                    }
+                    this.vdom().attr({'component' : cmp_atr + '-' + set_nm});
                 }
             }
         } catch (e) {
