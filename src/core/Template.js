@@ -7,7 +7,6 @@ mofron.Template = class extends mofron.Base {
     constructor (prm) {
         try {
             super();
-            this.name('Template');
             var bs_cmp = class extends mofron.Component {
                              initTmplConts (p) {
                                  try {
@@ -19,19 +18,27 @@ mofron.Template = class extends mofron.Base {
                              }
                          };
             this.base(new bs_cmp());
+            this.name('Template');
             this.base().initTmplConts([this,prm]);
             
             var tmp     = this.getNameList();
-            var tmp_str = '';
+            var tmp_str = 'mofron-tmpl-';
             for (var tidx in tmp) {
                 if (0 == tidx) {
                     continue;
                 } else if (1 != tidx) {
                     tmp_str += '-';
                 }
-                tmp_str += tmp[tidx];
+                if ('i' !== 'I'.toLowerCase()) {
+                    tmp_str += tmp[tidx].replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
+                } else {
+                    tmp_str += tmp[tidx].toLowerCase();
+                }
             }
-            this.base().target().attr('template', tmp_str);
+            if ('mofron-tmpl-' !== tmp_str) {
+                this.base().target().attr({'template' : tmp_str});
+            }
+            
             this.prmOpt(prm);
         } catch (e) {
             console.error(e.stack);
@@ -41,7 +48,20 @@ mofron.Template = class extends mofron.Base {
     
     name (nm) {
         try {
-           super.name(nm);
+           if (undefined === nm) {
+                return super.name();
+            }
+            super.name(nm);
+            var tmp_atr = this.base().target().attr('template');
+            var set_nm  = null;
+            if (null !== tmp_atr) {
+                if ('i' !== 'I'.toLowerCase()) {
+                    set_nm = nm.replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
+                } else {
+                    set_nm = nm.toLowerCase();
+                }
+                this.base().target().attr({'template' : tmp_atr + '-' + set_nm});
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
