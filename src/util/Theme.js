@@ -11,11 +11,12 @@ mofron.Theme = class extends mofron.Base {
     /**
      * initialize member
      */
-    constructor () {
+    constructor (prm_opt) {
         try {
             super();
             this.name('Theme');
             this.m_conts = {};
+            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -85,9 +86,9 @@ mofron.Theme = class extends mofron.Base {
     
     style (kv, idx) {
         try {
-            if (undefined === kv) {
+            if ((undefined === kv) || ('number' === typeof kv)) {
                 /* getter */
-                return this.get('Style');
+                return this.get('Style', kv);
             }
             /* setter */
             if ('object' !== typeof kv) {
@@ -106,9 +107,9 @@ mofron.Theme = class extends mofron.Base {
     
     color (clr, idx) {
         try {
-            if (undefined === clr) {
+            if ((undefined === clr) || ('number' === typeof clr)) {
                 /* getter */
-                return this.get('Color');
+                return this.get('Color', clr);
             }
             /* setter */
             if (false === mofron.func.isObject(clr, 'Color') ) {
@@ -167,9 +168,9 @@ mofron.Theme = class extends mofron.Base {
     
     font (fnt, idx) {
         try {
-            if (undefined === fnt) {
+            if ((undefined === fnt) || ('number' == typeof fnt)) {
                 /* getter */
-                return this.get('Font');
+                return this.get('Font', fnt);
             }
             /* setter */
             if (false === mofron.func.isInclude(fnt, 'Font')) {
