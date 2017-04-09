@@ -351,7 +351,7 @@ mofron.Component = class extends mofron.Base {
                     this.addConfig(
                         idx,
                         cnf[cnf_idx],
-                        (undefined === prm[cnf_idx]) ? null : prm[cnf_idx]
+                        ((undefined === prm) || (undefined === prm[cnf_idx])) ? null : prm[cnf_idx]
                     );
                 }
                 return;
