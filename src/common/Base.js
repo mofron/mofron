@@ -33,10 +33,17 @@ mofron.Base = class {
                 }
                 return this.m_name[this.m_name.length-1];
             }
-            if ('string' !== (typeof nm)) {
+            if ( !( ('string' === (typeof nm)) ||
+                    ( ('object' === (typeof nm)) && (undefined !== nm[0])) ) ) {
                 throw new Error('invalid parameter');
             }
-            this.m_name.push(nm);
+            if ('object' === (typeof nm)) {
+                for (var idx in nm) {
+                    this.m_name.push(nm[idx]);
+                }
+            } else {
+                this.m_name.push(nm);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

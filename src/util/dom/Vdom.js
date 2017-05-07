@@ -286,4 +286,21 @@ mofron.Vdom = class extends mofron.Dom {
             throw e;
         }
     }
+    
+    destroy () {
+        try {
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].destroy();
+            }
+            
+            if ( (null !== this.parent()) &&
+                 (true === mofron.func.isObject(this.parent(), 'Dom')) ) {
+                super.destroy();
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }

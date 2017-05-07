@@ -239,4 +239,32 @@ mofron.func.addHeadConts = function (opt) {
         throw new Error();
     }
 }
+
+mofron.func.addResizeWin = function (func, prm, tlag) {
+    try {
+        var que_buf = null;
+        var param   = prm;
+        var time_lag = (undefined === tlag) ? 200 : tlag;
+        if ( ('function' !== typeof func) ||
+             ('number'   !== typeof time_lag) ) {
+            throw new Error('invalid parameter');
+        }
+        window.addEventListener(
+            'resize',
+            function() {
+                try {
+                    clearTimeout(que_buf);
+                    que_buf = setTimeout(func, time_lag, param);
+                } catch (e) {
+                    console.error(e.stack);
+                    throw new Error();
+                }
+            },
+            false
+        );
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
 /* end of file */

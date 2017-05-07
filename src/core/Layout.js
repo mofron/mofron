@@ -22,11 +22,14 @@ mofron.Layout = class extends mofron.CompConf {
     execute () {
         try {
             var tgt_chd = this.target().child();
+            var _idx    = null;
             for (var idx in tgt_chd) {
-                if (idx < this.m_execnt) {
+                _idx = parseInt(idx);
+                if (_idx < this.m_execnt) {
                     continue;
                 }
-                this.layoutConts(idx,tgt_chd[idx]);
+                
+                this.layoutConts(_idx, tgt_chd[_idx]);
                 this.m_execnt++;
             }
         } catch (e) {
