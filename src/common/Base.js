@@ -33,10 +33,17 @@ mofron.Base = class {
                 }
                 return this.m_name[this.m_name.length-1];
             }
-            if ('string' !== (typeof nm)) {
+            if ( !( ('string' === (typeof nm)) ||
+                    ( ('object' === (typeof nm)) && (undefined !== nm[0])) ) ) {
                 throw new Error('invalid parameter');
             }
-            this.m_name.push(nm);
+            if ('object' === (typeof nm)) {
+                for (var idx in nm) {
+                    this.m_name.push(nm[idx]);
+                }
+            } else {
+                this.m_name.push(nm);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -71,12 +78,18 @@ mofron.Base = class {
             var opt = prm_opt;
             if ((null !== opt) && ('object' === typeof opt)) {
                 /* option */
+                if (undefined !== opt.param) {
+                    this.m_param = opt.param;
+                }
+                if (undefined !== opt.theme) {
+                    this.theme(opt.theme);
+                }
                 for (var opt_idx in opt) {
-                    if ('param' === opt_idx) {
-                        this.m_param = opt[opt_idx];
+                    if ( ('param' === opt_idx) || ('theme' === opt_idx) ) {
+                        continue;
                     } else if ('function' === typeof this[opt_idx]) {
-                        if (('option' === this[opt_idx]) ||
-                            ('name'   === this[opt_idx])) {
+                        if ( ('option' === this[opt_idx]) ||
+                             ('name'   === this[opt_idx]) ) {
                             throw new Error('invalid option');
                         }
                         if (true === mofron.func.isObject(opt[opt_idx],'Param')) {

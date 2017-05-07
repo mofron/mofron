@@ -41,21 +41,26 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === tg) {
                 /* getter */
-                return this.m_tag;
+                return (null === this.parent()) ? null : this.parent().tag();
             }
-            /* setter */
-            if ('string' != (typeof tg)) {
-                throw new Error('invalid parameter');
-            } else if (0 === chd.length) {
-                throw new Error('there is no child in this vdom');
+            throw new Error('tag set is not supported at vdom');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    addChild (chd) {
+        try {
+            if (true === mofron.func.isObject(chd, 'Dom')) {
+                /* set config */
+                chd.attr(this.attr());
+                chd.style(this.style());
+                chd.prop(this.prop());
+                chd.className(('' === this.className()) ? undefined : this.className());
+                chd.text(('' === this.text()) ? undefined : this.text());
             }
-            
-            var chd = this.child();
-            /* setter */
-            for (var idx in chd) {
-                chd[idx].tag(tg);
-            }
-            this.m_tag = tg;
+            super.addChild(chd);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -72,23 +77,21 @@ mofron.Vdom = class extends mofron.Dom {
      */
     style (kv, los) {
         try {
-            if (true === typeof los) {
-                this.m_style.protect(true);
-                this.m_style.set(kv);
-                this.m_style.protect(false);
-            } else if ('object' === typeof kv) {
-                for (var idx in kv) {
-                    this.m_style[idx] = kv[idx];
-                }
-                var chd = this.child();
-                for (var idx in chd) {
-                    chd[idx].style(kv, los);
-                }
-            } else {
-                if (undefined === kv) {
-                    return this.m_style;
-                }
+            if (undefined === kv) {
+                /* getter */ 
+                return this.m_style;
+            }
+            if ('string' === typeof kv) {
+                /* getter */
                 return (undefined === this.m_style[kv]) ? null : this.m_style[kv];
+            }
+            /* setter */
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].style(kv, los);
+            }
+            for (var idx in kv) {
+                this.m_style[idx] = kv[idx];
             }
         } catch (e) {
             console.error(e.stack);
@@ -161,7 +164,14 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === name) {
                 /* getter */
-                return this.m_classnm;
+                var ret_val = '';
+                for (var idx in this.m_classnm) {
+                    if ('' === ret_val) {
+                        ret_val += ' ';
+                    }
+                    ret_val += this.m_classnm[idx];
+                }
+                return ret_val;
             }
             /* setter */
             if ('string' !== typeof name) {
@@ -171,7 +181,7 @@ mofron.Vdom = class extends mofron.Dom {
             for (var idx in chd) {
                 chd[idx].className(name);
             }
-            this.m_classnm.push(name);
+            this.m_classnm[name] = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -188,7 +198,7 @@ mofron.Vdom = class extends mofron.Dom {
         try {
             if (undefined === txt) {
                 /* getter */
-                return this.m_text;
+                return (undefined === this.m_text) ? '' : this.m_text;
             }
             /* setter */
             if ('string' !== typeof txt) {
@@ -215,6 +225,7 @@ mofron.Vdom = class extends mofron.Dom {
             if (undefined !== val) {
                 return;
             }
+            
             var ret_val = '';
             /* get child value */
             if (0 != this.child().length) {
@@ -270,6 +281,23 @@ mofron.Vdom = class extends mofron.Dom {
                 throw new Error('this vdom is not rendered yet');
             }
             return this.m_rawdom;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    destroy () {
+        try {
+            var chd = this.child();
+            for (var idx in chd) {
+                chd[idx].destroy();
+            }
+            
+            if ( (null !== this.parent()) &&
+                 (true === mofron.func.isObject(this.parent(), 'Dom')) ) {
+                super.destroy();
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

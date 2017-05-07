@@ -8,12 +8,10 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             super();
             this.name('Effect');
-            
-            this.m_speed = 0;
-            this.m_cb    = new Array(
-                               null,  /* function */
-                               null   /* parameter */
-                           );
+            this.m_cb = new Array(
+                            null,  /* function */
+                            null   /* parameter */
+                        );
             
             this.prmOpt(prm);
         } catch (e) {
@@ -30,20 +28,29 @@ mofron.Effect = class extends mofron.CompConf {
             }
             
             if (0 === this.speed()) {
-               var exec = (true === _flg) ? this.enable : this.disable;
-               exec(this.target());
+               if (true === _flg) {
+                   this.enable(this.target());
+               } else {
+                   this.disable(this.target());
+               }
             } else {
                 /* init exec */
-                var init = (true === _flg) ? this.disable : this.enable;
-                init(this.target());
+                if (true === _flg) {
+                    this.disable(this.target());
+                } else {
+                    this.enable(this.target());
+                }
                 
                 this.setConf(true);
                 
                 setTimeout(
                     function (eff,flg) {
                         try {
-                            var exec = (true === flg) ? eff.enable : eff.disable;
-                            exec(eff.target());
+                            if (true === flg) {
+                                eff.enable(eff.target());
+                            } else {
+                                eff.disable(eff.target());
+                            }
                         } catch (e) {
                             console.error(e.stack);
                             throw e;
@@ -52,21 +59,25 @@ mofron.Effect = class extends mofron.CompConf {
                 );
             }
             
+            var cb_time = (0 > (1000 * this.speed()-200)) ? 0 : (1000 * this.speed()-200);
             setTimeout(
                 function (eff) {
                     try {
                         if (null != eff.callback()[0]) {
                             eff.callback()[0](eff.callback()[1]);
                         }
-                        eff.setConf(false);
+                        if (0 < eff.speed()) {
+                            eff.setConf(false);
+                        }
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
                     }
                 },
-                (1000 * this.speed()-200),
+                cb_time,
                 this
             );
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -115,7 +126,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             if (undefined === spd) {
                 /* getter */
-                return this.m_speed;
+                return (undefined === this.m_speed) ? 0 : this.m_speed;
             }
             /* setter */
             if ('number' != (typeof spd)) {

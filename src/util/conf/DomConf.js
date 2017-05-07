@@ -13,13 +13,8 @@ mofron.DomConf = class extends mofron.Base {
         try {
             super();
             this.name('DomConf');
-            
-            this.m_target  = null;
-            this.m_protect = null;
             this.m_conts   = {};
-            
             this.target(tgt);
-            this.protect(false);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -30,7 +25,7 @@ mofron.DomConf = class extends mofron.Base {
         try {
             if (undefined === tgt) {
                 /* getter */
-                return this.m_target;
+                return (undefined === this.m_target) ? null : this.m_target;
             }
             /* setter */
             if (false === mofron.func.isInclude(tgt, 'Dom')) {
@@ -76,7 +71,7 @@ mofron.DomConf = class extends mofron.Base {
                 return (undefined === this.m_conts[key]) ? null : this.m_conts[key];
             } else {
                  /* target is already rendered */
-                return this.rget();
+                return (undefined == this.rget(key)) ? null : this.rget(key);
             }
         } catch (e) {
             console.error(e.stack);
@@ -106,7 +101,7 @@ mofron.DomConf = class extends mofron.Base {
         try {
             if (undefined === prt) {
                 /* getter */
-                return this.m_protect;
+                return (undefined === this.m_protect) ? false : this.m_protect;
             }
             /* setter */
             if ('boolean' !== typeof prt) {

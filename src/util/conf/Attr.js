@@ -62,7 +62,7 @@ mofron.Attr = class extends mofron.DomConf {
                 if ('' !== ret_val) {
                     ret_val += ' ';
                 }
-                ret_val += idx + '="' + this.m_conts[idx] + '"';
+                ret_val += (null === this.m_conts[idx]) ? idx : idx + '="' + this.m_conts[idx] + '"';
             }
             return ret_val;
         } catch (e) {

@@ -26,7 +26,29 @@ mofron.ClassName = class extends mofron.DomConf {
     
     add (nm) {
         try {
-            this.set(mn, null);
+            var set_obj = {};
+            set_obj[nm] = null;
+            this.set(set_obj);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    get () {
+        try {
+            var ret_val = super.get();
+            if (null === ret_val) {
+                return null;
+            } else if (undefined === ret_val[0]) {
+                var ret_obj = new Array();
+                for (var idx in ret_val) {
+                    ret_obj.push(idx);
+                }
+                return ret_obj;
+            } else {
+                return ret_val;
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -73,11 +95,12 @@ mofron.ClassName = class extends mofron.DomConf {
     getString () {
         try {
             var ret_val = '';
-            for (var idx in this.m_conts) {
+            var conts   = this.get();
+            for (var idx in conts) {
                 if ('' !== ret_val) {
                     ret_val += ' ';
                 }
-                ret_val += idx;
+                ret_val += conts[idx];
             }
             if ('' === ret_val) {
                 return '';

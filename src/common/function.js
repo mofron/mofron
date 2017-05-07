@@ -148,13 +148,19 @@ mofron.func.isInclude = function (obj, nm) {
         if ('function' !== typeof obj.name) {
             return false;
         }
-        if ('string' !== typeof nm) {
-            throw new Error('invalid parameter');
-        }
+        var chk_nm  = ('string' === typeof nm) ? [nm] : nm;
+        var chk_idx = 0;
         var name_lst = obj.getNameList();
         for (var idx in name_lst) {
-            if(nm === name_lst[idx]) {
-                return true;
+            if(chk_nm[chk_idx] === name_lst[idx]) {
+                chk_idx++;
+                if (chk_nm.length === chk_idx) {
+                    return true;
+                }
+                continue;
+            }
+            if (0 < chk_idx) {
+                break;
             }
         }
         return false;
@@ -175,10 +181,87 @@ mofron.func.isObject = function (obj, nm) {
         if ('string' !== typeof nm) {
             throw new Error('invalid parameter');
         }
+        
         if (nm === obj.name()) {
             return true;
         }
         return false;
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
+mofron.func.addHeadConts = function (opt) {
+    try {
+        if ( ('object' !== typeof opt) || (null === opt) ) {
+            throw new Error('invalid parameter');
+        }
+        
+        var tag       = opt.tag;
+        var contents  = (undefined === opt.contents) ? '' : opt.contents;
+        if ( (undefined === tag)       ||
+             ('string' !== typeof tag) ||
+             ('string' !== typeof contents) ) {
+            throw new Error("invalid parameter");
+        }
+        
+        /* get attr contents */
+        var set_conts  = '';
+        var attr_conts = '';
+        var attr = (undefined === opt.attr) ? null : opt.attr;
+        for (var key in attr) {
+            attr_conts += key;
+            if (null != attr[key]) {
+                attr_conts += '="' + attr[key] + '" ';
+            }
+        }
+        
+        /* check simple tag */
+        var simple = false;
+        if (undefined === opt.simple) {
+            simple = ( ('link' === tag) ||
+                       ('meta' === tag) ||
+                       ('base' === tag) ) ? true : false;
+        } else {
+            simple = opt.simple;
+        }
+        
+        /* add tag */
+        if (false === simple) {
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents + '</' + tag + '>';
+        } else {
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents;
+        }
+        document.head.insertAdjacentHTML('beforeend',add_conts);
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error();
+    }
+}
+
+mofron.func.addResizeWin = function (func, prm, tlag) {
+    try {
+        var que_buf = null;
+        var param   = prm;
+        var time_lag = (undefined === tlag) ? 200 : tlag;
+        if ( ('function' !== typeof func) ||
+             ('number'   !== typeof time_lag) ) {
+            throw new Error('invalid parameter');
+        }
+        window.addEventListener(
+            'resize',
+            function() {
+                try {
+                    clearTimeout(que_buf);
+                    que_buf = setTimeout(func, time_lag, param);
+                } catch (e) {
+                    console.error(e.stack);
+                    throw new Error();
+                }
+            },
+            false
+        );
     } catch (e) {
         console.error(e.stack);
         throw new Error();
