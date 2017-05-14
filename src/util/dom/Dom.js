@@ -232,7 +232,7 @@ mofron.Dom = class extends mofron.Base {
             }
             
             if (0 !== chgcnf.length) {
-                this.execConfListener ('style', chgcnf);
+                this.execConfListener('style', chgcnf);
             }
             this.value(null);
         } catch (e) {
