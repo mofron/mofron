@@ -74,6 +74,9 @@ mofron.Base = class {
                 this.m_param = prm_opt;
                 return;
             }
+            if (true === mofron.func.isInclude(prm_opt, 'Component')) {
+                this.vdom();
+            }
             /* prm is option */
             var opt = prm_opt;
             if ((null !== opt) && ('object' === typeof opt)) {
