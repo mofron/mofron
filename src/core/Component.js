@@ -157,10 +157,9 @@ mofron.Component = class extends mofron.Base {
      * 
      * @param chd : (object) child component
      * @param chd : (object) child component array
-     * @paran disp : (boolean) child display flag
      * @return (array) : childlen object
      */
-    child (chd, disp) {
+    child (chd) {
         try {
             if (undefined === chd) {
                 /* getter */
@@ -178,7 +177,10 @@ mofron.Component = class extends mofron.Base {
             if (undefined !== chd[0]) {
                 /* set child array */
                 for (var idx in chd) {
-                    this.addChild(chd[idx], disp);
+                    this.addChild(
+                        (true === mofron.func.isInclude(chd[idx], 'Component')) ? chd[idx] : chd[idx][0],
+                        (true === mofron.func.isInclude(chd[idx], 'Component')) ? true : chd[idx][1]
+                    );
                 }
                 return;
             }
@@ -487,7 +489,7 @@ mofron.Component = class extends mofron.Base {
             }
             for (var idx in this.m_child) {
                 if (false === this.m_child[idx][1]) {
-                    this.m_child[idx].vdom().style({'display' : 'none'});
+                    this.child()[idx].vdom().style({'display' : 'none'});
                 }
             }
             
