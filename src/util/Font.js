@@ -48,8 +48,6 @@ mofron.Font = class extends mofron.Base {
      */
     setFace (fnt, pth) {
         try {
-            var hc = new mofron.HeadConts('style');
-            
             if ( ('string' !== (typeof pth)) ||
                  ('string' !== (typeof fnt)) ) {
                 throw new Error('invalid parameter');
@@ -74,8 +72,10 @@ mofron.Font = class extends mofron.Base {
                 'font-family' : fnt,
                 'src' : "url('" + pth + "') " + format
             };
-            hc.contents(mofron.func.getStyleConts('@font-face',style));
-            hc.pushTag();
+            mofron.func.addHeadConts({
+                tag : 'style',
+                contents : mofron.func.getStyleConts('@font-face',style)
+            });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -129,17 +129,16 @@ mofron.Font = class extends mofron.Base {
             if (true === this.m_theme) {
                 return;
             }
-            var hc    = new mofron.HeadConts('style');
             var style = {
                 'font-family' : this.getFamilyStyle()
             };
-            hc.contents(
-                mofron.func.getStyleConts(
-                    '.' + this.m_class ,
-                    {'font-family' : this.getFamilyStyle()}
-                )
-            );
-            hc.pushTag();
+            mofron.func.addHeadConts({
+                tag : 'style',
+                contents : mofron.func.getStyleConts(
+                               '.' + this.m_class ,
+                               {'font-family' : this.getFamilyStyle()}
+                           )
+            });
             this.m_theme = true;
         } catch (e) {
             console.error(e.stack);
