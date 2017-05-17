@@ -113,6 +113,15 @@ mofron.Theme = class extends mofron.Base {
             }
             /* setter */
             if (false === mofron.func.isObject(clr, 'Color') ) {
+                if (('object' === typeof clr) && (undefined !== clr[0])) {
+                    for (var clr_idx in clr) {
+                        this.color(
+                            clr[clr_idx],
+                            parseInt(clr_idx)
+                        );
+                    }
+                    return;
+                }
                 throw new Error('invalid parameter');
             }
             this.set('Color', clr, idx);
@@ -157,6 +166,16 @@ mofron.Theme = class extends mofron.Base {
             }
             /* setter */
             if (false === mofron.func.isInclude(cmp, 'Component')) {
+                if (('object' === typeof key) && (undefined !== key[0])) {
+                    for (var key_idx in key) {
+                        this.component(
+                            key[key_idx][0],
+                            key[key_idx][1],
+                            parseInt(key_idx)
+                        );
+                    }
+                    return;
+                }
                 throw new Error('invalid parameter');
             }
             this.set(key, cmp, idx);
@@ -174,10 +193,19 @@ mofron.Theme = class extends mofron.Base {
             }
             /* setter */
             if (false === mofron.func.isInclude(fnt, 'Font')) {
+                if (('object' === typeof fnt) && (undefined !== fnt[0])) {
+                    for (var fnt_idx in fnt) {
+                        this.font(
+                            fnt[fnt_idx],
+                            parseInt(fnt_idx)
+                        );
+                    }
+                    return;
+                }
                 throw new Error('invalid parameter');
             }
             fnt.pushTheme();
-            this.set('Font', fnt);
+            this.set('Font', fnt, idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
