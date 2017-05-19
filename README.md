@@ -56,7 +56,7 @@ new Button({
     style      : {
                      margin     : '5px',
                      background : 'lightblue'
-                 }
+                 },
     visible    : true
 });
 ```
