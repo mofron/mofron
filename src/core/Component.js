@@ -214,9 +214,9 @@ mofron.Component = class extends mofron.Base {
             /* init child */
             if (true === this.vdom().isPushed()) {
                 chd.render(disp);
-                let layout = this.layout();
-                for(var lo_idx in layout) {
-                    layout[lo_idx].execute();
+                let lo = this.layout();
+                for(var lo_idx in lo) {
+                    lo[lo_idx].execute();
                 }
             }
         } catch (e) {
