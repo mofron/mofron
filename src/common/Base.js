@@ -59,6 +59,18 @@ mofron.Base = class {
         }
     }
     
+    getId () {
+        try {
+            if (undefined === this.m_id) {
+                this.m_id = mofron.func.getId();
+            }
+            return this.m_id;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     prmOpt (prm_opt) {
         try {
             if ((undefined === prm_opt) || (null === prm_opt)) {

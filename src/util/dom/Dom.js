@@ -110,23 +110,6 @@ mofron.Dom = class extends mofron.Base {
         }
     }
     
-    /**
-     * get tag id
-     * 
-     * @return (string) tag id
-     */
-    getId () {
-        try {
-            if (undefined === this.m_id) {
-                this.m_id = mofron.func.getId();
-            }
-            return this.m_id;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     child (chd) {
         try {
             if (undefined === chd) {
