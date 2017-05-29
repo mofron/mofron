@@ -283,16 +283,13 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            if ( (undefined !== pnt) &&
-                 (null      !== pnt) &&
-                 (null      !== this.parent()) ) {
+            if ( ( (undefined !== pnt) &&
+                   (null      !== pnt) &&
+                   (null      !== this.parent()) )
+                   ||
+                   (true === this.target().isPushed()) ) {
                 /* rewrite parent */
-                var chd = this.parent().child(); // children from parent
-                for (var idx in chd) {
-                    if (chd[idx].vdom().getId() === this.vdom().getId()) {
-                        this.parent().child()[parseInt(idx)].destroy();
-                    }
-                }
+                this.destroy();
             }
             this.m_parent = pnt;
         } catch (e) {

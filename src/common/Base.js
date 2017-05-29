@@ -50,9 +50,41 @@ mofron.Base = class {
         }
     }
     
+    data (key, val) {
+        try {
+            if (undefined === val) {
+                /* getter */
+                return this.m_data[key];
+            }
+            /* setter */
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_data) {
+                this.m_data = {};
+            }
+            this.m_data[key] = val;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     getNameList () {
         try {
             return this.m_name;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getId () {
+        try {
+            if (undefined === this.m_id) {
+                this.m_id = mofron.func.getId();
+            }
+            return this.m_id;
         } catch (e) {
             console.error(e.stack);
             throw e;

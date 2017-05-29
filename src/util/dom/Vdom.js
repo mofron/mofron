@@ -298,6 +298,7 @@ mofron.Vdom = class extends mofron.Dom {
                  (true === mofron.func.isObject(this.parent(), 'Dom')) ) {
                 super.destroy();
             }
+            this.m_rawdom = null;
         } catch (e) {
             console.error(e.stack);
             throw e;
