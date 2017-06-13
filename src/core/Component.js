@@ -236,7 +236,7 @@ mofron.Component = class extends mofron.Base {
             var chd     = this.child();
             var upd_idx = null;
             for (var chd_idx in chd) {
-                if (chd[chd_idx].vdom().getId() === o_chd.vdom().getId()) {
+                if (chd[chd_idx].getId() === o_chd.getId()) {
                     upd_idx = chd_idx;
                     break;
                 }
@@ -245,10 +245,16 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
+            let old_tgt = chd[upd_idx].vdom().parent();
+            let buf_tgt = this.target();
+            
             /* replace child */
             var upd_disp = this.m_child[upd_idx][1];
             this.m_child[upd_idx][0].destroy();
+            
+            this.target(old_tgt);
             this.addChild(n_chd, upd_disp, upd_idx);
+            this.target(buf_tgt);
         } catch (e) {
             console.error(e.stack);
             throw e;

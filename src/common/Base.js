@@ -106,7 +106,8 @@ mofron.Base = class {
                 this.m_param = prm_opt;
                 return;
             }
-            if (true === mofron.func.isInclude(prm_opt, 'Component')) {
+console.log(this);
+            if (true === mofron.func.isInclude(this, 'Component')) {
                 this.vdom();
             }
             /* prm is option */
