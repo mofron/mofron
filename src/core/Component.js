@@ -676,4 +676,41 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     }
+    
+    prmOpt (prm_opt) {
+        try {
+            if ( (undefined === prm_opt) ||
+                 (null      === prm_opt) ) {
+                return;
+            }
+            
+            if ('object' !== typeof prm_opt) {
+                /* prm_opt is paramter */
+                this.m_param = prm_opt;
+                this.vdom();
+                return;
+            } else if ( (undefined !== prm_opt[0]) ||
+                        (true      === mofron.func.isInclude(prm_opt, 'Base')) ) {
+                /* prm_opt is paramter */
+                this.m_param = prm_opt;
+                this.vdom();
+                return;
+            } else {
+                /* prm_opt is options */
+                if (undefined !== prm_opt.param) {
+                    this.m_param  = prm_opt.param;
+                    prm_opt.param = undefined;;
+                    this.vdom();
+                }
+                if (undefined !== prm_opt.theme) {
+                    this.theme(prm_opt.theme);
+                    prm_opt.theme = undefined;
+                }
+                super.prmOpt(prm_opt);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
