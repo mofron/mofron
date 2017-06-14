@@ -699,9 +699,9 @@ mofron.Component = class extends mofron.Base {
                 /* prm_opt is options */
                 if (undefined !== prm_opt.param) {
                     this.m_param  = prm_opt.param;
-                    prm_opt.param = undefined;;
-                    this.vdom();
+                    prm_opt.param = undefined;
                 }
+                this.vdom();
                 if (undefined !== prm_opt.theme) {
                     this.theme(prm_opt.theme);
                     prm_opt.theme = undefined;
