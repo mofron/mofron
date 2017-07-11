@@ -1,7 +1,9 @@
 # mofron
 
 mofron is JavaScript Framework for Web UI.<br>
-mofron has interface like .NET,swing. so it makes front-end development possible by only javascript.
+It has an interface like .NET,swing. <br>
+so it makes possible to development front-end by only js.
+
 
 ## Install
 mofron dependencies webpack babel expose-loader
@@ -28,28 +30,34 @@ create ./src/sample.js (button display sample)
 require('mofron'); 
 let Button = require('mofron-comp-button');
 
-// simple use
+// simple usage
 new Button('test').visible(true); 
 
-// swing style coding
+// swing like style coding
 var btn = new Button('swing');
-btn.width(150);          // set width to 150px
-btn.visible(true);       // set to DOM
-btn.clickEvent(function () {  // set click event
-    alert();
-});
-btn.height(30);          // enable changing after display
-btn.style('background', 'lightblue');  // css setting
+btn.width(150);                        // set width to 150px
+btn.visible(true);                     // set to DOM
+btn.clickEvent(                        // set click event
+    () => {
+        console.log('click button');
+    }
+);
+btn.height(30);                        // enable changing after display
+btn.style({'margin-left' : '10px'});   // css setting, if you need
 
 // key-value style coding
 new Button({
-    param  : 'key-val'
-    width  : 150,
-    height : 30,
-    clickEvent : function () {
-                     alert('click');
+    text       : 'key-val',
+    width      : 150,
+    height     : 30,
+    clickEvent : () => {
+                     console.log('click button');
                  },
-    visible : true
+    style      : {
+                     margin     : '5px',
+                     background : 'lightblue'
+                 },
+    visible    : true
 });
 ```
 
