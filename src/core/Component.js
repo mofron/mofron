@@ -705,11 +705,11 @@ mofron.Component = class extends mofron.Base {
                     this.m_param  = prm_opt.param;
                     prm_opt.param = undefined;
                 }
-                this.vdom();
                 if (undefined !== prm_opt.theme) {
                     this.theme(prm_opt.theme);
                     prm_opt.theme = undefined;
                 }
+                this.vdom();
                 super.prmOpt(prm_opt);
             }
         } catch (e) {
