@@ -32,10 +32,7 @@ mofron.Component = class extends mofron.Base {
                                 null         /* event */
                             );
             
-            if (undefined !== prm_opt) {
-                this.prmOpt(prm_opt);
-                this.vdom();
-            }
+            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -47,7 +44,6 @@ mofron.Component = class extends mofron.Base {
     name (nm) {
         try {
             if (undefined === nm) {
-                this.vdom();
                 return super.name();
             }
             super.name(nm);
@@ -509,6 +505,7 @@ mofron.Component = class extends mofron.Base {
             /* before push event */
             this.beforeRender();
             
+            
             this.vdom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
@@ -596,10 +593,11 @@ mofron.Component = class extends mofron.Base {
         try {
             if (null === this.m_vdom) {
                 this.vdom(new mofron.Vdom());
-                this.initDomConts(this.m_param);
-            }
-            for (var idx in this.chd) {
-                chd[idx].initDomContsCtl();
+                this.vdom().component(this);
+                if (undefined === this.m_init_flg) {
+                    this.initDomConts(this.m_param);
+                    this.m_init_flg = true;
+                }
             }
         } catch (e) {
             console.error(e.stack);

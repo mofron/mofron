@@ -27,7 +27,7 @@ mofron.func.getId = function (tgt) {
         return ret_id;
     } catch (e) {
         console.error(e.stack);
-        throw new e;
+        throw e;
     }
 }
 
@@ -108,7 +108,7 @@ mofron.func.getColor = function (sty) {
         }
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -123,7 +123,7 @@ mofron.func.getLength = function (val) {
         return val;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -136,7 +136,7 @@ mofron.func.getStyleConts = function (sel,cnt) {
         return ret_val + '}';
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -166,7 +166,7 @@ mofron.func.isInclude = function (obj, nm) {
         return false;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -188,7 +188,7 @@ mofron.func.isObject = function (obj, nm) {
         return false;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -236,7 +236,7 @@ mofron.func.addHeadConts = function (opt) {
         document.head.insertAdjacentHTML('beforeend',add_conts);
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -264,7 +264,7 @@ mofron.func.addResizeWin = function (func, prm, tlag) {
         );
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 /* end of file */

@@ -14,7 +14,7 @@ mofron.Vdom = class extends mofron.Dom {
      * @param tag : (string) tag name
      * @param cmp : (object) component object
      */
-    constructor (prm_opt) {
+    constructor () {
         try {
             super();
             this.name('Vdom');
@@ -24,7 +24,7 @@ mofron.Vdom = class extends mofron.Dom {
             this.m_attr    = {};
             this.m_prop    = {};
             
-            this.prmOpt(prm_opt);
+            /* do not call prmOpt() at here */
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -50,7 +50,7 @@ mofron.Vdom = class extends mofron.Dom {
         }
     }
     
-    addChild (chd) {
+    addChild (chd, idx) {
         try {
             if (true === mofron.func.isObject(chd, 'Dom')) {
                 /* set config */
@@ -60,7 +60,7 @@ mofron.Vdom = class extends mofron.Dom {
                 chd.className(('' === this.className()) ? undefined : this.className());
                 chd.text(('' === this.text()) ? undefined : this.text());
             }
-            super.addChild(chd);
+            super.addChild(chd, idx);
         } catch (e) {
             console.error(e.stack);
             throw e;
