@@ -127,6 +127,42 @@ mofron.func.getLength = function (val) {
     }
 }
 
+mofron.func.getCompSize = function (cmp) {
+    try {
+        if (false === mofron.func.isInclude(cmp, 'Component')) {
+            throw new Error('invalid parameter');
+        }
+        let wid = null;
+        let hei = null;
+        
+        /* get x-value */
+        if ('function' === (typeof cmp.width)) {
+            wid = cmp.width();
+        } else if ('function' === (typeof cmp.size)) {
+            wid = cmp.size().width;
+        } else {
+            wid = mofron.func.getLength(cmp.style('width'));
+        }
+        
+        /* get y-value */
+        if ('function' === (typeof cmp.height)) {
+            hei = cmp.height();
+        } else if ('function' === (typeof cmp.size)) {
+            hei = cmp.size().height;
+        } else {
+            hei = mofron.func.getLength(cmp.style('height'));
+        }
+        
+        return {
+            width  : wid,
+            height : hei
+        };
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
+
 mofron.func.getStyleConts = function (sel,cnt) {
     try {
         var ret_val = sel + '{';
