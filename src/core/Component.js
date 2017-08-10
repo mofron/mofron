@@ -294,9 +294,8 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            if ( ( (undefined !== pnt) &&
-                   (null      !== pnt) &&
-                   (null      !== this.parent()) )
+            if ( ( (null !== pnt) &&
+                   (null !== this.parent()) )
                    ||
                    (true === this.target().isPushed()) ) {
                 /* rewrite parent */
@@ -394,6 +393,26 @@ mofron.Component = class extends mofron.Base {
     effect (eff, flg) {
         try {
             return this.config(1, eff, flg);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getEffect (nm) {
+        try {
+            if ('string' !== typeof nm) {
+                throw new Error('invalid parameter');
+            }
+            let eff  = this.effect();
+            let name = null;
+            for (let e_idx in eff) {
+                name = eff[e_idx][0].name();
+                if (nm === name) {
+                    return eff[e_idx][0];
+                }
+            }
+            return null;
         } catch (e) {
             console.error(e.stack);
             throw e;
