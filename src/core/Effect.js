@@ -44,9 +44,9 @@ mofron.Effect = class extends mofron.CompConf {
                 this.setConf(true);
                 
                 setTimeout(
-                    function (eff,flg) {
+                    (eff) => {
                         try {
-                            if (true === flg) {
+                            if (true === _flg) {
                                 eff.enable(eff.target());
                             } else {
                                 eff.disable(eff.target());
@@ -55,13 +55,13 @@ mofron.Effect = class extends mofron.CompConf {
                             console.error(e.stack);
                             throw e;
                         }
-                    }, 200, this, flg
+                    }, 200, this
                 );
             }
             
             var cb_time = (0 > (1000 * this.speed()-200)) ? 0 : (1000 * this.speed()-200);
             setTimeout(
-                function (eff) {
+                (eff) => {
                     try {
                         if (null != eff.callback()[0]) {
                             eff.callback()[0](eff.callback()[1]);
