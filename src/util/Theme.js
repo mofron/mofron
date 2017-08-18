@@ -2,7 +2,6 @@
  * @file theme.js
  * @author simpart
  */
-
 /**
  * @class mofron.theme
  * @brief theme defined class
@@ -135,34 +134,25 @@ mofron.Theme = class extends mofron.Base {
         try {
             if (undefined === cmp) {
                 /* getter */
-                var thm_cmp = this.get(key);
+                let thm_cmp = this.get(key);
                 if (null !== thm_cmp) {
                     return thm_cmp;
                 }
-                var sp_key  = key.split('-');
-                var pfx     = sp_key[sp_key.length-1][0].toUpperCase();
-                var ret_cmp = mofron.comp;
-                var tgt_cmp = null;
-                for (var kidx in sp_key) {
-                    tgt_cmp = sp_key[kidx];
-                    if ((kidx == 0) || (kidx == 1)) {
+                let sp_key  = key.split('-');
+                if ( (3 > sp_key.length) ||
+                     (4 < sp_key.length) ) {
+                    throw new Error('invalid key');
+                }
+                let pfx    = sp_key[sp_key.length-1][0].toUpperCase();
+                let obj_nm = null;
+                for (let oidx in sp_key[sp_key.length-1]) {
+                    if (null === obj_nm) {
+                        obj_nm = pfx;
                         continue;
                     }
-                    if (kidx == sp_key.length-1) {
-                        var tgt_cmp = pfx;
-                        for (var pidx in sp_key[sp_key.length-1]) {
-                            if (0 == pidx) {
-                                continue;
-                            }
-                            tgt_cmp += sp_key[sp_key.length-1][pidx];
-                        }
-                    }
-                    if (undefined === ret_cmp[tgt_cmp]) {
-                        throw new Error('invalid key');
-                    }
-                    ret_cmp = ret_cmp[tgt_cmp];
+                    obj_nm += sp_key[sp_key.length-1][oidx];
                 }
-                return ret_cmp;
+                return (3 === sp_key.length) ? mofron.comp[obj_nm] : mofron.comp[sp_key[2]][obj_nm];
             }
             /* setter */
             if (false === mofron.func.isInclude(cmp, 'Component')) {
@@ -324,3 +314,4 @@ mofron.Theme = class extends mofron.Base {
         }
     }
 }
+/* end of file */
