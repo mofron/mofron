@@ -187,3 +187,4 @@ mofron.Font = class extends mofron.Base {
         }
     }
 }
+mofron.font = {};
