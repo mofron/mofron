@@ -237,8 +237,7 @@ mofron.func.addHeadConts = function (opt) {
         var tag       = opt.tag;
         var contents  = (undefined === opt.contents) ? '' : opt.contents;
         if ( (undefined === tag)       ||
-             ('string' !== typeof tag) ||
-             ('string' !== typeof contents) ) {
+             ('string' !== typeof tag) ) {
             throw new Error("invalid parameter");
         }
         
@@ -263,11 +262,26 @@ mofron.func.addHeadConts = function (opt) {
             simple = opt.simple;
         }
         
+        /* init contents string */
+        let conts_str = '';
+        if ('object' === typeof contents) {
+            for (let cidx in contents) {
+                if ('string' !== typeof contents[cidx]) {
+                    throw new Error('invalid parameter');
+                }
+                conts_str += contents[cidx];
+            }
+        } else if ('string' === typeof contents) {
+            conts_str = contents;
+        } else {
+            throw new Error('invalid parameter'); 
+        }
+        
         /* add tag */
         if (false === simple) {
-            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents + '</' + tag + '>';
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str + '</' + tag + '>';
         } else {
-            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents;
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str;
         }
         document.head.insertAdjacentHTML('beforeend',add_conts);
     } catch (e) {
