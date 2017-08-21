@@ -108,3 +108,4 @@ mofron.Color = class extends mofron.Base {
         }
     }
 }
+/* end of file */

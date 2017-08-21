@@ -8,10 +8,11 @@
  * @brief top of mofron parent class
  */
 mofron.Base = class {
-    constructor () {
+    constructor (po) {
         try {
             this.m_name  = new Array();
             this.m_param = null;
+            this.setPrmOpt(po);
         } catch (e) {
             console.error(e.stack);
             throw e;

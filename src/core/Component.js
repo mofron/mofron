@@ -11,11 +11,11 @@ mofron.Component = class extends mofron.Base {
     /**
      * initialize member, vdom
      *
-     * @param prm_opt : (object) component parameter / option (not require)
+     * @param po : (object) component parameter / option (not require)
      */
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Component');
             
             /* initialize member */
@@ -31,8 +31,6 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            
-            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -11,12 +11,12 @@ mofron.Theme = class extends mofron.Base {
     /**
      * initialize member
      */
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Theme');
             this.m_conts = {};
-            this.prmOpt(prm_opt);
+            this.execPrmOpt();
         } catch (e) {
             console.error(e.stack);
             throw e;

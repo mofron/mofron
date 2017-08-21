@@ -39,7 +39,8 @@ mofron.Template = class extends mofron.Base {
                 this.base().target().attr({'template' : tmp_str});
             }
             
-            this.prmOpt(prm);
+            this.setPrmOpt(prm);
+            this.execOption();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -135,3 +136,4 @@ mofron.Template = class extends mofron.Base {
         }
     }
 }
+/* end of file */
