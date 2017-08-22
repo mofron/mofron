@@ -10,12 +10,12 @@ mofron.Theme = class extends mofron.Base {
     /**
      * initialize member
      */
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Theme');
             this.m_conts = {};
-            this.prmOpt(prm_opt);
+            this.execOption();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -74,9 +74,6 @@ mofron.Theme = class extends mofron.Base {
                     set_flg = true;
                 }
             }
-            if ( (null  !== this.target()) && (true === set_flg)) {
-                this.target().themeConts();
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -130,13 +127,14 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    component (key, cmp, idx) {
+    component (key, cmp, po) {
         try {
             if (undefined === cmp) {
                 /* getter */
-                let thm_cmp = this.get(key);
+                let thm_cmp = this.get(key, 0);
                 if (null !== thm_cmp) {
-                    return thm_cmp;
+                    return (undefined === thm_cmp[1]) ?
+                               new thm_cmp[0]() : new thm_cmp[0](thm_cmp[1]);
                 }
                 let sp_key  = key.split('-');
                 if ( (3 > sp_key.length) ||
@@ -152,23 +150,13 @@ mofron.Theme = class extends mofron.Base {
                     }
                     obj_nm += sp_key[sp_key.length-1][oidx];
                 }
-                return (3 === sp_key.length) ? mofron.comp[obj_nm] : mofron.comp[sp_key[2]][obj_nm];
+                return new ret_cmp();
             }
             /* setter */
-            if (false === mofron.func.isInclude(cmp, 'Component')) {
-                if (('object' === typeof key) && (undefined !== key[0])) {
-                    for (var key_idx in key) {
-                        this.component(
-                            key[key_idx][0],
-                            key[key_idx][1],
-                            parseInt(key_idx)
-                        );
-                    }
-                    return;
-                }
+            if ('function' !== typeof cmp) {
                 throw new Error('invalid parameter');
             }
-            this.set(key, cmp, idx);
+            this.set(key, [cmp, po], 0);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -273,9 +261,6 @@ mofron.Theme = class extends mofron.Base {
             }
             if (false === set_flg) {
                 throw new Error('invalid parameter');
-            }
-            if ( (null  !== this.target()) && (false !== noti) ) {
-                this.target().themeConts();
             }
         } catch (e) {
             console.error(e.stack);

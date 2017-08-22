@@ -188,3 +188,4 @@ mofron.Font = class extends mofron.Base {
     }
 }
 mofron.font = {};
+/* end of file */

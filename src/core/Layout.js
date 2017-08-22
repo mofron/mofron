@@ -4,15 +4,12 @@
  */
 
 mofron.Layout = class extends mofron.CompConf {
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Layout');
-            
-            /* member */
             this.m_execnt = 0;
-            
-            this.prmOpt(prm_opt);
+            this.execOption(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -47,3 +44,4 @@ mofron.Layout = class extends mofron.CompConf {
         }
     }
 }
+/* end of file */

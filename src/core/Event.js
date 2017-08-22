@@ -20,9 +20,10 @@ mofron.Event = class extends mofron.CompConf {
             this.name('Event');
             
             if ('function' === typeof fnc) {
-                this.handler(fnc,prm);
+                this.handler(fnc, prm);
             } else {
-                this.prmOpt(fnc);
+                this.setPrmOpt(fnc);
+                this.execOption();
             }
         } catch (e) {
             console.error(e.stack);
@@ -67,3 +68,4 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
 }
+/* end of file */

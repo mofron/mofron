@@ -11,11 +11,11 @@ mofron.Component = class extends mofron.Base {
     /**
      * initialize member, vdom
      *
-     * @param prm_opt : (object) component parameter / option (not require)
+     * @param po : (object) component parameter / option (not require)
      */
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Component');
             
             /* initialize member */
@@ -31,8 +31,6 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            
-            this.prmOpt(prm_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -189,20 +187,20 @@ mofron.Component = class extends mofron.Base {
             if (false === mofron.func.isInclude(chd, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            let set_disp = disp;
-            if ('boolean' !== typeof disp) {
-                set_disp = true;
-            }
-            if ('number' === typeof disp) {
-                idx = disp;
-            }
+            disp = ('boolean' !== typeof disp) ? true : disp;
+            idx  = ('number'  === typeof disp) ? disp : idx;
+            
+            /* configure child */
+            chd.theme(this.theme());
+            chd.vdom();
+            chd.execOption();
             
             /* setting parent-child relation */
-            chd.parent(this);  // child's parent is me
-            this.target().addChild(chd.vdom(), idx);
+            chd.parent(this);                         // child's parent is me
+            this.target().addChild(chd.vdom(), idx);  // relate to parent and child in DOM level
             
             /* configure visible */
-            if (false === set_disp) {
+            if (false === disp) {
                 chd.vdom().style({ 'display' : 'none' });
             }
             
@@ -213,9 +211,6 @@ mofron.Component = class extends mofron.Base {
                 this.m_child.splice(idx, 0, chd);
             }
 
-            /* set theme to child */
-            chd.theme(this.theme());
-            
             /* init child */
             if (true === this.vdom().isPushed()) {
                 chd.render(disp);
@@ -502,8 +497,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    themeConts () {}
-    
     /**
      * create componrnt DOM
      * 
@@ -511,9 +504,14 @@ mofron.Component = class extends mofron.Base {
      */
     render (disp) {
         try {
+            if (null === this.parent()) {
+                this.vdom();
+                this.execOption();
+            }
+            
             /* setting component visible */
             if (false === disp) {
-                this.vdom().style({'display' : 'none'});
+                this.vdom().style({ 'display' : 'none' });
             }
             
             /* push contents to DOM */
@@ -636,7 +634,7 @@ mofron.Component = class extends mofron.Base {
     }
     
     visible (flg, eff) {
-        try  {
+        try {
             if (undefined === flg) {
                 /* getter */
                 return  ( (null   === this.m_vdom) ||
@@ -698,40 +696,22 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    prmOpt (prm_opt) {
+    execOption (opt) {
         try {
-            if ( (undefined === prm_opt) ||
-                 (null      === prm_opt) ) {
-                return;
-            }
-            
-            if ('object' !== typeof prm_opt) {
-                /* prm_opt is paramter */
-                this.m_param = prm_opt;
-                this.vdom();
-                return;
-            } else if ( (undefined !== prm_opt[0]) ||
-                        (true      === mofron.func.isInclude(prm_opt, 'Base')) ) {
-                /* prm_opt is paramter */
-                this.m_param = prm_opt;
-                this.vdom();
-                return;
-            } else {
-                /* prm_opt is options */
-                if (undefined !== prm_opt.param) {
-                    this.m_param  = prm_opt.param;
-                    prm_opt.param = undefined;
+            opt = (undefined === opt) ? this.getOption() : opt;
+            if (null !== opt) {
+                if (undefined !== typeof opt.theme) {
+                    super.execOption({
+                        theme : opt.theme
+                    });
+                    opt.theme = undefined;
                 }
-                if (undefined !== prm_opt.theme) {
-                    this.theme(prm_opt.theme);
-                    prm_opt.theme = undefined;
-                }
-                this.vdom();
-                super.prmOpt(prm_opt);
-            }
+            } 
+            super.execOption(opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
+/* end of file */

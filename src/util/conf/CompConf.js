@@ -9,9 +9,9 @@
  */
 mofron.CompConf = class extends mofron.Base {
     
-    constructor (prm_opt) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('CompConf');
             this.m_func = new Array(null, null);
         } catch (e) {

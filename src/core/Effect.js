@@ -4,16 +4,15 @@
 
 mofron.Effect = class extends mofron.CompConf {
     
-    constructor (prm) {
+    constructor (po) {
         try {
-            super();
+            super(po);
             this.name('Effect');
             this.m_cb = new Array(
                             null,  /* function */
                             null   /* parameter */
                         );
-            
-            this.prmOpt(prm);
+            this.execOption(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -148,3 +147,4 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
 }
+/* end of file */
