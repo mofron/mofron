@@ -75,9 +75,6 @@ mofron.Theme = class extends mofron.Base {
                     set_flg = true;
                 }
             }
-            if ( (null  !== this.target()) && (true === set_flg)) {
-                this.target().themeConts();
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -274,9 +271,6 @@ mofron.Theme = class extends mofron.Base {
             }
             if (false === set_flg) {
                 throw new Error('invalid parameter');
-            }
-            if ( (null  !== this.target()) && (false !== noti) ) {
-                this.target().themeConts();
             }
         } catch (e) {
             console.error(e.stack);
