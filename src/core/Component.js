@@ -562,8 +562,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    themeConts(){}
-    
     initConfig () {
         try {
             /* set child config */
