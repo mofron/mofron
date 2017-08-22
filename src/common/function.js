@@ -27,7 +27,7 @@ mofron.func.getId = function (tgt) {
         return ret_id;
     } catch (e) {
         console.error(e.stack);
-        throw new e;
+        throw e;
     }
 }
 
@@ -108,7 +108,7 @@ mofron.func.getColor = function (sty) {
         }
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -123,7 +123,43 @@ mofron.func.getLength = function (val) {
         return val;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
+    }
+}
+
+mofron.func.getCompSize = function (cmp) {
+    try {
+        if (false === mofron.func.isInclude(cmp, 'Component')) {
+            throw new Error('invalid parameter');
+        }
+        let wid = null;
+        let hei = null;
+        
+        /* get x-value */
+        if ('function' === (typeof cmp.width)) {
+            wid = cmp.width();
+        } else if ('function' === (typeof cmp.size)) {
+            wid = cmp.size().width;
+        } else {
+            wid = mofron.func.getLength(cmp.style('width'));
+        }
+        
+        /* get y-value */
+        if ('function' === (typeof cmp.height)) {
+            hei = cmp.height();
+        } else if ('function' === (typeof cmp.size)) {
+            hei = cmp.size().height;
+        } else {
+            hei = mofron.func.getLength(cmp.style('height'));
+        }
+        
+        return {
+            width  : wid,
+            height : hei
+        };
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
     }
 }
 
@@ -136,7 +172,7 @@ mofron.func.getStyleConts = function (sel,cnt) {
         return ret_val + '}';
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -166,7 +202,7 @@ mofron.func.isInclude = function (obj, nm) {
         return false;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -188,7 +224,7 @@ mofron.func.isObject = function (obj, nm) {
         return false;
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -201,8 +237,7 @@ mofron.func.addHeadConts = function (opt) {
         var tag       = opt.tag;
         var contents  = (undefined === opt.contents) ? '' : opt.contents;
         if ( (undefined === tag)       ||
-             ('string' !== typeof tag) ||
-             ('string' !== typeof contents) ) {
+             ('string' !== typeof tag) ) {
             throw new Error("invalid parameter");
         }
         
@@ -227,16 +262,31 @@ mofron.func.addHeadConts = function (opt) {
             simple = opt.simple;
         }
         
+        /* init contents string */
+        let conts_str = '';
+        if ('object' === typeof contents) {
+            for (let cidx in contents) {
+                if ('string' !== typeof contents[cidx]) {
+                    throw new Error('invalid parameter');
+                }
+                conts_str += contents[cidx];
+            }
+        } else if ('string' === typeof contents) {
+            conts_str = contents;
+        } else {
+            throw new Error('invalid parameter'); 
+        }
+        
         /* add tag */
         if (false === simple) {
-            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents + '</' + tag + '>';
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str + '</' + tag + '>';
         } else {
-            var add_conts = '<' + tag + ' '+ attr_conts +'>' + contents;
+            var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str;
         }
         document.head.insertAdjacentHTML('beforeend',add_conts);
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 
@@ -264,7 +314,7 @@ mofron.func.addResizeWin = function (func, prm, tlag) {
         );
     } catch (e) {
         console.error(e.stack);
-        throw new Error();
+        throw e;
     }
 }
 /* end of file */

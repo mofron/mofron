@@ -184,5 +184,29 @@ mofron.Base = class {
             throw e;
         }
     }
+    
+    setOption (opt) {
+        try {
+            if ('object'  !== typeof opt) {
+                throw new Error('invalid parameter');
+            }
+            for (var opt_idx in opt) {
+                if ('function' === typeof this[opt_idx]) {
+                    if ( ('prmOpt' === this[opt_idx]) ||
+                         ('name'   === this[opt_idx]) ) {
+                        throw new Error('invalid option name');
+                    }
+                    if (true === mofron.func.isObject(opt[opt_idx],'Param')) {
+                        opt[opt_idx].call(this,opt_idx);
+                    } else {
+                        this[opt_idx](opt[opt_idx]);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */

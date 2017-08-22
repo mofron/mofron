@@ -166,6 +166,10 @@ mofron.Dom = class extends mofron.Base {
             }
             this.m_child[idx].destroy();
             this.addChild(chd, idx);
+            if ( (true === mofron.func.isObject(this, 'Vdom')) &&
+                 (1 === this.child().length) ) {
+                this.component().target(chd);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -623,7 +627,7 @@ mofron.Dom = class extends mofron.Base {
             }
             
             if ( (null !== this.parent()) &&
-                 (true === mofron.func.isObject(this.parent(), 'Dom')) ) {
+                 (true === mofron.func.isInclude(this.parent(), 'Dom')) ) {
                 var pnt_chd = this.parent().child();
                 for (var idx in pnt_chd) {
                     if (pnt_chd[idx].getId() === this.getId()) {
