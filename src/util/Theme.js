@@ -150,7 +150,8 @@ mofron.Theme = class extends mofron.Base {
                     }
                     obj_nm += sp_key[sp_key.length-1][oidx];
                 }
-                return new ret_cmp();
+                return (3 === sp_key.length) ?
+                           new mofron.comp[obj_nm]() : new mofron.comp[sp_key[2]][obj_nm]();
             }
             /* setter */
             if ('function' !== typeof cmp) {
