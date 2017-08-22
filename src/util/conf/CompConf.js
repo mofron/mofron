@@ -9,7 +9,7 @@
  */
 mofron.CompConf = class extends mofron.Base {
     
-    constructor (prm_opt) {
+    constructor (po) {
         try {
             super(po);
             this.name('CompConf');

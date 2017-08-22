@@ -12,7 +12,7 @@ mofron.Effect = class extends mofron.CompConf {
                             null,  /* function */
                             null   /* parameter */
                         );
-            this.execPrmOpt(po);
+            this.execOption(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
