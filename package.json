@@ -48,17 +48,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/simpart/mofron.git"
+    "url": "git+https://github.com/mofron/mofron.git"
   },
   "keywords": [
-    "mofron"
+    "front end"
   ],
   "author": "simparts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/simpart/mofron/issues"
   },
-  "homepage": "https://github.com/simpart/mofron#readme",
+  "homepage": "https://github.com/mofron/mofron#readme",
   "devDependencies": {
   }
 }
