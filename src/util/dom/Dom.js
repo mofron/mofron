@@ -87,21 +87,24 @@ mofron.Dom = class extends mofron.Base {
             
             /* set component attribute */
             var nm_lst  = cmp.getNameList();
-            var cmp_str = 'mofron-comp-';
-            for (var cidx in nm_lst) {
-                if (0 == cidx) {
-                    continue;
-                } else if (1 != cidx) {
-                    cmp_str += '-';
+            if (true === mofron.debug) {
+                var cmp_str = '';
+                for (var cidx in nm_lst) {
+                    if (cidx < 2) {
+                        continue;
+                    }
+                    if ('' !== cmp_str) {
+                        cmp_str += '-';
+                    }
+                    if ('i' !== 'I'.toLowerCase()) {
+                        cmp_str += nm_lst[cidx].replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
+                    } else {
+                        cmp_str += nm_lst[cidx].toLowerCase();
+                    }
                 }
-                if ('i' !== 'I'.toLowerCase()) {
-                    cmp_str += nm_lst[cidx].replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
-                } else {
-                    cmp_str += nm_lst[cidx].toLowerCase();
+                if ('' !== cmp_str) {
+                    cmp.vdom().attr({'component' : cmp_str});
                 }
-            }
-            if ('mofron-comp-' !== cmp_str) {
-                cmp.vdom().attr({'component' : cmp_str});
             }
         } catch (e) {
             console.error(e.stack);
