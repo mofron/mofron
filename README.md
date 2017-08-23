@@ -27,7 +27,7 @@ create ./index.html
 create ./src/sample.js (button display sample)
 
 ```javascript
-require('mofron'); 
+let mf = require('mofron'); 
 let Button = require('mofron-comp-button');
 
 // simple usage
@@ -46,7 +46,7 @@ btn.height(30);                        // enable changing after display
 btn.style({'margin-left' : '10px'});   // css setting, if you need
 
 // key-value style coding
-new Button({
+let btn = new Button({
     text       : 'key-val',
     width      : 150,
     height     : 30,
@@ -56,9 +56,9 @@ new Button({
     style      : {
                      margin     : '5px',
                      background : 'lightblue'
-                 },
-    visible    : true
+                 }
 });
+btn.visible(true);
 ```
 
 create ./webpack.config.js
