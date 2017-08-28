@@ -12,7 +12,7 @@ require('./src/util/conf/Style.js');
 require('./src/util/conf/CompConf.js');
 
 require('./src/util/dom/Dom.js');
-require('./src/util/dom/Vdom.js');
+require('./src/util/dom/Adom.js');
 
 require('./src/util/Color.js');
 require('./src/util/Font.js');
