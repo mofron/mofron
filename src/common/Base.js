@@ -132,6 +132,18 @@ mofron.Base = class {
         }
     }
     
+    delOption (key) {
+        try {
+            if (undefined === this.m_opt[key]) {
+                throw new Error('invalid key');
+            }
+            delete this.m_opt[key];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     prmOpt (po) {
         this.setPrmOpt(po);
     }

@@ -317,4 +317,23 @@ mofron.func.addResizeWin = function (func, prm, tlag) {
         throw e;
     }
 }
+
+mofron.func.execCompOpt = (chd) => {
+    try {
+        if ('object' !== typeof chd) {
+            throw new Error('invalid paramter');
+        }
+        let chk_chd = null;
+        for (let cidx in chd) {
+            chk_chd = chd[cidx].child();
+            if (null !== chk_chd) {
+                mofron.func.execCompOpt(chk_chd);
+            }
+            chd[cidx].execOption();
+        }
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
 /* end of file */
