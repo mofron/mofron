@@ -1,13 +1,13 @@
 /**
- * @file Vdom.js
+ * @file Adom.js
  * @author simpart
  */
 
 /**
- * @class Vdom
- * @brief virtual dom class
+ * @class Adom
+ * @brief agent dom class
  */
-mofron.Vdom = class extends mofron.Dom {
+mofron.Adom = class extends mofron.Dom {
     /**
      * initialize member
      *
@@ -16,8 +16,8 @@ mofron.Vdom = class extends mofron.Dom {
      */
     constructor () {
         try {
-            super();
-            this.name('Vdom');
+            super({});
+            this.name('Adom');
             
             this.m_style   = {};
             this.m_classnm = {};
@@ -43,7 +43,7 @@ mofron.Vdom = class extends mofron.Dom {
                 /* getter */
                 return (null === this.parent()) ? null : this.parent().tag();
             }
-            throw new Error('tag set is not supported at vdom');
+            throw new Error('tag set is not supported at adom');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -243,9 +243,9 @@ mofron.Vdom = class extends mofron.Dom {
     
     
     /**
-     * update vdom status
+     * update adom status
      * 
-     * @note update status also child vdom
+     * @note update status also child adom
      */
     setPushed () {
         try {
@@ -278,7 +278,7 @@ mofron.Vdom = class extends mofron.Dom {
     getRawDom () {
         try {
             if (false === this.isPushed()) {
-                throw new Error('this vdom is not rendered yet');
+                throw new Error('this adom is not rendered yet');
             }
             return this.m_rawdom;
         } catch (e) {

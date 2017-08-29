@@ -132,18 +132,6 @@ mofron.Base = class {
         }
     }
     
-    delOption (key) {
-        try {
-            if (undefined === this.m_opt[key]) {
-                throw new Error('invalid key');
-            }
-            delete this.m_opt[key];
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     prmOpt (po) {
         this.setPrmOpt(po);
     }
@@ -170,38 +158,17 @@ mofron.Base = class {
     
     execOption (opt) {
         try {
-            opt = (undefined === opt) ? this.getOption() : opt;
-            if (null === opt) {
-                return;
+            if (undefined !== opt) {
+                this.addOption(opt);
+            } else {
+                opt = this.getOption();
             }
             
-            if ('object' !== typeof opt) {
+            if ( ('object' !== typeof opt) ||
+                 (null === opt) ) {
                 throw new Error('invalid parameter');
             }
-            for (var opt_idx in opt) {
-                if ('function' === typeof this[opt_idx]) {
-                    if ( ('prmOpt' === this[opt_idx]) ||
-                         ('name'   === this[opt_idx]) ) {
-                        throw new Error('invalid option name');
-                    }
-                    if (true === mofron.func.isObject(opt[opt_idx],'Param')) {
-                        opt[opt_idx].call(this,opt_idx);
-                    } else {
-                        this[opt_idx](opt[opt_idx]);
-                    }
-                }
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    setOption (opt) {
-        try {
-            if ('object'  !== typeof opt) {
-                throw new Error('invalid parameter');
-            }
+            
             for (var opt_idx in opt) {
                 if ('function' === typeof this[opt_idx]) {
                     if ( ('prmOpt' === this[opt_idx]) ||

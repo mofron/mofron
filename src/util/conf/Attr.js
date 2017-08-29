@@ -11,7 +11,7 @@ mofron.Attr = class extends mofron.DomConf {
     /**
      * initialize member
      *
-     * @param tgt : (object) target vdom object
+     * @param tgt : (object) target adom object
      */
     constructor (tgt) {
         try {

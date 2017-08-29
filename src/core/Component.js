@@ -32,16 +32,17 @@ mofron.Component = class extends mofron.Base {
                                 null         /* event */
                             );
             
-            let opt     = this.getOption();
-            let opt_tgt = null;
+            let opt = this.getOption();
             if (null !== opt) {
                 if (undefined !== opt.child) {
-                    opt_tgt = 'child';
+                    this.child(opt.child);
                 } else if (undefined !== opt.addChild) {
-                    opt_tgt = 'addChild';
+                    this.addChild(opt.addChild);
                 }
-                this.execOption({ opt_tgt : opt.[opt_tgt] });
-                this.delOption(opt_tgt);
+                if ( (undefined !== opt.visible) &&
+                     (null === this.parent()) ) {
+                    this.visible(opt.visible);
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -210,15 +211,15 @@ mofron.Component = class extends mofron.Base {
 //            this.target().addChild(chd.adom(), idx);  // relate to parent and child in DOM level
 //            
             if ( (undefined === idx) ||
-                 (0 === this.child().length) ) {
+                 (0 === this.m_child.length) ) {
                 this.m_child.push(chd);
             } else {
                 this.m_child.splice(idx, 0, chd);
             }
             
-            /* init child */
             if ( (null !== this.m_adom) &&
                  (this.adom().isPushed()) ) {
+                /* render child */
                 let lo = this.layout();
                 for(var lo_idx in lo) {
                     lo[lo_idx].execute();
@@ -502,18 +503,12 @@ mofron.Component = class extends mofron.Base {
     /**
      * create componrnt DOM
      * 
-     * @param disp (bool) : initial visible flag. default is true
      */
-    render (disp) {
+    render () {
         try {
             if (null === this.parent()) {
                 this.adom();
                 this.execOption();
-            }
-            
-            /* setting component visible */
-            if (false === disp) {
-                this.adom().style({ 'display' : 'none' });
             }
             
             /* push contents to DOM */
@@ -644,28 +639,28 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            let c_chd = null;
-            for (c_chd.child()) {
-                
+            /* execute component option */
+            if (null === this.parent()) {
+                let opt = this.getOption();
+                if (undefined !== opt.visible) {
+                    delete opt.visible;
+                }
+                mofron.func.execCompOpt(this, opt);
             }
-            while() {
-                c_chd = c_chd.child();
-            }
-//            /* initialize component */
-//            if (false === this.adom().isPushed()) {
-//                this.render(flg);
-//            }
-            /* execute option */
-            
-            
             
             if (true === flg) {
                 this.adom().style(
-                    {'display' : null},
+                    { 'display' : null },
                     ('none' === this.adom().style('display')) ? undefined : true
                 );
             } else {
-                this.adom().style({'display' : 'none'});
+                this.adom().style({ 'display' : 'none' });
+            }
+            
+            if (null === this.parent()) {
+                if (false === this.adom().isPushed()) {
+                    this.render();
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -702,20 +697,28 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    
-    
     execOption (opt) {
         try {
-            opt = (undefined === opt) ? this.getOption() : opt;
-            if (null !== opt) {
-                if (undefined !== typeof opt.theme) {
-                    super.execOption({
-                        theme : opt.theme
-                    });
-                    opt.theme = undefined;
+            let exec_opt = opt;
+            if (undefined === opt) {
+                exec_opt = this.getOption();
+                if (null === exec_opt) {
+                    return;
                 }
-            } 
-            super.execOption(opt);
+                if (undefined !== exec_opt.child) {
+                    delete exec_opt.child;
+                } else if (undefined !== exec_opt.addChild) {
+                    delete exec_opt.addChild;
+                }
+            }
+            
+            if (null !== opt) {
+                if (undefined !== typeof exec_opt.theme) {
+                    this.theme(exec_opt.theme);
+                    delete exec_opt.theme;
+                }
+            }
+            super.execOption(exec_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
