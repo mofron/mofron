@@ -318,18 +318,46 @@ mofron.func.addResizeWin = function (func, prm, tlag) {
     }
 }
 
-mofron.func.execCompOpt = (cmp, opt) => {
+mofron.func.initCompChild = (cmp, rf) => {
     try {
         if ('object' !== typeof cmp) {
             throw new Error('invalid paramter');
+        }
+        if (true === mofron.func.isInclude(cmp, 'Component')) {
+            if (true === rf) {
+                let chd = cmp.child();
+                if (null !== chd) {
+                    mofron.func.initCompChild(chd);
+                }
+            }
+            
+            let opt = cmp.getOption();
+            if ( (undefined !== opt.visible) &&
+                 (true === rf) ) {
+                delete opt.visible;
+            }
+            
+            if (undefined !== opt.child) {
+                delete opt.child;
+            }
+            if (undefined !== opt.addChild) {
+                delete opt.addChild;
+            }
+            
+            let pnt = cmp.parent();
+            if (null !== pnt) {
+                pnt.target().addChild(cmp.adom());
+            }
+            cmp.execOption(opt);
+            return;
         }
         let chk_cmp = null;
         for (let cidx in cmp) {
             chk_cmp = cmp[cidx].child();
             if (null !== chk_cmp) {
-                mofron.func.execCompOpt(chk_cmp);
+                mofron.func.initCompChild(chk_cmp);
             }
-            cmp[cidx].execOption(opt);
+            mofron.func.initCompChild(cmp[cidx]);
         }
     } catch (e) {
         console.error(e.stack);

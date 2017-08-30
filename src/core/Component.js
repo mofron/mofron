@@ -171,7 +171,7 @@ mofron.Component = class extends mofron.Base {
             if (undefined === chd) {
                 /* getter */
                 this.adom();
-                return (undefined === this.m_child) ? null : this.m_child;
+                return (0 === this.m_child.length) ? null : this.m_child;
             }
             /* setter */
             if ('object' !== typeof chd) {
@@ -506,11 +506,6 @@ mofron.Component = class extends mofron.Base {
      */
     render () {
         try {
-            if (null === this.parent()) {
-                this.adom();
-                this.execOption();
-            }
-            
             /* push contents to DOM */
             if (null === this.parent()) {
                 mofron.root.push(this);
@@ -641,18 +636,16 @@ mofron.Component = class extends mofron.Base {
             
             /* execute component option */
             if (null === this.parent()) {
-                let opt = this.getOption();
-                if (undefined !== opt.visible) {
-                    delete opt.visible;
-                }
-                mofron.func.execCompOpt(this, opt);
-            }
-            
-            if (true === flg) {
-                this.adom().style(
-                    { 'display' : null },
-                    ('none' === this.adom().style('display')) ? undefined : true
+                mofron.func.initCompChild(
+                    this,
+                    true
                 );
+            }
+
+            if (true === flg) {
+                if ('none' === this.adom().style('display')) {
+                    this.adom().style({ 'display' : null });
+                }
             } else {
                 this.adom().style({ 'display' : 'none' });
             }
@@ -712,7 +705,7 @@ mofron.Component = class extends mofron.Base {
                 }
             }
             
-            if (null !== opt) {
+            if (null !== exec_opt) {
                 if (undefined !== typeof exec_opt.theme) {
                     this.theme(exec_opt.theme);
                     delete exec_opt.theme;
