@@ -170,8 +170,8 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                this.adom();
-                return (0 === this.m_child.length) ? null : this.m_child;
+                this.adom();  // for before initDomConts()
+                return this.m_child;
             }
             /* setter */
             if ('object' !== typeof chd) {
@@ -206,10 +206,10 @@ mofron.Component = class extends mofron.Base {
             chd.theme(
                 (null === this.theme()) ? undefined : this.theme()
             );
+            
             /* setting parent-child relation */
-            chd.parent(this);                         // child's parent is me
-//            this.target().addChild(chd.adom(), idx);  // relate to parent and child in DOM level
-//            
+            chd.parent(this);     // child's parent is me
+            
             if ( (undefined === idx) ||
                  (0 === this.m_child.length) ) {
                 this.m_child.push(chd);
@@ -486,7 +486,11 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === thm) {
                 /* getter */
-                return (undefined === this.m_theme) ? null : this.m_theme;
+                if (undefined === this.m_theme) { 
+                    this.m_theme = new mofron.Theme({});
+                    this.m_theme.target(this);
+                }
+                return this.m_theme;
             }
             /* setter */
             this.theme().setTheme(thm);

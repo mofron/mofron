@@ -332,23 +332,29 @@ mofron.func.initCompChild = (cmp, rf) => {
             }
             
             let opt = cmp.getOption();
-            if ( (undefined !== opt.visible) &&
-                 (true === rf) ) {
-                delete opt.visible;
-            }
-            
-            if (undefined !== opt.child) {
-                delete opt.child;
-            }
-            if (undefined !== opt.addChild) {
-                delete opt.addChild;
+            if (null !== opt) {
+                if ( (undefined !== opt.visible) &&
+                     (true === rf) ) {
+                    delete opt.visible;
+                }
+                
+                if (undefined !== opt.child) {
+                    delete opt.child;
+                }
+                
+                if (undefined !== opt.addChild) {
+                    delete opt.addChild;
+                }
             }
             
             let pnt = cmp.parent();
             if (null !== pnt) {
                 pnt.target().addChild(cmp.adom());
             }
-            cmp.execOption(opt);
+            
+            if (null !== opt) {
+                cmp.execOption(opt);
+            }
             return;
         }
         let chk_cmp = null;
