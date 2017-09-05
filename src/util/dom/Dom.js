@@ -103,7 +103,7 @@ mofron.Dom = class extends mofron.Base {
                     }
                 }
                 if ('' !== cmp_str) {
-                    cmp.vdom().attr({'component' : cmp_str});
+                    cmp.adom().attr({'component' : cmp_str});
                 }
             }
         } catch (e) {
@@ -116,7 +116,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                return this.m_child;
+                return (0 === this.m_child.length) ? null :  this.m_child;
             }
             /* setter */
             if ('object' !== typeof chd) {
@@ -137,9 +137,9 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * add child vdom
+     * add child adom
      *
-     * @param chd : (object) child vdom
+     * @param chd : (object) child adom
      */
     addChild (chd, idx) {
         try {
@@ -168,7 +168,7 @@ mofron.Dom = class extends mofron.Base {
             }
             this.m_child[idx].destroy();
             this.addChild(chd, idx);
-            if ( (true === mofron.func.isObject(this, 'Vdom')) &&
+            if ( (true === mofron.func.isObject(this, 'Adom')) &&
                  (1 === this.child().length) ) {
                 this.component().target(chd);
             }
@@ -489,10 +489,10 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * get vdom status
+     * get adom status
      *
-     * @return (boolean) true : this vdom had pushed
-     * @return (boolean) false : this vdom had not pushed
+     * @return (boolean) true : this adom had pushed
+     * @return (boolean) false : this adom had not pushed
      */
     isPushed () {
         try {
@@ -504,9 +504,9 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * update vdom status
+     * update adom status
      * 
-     * @note update status also child vdom
+     * @note update status also child adom
      */
     setPushed () {
         try {
@@ -549,8 +549,8 @@ mofron.Dom = class extends mofron.Base {
     /**
      * check whether tag name is simple tag
      *
-     * @return (boolean) true  : this vdom is simple tag
-     * @return (boolean) false : this vdom is not simple tag
+     * @return (boolean) true  : this adom is simple tag
+     * @return (boolean) false : this adom is not simple tag
      */
     isSimple (flg) {
         try {
@@ -577,10 +577,10 @@ mofron.Dom = class extends mofron.Base {
     }
     
     /**
-     * parent vdom setter / getter
+     * parent adom setter / getter
      * 
-     * @param pnt : (object) parent dom/vdom object
-     * @return (object) parant dom/vdom object
+     * @param pnt : (object) parent dom/adom object
+     * @return (object) parant dom/adom object
      */
     parent (pnt) {
         try {

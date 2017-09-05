@@ -89,9 +89,9 @@ mofron.Effect = class extends mofron.CompConf {
                 throw new Error('invalid paramter');
             }
             
-            var vdom = this.target().vdom();
+            var adom = this.target().adom();
             if (true === en) {
-                vdom.style({
+                adom.style({
                     '-webkit-transition' : ((1000 * this.speed()) - 200) + 'ms all linear 0s',
                     '-moz-transition'    : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
                     '-ms-transition'     : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
@@ -99,7 +99,7 @@ mofron.Effect = class extends mofron.CompConf {
                     'transtion'          : ((1000 * this.speed()) - 200) + 'ms all linear 0s'
                 });
             } else {
-                vdom.style({
+                adom.style({
                     '-webkit-transition' : null,
                     '-moz-transition'    : null,
                     '-ms-transition'     : null,

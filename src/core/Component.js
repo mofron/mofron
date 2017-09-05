@@ -9,7 +9,7 @@
  */
 mofron.Component = class extends mofron.Base {
     /**
-     * initialize member, vdom
+     * initialize member, adom
      *
      * @param po : (object) component parameter / option (not require)
      */
@@ -20,7 +20,7 @@ mofron.Component = class extends mofron.Base {
             
             /* initialize member */
             this.m_child  = new Array();
-            this.m_vdom   = null;
+            this.m_adom   = null;
             this.m_conf   = new Array(
                                 new Array(), /* layout */
                                 new Array(), /* effect */
@@ -31,6 +31,19 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
+            
+            let opt = this.getOption();
+            if (null !== opt) {
+                if (undefined !== opt.child) {
+                    this.child(opt.child);
+                } else if (undefined !== opt.addChild) {
+                    this.addChild(opt.addChild);
+                }
+                if ( (undefined !== opt.visible) &&
+                     (null === this.parent()) ) {
+                    this.visible(opt.visible);
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -45,8 +58,8 @@ mofron.Component = class extends mofron.Base {
                 return super.name();
             }
             super.name(nm);
-            if ((undefined !== this.m_vdom) && (null !== this.m_vdom)) {
-                var cmp_atr = this.vdom().attr('component');
+            if ((undefined !== this.m_adom) && (null !== this.m_adom)) {
+                var cmp_atr = this.adom().attr('component');
                 var set_nm  = null;
                 if (null !== cmp_atr) {
                     if ('i' !== 'I'.toLowerCase()) {
@@ -54,7 +67,7 @@ mofron.Component = class extends mofron.Base {
                     } else {
                         set_nm = nm.toLowerCase();
                     }
-                    this.vdom().attr({'component' : cmp_atr + '-' + set_nm});
+                    this.adom().attr({'component' : cmp_atr + '-' + set_nm});
                 }
             }
         } catch (e) {
@@ -66,21 +79,21 @@ mofron.Component = class extends mofron.Base {
     /**
      * child target setter / getter
      * 
-     * @param tgt : (object) dom/vdom object
+     * @param tgt : (object) dom/adom object
      * @param idx : (number) set index
-     * @return (object) dom/vdom object
+     * @return (object) dom/adom object
      */
     target (tgt, idx) {
         try {
-            this.vdom();
+            this.adom();
             var _idx = (undefined === idx) ? 0 : idx;
             if (undefined === tgt) {
                 /* getter */
                 if ( (0 === _idx) && (null === this.m_target[_idx]) ) {
-                    if (0 === this.vdom().child().length) {
+                    if (0 === this.adom().child().length) {
                         return null;
                     }
-                    this.target(this.vdom().child()[0]);
+                    this.target(this.adom().child()[0]);
                 }
                 return this.m_target[_idx];
             }
@@ -96,10 +109,10 @@ mofron.Component = class extends mofron.Base {
     }
     
     /**
-     * get style target vdom
+     * get style target adom
      *
-     * @param tgt : (object) dom/vdom object
-     * @return (object) dom/vdom object
+     * @param tgt : (object) dom/adom object
+     * @return (object) dom/adom object
      */
     styleTgt (tgt) {
         try {
@@ -122,17 +135,17 @@ mofron.Component = class extends mofron.Base {
     }
     
     /**
-     * get event target vdom
+     * get event target adom
      *
-     * @param tgt : (object) dom/vdom object
-     * @return (object) dom/vdom object
+     * @param tgt : (object) dom/adom object
+     * @return (object) dom/adom object
      */
     eventTgt (tgt) {
         try {
             if (undefined === tgt) {
                 /* getter */
-                if (this.target().getId() === this.vdom().getId()) {
-                    this.target(this.vdom().child()[0], 2);
+                if (this.target().getId() === this.adom().getId()) {
+                    this.target(this.adom().child()[0], 2);
                 } else if (null === this.m_target[2]) {
                     return this.target();
                 }
@@ -157,7 +170,8 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                return (undefined === this.m_child) ? null : this.m_child;
+                this.adom();  // for before initDomConts()
+                return this.m_child;
             }
             /* setter */
             if ('object' !== typeof chd) {
@@ -182,42 +196,35 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    addChild (chd, disp, idx) {
+    addChild (chd, idx) {
         try {
             if (false === mofron.func.isInclude(chd, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            disp = ('boolean' !== typeof disp) ? true : disp;
-            idx  = ('number'  === typeof disp) ? disp : idx;
             
             /* configure child */
-            chd.theme(this.theme());
-            chd.vdom();
-            chd.execOption();
+            chd.theme(
+                (null === this.theme()) ? undefined : this.theme()
+            );
             
             /* setting parent-child relation */
-            chd.parent(this);                         // child's parent is me
-            this.target().addChild(chd.vdom(), idx);  // relate to parent and child in DOM level
-            
-            /* configure visible */
-            if (false === disp) {
-                chd.vdom().style({ 'display' : 'none' });
-            }
+            chd.parent(this);     // child's parent is me
             
             if ( (undefined === idx) ||
-                 (0 === this.child().length) ) {
+                 (0 === this.m_child.length) ) {
                 this.m_child.push(chd);
             } else {
                 this.m_child.splice(idx, 0, chd);
             }
-
-            /* init child */
-            if (true === this.vdom().isPushed()) {
-                chd.render(disp);
+            
+            if ( (null !== this.m_adom) &&
+                 (this.adom().isPushed()) ) {
+                /* render child */
                 let lo = this.layout();
                 for(var lo_idx in lo) {
                     lo[lo_idx].execute();
                 }
+                chd.render();
             }
         } catch (e) {
             console.error(e.stack);
@@ -245,7 +252,7 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            let old_tgt = chd[upd_idx].vdom().parent();
+            let old_tgt = chd[upd_idx].adom().parent();
             let buf_tgt = this.target();
             
             /* replace child */
@@ -460,7 +467,7 @@ mofron.Component = class extends mofron.Base {
             }
             this.m_conf[idx].push(new Array(cnf, prm));
             cnf.target(this);
-            if (true === this.vdom().isPushed()) {
+            if (true === this.adom().isPushed()) {
                 cnf.execute(prm);
             }
         } catch (e) {
@@ -480,7 +487,7 @@ mofron.Component = class extends mofron.Base {
             if (undefined === thm) {
                 /* getter */
                 if (undefined === this.m_theme) { 
-                    this.m_theme = new mofron.Theme();
+                    this.m_theme = new mofron.Theme({});
                     this.m_theme.target(this);
                 }
                 return this.m_theme;
@@ -500,20 +507,9 @@ mofron.Component = class extends mofron.Base {
     /**
      * create componrnt DOM
      * 
-     * @param disp (bool) : initial visible flag. default is true
      */
-    render (disp) {
+    render () {
         try {
-            if (null === this.parent()) {
-                this.vdom();
-                this.execOption();
-            }
-            
-            /* setting component visible */
-            if (false === disp) {
-                this.vdom().style({ 'display' : 'none' });
-            }
-            
             /* push contents to DOM */
             if (null === this.parent()) {
                 mofron.root.push(this);
@@ -522,16 +518,16 @@ mofron.Component = class extends mofron.Base {
             /* before push event */
             this.beforeRender();
             
+            /* set child config */
+            this.initConfig();
             
-            this.vdom().pushDom(
+            this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
             
             /* after push event */
             this.afterRender();
             
-            /* set child config */
-            this.initConfig();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -584,17 +580,17 @@ mofron.Component = class extends mofron.Base {
     
     destroy () {
         try {
-            if (null === this.m_vdom) {
+            if (null === this.m_adom) {
                 throw new Error('not initialized yet');
             }
             /* delete dom */
-            this.vdom().destroy();
+            this.adom().destroy();
             
             /* delete own object in parent */
             if (null !== this.parent()) {
                var chd = this.parent().child(); // children from parent
                for (var idx in chd) {
-                   if (chd[idx].vdom().getId() === this.vdom().getId()) {
+                   if (chd[idx].adom().getId() === this.adom().getId()) {
                        this.parent().delChild(parseInt(idx));
                        break;
                    }
@@ -608,13 +604,10 @@ mofron.Component = class extends mofron.Base {
     
     initDomContsCtl() {
         try {
-            if (null === this.m_vdom) {
-                this.vdom(new mofron.Vdom());
-                this.vdom().component(this);
-                if (undefined === this.m_init_flg) {
-                    this.initDomConts(this.m_param);
-                    this.m_init_flg = true;
-                }
+            if (null === this.m_adom) {
+                this.adom(new mofron.Adom());
+                this.adom().component(this);
+                this.initDomConts(this.m_param);
             }
         } catch (e) {
             console.error(e.stack);
@@ -624,7 +617,7 @@ mofron.Component = class extends mofron.Base {
     
     initDomConts(prm) {
         try {
-            this.vdom().addChild(
+            this.adom().addChild(
                 new mofron.Dom(('string' === typeof prm) ? prm : 'div',this)
             );
         } catch (e) {
@@ -633,36 +626,37 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    visible (flg, eff) {
+    visible (flg) {
         try {
             if (undefined === flg) {
                 /* getter */
-                return  ( (null   === this.m_vdom) ||
-                          ('none' === this.vdom().style('display')) ) ? false : true;
+                return  ( (null   === this.m_adom) ||
+                          ('none' === this.adom().style('display')) ) ? false : true;
             }
             /* setter */
             if ('boolean' !== typeof flg) {
                 throw new Error('invalid parameter');
             }
             
-            /* initialize component */
-            if (false === this.vdom().isPushed()) {
-                this.render(flg);
+            /* execute component option */
+            if (null === this.parent()) {
+                mofron.func.initCompChild(
+                    this,
+                    true
+                );
+            }
+
+            if (true === flg) {
+                if ('none' === this.adom().style('display')) {
+                    this.adom().style({ 'display' : null });
+                }
+            } else {
+                this.adom().style({ 'display' : 'none' });
             }
             
-            if ( (undefined !== eff) &&
-                 (true      === mofron.func.isInclude(eff, 'Effect')) ) {
-                /* set effect */
-                eff.speed( (0 === eff.speed()) ? 0.5 : eff.speed());
-                this.addEffect(eff, flg);
-            } else {
-                if (true === flg) {
-                    this.vdom().style(
-                        {'display' : null},
-                        ('none' === this.vdom().style('display')) ? undefined : true
-                    );
-                } else {
-                    this.vdom().style({'display' : 'none'});
+            if (null === this.parent()) {
+                if (false === this.adom().isPushed()) {
+                    this.render();
                 }
             }
         } catch (e) {
@@ -671,25 +665,29 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    /**
-     * virtual dom setter / getter
-     * 
-     * @return (object) vdom object
-     */
     vdom (vd) {
+        return this.adom(vd);
+    }
+    
+    /**
+     * agent dom setter / getter
+     * 
+     * @return (object) adom object
+     */
+    adom (ad, rdf) {
         try {
-            if (undefined === vd) {
+            if (undefined === ad) {
                 /* getter */
-                if (null === this.m_vdom) {
+                if (null === this.m_adom) {
                     this.initDomContsCtl();
                 }
-                return this.m_vdom;
+                return this.m_adom;
             }
             /* setter */
-            if (false === mofron.func.isInclude(vd, 'Dom')) {
-                throw new Error('invalid parameter : ' + typeof vd);
+            if (false === mofron.func.isInclude(ad, 'Dom')) {
+                throw new Error('invalid parameter : ' + typeof ad);
             }
-            this.m_vdom = vd;
+            this.m_adom = ad;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -698,16 +696,26 @@ mofron.Component = class extends mofron.Base {
     
     execOption (opt) {
         try {
-            opt = (undefined === opt) ? this.getOption() : opt;
-            if (null !== opt) {
-                if (undefined !== typeof opt.theme) {
-                    super.execOption({
-                        theme : opt.theme
-                    });
-                    opt.theme = undefined;
+            let exec_opt = opt;
+            if (undefined === opt) {
+                exec_opt = this.getOption();
+                if (null === exec_opt) {
+                    return;
                 }
-            } 
-            super.execOption(opt);
+                if (undefined !== exec_opt.child) {
+                    delete exec_opt.child;
+                } else if (undefined !== exec_opt.addChild) {
+                    delete exec_opt.addChild;
+                }
+            }
+            
+            if (null !== exec_opt) {
+                if (undefined !== typeof exec_opt.theme) {
+                    this.theme(exec_opt.theme);
+                    delete exec_opt.theme;
+                }
+            }
+            super.execOption(exec_opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
