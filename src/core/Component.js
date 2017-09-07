@@ -512,11 +512,14 @@ mofron.Component = class extends mofron.Base {
             this.beforeRender();
             
             /* set child config */
-            this.initConfig();
+            this.initConfig('layout');
+            this.initConfig('effect');
             
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
+            
+            this.initConfig('event');
             
             /* after push event */
             this.afterRender();
@@ -551,20 +554,38 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    initConfig () {
+    initConfig (tgt) {
         try {
             /* set child config */
-            var chd = this.child();
-            for (var idx in chd) {
-                chd[idx].initConfig();
+            let chd = this.child();
+            for (let idx in chd) {
+                chd[idx].initConfig(tgt);
             }
-
+            
             /* set config */
-            for (var idx_1 in this.m_conf) {
-                for (var idx_2 in this.m_conf[idx_1]) {
-                    this.m_conf[idx_1][idx_2][0].execute(this.m_conf[idx_1][idx_2][1]);
+            if ('layout' === tgt) {
+                let lo_lst = this.m_conf[0];
+                for (let lo_idx in lo_lst) {
+                    lo_lst[lo_idx][0].execute(
+                        lo_lst[lo_idx][1]
+                    );
+                }
+            } else if ('effect' === tgt) {
+                let ef_lst = this.m_conf[1];
+                for (let ef_idx in ef_lst) {
+                    ef_lst[ef_idx][0].execute(
+                        ef_lst[ef_idx][1]
+                    );
+                }
+            } else if ('event' === tgt) {
+                let ev_lst = this.m_conf[0];
+                for (let ev_idx in ev_lst) {
+                    ev_lst[ev_idx][0].execute(
+                        ev_lst[ev_idx][1]
+                    );
                 }
             }
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
