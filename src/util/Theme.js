@@ -39,17 +39,33 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
+    override (flg) {
+        try {
+            if (undefined === flg) {
+                /* getter */
+                return (undefined === this.m_over) ? true : this.m_over;
+            }
+            /* setter */
+            if ('boolean' !== typeof flg) {
+                throw new Error('invalid parameter');
+            }
+            this.m_over = flg;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * set theme contents
      * 
      * @param thm : (mofron.theme object) theme
      */
-    setTheme (thm, ovr) {
+    setTheme (thm) {
         try {
             if (false === mofron.func.isObject(thm, 'Theme')) {
                 throw new Error('invalid parameter');
             }
-            var _ovr    = (undefined === ovr) ? false : ovr;
             var thm_cnt = thm.get();
             var set_flg = false;
             for (var cnt_key in thm_cnt) {
@@ -60,7 +76,7 @@ mofron.Theme = class extends mofron.Base {
                         continue;
                     }
 
-                    if ( (false === _ovr) &&
+                    if ( (false === this.override()) &&
                          (null  !== this.get(cnt_key, _idx)) ) {
                         continue;
                     }
@@ -68,8 +84,7 @@ mofron.Theme = class extends mofron.Base {
                     this.set(
                         cnt_key,
                         thm_cnt[cnt_key][_idx],
-                        _idx,
-                        false
+                        _idx
                     );
                     set_flg = true;
                 }
@@ -227,9 +242,8 @@ mofron.Theme = class extends mofron.Base {
      * @param key  : (string) theme contetent key
      * @param val  : (object) theme element
      * @param idx  : (number) set index
-     * @param bind : (boolean) notify flag
      */
-    set (key, val, idx, noti) {
+    set (key, val, idx) {
         try {
             var _val = (val === undefined) ? null : val;
             var _idx = (idx === undefined) ? 0    : idx;

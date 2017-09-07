@@ -116,7 +116,7 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                return (0 === this.m_child.length) ? null :  this.m_child;
+                return this.m_child;
             }
             /* setter */
             if ('object' !== typeof chd) {

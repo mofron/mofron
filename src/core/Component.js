@@ -31,18 +31,10 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            
             let opt = this.getOption();
-            if (null !== opt) {
-                if (undefined !== opt.child) {
-                    this.child(opt.child);
-                } else if (undefined !== opt.addChild) {
-                    this.addChild(opt.addChild);
-                }
-                if ( (undefined !== opt.visible) &&
-                     (null === this.parent()) ) {
-                    this.visible(opt.visible);
-                }
+            if ( (null !== opt) &&
+                 (true === opt.visible) ) {
+                this.visible(true);
             }
         } catch (e) {
             console.error(e.stack);
@@ -299,7 +291,8 @@ mofron.Component = class extends mofron.Base {
             if ( ( (null !== pnt) &&
                    (null !== this.parent()) )
                    ||
-                   (true === this.target().isPushed()) ) {
+                 ( (null !== this.m_adom) &&
+                   (true === this.target().isPushed()) ) ) {
                 /* rewrite parent */
                 this.destroy();
             }
@@ -494,7 +487,7 @@ mofron.Component = class extends mofron.Base {
             }
             /* setter */
             this.theme().setTheme(thm);
-            var chd = this.child();
+            var chd = this.m_child;
             for (var idx in chd) {
                 chd[idx].theme(thm);
             }
@@ -645,7 +638,7 @@ mofron.Component = class extends mofron.Base {
                     true
                 );
             }
-
+            
             if (true === flg) {
                 if ('none' === this.adom().style('display')) {
                     this.adom().style({ 'display' : null });
@@ -696,26 +689,21 @@ mofron.Component = class extends mofron.Base {
     
     execOption (opt) {
         try {
-            let exec_opt = opt;
-            if (undefined === opt) {
-                exec_opt = this.getOption();
-                if (null === exec_opt) {
-                    return;
-                }
-                if (undefined !== exec_opt.child) {
-                    delete exec_opt.child;
-                } else if (undefined !== exec_opt.addChild) {
-                    delete exec_opt.addChild;
-                }
+            opt = (undefined === opt) ? this.getOption() : opt;
+            
+            if (null === opt) {
+                return;
+            }
+            if (undefined !== opt.theme) {
+                this.theme(opt.theme);
+                delete opt.theme;
             }
             
-            if (null !== exec_opt) {
-                if (undefined !== typeof exec_opt.theme) {
-                    this.theme(exec_opt.theme);
-                    delete exec_opt.theme;
-                }
+            if ( (null === this.parent()) &&
+                 (true === opt.visible) ) {
+                delete opt.visible;
             }
-            super.execOption(exec_opt);
+            super.execOption(opt);
         } catch (e) {
             console.error(e.stack);
             throw e;

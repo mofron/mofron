@@ -156,6 +156,18 @@ mofron.Base = class {
         }
     }
     
+    delOption (key) {
+        try {
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            delete this.m_opt[key];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     execOption (opt) {
         try {
             if (undefined !== opt) {
