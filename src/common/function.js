@@ -318,29 +318,18 @@ mofron.func.addResizeWin = function (func, prm, tlag) {
     }
 }
 
-mofron.func.initCompChild = (cmp, rf) => {
+mofron.func.getTemp = (key) => {
     try {
-        if ('object' !== typeof cmp) {
-            throw new Error('invalid paramter');
-        }
-        if (true === mofron.func.isInclude(cmp, 'Component')) {
-            cmp.execOption();
-            cmp.adom();
-            let chd = cmp.child();
-            if (0 !== chd.length) {
-                mofron.func.initCompChild(chd);
-            }
-            
-            let pnt = cmp.parent();
-            if (null !== pnt) {
-                pnt.target().addChild(cmp.adom());
-            }
-            return;
-        } else if ( ('object' === typeof cmp) && (undefined !== cmp[0]) ) {
-            for (let cidx in cmp) {
-                mofron.func.initCompChild(cmp[cidx]);
-            }
-        }
+        return (undefined === mofron.temp[key]) ? null : mofron.temp[key];
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
+
+mofron.func.setTemp = (key, val) => {
+    try {
+        mofron.temp[key] = val;
     } catch (e) {
         console.error(e.stack);
         throw e;

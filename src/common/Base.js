@@ -92,6 +92,19 @@ mofron.Base = class {
         }
     }
     
+    prmOpt (po) {
+        try {
+            this.setPrmOpt(po);
+            let opt = this.getOption();
+            if (null !== opt) {
+                this.execOption();
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     param (prm) {
         try {
             if (undefined === prm) {
@@ -130,10 +143,6 @@ mofron.Base = class {
             console.error(e.stack);
             throw e;
         }
-    }
-    
-    prmOpt (po) {
-        this.setPrmOpt(po);
     }
     
     setPrmOpt (po) {
@@ -176,9 +185,8 @@ mofron.Base = class {
                 opt = this.getOption();
             }
             
-            if ( ('object' !== typeof opt) ||
-                 (null === opt) ) {
-                throw new Error('invalid parameter');
+            if (null === opt) {
+                return;
             }
             
             for (var opt_idx in opt) {

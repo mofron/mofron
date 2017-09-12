@@ -31,11 +31,8 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            let opt = this.getOption();
-            if ( (null !== opt) &&
-                 (true === opt.visible) ) {
-                this.visible(true);
-            }
+            
+            this.execOption();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -50,18 +47,6 @@ mofron.Component = class extends mofron.Base {
                 return super.name();
             }
             super.name(nm);
-            if ((undefined !== this.m_adom) && (null !== this.m_adom)) {
-                var cmp_atr = this.adom().attr('component');
-                var set_nm  = null;
-                if (null !== cmp_atr) {
-                    if ('i' !== 'I'.toLowerCase()) {
-                        set_nm = nm.replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
-                    } else {
-                        set_nm = nm.toLowerCase();
-                    }
-                    this.adom().attr({'component' : cmp_atr + '-' + set_nm});
-                }
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -173,14 +158,7 @@ mofron.Component = class extends mofron.Base {
             let set_chd  = null;
             let set_disp = true;
             for (var idx in chd) {
-                set_chd  = chd[idx];
-                set_disp = true;
-                if ( ('object' === typeof chd[idx]) &&
-                     (false === mofron.func.isInclude(chd[idx], 'Component')) ) {
-                    set_chd  = chd[idx][0];
-                    set_disp = chd[idx][1];
-                }
-                this.addChild(set_chd, set_disp);
+                this.addChild(chd[idx]);
             }
         } catch (e) {
             console.error(e.stack);
@@ -200,7 +178,8 @@ mofron.Component = class extends mofron.Base {
             );
             
             /* setting parent-child relation */
-            chd.parent(this);     // child's parent is me
+            chd.parent(this);                    // child's parent is me
+            this.target().addChild(chd.adom());  // parent relate to child at dom level
             
             if ( (undefined === idx) ||
                  (0 === this.m_child.length) ) {
@@ -394,20 +373,40 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    getEffect (nm) {
+    getConfig (tp, nm) {
         try {
-            if ('string' !== typeof nm) {
-                throw new Error('invalid parameter');
+            let cnf = null;
+            if ('layout' === tp) {
+                cnf = this.layout();
+            } else if ('effect' === tp) {
+                cnf = this.effect();
+            } else if ('event' === tp) {
+                cnf = this.event();
+            } else {
+                throw new Error('invalid type');
             }
-            let eff  = this.effect();
-            let name = null;
-            for (let e_idx in eff) {
-                name = eff[e_idx][0].name();
-                if (nm === name) {
-                    return eff[e_idx][0];
+            let chk_obj = null;
+            for (let cidx in cnf) {
+                if ('effect' === tp) {
+                    chk_obj = cnf[cidx][0];
+                } else {
+                    chk_obj = cnf[cidx];
+                }
+                
+                if (chk_obj.name() === nm) {
+                    return chk_obj;
                 }
             }
             return null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    } 
+    
+    getEffect (nm) {
+        try {
+            return this.getConfig('effect', nm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -497,6 +496,8 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    themeConts () {}
+    
     /**
      * create componrnt DOM
      * 
@@ -508,21 +509,19 @@ mofron.Component = class extends mofron.Base {
                 mofron.root.push(this);
             }
             
-            /* before push event */
-            this.beforeRender();
-            
             /* set child config */
             this.initConfig('layout');
             this.initConfig('effect');
             
+            /* before push event */
+            this.beforeRender();
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
-            
-            this.initConfig('event');
-            
             /* after push event */
             this.afterRender();
+            
+            this.initConfig('event');
             
         } catch (e) {
             console.error(e.stack);
@@ -578,7 +577,7 @@ mofron.Component = class extends mofron.Base {
                     );
                 }
             } else if ('event' === tgt) {
-                let ev_lst = this.m_conf[0];
+                let ev_lst = this.m_conf[2];
                 for (let ev_idx in ev_lst) {
                     ev_lst[ev_idx][0].execute(
                         ev_lst[ev_idx][1]
@@ -597,15 +596,15 @@ mofron.Component = class extends mofron.Base {
             if (null === this.m_adom) {
                 throw new Error('not initialized yet');
             }
-            /* delete dom */
+            /* delete at dom level */
             this.adom().destroy();
             
-            /* delete own object in parent */
+            /* delete at component level */
             if (null !== this.parent()) {
                var chd = this.parent().child(); // children from parent
                for (var idx in chd) {
                    if (chd[idx].adom().getId() === this.adom().getId()) {
-                       this.parent().delChild(parseInt(idx));
+                       this.parent().delChild(parseInt(idx));  // separated from parent
                        break;
                    }
                }
@@ -618,7 +617,7 @@ mofron.Component = class extends mofron.Base {
     
     initDomContsCtl() {
         try {
-            if (null === this.m_adom) {
+            if (false === this.isInitDom()) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
                 this.initDomConts(this.m_param);
@@ -640,24 +639,25 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    isInitDom () {
+        try {
+            return (null === this.m_adom) ? false : true;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     visible (flg) {
         try {
             if (undefined === flg) {
                 /* getter */
-                return  ( (null   === this.m_adom) ||
+                return  ( (false   === this.isInitDom()) ||
                           ('none' === this.adom().style('display')) ) ? false : true;
             }
             /* setter */
             if ('boolean' !== typeof flg) {
                 throw new Error('invalid parameter');
-            }
-            
-            /* execute component option */
-            if (null === this.parent()) {
-                mofron.func.initCompChild(
-                    this,
-                    true
-                );
             }
             
             if (true === flg) {
@@ -711,18 +711,13 @@ mofron.Component = class extends mofron.Base {
     execOption (opt) {
         try {
             opt = (undefined === opt) ? this.getOption() : opt;
-            
             if (null === opt) {
                 return;
             }
+            this.adom();
             if (undefined !== opt.theme) {
                 this.theme(opt.theme);
                 delete opt.theme;
-            }
-            
-            if ( (null === this.parent()) &&
-                 (true === opt.visible) ) {
-                delete opt.visible;
             }
             super.execOption(opt);
         } catch (e) {

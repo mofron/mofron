@@ -89,6 +89,10 @@ mofron.Theme = class extends mofron.Base {
                     set_flg = true;
                 }
             }
+            if (null === this.target()) {
+                throw new Error('could not find target component');
+            }
+            this.target().themeConts(this);
         } catch (e) {
             console.error(e.stack);
             throw e;

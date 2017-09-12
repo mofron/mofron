@@ -23,7 +23,9 @@ mofron.Event = class extends mofron.CompConf {
                 this.handler(fnc, prm);
             } else {
                 this.setPrmOpt(fnc);
-                this.execOption();
+                this.execOption(
+                    ( (undefined === fnc) || (null === fnc) ) ? {} : fnc
+                );
             }
         } catch (e) {
             console.error(e.stack);

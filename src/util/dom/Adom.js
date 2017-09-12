@@ -291,12 +291,17 @@ mofron.Adom = class extends mofron.Dom {
         try {
             var chd = this.child();
             for (var idx in chd) {
-                chd[idx].destroy();
+                chd[idx].destroy();  // delete rawdom
             }
             
-            if ( (null !== this.parent()) &&
-                 (true === mofron.func.isObject(this.parent(), 'Dom')) ) {
-                super.destroy();
+            // delete parent relating
+            if (true === mofron.func.isObject(this.parent(), 'Dom') ) {
+                let pchd = this.parent().child();
+                for (let pidx in pchd) {
+                    if(pchd[pidx].getId() === this.getId()) {
+                        this.parent().delChild(parseInt(pidx));
+                    }
+                }
             }
             this.m_rawdom = null;
         } catch (e) {

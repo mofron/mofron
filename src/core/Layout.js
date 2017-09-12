@@ -9,7 +9,11 @@ mofron.Layout = class extends mofron.CompConf {
             super(po);
             this.name('Layout');
             this.m_execnt = 0;
-            this.execOption(po);
+            
+            let opt = this.getOption();
+            if (null !== opt) {
+                this.execOption(opt);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
