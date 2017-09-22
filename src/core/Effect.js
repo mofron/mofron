@@ -29,15 +29,19 @@ mofron.Effect = class extends mofron.CompConf {
             if (0 === this.speed()) {
                if (true === _flg) {
                    this.enable(this.target());
+                   this.status(true);
                } else {
                    this.disable(this.target());
+                   this.status(false);
                }
             } else {
                 /* init exec */
                 if (true === _flg) {
                     this.disable(this.target());
+                    this.status(false);
                 } else {
                     this.enable(this.target());
+                    this.status(true);
                 }
                 
                 this.setConf(true);
@@ -47,8 +51,10 @@ mofron.Effect = class extends mofron.CompConf {
                         try {
                             if (true === _flg) {
                                 eff.enable(eff.target());
+                                eff.status(true);
                             } else {
                                 eff.disable(eff.target());
+                                eff.status(false);
                             }
                         } catch (e) {
                             console.error(e.stack);
@@ -92,11 +98,11 @@ mofron.Effect = class extends mofron.CompConf {
             var adom = this.target().adom();
             if (true === en) {
                 adom.style({
-                    '-webkit-transition' : ((1000 * this.speed()) - 200) + 'ms all linear 0s',
-                    '-moz-transition'    : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    '-ms-transition'     : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    '-o-transition'      : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    'transtion'          : ((1000 * this.speed()) - 200) + 'ms all linear 0s'
+                    '-webkit-transition' : ((1000 * this.speed())) + 'ms all linear 0s',
+                    '-moz-transition'    : 'all ' + ((1000 * this.speed())) + 'ms',
+                    '-ms-transition'     : 'all ' + ((1000 * this.speed())) + 'ms',
+                    '-o-transition'      : 'all ' + ((1000 * this.speed())) + 'ms',
+                    'transtion'          : ((1000 * this.speed())) + 'ms all linear 0s'
                 });
             } else {
                 adom.style({
@@ -119,6 +125,23 @@ mofron.Effect = class extends mofron.CompConf {
     
     disable (tgt) {
         console.warn('not implement');
+    }
+    
+    status (sts) {
+        try {
+            if (undefined === sts) {
+                /* getter */
+                return (undefined === this.m_sts) ? false : this.m_sts;
+            }
+            /* setter */
+            if ('boolean' !== typeof sts) {
+                throw new Error('invalid parameter');
+            }
+            this.m_sts = sts;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
     
     speed (spd) {
