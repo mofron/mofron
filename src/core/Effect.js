@@ -67,21 +67,12 @@ mofron.Effect = class extends mofron.CompConf {
             setTimeout(
                 (eff) => {
                     try {
+                        if ( (0 < eff.speed()) &&
+                             (eff.getId() === eff.target().effect()[0].getId()) ) {
+                            eff.setConf(false);
+                        }
                         if (null != eff.callback()[0]) {
                             eff.callback()[0](eff.callback()[1]);
-                        }
-                        if (0 < eff.speed()) {
-                            let eff_lst = eff.target().effect();
-                            let reset = true;
-                            for (let eidx in eff_lst) {
-                                if (eff.speed() < eff_lst[eidx].speed()) {
-                                    reset = false;
-                                    break;
-                                }
-                            }
-                            if (true === reset) {
-                                eff.setConf(false);
-                            }
                         }
                     } catch (e) {
                         console.error(e.stack);
@@ -153,17 +144,34 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
+    defStatus (sts) {
+        try {
+            if (undefined === sts) {
+                /* getter */
+                return (undefined === this.m_defsts) ? true : this.m_defsts;
+            }
+            /* setter */
+            if ('boolean' !== typeof sts) {
+                throw new Error('invalid parameter');
+            }
+            this.m_defsts = sts;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     speed (spd) {
         try {
             if (undefined === spd) {
                 /* getter */
-                return (undefined === this.m_speed) ? 0 : this.m_speed;
+                return this.m_speed;
             }
             /* setter */
             if ('number' != (typeof spd)) {
                 throw new Error('invalid parameter');
             }
-            this.m_speed = (spd < 0.5) ? 0 : spd;
+            this.m_speed = spd;
         } catch (e) {
             console.error(e.stack);
             throw e;
