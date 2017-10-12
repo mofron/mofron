@@ -152,7 +152,8 @@ mofron.Component = class extends mofron.Base {
             }
             /* setter */
             if ('object' !== typeof chd) {
-                throw new Error('invalid parameter');
+                this.addChild(chd);
+                return;
             }
             
             let set_chd  = null;
@@ -311,6 +312,10 @@ mofron.Component = class extends mofron.Base {
                 return this.config(2);
             }
             /* setter */
+            if ('object' !== typeof evt) {
+                this.addEvent(evt);
+                return;
+            }
             for (let eidx in evt) {
                 this.addEvent(evt[eidx]);
             }
@@ -341,6 +346,10 @@ mofron.Component = class extends mofron.Base {
                 return this.config(0);
             }
             /* setter */
+            if ('object' !== typeof lo) {
+                this.addLayout(lo);
+                return;
+            }
             for (let lidx in lo) {
                 this.addLayout(lo[lidx]);
             }
@@ -371,6 +380,10 @@ mofron.Component = class extends mofron.Base {
                 return this.config(1);
             }
             /* setter */
+            if ('object' !== typeof eff) {
+                this.addEffect(eff);
+                return;
+            }
             for (let eidx in eff) {
                 this.addEffect(eff[eidx]);
             }
