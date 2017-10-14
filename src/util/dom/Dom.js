@@ -473,7 +473,7 @@ mofron.Dom = class extends mofron.Base {
                 throw new Error('already pushed');
             }
             
-            //this.parent(tgt);
+            this.parent(tgt);
             
             var tgt_dom = (null === this.parent()) ? document.body : this.parent().getRawDom();
             if (false === _upd) {
@@ -627,10 +627,21 @@ mofron.Dom = class extends mofron.Base {
                 this.getRawDom().remove();
                 this.m_rawdom = null;
             }
-            let chd = this.child();
-            for (let cidx in chd) {
-                chd[cidx].destroy();
-            }
+            //let chd = this.child();
+            //for (let cidx in chd) {
+            //    chd[cidx].destroy();
+            //}
+            //if ( (null !== this.parent()) &&
+            //     (true === mofron.func.isInclude(this.parent(), 'Dom')) ) {
+            //    var pnt_chd = this.parent().child();
+            //    for (var idx in pnt_chd) {
+            //        if (pnt_chd[idx].getId() === this.getId()) {
+            //            this.parent().delChild(parseInt(idx));
+            //            break;
+            //        }
+            //    }
+            //}
+            
         } catch (e) {
             console.error(e.stack);
             throw e;

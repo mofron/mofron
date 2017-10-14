@@ -11,5 +11,6 @@ module.exports = {
     func   : {},
     theme  : null,
     root   : new Array(),
-    temp   : {}
+    temp   : {},
+    util   : {}
 };

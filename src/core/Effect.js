@@ -29,15 +29,19 @@ mofron.Effect = class extends mofron.CompConf {
             if (0 === this.speed()) {
                if (true === _flg) {
                    this.enable(this.target());
+                   this.status(true);
                } else {
                    this.disable(this.target());
+                   this.status(false);
                }
             } else {
                 /* init exec */
                 if (true === _flg) {
                     this.disable(this.target());
+                    this.status(false);
                 } else {
                     this.enable(this.target());
+                    this.status(true);
                 }
                 
                 this.setConf(true);
@@ -47,8 +51,10 @@ mofron.Effect = class extends mofron.CompConf {
                         try {
                             if (true === _flg) {
                                 eff.enable(eff.target());
+                                eff.status(true);
                             } else {
                                 eff.disable(eff.target());
+                                eff.status(false);
                             }
                         } catch (e) {
                             console.error(e.stack);
@@ -58,22 +64,22 @@ mofron.Effect = class extends mofron.CompConf {
                 );
             }
             
-            var cb_time = (0 > (1000 * this.speed()-200)) ? 0 : (1000 * this.speed()-200);
             setTimeout(
                 (eff) => {
                     try {
+                        if ( (0 < eff.speed()) &&
+                             (eff.getId() === eff.target().effect()[0].getId()) ) {
+                            eff.setConf(false);
+                        }
                         if (null != eff.callback()[0]) {
                             eff.callback()[0](eff.callback()[1]);
-                        }
-                        if (0 < eff.speed()) {
-                            eff.setConf(false);
                         }
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
                     }
                 },
-                cb_time,
+                this.speed() * 1000,
                 this
             );
             
@@ -92,11 +98,11 @@ mofron.Effect = class extends mofron.CompConf {
             var adom = this.target().adom();
             if (true === en) {
                 adom.style({
-                    '-webkit-transition' : ((1000 * this.speed()) - 200) + 'ms all linear 0s',
-                    '-moz-transition'    : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    '-ms-transition'     : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    '-o-transition'      : 'all ' + ((1000 * this.speed()) - 200) + 'ms',
-                    'transtion'          : ((1000 * this.speed()) - 200) + 'ms all linear 0s'
+                    '-webkit-transition' : ((1000 * this.speed())) + 'ms all linear 0s',
+                    '-moz-transition'    : 'all ' + ((1000 * this.speed())) + 'ms',
+                    '-ms-transition'     : 'all ' + ((1000 * this.speed())) + 'ms',
+                    '-o-transition'      : 'all ' + ((1000 * this.speed())) + 'ms',
+                    'transtion'          : ((1000 * this.speed())) + 'ms all linear 0s'
                 });
             } else {
                 adom.style({
@@ -121,17 +127,51 @@ mofron.Effect = class extends mofron.CompConf {
         console.warn('not implement');
     }
     
+    status (sts) {
+        try {
+            if (undefined === sts) {
+                /* getter */
+                return (undefined === this.m_sts) ? false : this.m_sts;
+            }
+            /* setter */
+            if ('boolean' !== typeof sts) {
+                throw new Error('invalid parameter');
+            }
+            this.m_sts = sts;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    defStatus (sts) {
+        try {
+            if (undefined === sts) {
+                /* getter */
+                return (undefined === this.m_defsts) ? true : this.m_defsts;
+            }
+            /* setter */
+            if ('boolean' !== typeof sts) {
+                throw new Error('invalid parameter');
+            }
+            this.m_defsts = sts;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     speed (spd) {
         try {
             if (undefined === spd) {
                 /* getter */
-                return (undefined === this.m_speed) ? 0 : this.m_speed;
+                return this.m_speed;
             }
             /* setter */
             if ('number' != (typeof spd)) {
                 throw new Error('invalid parameter');
             }
-            this.m_speed = (spd < 0.5) ? 0 : spd;
+            this.m_speed = spd;
         } catch (e) {
             console.error(e.stack);
             throw e;

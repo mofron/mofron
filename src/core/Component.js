@@ -152,7 +152,8 @@ mofron.Component = class extends mofron.Base {
             }
             /* setter */
             if ('object' !== typeof chd) {
-                throw new Error('invalid parameter');
+                this.addChild(chd);
+                return;
             }
             
             let set_chd  = null;
@@ -306,13 +307,17 @@ mofron.Component = class extends mofron.Base {
     
     event (evt) {
         try {
-            var ret_evt = this.config(2, evt);
             if (undefined === evt) {
-                var ret = [];
-                for (var idx in ret_evt) {
-                    ret.push(ret_evt[idx][0]);
-                }
-                return ret;
+                /* getter */
+                return this.config(2);
+            }
+            /* setter */
+            if ('object' !== typeof evt) {
+                this.addEvent(evt);
+                return;
+            }
+            for (let eidx in evt) {
+                this.addEvent(evt[eidx]);
             }
         } catch (e) {
             console.error(e.stack);
@@ -336,13 +341,17 @@ mofron.Component = class extends mofron.Base {
     
     layout (lo) {
         try {
-            var ret_lo = this.config(0, lo);
-            if (undefined === lo) {
-                var ret = [];
-                for (var idx in ret_lo) {
-                    ret.push(ret_lo[idx][0]);
-                }
-                return ret;
+            if (undefined === eff) {
+                /* getter */
+                return this.config(0);
+            }
+            /* setter */
+            if ('object' !== typeof lo) {
+                this.addLayout(lo);
+                return;
+            }
+            for (let lidx in lo) {
+                this.addLayout(lo[lidx]);
             }
         } catch (e) {
             console.error(e.stack);
@@ -364,9 +373,20 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    effect (eff, flg) {
+    effect (eff) {
         try {
-            return this.config(1, eff, flg);
+            if (undefined === eff) {
+                /* getter */
+                return this.config(1);
+            }
+            /* setter */
+            if ('object' !== typeof eff) {
+                this.addEffect(eff);
+                return;
+            }
+            for (let eidx in eff) {
+                this.addEffect(eff[eidx]);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -375,27 +395,20 @@ mofron.Component = class extends mofron.Base {
     
     getConfig (tp, nm) {
         try {
-            let cnf = null;
-            if ('layout' === tp) {
-                cnf = this.layout();
-            } else if ('effect' === tp) {
-                cnf = this.effect();
-            } else if ('event' === tp) {
-                cnf = this.event();
-            } else {
+            if ( ('layout' !== tp) &&
+                 ('effect' !== tp) &&
+                 ('event'  !== tp) ) {
                 throw new Error('invalid type');
             }
-            let chk_obj = null;
-            for (let cidx in cnf) {
-                if ('effect' === tp) {
-                    chk_obj = cnf[cidx][0];
-                } else {
-                    chk_obj = cnf[cidx];
+            let cnf = this[tp]();
+            if (undefined !== nm) {
+                for (let cidx in cnf) {
+                    if (cnf[cidx].name() === nm) {
+                        return cnf[cidx];
+                    }
                 }
-                
-                if (chk_obj.name() === nm) {
-                    return chk_obj;
-                }
+            } else {
+                return cnf;
             }
             return null;
         } catch (e) {
@@ -404,25 +417,31 @@ mofron.Component = class extends mofron.Base {
         }
     } 
     
-    getEffect (nm) {
-        try {
-            return this.getConfig('effect', nm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     addEffect (eff, flg) {
         try {
-            this.addConfig(1, eff, flg);
+            if (undefined !== eff.speed()) {
+                /* update effect speed */
+                let eff_lst = this.effect();
+                for (let eidx in eff_lst) {
+                    eff_lst[eidx].speed(eff.speed());
+                }
+            } else {
+                if ( (     null !== this.effect()) &&
+                     (undefined !== this.effect()[0].speed()) ) {
+                    eff.speed(this.effect()[0].speed());
+                }
+            }
+            if (undefined !== flg) {
+                eff.defStatus(flg);
+            }
+            this.addConfig(1, eff);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    config (idx, cnf, prm) {
+    config (idx, cnf) {
         try {
             if (undefined === cnf) {
                 /* getter */
@@ -433,34 +452,33 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             if (undefined !== cnf[0]) {
-                for (var cnf_idx in cnf) {
+                for (let cidx in cnf) {
                     /* set child array */
-                    this.addConfig(
-                        idx,
-                        cnf[cnf_idx],
-                        ((undefined === prm) || (undefined === prm[cnf_idx])) ? undefined : prm[cnf_idx]
-                    );
+                    this.addConfig(idx, cnf[cidx]);
                 }
                 return;
             }
-            
-            this.addConfig(idx, cnf, prm);
+            this.addConfig(idx, cnf);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    addConfig (idx, cnf, prm) {
+    addConfig (idx, cnf) {
         try {
             if ( (undefined === this.m_conf[idx]) ||
                  (false     === mofron.func.isInclude(cnf, 'CompConf')) ) {
                 throw new Error('invalid parameter');
             }
-            this.m_conf[idx].push(new Array(cnf, prm));
+            this.m_conf[idx].push(cnf);
             cnf.target(this);
             if (true === this.adom().isPushed()) {
-                cnf.execute(prm);
+                if ( (    1 === idx) &&
+                     (false === cnf.defStatus()) ) {
+                    return;
+                }
+                cnf.execute();
             }
         } catch (e) {
             console.error(e.stack);
@@ -510,8 +528,8 @@ mofron.Component = class extends mofron.Base {
             }
             
             /* set child config */
-            this.initConfig('layout');
-            this.initConfig('effect');
+            this.initConfig(0); // layout
+            this.initConfig(1); // effect
             
             /* before push event */
             this.beforeRender();
@@ -521,7 +539,7 @@ mofron.Component = class extends mofron.Base {
             /* after push event */
             this.afterRender();
             
-            this.initConfig('event');
+            this.initConfig(2); // event
             
         } catch (e) {
             console.error(e.stack);
@@ -553,38 +571,21 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    initConfig (tgt) {
+    initConfig (tgt_idx) {
         try {
             /* set child config */
             let chd = this.child();
-            for (let idx in chd) {
-                chd[idx].initConfig(tgt);
+            for (let cidx in chd) {
+                chd[cidx].initConfig(tgt_idx);
             }
             
             /* set config */
-            if ('layout' === tgt) {
-                let lo_lst = this.m_conf[0];
-                for (let lo_idx in lo_lst) {
-                    lo_lst[lo_idx][0].execute(
-                        lo_lst[lo_idx][1]
-                    );
-                }
-            } else if ('effect' === tgt) {
-                let ef_lst = this.m_conf[1];
-                for (let ef_idx in ef_lst) {
-                    ef_lst[ef_idx][0].execute(
-                        ef_lst[ef_idx][1]
-                    );
-                }
-            } else if ('event' === tgt) {
-                let ev_lst = this.m_conf[2];
-                for (let ev_idx in ev_lst) {
-                    ev_lst[ev_idx][0].execute(
-                        ev_lst[ev_idx][1]
-                    );
-                }
+            let cnf = this.config(tgt_idx);
+            for (let cfidx in cnf) {
+                cnf[cfidx].execute(
+                    (1 === tgt_idx) ? undefined : (cnf[cfidx].defStatus())
+                );
             }
-            
         } catch (e) {
             console.error(e.stack);
             throw e;
