@@ -583,7 +583,7 @@ mofron.Component = class extends mofron.Base {
             let cnf = this.config(tgt_idx);
             for (let cfidx in cnf) {
                 cnf[cfidx].execute(
-                    (1 === tgt_idx) ? undefined : (cnf[cfidx].defStatus())
+                    (1 === tgt_idx) ? (cnf[cfidx].defStatus()) : undefined
                 );
             }
         } catch (e) {
