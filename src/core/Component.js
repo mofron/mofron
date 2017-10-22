@@ -341,7 +341,7 @@ mofron.Component = class extends mofron.Base {
     
     layout (lo) {
         try {
-            if (undefined === eff) {
+            if (undefined === lo) {
                 /* getter */
                 return this.config(0);
             }
@@ -426,7 +426,7 @@ mofron.Component = class extends mofron.Base {
                     eff_lst[eidx].speed(eff.speed());
                 }
             } else {
-                if ( (     null !== this.effect()) &&
+                if ( (        0 !== this.effect().length) &&
                      (undefined !== this.effect()[0].speed()) ) {
                     eff.speed(this.effect()[0].speed());
                 }
