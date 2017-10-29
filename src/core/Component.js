@@ -179,8 +179,8 @@ mofron.Component = class extends mofron.Base {
             );
             
             /* setting parent-child relation */
-            chd.parent(this);                    // child's parent is me
-            this.target().addChild(chd.adom());  // parent relate to child at dom level
+            chd.parent(this);                         // child's parent is me
+            this.target().addChild(chd.adom(), idx);  // parent relate to child at dom level
             
             if ( (undefined === idx) ||
                  (0 === this.m_child.length) ) {

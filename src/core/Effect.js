@@ -165,7 +165,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             if (undefined === spd) {
                 /* getter */
-                return this.m_speed;
+                return (undefined === this.m_speed) ? 0 : this.m_speed;
             }
             /* setter */
             if ('number' != (typeof spd)) {

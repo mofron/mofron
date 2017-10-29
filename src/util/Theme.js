@@ -155,22 +155,7 @@ mofron.Theme = class extends mofron.Base {
                     return (undefined === thm_cmp[1]) ?
                                new thm_cmp[0]() : new thm_cmp[0](thm_cmp[1]);
                 }
-                let sp_key  = key.split('-');
-                if ( (3 > sp_key.length) ||
-                     (4 < sp_key.length) ) {
-                    throw new Error('invalid key');
-                }
-                let pfx    = sp_key[sp_key.length-1][0].toUpperCase();
-                let obj_nm = null;
-                for (let oidx in sp_key[sp_key.length-1]) {
-                    if (null === obj_nm) {
-                        obj_nm = pfx;
-                        continue;
-                    }
-                    obj_nm += sp_key[sp_key.length-1][oidx];
-                }
-                return (3 === sp_key.length) ?
-                           new mofron.comp[obj_nm]() : new mofron.comp[sp_key[2]][obj_nm]();
+                return null;
             }
             /* setter */
             if ('function' !== typeof cmp) {
