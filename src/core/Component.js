@@ -709,6 +709,53 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    size (x, y) {
+        try {
+            if (undefined === x) {
+                /* getter */
+                return [this.width(), this.height()];
+            }
+            /* setter */
+            this.width(x);
+            this.height(y);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    width (x) {
+        try {
+            if (undefined === x) {
+                /* getter */
+                return mofron.func.getLength(this.style('width')),
+            }
+            /* setter */
+            this.style({
+                'width'  : ('number' === typeof x) ? (x + 'px') : x
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    height (y) {
+        try {
+            if (undefined === y) {
+                /* getter */
+                return mofron.func.getLength(this.style('height')),
+            }
+            /* setter */
+            this.style({
+                'height'  : ('number' === typeof y) ? (y + 'px') : y
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     execOption (opt) {
         try {
             opt = (undefined === opt) ? this.getOption() : opt;
