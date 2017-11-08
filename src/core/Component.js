@@ -728,7 +728,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === x) {
                 /* getter */
-                return mofron.func.getLength(this.style('width')),
+                return mofron.func.getLength(this.style('width'));
             }
             /* setter */
             this.style({
@@ -744,7 +744,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === y) {
                 /* getter */
-                return mofron.func.getLength(this.style('height')),
+                return mofron.func.getLength(this.style('height'));
             }
             /* setter */
             this.style({
