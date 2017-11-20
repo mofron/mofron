@@ -55,7 +55,10 @@ mofron.Base = class {
         try {
             if (undefined === val) {
                 /* getter */
-                return this.m_data[key];
+                if (undefined === this.m_data) {
+                    return null;
+                }
+                return (undefined === this.m_data[key]) ? null : this.m_data[key];
             }
             /* setter */
             if ('string' !== typeof key) {
