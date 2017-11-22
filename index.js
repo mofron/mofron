@@ -1,7 +1,7 @@
 require('expose-loader?mofron!./src/core/namesp.js');
 require('./src/common/Base.js');
 require('./src/common/Param.js');
-require('./src/common/function.js');
+mofron.func = require('./src/common/function.js');
 
 require('./src/util/conf/DomConf.js');
 require('./src/util/conf/Attr.js');
