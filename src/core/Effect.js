@@ -21,6 +21,10 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (flg) {
         try {
+            if (true === this.ignore()) {
+                return;
+            }
+            
             var _flg = (flg === undefined) ? true : flg;
             if ('boolean' !== typeof _flg) {
                 throw new Error('invalid paramter');

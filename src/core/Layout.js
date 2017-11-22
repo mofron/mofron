@@ -22,6 +22,9 @@ mofron.Layout = class extends mofron.CompConf {
     
     execute () {
         try {
+            if (true === this.ignore()) {
+                return;
+            }
             var tgt_chd = this.target().child();
             var _idx    = null;
             for (var idx in tgt_chd) {
