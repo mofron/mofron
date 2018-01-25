@@ -6,87 +6,43 @@ so it makes possible to development front-end by only js.
 
 
 ## Install
-mofron dependencies webpack babel expose-loader
 
 ```bash
-npm install mofron 
+npm install mofron
 ```
 
 ## Quick Start
+this is a sample for it build the login page.
 
-create ./index.html
-
-```html
-<html>
-    <head></head>
-    <body style="margin:0px;padding:0px;"></body>
-    <script src='./dist/app.js'></script>
-</html>
+install mofron develop env
+```
+cd (deploy target dir)
+git clone https://github.com/mofron/env-template.git (dirname)
+cd (dirname)
+./tool/init.sh
 ```
 
-create ./src/sample.js (button display sample)
+install mofron and login component
+```
+npm install mofron mofron-comp-login
+```
 
+edit src/js/ctrl/init/index.js
 ```javascript
-let mf = require('mofron'); 
-let Button = require('mofron-comp-button');
-
-// simple usage
-new Button('test').visible(true); 
-
-// swing like style coding
-var btn = new Button('swing');
-btn.width(150);                        // set width to 150px
-btn.visible(true);                     // set to DOM
-btn.clickEvent(                        // set click event
-    () => {
-        console.log('click button');
+let Login = require('mofron-comp-login');    // add
+let start = (rt) => {
+    try {
+        new Login().visible(true);           // add
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
     }
-);
-btn.height(30);                        // enable changing after display
-btn.style({'margin-left' : '10px'});   // css setting, if you need
-
-// key-value style coding
-let btn = new Button({
-    text       : 'key-val',
-    width      : 150,
-    height     : 30,
-    clickEvent : () => {
-                     console.log('click button');
-                 },
-    style      : {
-                     margin     : '5px',
-                     background : 'lightblue'
-                 }
-});
-btn.visible(true);
+}
 ```
 
-create ./webpack.config.js
-
-```javascript
-module.exports = {
-    entry: './src/sample.js', 
-    output: {
-        path: __dirname + '/dist',
-        filename: 'app.js' 
-    },
-    module: {
-        loaders: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader'  ,
-            query: {
-                presets: ['es2015']  
-            }
-        }]
-    }
-};
-```
-packed
-
+create a js file for browser 
 ```bash
-`npm bin`/webpack   # makes dist/app.js
+./too/build.sh
 ```
 
-
-[more](http://qiita.com/Ki4mTaria/items/3d2ccc1c9867ee9270bf)
+then you can see login page.
