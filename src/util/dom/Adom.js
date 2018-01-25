@@ -16,7 +16,7 @@ mofron.Adom = class extends mofron.Dom {
      */
     constructor () {
         try {
-            super({});
+            super();
             this.name('Adom');
             
             this.m_style   = {};

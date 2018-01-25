@@ -159,6 +159,19 @@ mofron.Base = class {
                 /* prm-opt is paramter */
                 this.param(po);
             } else if (null !== po) {
+                let isrun = false;
+                for (let idx in po) {
+                    isrun = true;
+                    if ('string' !== typeof idx) {
+                        /* prm-opt is paramter */
+                        this.param(po);
+                        return;
+                    }
+                }
+                if (false === isrun) {
+                    /* prm-opt is paramter */
+                    this.param(po);
+                }
                 /* prm-opt is option */
                 this.addOption(po);
             }
