@@ -7,10 +7,8 @@ module.exports = {
     layout : {},
     event  : {},
     effect : {},
-    tmpl   : {},
     func   : {},
     theme  : null,
     root   : new Array(),
-    temp   : {},
-    util   : {}
+    debug  : false
 };

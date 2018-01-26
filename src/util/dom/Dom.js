@@ -2,7 +2,6 @@
  * @file Dom.js
  * @author simpart
  */
-
 /**
  * @class Dom
  * @brief Dom class
@@ -86,24 +85,10 @@ mofron.Dom = class extends mofron.Base {
             this.m_comp = cmp;
             
             /* set component attribute */
-            var nm_lst  = cmp.getNameList();
             if (true === mofron.debug) {
-                var cmp_str = '';
-                for (var cidx in nm_lst) {
-                    if (cidx < 2) {
-                        continue;
-                    }
-                    if ('' !== cmp_str) {
-                        cmp_str += '-';
-                    }
-                    if ('i' !== 'I'.toLowerCase()) {
-                        cmp_str += nm_lst[cidx].replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
-                    } else {
-                        cmp_str += nm_lst[cidx].toLowerCase();
-                    }
-                }
-                if ('' !== cmp_str) {
-                    cmp.adom().attr({'component' : cmp_str});
+                var nm  = cmp.name().toLowerCase();
+                if ('Component' !== nm) {
+                    cmp.adom().attr({'component' : 'mofron-comp-' + nm});
                 }
             }
         } catch (e) {
