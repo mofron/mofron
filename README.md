@@ -20,7 +20,7 @@ install mofron develop env
 cd (deploy target dir)
 git clone https://github.com/mofron/env-template.git (dirname)
 cd (dirname)
-./tool/init.sh
+./tool/init/centos.sh
 ```
 
 install mofron and login component
