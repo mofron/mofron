@@ -460,6 +460,10 @@ mofron.Dom = class extends mofron.Base {
             
             this.parent(tgt);
             
+            if (true === mofron.ssr) {
+                return;
+            }
+            
             var tgt_dom = (null === this.parent()) ? document.body : this.parent().getRawDom();
             if (false === _upd) {
                 tgt_dom.insertAdjacentHTML('beforeend',this.value());
