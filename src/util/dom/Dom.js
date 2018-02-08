@@ -15,7 +15,7 @@ mofron.Dom = class extends mofron.Base {
      */
     constructor (tg, cmp) {
         try {
-            super(tg);
+            super(tg, cmp);
             this.name('Dom');
             
             this.m_classnm = new mofron.ClassName(this);
@@ -30,11 +30,7 @@ mofron.Dom = class extends mofron.Base {
             if (null === prm) {
                 this.execOption();
             } else {
-                this.tag(prm);
-            }
-            
-            /* check component */
-            if (undefined !== cmp) {
+                this.tag(tg);
                 this.component(cmp);
             }
         } catch (e) {

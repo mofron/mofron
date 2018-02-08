@@ -14,13 +14,17 @@ mofron.Param = class extends mofron.Base {
             this.name('Param');
             
             this.m_param = new Array();
-            for (var idx in arguments) {
+            for (let idx in arguments) {
+                if (undefined === arguments[idx]) {
+                    continue;
+                }
                 this.m_param.push(arguments[idx]); 
             }
             
-            if ( (1 >= this.m_param.length) ||
-                 (5 <= this.m_param.length)) {
-                throw new Error('invalid parameter');
+            if (0 === this.m_param.length) {
+                throw new Error('too few parameter');
+            } else if (5 <= this.m_param.length) {
+                throw new Error('too many parameters');
             }
         } catch (e) {
             console.error(e.stack);
@@ -46,7 +50,10 @@ mofron.Param = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             var prm = this.getParam();
-            if (2 === prm.length) {
+            if (1 === prm.length) {
+                console.warn('you shuld call ' + func + '() without mofron.Param object');
+                obj[func](prm[0]);
+            } else if (2 === prm.length) {
                 obj[func](prm[0], prm[1]);
             } else if (3 === prm.length) {
                 obj[func](prm[0], prm[1], prm[2]);

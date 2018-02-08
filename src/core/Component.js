@@ -13,9 +13,9 @@ mofron.Component = class extends mofron.Base {
      *
      * @param po : (object) component parameter / option (not require)
      */
-    constructor (po) {
+    constructor (p1,p2,p3) {
         try {
-            super(po);
+            super(p1,p2,p3);
             this.name('Component');
             
             /* initialize member */
@@ -31,7 +31,7 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            
+            this.adom();
             this.execOption();
         } catch (e) {
             console.error(e.stack);
@@ -621,7 +621,23 @@ mofron.Component = class extends mofron.Base {
             if (false === this.isInitDom()) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
-                this.initDomConts(this.m_param);
+                /*** initialize dom contents ***/
+                if (null === this.param()) {
+                    /* this component is no parameter */
+                    this.initDomConts();
+                } else {
+                    let cmp_p = this.param().getParam();
+                    /* call init function with parameters specified */
+                    if (1 === cmp_p.length) {
+                        this.initDomConts(cmp_p[0]);
+                    } else if (2 === cmp_p.length) {
+                        this.initDomConts(cmp_p[0], cmp_p[1]);
+                    } else if (3 === cmp_p.length) {
+                        this.initDomConts(cmp_p[0], cmp_p[1], cmp_p[2]);
+                    } else {
+                        throw new Error('too many component parameters');
+                    }
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -762,7 +778,6 @@ mofron.Component = class extends mofron.Base {
             if (null === opt) {
                 return;
             }
-            this.adom();
             if (undefined !== opt.theme) {
                 this.theme(opt.theme);
                 delete opt.theme;

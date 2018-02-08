@@ -8,11 +8,20 @@
  * @brief top of mofron parent class
  */
 mofron.Base = class {
-    constructor (po) {
+    constructor (p1,p2,p3,p4,p5) {
         try {
-            this.m_name  = new Array();
-            this.m_param = null;
-            this.setPrmOpt(po);
+            this.m_name = new Array();
+            if (1 < arguments.length) {
+                if ( (undefined !== p1) ||
+                     (undefined !== p2) || 
+                     (undefined !== p3) || 
+                     (undefined !== p4) || 
+                     (undefined !== p5) ) {
+                    this.param(new mofron.Param(p1,p2,p3,p4,p5));
+                }
+            } else if (1 === arguments.length){
+                this.setPrmOpt(arguments[0]);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -95,24 +104,11 @@ mofron.Base = class {
         }
     }
     
-    prmOpt (po) {
-        try {
-            this.setPrmOpt(po);
-            let opt = this.getOption();
-            if (null !== opt) {
-                this.execOption();
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     param (prm) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return this.m_param;
+                return (undefined === this.m_param) ? null : this.m_param;
             }
             /* setter */
             this.m_param = prm;
@@ -157,20 +153,20 @@ mofron.Base = class {
             if ( ('object'  !== typeof po) ||
                  (undefined !== po[0]) ) {
                 /* prm-opt is paramter */
-                this.param(po);
+                this.param(new mofron.Param(po));
             } else if (null !== po) {
                 let isrun = false;
                 for (let idx in po) {
                     isrun = true;
                     if ('string' !== typeof idx) {
                         /* prm-opt is paramter */
-                        this.param(po);
+                        this.param(new mofron.Param(po));
                         return;
                     }
                 }
                 if (false === isrun) {
                     /* prm-opt is paramter */
-                    this.param(po);
+                    this.param(new mofron.Param(po));
                 }
                 /* prm-opt is option */
                 this.addOption(po);
@@ -207,8 +203,7 @@ mofron.Base = class {
             
             for (var opt_idx in opt) {
                 if ('function' === typeof this[opt_idx]) {
-                    if ( ('prmOpt' === this[opt_idx]) ||
-                         ('name'   === this[opt_idx]) ) {
+                    if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
                     if (true === mofron.func.isObject(opt[opt_idx],'Param')) {

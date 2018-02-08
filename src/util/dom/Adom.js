@@ -18,13 +18,10 @@ mofron.Adom = class extends mofron.Dom {
         try {
             super();
             this.name('Adom');
-            
             this.m_style   = {};
             this.m_classnm = {};
             this.m_attr    = {};
             this.m_prop    = {};
-            
-            /* do not call prmOpt() at here */
         } catch (e) {
             console.error(e.stack);
             throw e;
