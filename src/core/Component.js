@@ -15,7 +15,15 @@ mofron.Component = class extends mofron.Base {
      */
     constructor (p1,p2,p3) {
         try {
-            super(p1,p2,p3);
+            if (0 === arguments.length) {
+                super();
+            } else if (1 === arguments.length) {
+                super(p1);
+            } else if (2 === arguments.length) {
+                super(p1,p2);
+            } else if (3 === arguments.length) {
+                super(p1,p2,p3);
+            }
             this.name('Component');
             
             /* initialize member */

@@ -11,16 +11,16 @@ mofron.Base = class {
     constructor (p1,p2,p3,p4,p5) {
         try {
             this.m_name = new Array();
-            if (1 < arguments.length) {
+            if (1 === arguments.length) {
+                this.setPrmOpt(arguments[0]);
+            } else if (1 < arguments.length) {
                 if ( (undefined !== p1) ||
                      (undefined !== p2) || 
                      (undefined !== p3) || 
                      (undefined !== p4) || 
                      (undefined !== p5) ) {
-                    this.param(new mofron.Param(p1,p2,p3,p4,p5));
+                    this.param(new mofron.Param(p1,p2,p3,p4,p5)); 
                 }
-            } else if (1 === arguments.length){
-                this.setPrmOpt(arguments[0]);
             }
         } catch (e) {
             console.error(e.stack);
