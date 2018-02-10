@@ -13,17 +13,9 @@ mofron.Component = class extends mofron.Base {
      *
      * @param po : (object) component parameter / option (not require)
      */
-    constructor (p1,p2,p3) {
+    constructor (po) {
         try {
-            if (0 === arguments.length) {
-                super();
-            } else if (1 === arguments.length) {
-                super(p1);
-            } else if (2 === arguments.length) {
-                super(p1,p2);
-            } else if (3 === arguments.length) {
-                super(p1,p2,p3);
-            }
+            super();
             this.name('Component');
             
             /* initialize member */
@@ -39,8 +31,7 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
-            this.adom();
-            this.execOption();
+            this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -626,6 +617,7 @@ mofron.Component = class extends mofron.Base {
     
     initDomContsCtl() {
         try {
+console.log();
             if (false === this.isInitDom()) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
@@ -782,6 +774,7 @@ mofron.Component = class extends mofron.Base {
     
     execOption (opt) {
         try {
+            this.adom();
             opt = (undefined === opt) ? this.getOption() : opt;
             if (null === opt) {
                 return;

@@ -8,20 +8,9 @@
  * @brief top of mofron parent class
  */
 mofron.Base = class {
-    constructor (p1,p2,p3,p4,p5) {
+    constructor () {
         try {
             this.m_name = new Array();
-            if (1 === arguments.length) {
-                this.setPrmOpt(arguments[0]);
-            } else if (1 < arguments.length) {
-                if ( (undefined !== p1) ||
-                     (undefined !== p2) || 
-                     (undefined !== p3) || 
-                     (undefined !== p4) || 
-                     (undefined !== p5) ) {
-                    this.param(new mofron.Param(p1,p2,p3,p4,p5)); 
-                }
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -144,32 +133,51 @@ mofron.Base = class {
         }
     }
     
-    setPrmOpt (po) {
+    setPrmOpt (po, p2, p3, p4, p5) {
         try {
-            if ( (undefined === po) ||
-                 (null      === po) ) {
-                return;
+            let prm_cnt = 0;
+            for (let pidx in arguments) {
+                if (undefined !== arguments[pidx]) {
+                    prm_cnt++;
+                }
             }
-            if ( ('object'  !== typeof po) ||
-                 (undefined !== po[0]) ) {
-                /* prm-opt is paramter */
-                this.param(new mofron.Param(po));
-            } else if (null !== po) {
-                let isrun = false;
-                for (let idx in po) {
-                    isrun = true;
-                    if ('string' !== typeof idx) {
-                        /* prm-opt is paramter */
+            if (0 === prm_cnt) {
+                return;
+            } else if (1 === prm_cnt) {
+                if ('object' === typeof po) {
+                    if ("undefined" === typeof po[0]) {
+                        for (let pidx2 in po) {
+                            if ('string' !== typeof pidx2) {
+                                /* this is paramter */
+                                this.param(new mofron.Param(po));
+                                return;
+                            }
+                        }
+                        /* this is option */
+                        this.addOption(po);
+                    } else {
+                        /* this is paramter */
                         this.param(new mofron.Param(po));
-                        return;
                     }
+                } else {
+                    /* this is paramter */
+                    this.param(new mofron.Param(po, p2, p3, p4, p5));
                 }
-                if (false === isrun) {
-                    /* prm-opt is paramter */
-                    this.param(new mofron.Param(po));
-                }
-                /* prm-opt is option */
-                this.addOption(po);
+            } else {
+                this.param(new mofron.Param(po, p2, p3, p4, p5));
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    prmOpt (po, p1, p2, p3, p4) {
+        try {
+            this.setPrmOpt(po, p1, p2, p3, p4);
+            let opt = this.getOption();
+            if (null !== opt) {
+                this.execOption();
             }
         } catch (e) {
             console.error(e.stack);
