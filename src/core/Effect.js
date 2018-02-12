@@ -12,7 +12,7 @@ mofron.Effect = class extends mofron.CompConf {
                             null,  /* function */
                             null   /* parameter */
                         );
-            this.execOption();
+            this.execOption(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -98,7 +98,6 @@ mofron.Effect = class extends mofron.CompConf {
             if ('boolean' !== typeof en) {
                 throw new Error('invalid paramter');
             }
-            
             var adom = this.target().adom();
             if (true === en) {
                 adom.style({

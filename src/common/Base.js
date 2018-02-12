@@ -11,6 +11,7 @@ mofron.Base = class {
     constructor () {
         try {
             this.m_name = new Array();
+            this.name('Base');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -146,6 +147,12 @@ mofron.Base = class {
             } else if (1 === prm_cnt) {
                 if ('object' === typeof po) {
                     if ("undefined" === typeof po[0]) {
+                        if (true === mofron.func.isInclude(po, 'Base')) {
+                            /* this is parameter */
+                            this.param(new mofron.Param(po));
+                            return;
+                        }
+                        
                         for (let pidx2 in po) {
                             if ('string' !== typeof pidx2) {
                                 /* this is paramter */
