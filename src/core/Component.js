@@ -772,6 +772,25 @@ console.log();
         }
     }
     
+    color (val) {
+        try {
+            if (undefined === val) {
+                /* getter */
+                return (undefined === this.m_color) ? null : this.m_color;
+            }
+            /* setter */
+            if (true !== mofron.func.isInclude(val, 'Color')) {
+                throw new Error('invalid parameter');
+            }
+            this.style({
+                'background' : val.getStyle()
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     execOption (opt) {
         try {
             this.adom();
