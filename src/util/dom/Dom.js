@@ -170,6 +170,27 @@ mofron.Dom = class extends mofron.Base {
         }
     }
     
+    styleListener (key, func, prm) {
+        try {
+            if (undefined === key) {
+                /* getter */
+                return (undefined === this.m_style_lis) ? [] : this.m_style_lis;
+            }
+            /* setter */
+            if (undefined === this.m_style_lis) {
+                this.m_style_lis = {};
+            }
+            if ( ('string'   !== typeof (key)) ||
+                 ('function' !== typeof (func)) ) {
+                throw new Error('invalid parameter');
+            }
+            this.m_style_lis[key] = [func, prm];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * style setter / getter
      *
@@ -184,13 +205,6 @@ mofron.Dom = class extends mofron.Base {
                 return this.m_style.get(kv);
             }
             /* setter */
-            var chgcnf = {};
-            for (var kv_idx in kv) {
-                if (kv[kv_idx] !== this.style(kv_idx)) {
-                    chgcnf[kv_idx] = kv[kv_idx];
-                }
-            }
-            
             if (true === los) {
                 this.m_style.protect(true);
                 this.m_style.set(kv);
@@ -199,9 +213,16 @@ mofron.Dom = class extends mofron.Base {
                 this.m_style.set(kv);
             }
             
-            if (0 !== chgcnf.length) {
-                this.execConfListener('style', chgcnf);
+            /* execute style listener */
+            let lisner = this.styleListener();
+            for (let kv_idx in kv) {
+                for (let lis_idx in lisner) {
+                    if (kv_idx === lis_idx) {
+                        lisner[lis_idx][0](lisner[lis_idx][1]);
+                    }
+                }
             }
+            
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -239,9 +260,9 @@ mofron.Dom = class extends mofron.Base {
                 this.m_attr.set(kv);
             }
             
-            if (0 !== chgcnf.length) {
-                this.execConfListener ('attr', chgcnf);
-            }
+            //if (0 !== chgcnf.length) {
+            //    this.execConfListener ('attr', chgcnf);
+            //}
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -278,9 +299,9 @@ mofron.Dom = class extends mofron.Base {
                 this.m_prop.set(kv);
             }
             
-            if (0 !== chgcnf.length) {
-                this.execConfListener ('prop', chgcnf);
-            }
+            //if (0 !== chgcnf.length) {
+            //    this.execConfListener ('prop', chgcnf);
+            //}
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -301,7 +322,7 @@ mofron.Dom = class extends mofron.Base {
             }
             /* setter */
             this.m_classnm.add(name);
-            this.execConfListener('className', name);
+            //this.execConfListener('className', name);
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -335,9 +356,9 @@ mofron.Dom = class extends mofron.Base {
                 this.getRawDom().innerHTML = txt;
             }
             
-            if (null !== chgcnf) {
-                this.execConfListener ('text', txt);
-            }
+            //if (null !== chgcnf) {
+                //this.execConfListener ('text', txt);
+            //}
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -345,32 +366,32 @@ mofron.Dom = class extends mofron.Base {
         }
     }
     
-    addConfListener (fnc, prm) {
-        try {
-            if ('function' !== typeof fnc) {
-                throw new Error('invalid parameter');
-            }
-            this.m_cnflis.push([fnc, prm]);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    execConfListener (type, prm) {
-        try {
-            for (var idx in this.m_cnflis) {
-                this.m_cnflis[idx][0](
-                    type,
-                    prm,
-                    this.m_cnflis[idx][1]
-                );
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //addConfListener (fnc, prm) {
+    //    try {
+    //        if ('function' !== typeof fnc) {
+    //            throw new Error('invalid parameter');
+    //        }
+    //        this.m_cnflis.push([fnc, prm]);
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
+    //
+    //execConfListener (type, prm) {
+    //    try {
+    //        for (var idx in this.m_cnflis) {
+    //            this.m_cnflis[idx][0](
+    //                type,
+    //                prm,
+    //                this.m_cnflis[idx][1]
+    //            );
+    //        }
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
     
     /**
      * dom string setter / getter
