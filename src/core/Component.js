@@ -617,7 +617,6 @@ mofron.Component = class extends mofron.Base {
     
     initDomContsCtl() {
         try {
-console.log();
             if (false === this.isInitDom()) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
