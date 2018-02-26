@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "babel-preset-env": "",
     "expose-loader": "",
     "webpack": "",
+    "webpack-cli": "",
     
     "mofron-comp-accordion": "",
     "mofron-comp-button": "",
@@ -30,6 +31,7 @@
     "mofron-comp-loading": "",
     "mofron-comp-menu": "",
     "mofron-comp-message": "",
+    "mofron-comp-modalfil" : "",
     "mofron-comp-notify": "",
     "mofron-comp-pagination": "",
     "mofron-comp-progress": "",
