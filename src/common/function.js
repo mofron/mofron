@@ -284,7 +284,12 @@ module.exports = {
             } else {
                 var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str;
             }
-            document.head.insertAdjacentHTML('beforeend',add_conts);
+            
+            if (null !== mofron.ssr) {
+                mofron.ssr.head(add_conts);
+            } else { 
+                document.head.insertAdjacentHTML('beforeend',add_conts);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
