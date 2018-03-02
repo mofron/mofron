@@ -285,7 +285,7 @@ module.exports = {
                 var add_conts = '<' + tag + ' '+ attr_conts +'>' + conts_str;
             }
             
-            if (null !== mofron.ssr) {
+            if (undefined !== mofron.ssr) {
                 mofron.ssr.head(add_conts);
             } else { 
                 document.head.insertAdjacentHTML('beforeend',add_conts);

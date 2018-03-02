@@ -231,7 +231,7 @@ mofron.Component = class extends mofron.Base {
             this.child()[upd_idx].destroy();
             
             this.target(old_tgt);
-            this.addChild(n_chd, upd_disp, upd_idx);
+            this.addChild(n_chd, upd_idx);
             this.target(buf_tgt);
         } catch (e) {
             console.error(e.stack);
@@ -415,6 +415,37 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     } 
+    
+    delConfig (tp, nm) {
+        try {
+            if ( ('layout' !== tp) &&
+                 ('effect' !== tp) &&
+                 ('event'  !== tp) ) {
+                throw new Error('invalid type');
+            }
+            let cnf = this[tp]();
+            if (undefined !== nm) {
+                for (let cidx in cnf) {
+                    if (cnf[cidx].name() === nm) {
+                        /* delete target */
+                        if ('layout' === tp) {
+                            this.m_conf[0].splice(cidx, 1);
+                        } else if ('effect' === tp) {
+                            this.m_conf[1].splice(cidx, 1);
+                        } else if ('event' === tp) {
+                            this.m_conf[2].splice(cidx, 1);
+                        }
+                    }
+                }
+            } else {
+                return cnf;
+            }
+            return null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     
     addEffect (eff, flg) {
         try {
