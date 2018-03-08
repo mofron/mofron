@@ -276,6 +276,30 @@ mofron.Component = class extends mofron.Base {
                 this.destroy();
             }
             this.m_parent = pnt;
+            let lis = this.parentListener();
+            for (let lidx in lis) {
+                lis[lidx][0](this, lis[lidx][1]);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    parentListener (evt, prm) {
+        try {
+            if (undefined === evt) {
+                /* getter */
+                return (undefined === this.m_pnt_lis) ? [] : this.m_pnt_lis;
+            }
+            /* setter */
+            if ('function' !== typeof evt) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_pnt_lis) {
+                this.m_pnt_lis = new Array();
+            }
+            this.m_pnt_lis.push([evt, prm]);
         } catch (e) {
             console.error(e.stack);
             throw e;
