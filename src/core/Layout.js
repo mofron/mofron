@@ -32,6 +32,14 @@ mofron.Layout = class extends mofron.CompConf {
                 if (_idx < this.m_execnt) {
                     continue;
                 }
+                /* check skip */
+                let skip = this.skipTarget();
+                for (let sidx in skip) {
+                    if (tgt_chd[_idx].getId() === skip[sidx]) {
+                        this.m_execnt++;
+                        continue;;
+                    }
+                }
                 
                 this.layoutConts(_idx, tgt_chd[_idx]);
                 this.m_execnt++;
@@ -48,6 +56,25 @@ mofron.Layout = class extends mofron.CompConf {
         } catch (e) {
             console.error(e.stack);
             throw e;
+        }
+    }
+    
+    skipTarget (id) {
+        try {
+            if (undefined === id) {
+                /* getter */
+                return (undefined === this.m_skip_tgt) ? [] : this.m_skip_tgt;
+            }
+            /* setter */
+            if ('string' !== typeof id) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_skip_tgt) {
+                this.m_skip_tgt = new Array();
+            }
+            this.m_skip_tgt.push(id);
+        } catch (e) {
+            console.error(e.stack);
         }
     }
 }
