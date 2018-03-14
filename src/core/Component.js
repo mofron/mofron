@@ -680,7 +680,7 @@ mofron.Component = class extends mofron.Base {
                     /* this component is no parameter */
                     this.initDomConts();
                 } else {
-                    let cmp_p = this.param().getParam();
+                    let cmp_p = this.param();
                     /* call init function with parameters specified */
                     if (1 === cmp_p.length) {
                         this.initDomConts(cmp_p[0]);

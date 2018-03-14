@@ -98,7 +98,7 @@ mofron.Base = class {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_param) ? null : this.m_param;
+                return (undefined === this.m_param) ? null : this.m_param.getParam();
             }
             /* setter */
             this.m_param = prm;
