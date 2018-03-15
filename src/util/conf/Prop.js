@@ -41,6 +41,18 @@ mofron.Prop = class extends mofron.DomConf {
         }
     }
     
+    rrem (key) {
+        try {
+            if (undefined === this.target().getRawDom()[key]) {
+                return;
+            }
+            delete this.target().getRawDom()[key];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * get property value from rawdom
      *

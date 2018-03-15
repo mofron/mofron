@@ -53,7 +53,11 @@ mofron.DomConf = class extends mofron.Base {
                 this.m_conts[idx] = kv[idx];
                 if (true === this.target().isPushed()) {
                     /* target is already rendered */
-                    this.rset(idx, kv[idx]);
+                    if (null !== kv[idx]) {
+                        this.rset(idx, kv[idx]);
+                    } else {
+                        this.rrem(idx);
+                    }
                 }
             }
         } catch (e) {
@@ -73,6 +77,15 @@ mofron.DomConf = class extends mofron.Base {
                  /* target is already rendered */
                 return (undefined == this.rget(key)) ? null : this.rget(key);
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    rrem () {
+        try {
+            console.warn('not implement');
         } catch (e) {
             console.error(e.stack);
             throw e;

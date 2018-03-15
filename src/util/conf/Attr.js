@@ -38,6 +38,15 @@ mofron.Attr = class extends mofron.DomConf {
         }
     }
     
+    rrem (key) {
+        try {
+            this.target().getRawDom().removeAttribute(key);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * get attribute value from rawdom
      *

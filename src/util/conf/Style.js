@@ -55,6 +55,15 @@ mofron.Style = class extends mofron.DomConf {
         }
     }
     
+    rrem (key) {
+        try {
+            delete this.target().getRawDom().style[key];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     getString () {
         try {
             var ret_val = '';

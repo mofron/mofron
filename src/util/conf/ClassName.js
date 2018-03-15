@@ -70,6 +70,15 @@ mofron.ClassName = class extends mofron.DomConf {
         }
     }
     
+    rrem (key) {
+        try {
+            this.target().getRawDom().classList.remove(key);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * get class name from rawdom
      *
