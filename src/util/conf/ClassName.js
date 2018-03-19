@@ -27,7 +27,7 @@ mofron.ClassName = class extends mofron.DomConf {
     add (nm) {
         try {
             var set_obj = {};
-            set_obj[nm] = null;
+            set_obj[nm] = "";
             this.set(set_obj);
         } catch (e) {
             console.error(e.stack);

@@ -17,9 +17,11 @@ require('./src/util/dom/Adom.js');
 require('./src/util/Color.js');
 require('./src/util/Font.js');
 require('./src/util/Theme.js');
+require('./src/util/CompCtrl.js');
 
 require('./src/core/Component.js');
 require('./src/core/Layout.js');
 require('./src/core/Event.js');
 require('./src/core/Effect.js');
+
 module.exports = mofron;
