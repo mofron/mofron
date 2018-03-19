@@ -245,13 +245,6 @@ mofron.Dom = class extends mofron.Base {
                 return this.m_attr.get(kv);
             }
             /* setter */
-            var chgcnf = {};
-            for (var kv_idx in kv) {
-                if (kv[kv_idx] !== this.attr(kv_idx)) {
-                    chgcnf[kv_idx] = kv[kv_idx];
-                }
-            }
-            
             if ('string' === typeof kv) {
                 var set_obj = {};
                 set_obj[kv] = val;
@@ -260,9 +253,6 @@ mofron.Dom = class extends mofron.Base {
                 this.m_attr.set(kv);
             }
             
-            //if (0 !== chgcnf.length) {
-            //    this.execConfListener ('attr', chgcnf);
-            //}
             this.value(null);
         } catch (e) {
             console.error(e.stack);

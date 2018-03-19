@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "0.15.14",
+  "version": "0.15.15",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "mofron-comp-date": "",
     "mofron-comp-dialog": "",
     "mofron-comp-dropdown": "",
+    "mofron-comp-footer": "",
     "mofron-comp-form": "",
     "mofron-comp-formitem": "",
     "mofron-comp-frame": "",

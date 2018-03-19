@@ -50,7 +50,16 @@ mofron.DomConf = class extends mofron.Base {
                      (undefined !== this.m_conts[idx]) ) {
                     return;
                 }
-                this.m_conts[idx] = kv[idx];
+                
+                if (null !== kv[idx]) {
+                    /* set config */
+                    this.m_conts[idx] = kv[idx];
+                } else {
+                    /* delete config */
+                    if (undefined !== this.m_conts[idx]) {
+                        delete this.m_conts[idx];
+                    }
+                }
                 if (true === this.target().isPushed()) {
                     /* target is already rendered */
                     if (null !== kv[idx]) {

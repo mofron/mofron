@@ -27,6 +27,7 @@ mofron.Layout = class extends mofron.CompConf {
             }
             var tgt_chd = this.target().child();
             var _idx    = null;
+            let skip_flg = false;
             for (var idx in tgt_chd) {
                 _idx = parseInt(idx);
                 if (_idx < this.m_execnt) {
@@ -34,14 +35,17 @@ mofron.Layout = class extends mofron.CompConf {
                 }
                 /* check skip */
                 let skip = this.skipTarget();
+                skip_flg = false;
                 for (let sidx in skip) {
                     if (tgt_chd[_idx].getId() === skip[sidx]) {
-                        this.m_execnt++;
-                        continue;;
+                        skip_flg = true;
+                        break;
                     }
                 }
                 
-                this.layoutConts(_idx, tgt_chd[_idx]);
+                if (false === skip_flg) {
+                    this.layoutConts(_idx, tgt_chd[_idx]);
+                }
                 this.m_execnt++;
             }
         } catch (e) {

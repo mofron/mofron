@@ -188,30 +188,5 @@ mofron.Effect = class extends mofron.CompConf {
             throw e;
         }
     }
-    
-    param (val) {
-        try {
-            let ret = super.param(val);
-            if (undefined === ret) {
-                let prm = val.getParam();
-                let plen = val.getParam().length;
-                if (1 === plen) {
-                    this.value(prm[0]);
-                } else if (2 === plen) {
-                    this.value(prm[0], prm[1]);
-                } else if (3 === plen) {
-                    this.value(prm[0], prm[1], prm[2]);
-                } else if (4 === plen) {
-                    this.value(prm[0], prm[1], prm[2], prm[3]);
-                } else if (5 === plen) {
-                    this.value(prm[0], prm[1], prm[2], prm[3], prm[4]);
-                }
-            }
-            return ret;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
 }
 /* end of file */
