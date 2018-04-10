@@ -181,6 +181,13 @@ mofron.Component = class extends mofron.Base {
             chd.parent(this);                         // child's parent is me
             this.target().addChild(chd.adom(), idx);  // parent relate to child at dom level
             
+            if ( (null !== this.target().component().parent()) &&
+                 (this.getId() === this.target().component().parent().getId()) ) {
+                /* target is inner component */
+                this.target().component().addChild(chd, idx);
+                return;
+            }
+            
             if ( (undefined === idx) ||
                  (0 === this.m_child.length) ) {
                 this.m_child.push(chd);
