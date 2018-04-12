@@ -67,6 +67,26 @@ mofron.Layout = class extends mofron.CompConf {
         try {
             if (undefined === id) {
                 /* getter */
+                return this.skipTargetElem();
+            }
+            /* setter */
+            if ('string' === typeof id) {
+                this.skipTargetElem(id);
+                return;
+            }
+            for (let sidx in id) {
+                this.skipTargetElem(id[sidx]);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    skipTargetElem (id) {
+        try {
+            if (undefined === id) {
+                /* getter */
                 return (undefined === this.m_skip_tgt) ? [] : this.m_skip_tgt;
             }
             /* setter */
@@ -79,6 +99,7 @@ mofron.Layout = class extends mofron.CompConf {
             this.m_skip_tgt.push(id);
         } catch (e) {
             console.error(e.stack);
+            throw e;
         }
     }
 }

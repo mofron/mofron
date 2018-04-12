@@ -150,13 +150,10 @@ mofron.Component = class extends mofron.Base {
                 return this.m_child;
             }
             /* setter */
-            if ('object' !== typeof chd) {
+            if (true !== Array.isArray(chd)) {
                 this.addChild(chd);
                 return;
             }
-            
-            let set_chd  = null;
-            let set_disp = true;
             for (var idx in chd) {
                 this.addChild(chd[idx]);
             }
