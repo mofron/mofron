@@ -849,6 +849,14 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    prmOpt (po, p1, p2, p3, p4) {
+        super.prmOpt(po, p1, p2, p3, p4);
+        
+        if (null !== this.param()) {
+            this.adom();
+        }
+    }
+    
     execOption (opt) {
         try {
             this.adom();
