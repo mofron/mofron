@@ -834,7 +834,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === val) {
                 /* getter */
-                return (undefined === this.m_color) ? null : this.m_color;
+                return mofron.func.getColor(this.style('background'));
             }
             /* setter */
             if (true !== mofron.func.isInclude(val, 'Color')) {
