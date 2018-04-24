@@ -63,7 +63,7 @@ mofron.Effect = class extends mofron.CompConf {
                             console.error(e.stack);
                             throw e;
                         }
-                    }, 200, this
+                    }, 50, this
                 );
             }
             
