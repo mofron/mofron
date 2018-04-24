@@ -74,5 +74,18 @@ mofron.CompConf = class extends mofron.Base {
             throw e;
         }
     }
+    
+    value (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_value) ? null : this.m_value;
+            }
+            this.m_value = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
