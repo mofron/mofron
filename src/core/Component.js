@@ -147,6 +147,10 @@ mofron.Component = class extends mofron.Base {
             if (undefined === chd) {
                 /* getter */
                 this.adom();  // for before initDomConts()
+                if (true === this.isInnerTarget()) {
+                    /* target is inner component */
+                    return this.target().component().child();
+                }
                 return this.m_child;
             }
             /* setter */
@@ -157,6 +161,18 @@ mofron.Component = class extends mofron.Base {
             for (var idx in chd) {
                 this.addChild(chd[idx]);
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getChild (rflg) {
+        try {
+            if (true === rflg) {
+                return this.m_child;
+            }
+            return this.child();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -178,8 +194,7 @@ mofron.Component = class extends mofron.Base {
             chd.parent(this);                         // child's parent is me
             this.target().addChild(chd.adom(), idx);  // parent relate to child at dom level
             
-            if ( (null !== this.target().component().parent()) &&
-                 (this.getId() === this.target().component().parent().getId()) ) {
+            if (true === this.isInnerTarget() ) {
                 /* target is inner component */
                 this.target().component().addChild(chd, idx);
                 return;
@@ -215,7 +230,7 @@ mofron.Component = class extends mofron.Base {
             }
             
             /* search index of old-child */
-            var chd     = this.child();
+            var chd     = this.getChild(true);
             var upd_idx = null;
             for (var chd_idx in chd) {
                 if (chd[chd_idx].getId() === o_chd.getId()) {
@@ -231,8 +246,8 @@ mofron.Component = class extends mofron.Base {
             let buf_tgt = this.target();
             
             /* replace child */
-            var upd_disp = this.child()[upd_idx].visible();
-            this.child()[upd_idx].destroy();
+            var upd_disp = this.getChild(true)[upd_idx].visible();
+            this.getChild(true)[upd_idx].destroy();
             
             this.target(old_tgt);
             this.addChild(n_chd, upd_idx);
@@ -247,7 +262,7 @@ mofron.Component = class extends mofron.Base {
     delChild (idx) {
         try {
             if ( ('number'  !== typeof idx) ||
-                 (undefined === this.child()[idx]) ) {
+                 (undefined === this.getChild(true)[idx]) ) {
                 throw new Error('invalid parameter');
             }
             this.m_child.splice(idx, 1);
@@ -256,6 +271,7 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     }
+    
     
     /**
      * parent getter / setter
@@ -607,7 +623,7 @@ mofron.Component = class extends mofron.Base {
     
     beforeRender () {
         try {
-            var chd = this.child();
+            var chd = this.getChild(true);
             for (var idx in chd) {
                 chd[idx].beforeRender();
             }
@@ -619,7 +635,7 @@ mofron.Component = class extends mofron.Base {
     
     afterRender () {
         try {
-            var chd = this.child();
+            var chd = this.getChild(true);
             for (var idx in chd) {
                 chd[idx].afterRender();
             }
@@ -632,7 +648,7 @@ mofron.Component = class extends mofron.Base {
     initConfig (tgt_idx) {
         try {
             /* set child config */
-            let chd = this.child();
+            let chd = this.getChild(true);
             for (let cidx in chd) {
                 chd[cidx].initConfig(tgt_idx);
             }
@@ -869,6 +885,27 @@ mofron.Component = class extends mofron.Base {
                 delete opt.theme;
             }
             super.execOption(opt);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isInnerTarget () { 
+        try {
+            if (null === this.target().component().parent()) {
+                return false;
+            }
+            
+            let pnt_buf = this.target().component().parent();
+            while (null !== pnt_buf) {
+                if (this.getId() === pnt_buf.getId()) {
+                    /* target is inner component */
+                    return true;
+                }
+                pnt_buf = pnt_buf.parent();
+            }
+            return false;
         } catch (e) {
             console.error(e.stack);
             throw e;
