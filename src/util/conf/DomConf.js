@@ -45,10 +45,11 @@ mofron.DomConf = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
+            let ret = {};
             for (var idx in kv) {
-                if ( (true      === this.protect())   &&
-                     (undefined !== this.m_conts[idx]) ) {
-                    return;
+                if ( ((true === this.protect()) && (undefined !== this.m_conts[idx])) ||
+                     (kv[idx] === this.m_conts[idx])  ) {
+                    continue;
                 }
                 
                 if (null !== kv[idx]) {
@@ -68,7 +69,9 @@ mofron.DomConf = class extends mofron.Base {
                         this.rrem(idx);
                     }
                 }
+                ret[idx] = kv[idx];
             }
+            return ret;
         } catch (e) {
             console.error(e.stack);
             throw e;

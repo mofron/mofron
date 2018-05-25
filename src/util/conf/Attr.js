@@ -56,8 +56,7 @@ mofron.Attr = class extends mofron.DomConf {
      */
     rget (key) {
         try {
-            var val = this.target().getRawDom().getAttribute(key);
-            return ('' === val) ? null : val;
+            return this.target().getRawDom().getAttribute(key);
         } catch (e) {
             console.error(e.stack);
             throw e;

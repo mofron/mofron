@@ -204,21 +204,24 @@ mofron.Dom = class extends mofron.Base {
                 /* getter */
                 return this.m_style.get(kv);
             }
+            let set_ret = null;
             /* setter */
             if (true === los) {
                 this.m_style.protect(true);
-                this.m_style.set(kv);
+                set_ret = this.m_style.set(kv);
                 this.m_style.protect(false);
             } else if ('object' === typeof kv) {
-                this.m_style.set(kv);
+                set_ret = this.m_style.set(kv);
             }
             
             /* execute style listener */
-            let lisner = this.styleListener();
-            for (let kv_idx in kv) {
+            let lisner  = this.styleListener();
+            let lis_prm = {};
+            for (let s_idx in set_ret) {
                 for (let lis_idx in lisner) {
-                    if (kv_idx === lis_idx) {
-                        lisner[lis_idx][0](lisner[lis_idx][1]);
+                    if (s_idx === lis_idx) {
+                        lis_prm[lis_idx] = set_ret[s_idx];
+                        lisner[lis_idx][0](lis_prm, this, lisner[lis_idx][1]);
                     }
                 }
             }
