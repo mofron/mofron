@@ -757,6 +757,9 @@ mofron.Component = class extends mofron.Base {
                 }
             } else {
                 this.adom().style({ 'display' : 'none' });
+                if (false === this.adom().isPushed()) {
+                    return;
+                }
             }
             
             if (null === this.parent()) {
