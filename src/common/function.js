@@ -340,6 +340,33 @@ module.exports = {
             console.error(e.stack);
             throw e;
         }
+    },
+    
+    responsive : (cmp, tgt, val) => {
+        try {
+            if (false === mofron.func.isInclude(cmp, 'Component')) {
+                throw new Error('invalid parameter');
+            }
+            let resp = cmp.responsive();
+            if (null === resp) {
+                return;
+            }
+            for (let idx in resp) {
+                if (tgt === idx) {
+                    if ( ('number' === typeof resp[idx]) && ('number' === typeof val)) {
+                        cmp[tgt](cmp[tgt]() + resp[idx]);
+                    } else if ('string' === typeof resp[idx]) {
+                        cmp[tgt](resp[idx]);
+                    } else if ('function' === typeof resp[idx]) {
+                        resp[idx](cmp, val);
+                    }
+                    break;
+                }
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
 };
 /* end of file */

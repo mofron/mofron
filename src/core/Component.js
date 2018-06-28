@@ -701,10 +701,6 @@ mofron.Component = class extends mofron.Base {
                 if (null === this.param()) {
                     /* this component is no parameter */
                     this.initDomConts();
-                    let dev_tp = mofron.func.devType();
-                    if ((true === this.enableRespsv()) && ('other' !== dev_tp)) {
-                        this.responsive(dev_tp);
-                    }
                 } else {
                     let cmp_p = this.param();
                     /* call init function with parameters specified */
@@ -833,6 +829,12 @@ mofron.Component = class extends mofron.Base {
             this.style({
                 'width'  : ('number' === typeof x) ? (x + 'px') : x
             });
+            
+            if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
+                this.m_respsv_ctl = true;
+                mofron.func.responsive(this, 'width', x);
+                this.m_respsv_ctl = false;
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -849,6 +851,12 @@ mofron.Component = class extends mofron.Base {
             this.style({
                 'height'  : ('number' === typeof y) ? (y + 'px') : y
             });
+            
+            if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
+                this.m_respsv_ctl = true;
+                mofron.func.responsive(this, 'height', y);
+                this.m_respsv_ctl = false;
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -921,23 +929,68 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    enableRespsv (prm) {
+    responsive (prm, ini) {
         try {
-            if (undefined === prm) {
+            if (undefined === prm) { 
                 /* getter */
-                return (undefined === this.m_respsv) ? true : this.m_respsv;
+                return (undefined === this.m_respsv) ? null : this.m_respsv;
             }
             /* setter */
-            if ('boolean' !== typeof prm) {
-                throw new Error("invalid parameter");
+            if ('object' !== typeof prm) {
+                throw new Error('invalid parameter');
             }
-            this.m_respsv = prm;
+            if (undefined === this.m_respsv) {
+                this.m_respsv = {};
+            }
+            
+            let tmp = this;
+            for (let pidx in prm) {
+                this.m_respsv[pidx] = prm[pidx];
+                if (true !== this.isRespsv()) {
+                    continue;
+                }
+                
+                if (true === ini) {
+                    this.m_respsv_ctl = true;
+                    mofron.func.responsive(
+                        this,
+                        pidx,
+                        (null !== tmp[pidx]()) ? tmp[pidx]() : prm[pidx]
+                    );
+                    this.m_respsv_ctl = false;
+                } else {
+                    if (null !== tmp[pidx]()) {
+                        this.m_respsv_ctl = true;
+                        mofron.func.responsive(this, pidx, tmp[pidx]());
+                        this.m_respsv_ctl = false;
+                    }
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    responsive (prm) {}
+    isRespsv (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                let ret = (undefined === this.m_respsv_flg) ? true : this.m_respsv_flg;
+                if (false === ret) {
+                    return false;
+                }
+                return ('other' !== mofron.func.devType()) ? true : false;
+            }
+            /* setter */
+            if ('boolean' !== typeof prm) {
+                throw new Error('invald parameter');
+            }
+            this.m_respsv_flg = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
