@@ -701,7 +701,7 @@ mofron.Component = class extends mofron.Base {
                 if (null === this.param()) {
                     /* this component is no parameter */
                     this.initDomConts();
-                    let dev_tp = mf.func.devType();
+                    let dev_tp = mofron.func.devType();
                     if ((true === this.enableRespsv()) && ('other' !== dev_tp)) {
                         this.responsive(dev_tp);
                     }
