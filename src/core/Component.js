@@ -607,6 +607,8 @@ mofron.Component = class extends mofron.Base {
             
             /* before push event */
             this.beforeRender();
+            
+            /* execute render */
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
@@ -699,6 +701,10 @@ mofron.Component = class extends mofron.Base {
                 if (null === this.param()) {
                     /* this component is no parameter */
                     this.initDomConts();
+                    let dev_tp = mf.func.devType();
+                    if ((true === this.enableRespsv()) && ('other' !== dev_tp)) {
+                        this.responsive(dev_tp);
+                    }
                 } else {
                     let cmp_p = this.param();
                     /* call init function with parameters specified */
@@ -914,5 +920,24 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     }
+    
+    enableRespsv (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_respsv) ? true : this.m_respsv;
+            }
+            /* setter */
+            if ('boolean' !== typeof prm) {
+                throw new Error("invalid parameter");
+            }
+            this.m_respsv = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    responsive (prm) {}
 }
 /* end of file */

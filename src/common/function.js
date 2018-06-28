@@ -323,19 +323,19 @@ module.exports = {
             throw e;
         }
     },
-    
-    getTemp : (key) => {
+    devType : () => {
         try {
-            return (undefined === mofron.temp[key]) ? null : mofron.temp[key];
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    },
-    
-    setTemp : (key, val) => {
-        try {
-            mofron.temp[key] = val;
+            let ua = navigator.userAgent;
+            if ( ua.indexOf('iPhone')  > 0 ||
+                 ua.indexOf('iPod')    > 0 ||
+                 ua.indexOf('Android') > 0 &&
+                 ua.indexOf('Mobile')  > 0 ){
+                return 'smartphone';
+            } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+                return 'tablet';
+            } else {
+                return 'other';
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
