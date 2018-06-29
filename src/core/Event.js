@@ -18,10 +18,6 @@ mofron.Event = class extends mofron.CompConf {
         try {
             super();
             this.name('Event');
-            
-            if ('function' === typeof fnc) {
-                this.handler(fnc, prm);
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -61,6 +57,24 @@ mofron.Event = class extends mofron.CompConf {
     eventConts (tgt) {
         try {
             console.warn('not implement');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    prmOpt (po) {
+        try {
+            super.prmOpt(po);
+            let prm = this.param();
+            if (null !== prm) {
+               if ('function' === typeof prm[0]) {
+                   this.handler(
+                       prm[0],
+                       (1 < prm.length) ? prm[1] : undefined
+                   );
+               }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

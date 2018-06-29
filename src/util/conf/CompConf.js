@@ -82,6 +82,22 @@ mofron.CompConf = class extends mofron.Base {
                 return (undefined === this.m_value) ? null : this.m_value;
             }
             this.m_value = prm;
+            if ((null !== this.target()) && (true === this.target().adom().isPushed())) {
+                this.execute();
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    prmOpt (po) {
+        try {
+            super.prmOpt(po);
+            let prm = this.param();
+            if (null !== prm) {
+               this.m_param.call(this, 'value');
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

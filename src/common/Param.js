@@ -51,7 +51,6 @@ mofron.Param = class extends mofron.Base {
             }
             var prm = this.getParam();
             if (1 === prm.length) {
-                console.warn('you shuld call ' + func + '() without mofron.Param object');
                 obj[func](prm[0]);
             } else if (2 === prm.length) {
                 obj[func](prm[0], prm[1]);
