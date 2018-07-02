@@ -63,9 +63,9 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
     
-    prmOpt (po) {
+    prmOpt (po, p1, p2, p3, p4) {
         try {
-            super.prmOpt(po);
+            super.prmOpt(po, p1, p2, p3, p4);
             let prm = this.param();
             if (null !== prm) {
                if ('function' === typeof prm[0]) {
