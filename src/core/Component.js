@@ -172,7 +172,7 @@ mofron.Component = class extends mofron.Base {
             if (true === rflg) {
                 return this.m_child;
             }
-            return this.child();
+            return this.target().component().parent();;
         } catch (e) {
             console.error(e.stack);
             throw e;
