@@ -61,9 +61,12 @@ mofron.ClassName = class extends mofron.DomConf {
      * @param key : (string) style key
      * @param val : (string) style value
      */
-    rset (key, val) {
+    rset (key) {
         try {
-            this.target().getRawDom().classList.add(key);
+            let spkey = key.split(' ');
+            for (let idx in spkey) {
+                this.target().getRawDom().classList.add(spkey[idx]);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
