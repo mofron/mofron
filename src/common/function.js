@@ -296,7 +296,7 @@ module.exports = {
         }
     },
     
-    addResizeWin : (func, prm, tlag) => {
+    rsizWinEvent : (func, prm, tlag) => {
         try {
             var que_buf = null;
             var param   = prm;

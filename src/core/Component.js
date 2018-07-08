@@ -775,10 +775,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    vdom (vd) {
-        return this.adom(vd);
-    }
-    
     /**
      * agent dom setter / getter
      * 

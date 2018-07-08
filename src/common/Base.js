@@ -249,9 +249,10 @@ mofron.Base = class {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
-                    if (true === mofron.func.isObject(opt[opt_idx],'Param')) {
-                        opt[opt_idx].call(this,opt_idx);
-                    } else {
+                    if ( (true === mofron.func.isObject(opt[opt_idx],'Param')) ||
+                         (true === mofron.func.isObject(opt[opt_idx],'Option')) ) {
+                        opt[opt_idx].exec(this, opt_idx);
+                    }else {
                         this[opt_idx](opt[opt_idx]);
                     }
                 }

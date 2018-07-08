@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "0.17.5",
+  "version": "0.17.6",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
