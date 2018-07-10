@@ -41,7 +41,7 @@ mofron.Param = class extends mofron.Base {
         }
     }
     
-    call (obj,func) {
+    exec (obj,func) {
         try {
             if ((null === obj) || ('object' !== typeof obj)) {
                 throw new Error('invalid paramter');

@@ -988,5 +988,49 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     }
+    
+    addSwitchTgt (key, prm) {
+        try {
+            if ( (('string' !== typeof key) && ('number' !== typeof key)) ||
+                 (undefined === prm) ||
+                 (true !== mofron.func.isObject(prm, 'Dom')) ) {
+                throw new Error('invald parameter');
+            }
+            if ('number' === typeof key) {
+                key = key + '';
+            }
+            
+            if (undefined === this.m_swhtgt) {
+                this.m_swhtgt = {};
+            }
+            this.m_swhtgt[key] = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    switchTgt (key, fnc) {
+        try {
+            if ( ( ('string'   !== typeof key) &&
+                   ('number'   !== typeof key) ) ||
+                   ('function' !== typeof fnc) ) {
+                throw new Error('invald parameter');
+            }
+            if ('number' === typeof key) {
+                key = key + '';
+            }
+            let tgt_buf = this.target();
+            if (undefined === this.m_swhtgt[key]) {
+                throw new Error('could not find switch target');
+            }
+            this.target(this.m_swhtgt[key]);
+            fnc();
+            this.target(tgt_buf);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
