@@ -24,7 +24,8 @@ mofron.Component = class extends mofron.Base {
             this.m_conf   = new Array(
                                 new Array(), /* layout */
                                 new Array(), /* effect */
-                                new Array()  /* event */
+                                new Array(), /* event */
+                                new Array()  /* responsive */
                             );
             this.m_target = new Array(
                                 null,        /* child */
@@ -436,6 +437,59 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    addEffect (eff, flg) {
+        try {
+            if (undefined !== eff.speed()) {
+                /* update effect speed */
+                let eff_lst = this.effect();
+                for (let eidx in eff_lst) {
+                    eff_lst[eidx].speed(eff.speed());
+                }
+            } else {
+                if ( (        0 !== this.effect().length) &&
+                     (undefined !== this.effect()[0].speed()) ) {
+                    eff.speed(this.effect()[0].speed());
+                }
+            }
+            if (undefined !== flg) {
+                eff.defStatus(flg);
+            }
+            this.addConfig(1, eff);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    respsv (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return this.config(3);
+            }
+            /* setter */
+            if ('object' !== typeof prm) {
+                this.addRespsv(prm);
+                return;
+            }
+            for (let ridx in prm) {
+                this.addRespsv(prm[ridx]);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    addRespsv (prm) {
+        try {
+            this.addConfig(3, prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     getConfig (tp, nm) {
         try {
             if ( ('layout' !== tp) &&
@@ -491,30 +545,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    addEffect (eff, flg) {
-        try {
-            if (undefined !== eff.speed()) {
-                /* update effect speed */
-                let eff_lst = this.effect();
-                for (let eidx in eff_lst) {
-                    eff_lst[eidx].speed(eff.speed());
-                }
-            } else {
-                if ( (        0 !== this.effect().length) &&
-                     (undefined !== this.effect()[0].speed()) ) {
-                    eff.speed(this.effect()[0].speed());
-                }
-            }
-            if (undefined !== flg) {
-                eff.defStatus(flg);
-            }
-            this.addConfig(1, eff);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     config (idx, cnf) {
         try {
             if (undefined === cnf) {
@@ -546,7 +576,7 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_conf[idx].push(cnf);
-            cnf.target(this);
+            cnf.component(this);
             if (true === this.adom().isPushed()) {
                 if ( (    1 === idx) &&
                      (false === cnf.defStatus()) ) {
@@ -604,6 +634,7 @@ mofron.Component = class extends mofron.Base {
             /* set child config */
             this.initConfig(0); // layout
             this.initConfig(1); // effect
+            this.initConfig(3); // responsive
             
             /* before push event */
             this.beforeRender();
@@ -826,11 +857,11 @@ mofron.Component = class extends mofron.Base {
                 'width'  : ('number' === typeof x) ? (x + 'px') : x
             });
             
-            if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
-                this.m_respsv_ctl = true;
-                mofron.func.responsive(this, 'width', x);
-                this.m_respsv_ctl = false;
-            }
+            //if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
+            //    this.m_respsv_ctl = true;
+            //    mofron.func.responsive(this, 'width', x);
+            //    this.m_respsv_ctl = false;
+            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -848,11 +879,11 @@ mofron.Component = class extends mofron.Base {
                 'height'  : ('number' === typeof y) ? (y + 'px') : y
             });
             
-            if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
-                this.m_respsv_ctl = true;
-                mofron.func.responsive(this, 'height', y);
-                this.m_respsv_ctl = false;
-            }
+            //if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
+            //    this.m_respsv_ctl = true;
+            //    mofron.func.responsive(this, 'height', y);
+            //    this.m_respsv_ctl = false;
+            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -919,70 +950,6 @@ mofron.Component = class extends mofron.Base {
                 pnt_buf = pnt_buf.parent();
             }
             return false;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    responsive (prm, ini) {
-        try {
-            if (undefined === prm) { 
-                /* getter */
-                return (undefined === this.m_respsv) ? null : this.m_respsv;
-            }
-            /* setter */
-            if ('object' !== typeof prm) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === this.m_respsv) {
-                this.m_respsv = {};
-            }
-            
-            let tmp = this;
-            for (let pidx in prm) {
-                this.m_respsv[pidx] = prm[pidx];
-                if (true !== this.isRespsv()) {
-                    continue;
-                }
-                
-                if (true === ini) {
-                    this.m_respsv_ctl = true;
-                    mofron.func.responsive(
-                        this,
-                        pidx,
-                        (null !== tmp[pidx]()) ? tmp[pidx]() : prm[pidx]
-                    );
-                    this.m_respsv_ctl = false;
-                } else {
-                    if (null !== tmp[pidx]()) {
-                        this.m_respsv_ctl = true;
-                        mofron.func.responsive(this, pidx, tmp[pidx]());
-                        this.m_respsv_ctl = false;
-                    }
-                }
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    isRespsv (prm) {
-        try {
-            if (undefined === prm) {
-                /* getter */
-                let ret = (undefined === this.m_respsv_flg) ? true : this.m_respsv_flg;
-                if (false === ret) {
-                    return false;
-                }
-                return ('other' !== mofron.func.devType()) ? true : false;
-            }
-            /* setter */
-            if ('boolean' !== typeof prm) {
-                throw new Error('invald parameter');
-            }
-            this.m_respsv_flg = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;

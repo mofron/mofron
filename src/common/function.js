@@ -323,6 +323,125 @@ module.exports = {
             throw e;
         }
     },
+    angleEvent : () => {
+        try {
+            let nti_fnc = (evt) => {
+                try {
+                    let ef = null;
+                    if ( ("landscape-primary"   === screen.mozOrientation) ||
+                         ("landscape-secondary" === screen.mozOrientation) ) {
+                        /* horizon event */
+                        ef = mofron.func.hrzAngleEvent();
+                    } else if ( ("portrait-primary"   === screen.mozOrientation) ||
+                                ("portrait-secondary" === screen.mozOrientation) ) {
+                        /* vertical event */
+                        ef = mofron.func.vrtAngleEvent();
+                    }
+                    for (let eidx in ef) {
+                        ef[eidx][0](evt, ef[eidx][1]);
+                    }
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
+            };
+            
+            if ( (undefined !== screen.orientation) &&
+                 (null      === screen.orientation.onchange) ) {
+                //screen.orientation.onchange = nti_fnc;
+                screen.orientation.onchange = (evt) => {
+                    try {
+                        let ef = null;
+                        if ( ("landscape-primary"   === screen.orientation.type) ||
+                             ("landscape-secondary" === screen.orientation.type) ) {
+                            /* horizon event */
+                            ef = mofron.func.hrzAngleEvent();
+                        } else if ( ("portrait-primary"   === screen.orientation.type) ||
+                                    ("portrait-secondary" === screen.orientation.type) ) {
+                            /* vertical event */
+                            ef = mofron.func.vrtAngleEvent();
+                        }
+                        for (let eidx in ef) {
+                            ef[eidx][0](evt, ef[eidx][1]);
+                        }
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                }
+            } else if (null === screen.onmozorientationchange) {
+                screen.onmozorientationchange = nti_fnc;
+            } else if (null === screen.onmsorientationchange) {
+                screen.onmsorientationchange = nti_fnc;
+            } else {
+                if ( (1 < mofron.func.hrzAngleEvent().length) ||
+                     (1 < mofron.func.vrtAngleEvent().length)) {
+                    return;
+                }
+                window.addEventListener(
+                    "orientationchange",
+                    (evt) => {
+                        try {
+                            let ef = null;
+                            if (window.innerHeight < window.innerWidth) {
+                                /* horizon event */
+                                ef = mofron.func.hrzAngleEvent();
+                            } else {
+                                /* vertical event */
+                                ef = mofron.func.vrtAngleEvent();
+                            }
+                            for (let eidx in ef) {
+                                ef[eidx][0](evt, ef[eidx][1]);
+                            }
+                        } catch (e) {
+                            console.error(e.stack);
+                            throw e;
+                        }
+                    }
+                );
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    hrzAngleEvent : (func, prm) => {
+        try {
+            if (undefined === func) {
+                /* getter */
+                return mofron.func.hrzAngleEvent_func;
+            }
+            /* setter */
+            if ('function' !== typeof func) {
+                throw new Error('invalid parameter');
+            }
+            mofron.func.hrzAngleEvent_func.push(new Array(func, prm));
+            mofron.func.angleEvent();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    hrzAngleEvent_func : new Array(),
+    vrtAngleEvent : (func, prm) => {
+        try {
+            if (undefined === func) {
+                /* getter */
+                return mofron.func.vrtAngleEvent_func;
+            }
+            /* setter */
+            if ('function' !== typeof func) {
+                throw new Error('invalid parameter');
+            }
+            mofron.func.vrtAngleEvent_func.push(new Array(func, prm));
+            mofron.func.angleEvent();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    vrtAngleEvent_func : new Array(),
     devType : () => {
         try {
             let ua = navigator.userAgent;
@@ -330,7 +449,7 @@ module.exports = {
                  ua.indexOf('iPod')    > 0 ||
                  ua.indexOf('Android') > 0 &&
                  ua.indexOf('Mobile')  > 0 ){
-                return 'smartphone';
+                return 'mobile';
             } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
                 return 'tablet';
             } else {
@@ -341,27 +460,41 @@ module.exports = {
             throw e;
         }
     },
-    
-    responsive : (cmp, tgt, val) => {
+    osType  : () => {
         try {
-            if (false === mofron.func.isInclude(cmp, 'Component')) {
-                throw new Error('invalid parameter');
+            let ua = window.navigator.userAgent;
+            if ( ua.indexOf('iPhone')  > 0 ||
+                 ua.indexOf('iPod')    > 0 ||
+                 ua.indexOf('iPad')    > 0 ) {
+                return 'ios';
+            } else if (ua.indexOf('Android') > 0) {
+                return 'android';
+            } else {
+                return 'other';
             }
-            let resp = cmp.responsive();
-            if (null === resp) {
-                return;
-            }
-            for (let idx in resp) {
-                if (tgt === idx) {
-                    if ( ('number' === typeof resp[idx]) && ('number' === typeof val)) {
-                        cmp[tgt](cmp[tgt]() + resp[idx]);
-                    } else if ('string' === typeof resp[idx]) {
-                        cmp[tgt](resp[idx]);
-                    } else if ('function' === typeof resp[idx]) {
-                        resp[idx](cmp, val);
-                    }
-                    break;
-                }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    brsType : () => {
+        try {
+            let ua = window.navigator.userAgent.toLowerCase();
+            if( (ua.indexOf('msie')    !== -1) ||
+                (ua.indexOf('trident') !== -1) ) {
+                return 'ie';
+            } else if (ua.indexOf('edge') != -1) {
+                return 'edge';
+            } else if (ua.indexOf('chrome') != -1) {
+                return 'chrome';
+            } else if (ua.indexOf('safari') != -1) {
+                return 'safari';
+            } else if (ua.indexOf('firefox') != -1) {
+                return 'firefox';
+            } else if (ua.indexOf('opera') != -1) {
+                return 'opera';
+            } else {
+                return 'other';
             }
         } catch (e) {
             console.error(e.stack);

@@ -6,12 +6,8 @@ mofron.Effect = class extends mofron.CompConf {
     
     constructor (po) {
         try {
-            super(po);
+            super();
             this.name('Effect');
-            this.m_cb = new Array(
-                            null,  /* function */
-                            null   /* parameter */
-                        );
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -20,9 +16,9 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (flg) {
         try {
-            if (true === this.ignore()) {
-                return;
-            }
+            //if (true === this.ignore()) {
+            //    return;
+            //}
             
             var _flg = (flg === undefined) ? true : flg;
             if ('boolean' !== typeof _flg) {
@@ -31,19 +27,19 @@ mofron.Effect = class extends mofron.CompConf {
             
             if (0 === this.speed()) {
                if (true === _flg) {
-                   this.enable(this.target());
+                   this.contents(true, this.component());
                    this.status(true);
                } else {
-                   this.disable(this.target());
+                   this.contents(false, this.component());
                    this.status(false);
                }
             } else {
                 /* init exec */
                 if (true === _flg) {
-                    this.disable(this.target());
+                    this.contents(false, this.component());
                     this.status(false);
                 } else {
-                    this.enable(this.target());
+                    this.contents(true,this.component());
                     this.status(true);
                 }
                 
@@ -53,10 +49,10 @@ mofron.Effect = class extends mofron.CompConf {
                     (eff) => {
                         try {
                             if (true === _flg) {
-                                eff.enable(eff.target());
+                                eff.contents(true, eff.component());
                                 eff.status(true);
                             } else {
-                                eff.disable(eff.target());
+                                eff.contents(false, eff.component());
                                 eff.status(false);
                             }
                         } catch (e) {
@@ -71,7 +67,7 @@ mofron.Effect = class extends mofron.CompConf {
                 (eff) => {
                     try {
                         if ( (0 < eff.speed()) &&
-                             (eff.getId() === eff.target().effect()[0].getId()) ) {
+                             (eff.getId() === eff.component().effect()[0].getId()) ) {
                             eff.setConf(false);
                         }
                         if (null != eff.callback()[0]) {
@@ -97,7 +93,7 @@ mofron.Effect = class extends mofron.CompConf {
             if ('boolean' !== typeof en) {
                 throw new Error('invalid paramter');
             }
-            var adom = this.target().adom();
+            var adom = this.component().adom();
             if (true === en) {
                 adom.style({
                     '-webkit-transition' : ((1000 * this.speed())) + 'ms all linear 0s',
@@ -121,13 +117,13 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    enable (tgt) {
-        console.warn('not implement');
-    }
-    
-    disable (tgt) {
-        console.warn('not implement');
-    }
+    //enable (tgt) {
+    //    console.warn('not implement');
+    //}
+    //
+    //disable (tgt) {
+    //    console.warn('not implement');
+    //}
     
     status (sts) {
         try {
@@ -182,7 +178,19 @@ mofron.Effect = class extends mofron.CompConf {
     
     callback (fnc, prm) {
         try {
-            return this.confFunc(fnc, prm);
+            if (undefined === fnc) {
+                /* getter */
+                return (undefined === this.m_callback) ? null : this.m_callback;
+            }
+            /* setter */
+            if ('function' !== typeof fnc) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_callback) {
+                this.m_callback = new Array(null,null);
+            }
+            this.m_callback[0] = fnc;
+            this.m_callback[1] = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;

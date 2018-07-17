@@ -6,7 +6,7 @@
 mofron.Layout = class extends mofron.CompConf {
     constructor (po) {
         try {
-            super(po);
+            super();
             this.name('Layout');
             this.m_execnt = 0;
         } catch (e) {
@@ -17,13 +17,13 @@ mofron.Layout = class extends mofron.CompConf {
     
     execute () {
         try {
-            if (true === this.ignore()) {
-                return;
-            }
-            var tgt_chd = this.target().child();
+            //if (true === this.ignore()) {
+            //    return;
+            //}
+            var cmp_chd = this.component().child();
             var _idx    = null;
             let skip_flg = false;
-            for (var idx in tgt_chd) {
+            for (var idx in cmp_chd) {
                 _idx = parseInt(idx);
                 if (_idx < this.m_execnt) {
                     continue;
@@ -32,14 +32,14 @@ mofron.Layout = class extends mofron.CompConf {
                 let skip = this.skipTarget();
                 skip_flg = false;
                 for (let sidx in skip) {
-                    if (tgt_chd[_idx].getId() === skip[sidx]) {
+                    if (cmp_chd[_idx].getId() === skip[sidx]) {
                         skip_flg = true;
                         break;
                     }
                 }
                 
                 if (false === skip_flg) {
-                    this.layoutConts(_idx, tgt_chd[_idx]);
+                    this.contents(_idx, cmp_chd[_idx]);
                 }
                 this.m_execnt++;
             }
@@ -49,55 +49,34 @@ mofron.Layout = class extends mofron.CompConf {
         }
     }
     
-    layoutConts (idx, tgt) {
-        try {
-            console.warn('layout is not implements');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //contents (idx, tgt) {
+    //    console.warn('layout is not implements');
+    //}
     
-    skipTarget (id) {
+    skipTarget (prm) {
         try {
-            if (undefined === id) {
-                /* getter */
-                return this.skipTargetElem();
-            }
-            /* setter */
-            if ('string' === typeof id) {
-                this.skipTargetElem(id);
-                return;
-            }
-            for (let sidx in id) {
-                this.skipTargetElem(id[sidx]);
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    skipTargetElem (id) {
-        try {
-            if (undefined === id) {
+            if (undefined === prm) {
                 /* getter */
                 return (undefined === this.m_skip_tgt) ? [] : this.m_skip_tgt;
             }
             /* setter */
-            if ('string' !== typeof id) {
+            if (true === Array.isArray(prm)) {
+                for (let sidx in prm) {
+                    this.skipTarget(prm[sidx]);
+                }
+                return;
+            } else if (true === mofron.func.isInclude(prm,'Component')) {
+                if (undefined === this.m_skip_tgt) {
+                    this.m_skip_tgt = new Array();
+                }
+                this.m_skip_tgt.push(prm.getId());
+            } else {
                 throw new Error('invalid parameter');
             }
-            if (undefined === this.m_skip_tgt) {
-                this.m_skip_tgt = new Array();
-            }
-            this.m_skip_tgt.push(id);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    
 }
 /* end of file */

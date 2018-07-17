@@ -7,6 +7,7 @@ module.exports = {
     layout : {},
     event  : {},
     effect : {},
+    respsv : {},
     func   : {},
     theme  : null,
     root   : new Array(),

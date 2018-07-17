@@ -32,7 +32,19 @@ mofron.Event = class extends mofron.CompConf {
      */
     handler (fnc, prm) {
         try {
-            return this.confFunc(fnc, prm);
+            if (undefined === fnc) {
+                /* getter */
+                return (undefined === this.m_handler) ? null : this.m_handler;
+            }
+            /* setter */
+            if ('function' !== typeof fnc) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_handler) {
+                this.m_handler = new Array(null,null);
+            }
+            this.m_handler[0] = fnc;
+            this.m_handler[1] = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -41,22 +53,7 @@ mofron.Event = class extends mofron.CompConf {
     
     execute () {
         try {
-            if (true !== this.ignore()) {
-                this.eventConts(this.target().eventTgt());
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * this is interface function.
-     * extend class needs to implement this function.
-     */
-    eventConts (tgt) {
-        try {
-            console.warn('not implement');
+            this.contents(this.component().eventTgt());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -67,13 +64,11 @@ mofron.Event = class extends mofron.CompConf {
         try {
             super.prmOpt(po, p1, p2, p3, p4);
             let prm = this.param();
-            if (null !== prm) {
-               if ('function' === typeof prm[0]) {
-                   this.handler(
-                       prm[0],
-                       (1 < prm.length) ? prm[1] : undefined
-                   );
-               }
+            if ((null !== prm) && ('function' === typeof prm[0])) {
+                this.handler(
+                    prm[0],
+                    (1 < prm.length) ? prm[1] : undefined
+                );
             }
         } catch (e) {
             console.error(e.stack);
