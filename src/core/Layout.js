@@ -17,9 +17,6 @@ mofron.Layout = class extends mofron.CompConf {
     
     execute () {
         try {
-            //if (true === this.ignore()) {
-            //    return;
-            //}
             var cmp_chd = this.component().child();
             var _idx    = null;
             let skip_flg = false;
@@ -39,6 +36,10 @@ mofron.Layout = class extends mofron.CompConf {
                 }
                 
                 if (false === skip_flg) {
+                    /* check parameter count */
+                    if (false === this.getParam().checkCount()) {
+                        throw new Error('invalid parameter count');
+                    }
                     this.contents(_idx, cmp_chd[_idx]);
                 }
                 this.m_execnt++;

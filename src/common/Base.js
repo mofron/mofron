@@ -94,20 +94,16 @@ mofron.Base = class {
         }
     }
     
-    param (prm) {
+    param (prm, pflg) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_param) ? null : this.m_param.getParam();
+                if (undefined === this.m_param) {
+                    return null;
+                }
+                return ((undefined === pflg) || (false === pflg)) ? this.m_param.getParam() : this.m_param;
             }
             /* setter */
-            let pchk    = this.prmCheck();
-            let get_prm = prm.getParam();
-            if (null !== pchk) {
-                for (let idx in pchk) {
-                    pchk[idx](get_prm[idx]);
-                }
-            }
             this.m_param = prm;
         } catch (e) {
             console.error(e.stack);
@@ -115,21 +111,9 @@ mofron.Base = class {
         }
     }
     
-    prmCheck () {
+    getParam () {
         try {
-            if (0 === arguments.length) {
-                /* getter */
-                return (undefined === this.m_prmcheck) ? null : this.m_prmcheck;
-            }
-            if (undefined === this.m_prmcheck) {
-                this.m_prmcheck = new Array();
-            }
-            for (let idx in arguments) {
-                if ('function' !== typeof arguments[idx]) {
-                    throw new Error('invalid parameter');
-                }
-                this.m_prmcheck.push(arguments[idx]);
-            }
+            return this.param(undefined, true);
         } catch (e) {
             console.error(e.stack);
             throw e;

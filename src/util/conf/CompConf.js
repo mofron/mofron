@@ -12,7 +12,6 @@ mofron.CompConf = class extends mofron.Base {
         try {
             super(po);
             this.name('CompConf');
-            //this.m_func = new Array(null, null);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -44,46 +43,15 @@ mofron.CompConf = class extends mofron.Base {
         console.warn('not implement');
     }
     
-    //confFunc (fnc, prm) {
-    //    try {
-    //        if (undefined === fnc) {
-    //            /* getter */
-    //            return this.m_func;
-    //        }
-    //        /* setter */
-    //        if ('function' !== typeof fnc) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        this.m_func[0] = fnc;
-    //        this.m_func[1] = (undefined === prm) ? null : prm;
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-    
-    //ignore (flg) {
-    //    try {
-    //        if (undefined === flg) {
-    //            /* getter */
-    //            return (undefined === this.m_cpcf_ign) ? false : this.m_cpcf_ign;
-    //        }
-    //        /* setter */
-    //        if ('boolean' !== typeof flg) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        this.m_cpcf_ign = flg;
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-
     value (p1, p2, p3, p4, p5) {
         try {
-            if (undefined === p1) {
+            if ( (undefined === p1) ||
+                 (undefined === p2) ||
+                 (undefined === p3) ||
+                 (undefined === p4) ||
+                 (undefined === p5) ) {
                 /* getter */
-                return super.param();
+                return (1 === super.param().length) ? super.param()[0] : super.param();
             }
             /* setter */
             super.param(new mofron.Param(p1, p2, p3, p4, p5));
@@ -92,22 +60,5 @@ mofron.CompConf = class extends mofron.Base {
             throw e;
         }
     }
-
-    //param (p1, p2, p3, p4, p5) {
-    //    try {
-    //        if (undefined === p1) {
-    //            /* getter */
-    //            return super.param();
-    //        }
-    //        /* setter */
-    //        super.param(new mofron.Param(p1, p2, p3, p4, p5));
-    //        if ((null !== this.component()) && (true === this.component().adom().isPushed())) {
-    //            this.execute();
-    //        }
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
 }
 /* end of file */

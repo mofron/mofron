@@ -70,7 +70,7 @@ mofron.Effect = class extends mofron.CompConf {
                              (eff.getId() === eff.component().effect()[0].getId()) ) {
                             eff.setConf(false);
                         }
-                        if (null != eff.callback()[0]) {
+                        if (null != eff.callback()) {
                             eff.callback()[0](eff.callback()[1]);
                         }
                     } catch (e) {
@@ -117,13 +117,26 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    //enable (tgt) {
-    //    console.warn('not implement');
-    //}
-    //
-    //disable (tgt) {
-    //    console.warn('not implement');
-    //}
+    contents (flg, cmp) {
+        try {
+            if (true === flg) {
+                this.enable(cmp);
+            } else {
+                this.disable(cmp);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    enable (tgt) {
+        console.warn('not implement');
+    }
+    
+    disable (tgt) {
+        console.warn('not implement');
+    }
     
     status (sts) {
         try {
