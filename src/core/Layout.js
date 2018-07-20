@@ -37,7 +37,7 @@ mofron.Layout = class extends mofron.CompConf {
                 
                 if (false === skip_flg) {
                     /* check parameter count */
-                    if (false === this.getParam().checkCount()) {
+                    if ((null !== this.getParam()) && (false === this.getParam().checkCount())) {
                         throw new Error('invalid parameter count');
                     }
                     this.contents(_idx, cmp_chd[_idx]);
