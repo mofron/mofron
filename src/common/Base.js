@@ -111,15 +111,6 @@ mofron.Base = class {
         }
     }
     
-    getParam () {
-        try {
-            return this.param(undefined, true);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     getOption () {
         try {
             return (undefined === this.m_opt) ? null : this.m_opt;

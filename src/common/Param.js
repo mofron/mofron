@@ -52,89 +52,7 @@ mofron.Param = class extends mofron.Base {
             for (let pidx = plen; pidx < idx ;pidx++) {
                 this.m_param.push();
             }
-            
             this.m_param[idx] = val;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    check () {
-        try {
-            if (0 === arguments.length) {
-                /* getter */
-                return (undefined === this.m_check) ? null : this.m_check;
-            }
-            /* setter */
-            if (undefined === this.m_check) {
-                this.m_check = new Array();
-            }
-            for (let idx in arguments) {
-                if ('function' !== typeof arguments[idx]) {
-                    throw new Error('invalid parameter');
-                }
-                this.m_check.push(arguments[idx]);
-            }
-            
-            if (undefined !== this.m_param) {
-                /* parameter is already setted, execute parameter check */
-                this.checkParam();
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    checkParam (idx) {
-        try {
-            if (undefined === this.m_param) {
-                throw new Error('could not find parameter');
-            }
-            let chk_tgt = null;
-            let check   = this.check();
-            let chk_ret = null;
-            if (null === check) {
-                console.warn('could not find checker');
-                return;
-            }
-            
-            if (undefined === idx) {
-                chk_tgt = this.m_param;
-                for (let cidx in check) {
-                
-                //for (let pidx in this.m_param) {
-                //    if (undefined === check[pidx]) {
-                //        break;
-                //    }
-                    chk_ret = check[cidx](this.m_param[cidx]);
-                    if (undefined !== chk_ret) {
-                        this.paramData(cidx, chk_ret);
-                    }
-                }
-                
-            } else {
-                if ((undefined === this.m_param[idx]) || (undefined === check[idx])) {
-                    throw new Error('could not find parameter or checker');
-                }
-                chk_ret = check[idx](this.m_param[idx]);
-                if (undefined !== chk_ret) {
-                    this.paramData(idx, chk_ret);
-                }
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    checkCount () {
-        try {
-            if (null === this.check()) {
-                return ((undefined === this.m_param) || (0 === this.m_param.length)) ? true : false;
-            }
-            return ((undefined !== this.m_param) && (this.check().length === this.m_param.length)) ? true : false;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -167,3 +85,4 @@ mofron.Param = class extends mofron.Base {
         }
     }
 }
+/* end of file */

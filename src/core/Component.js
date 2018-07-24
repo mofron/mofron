@@ -856,12 +856,6 @@ mofron.Component = class extends mofron.Base {
             this.style({
                 'width'  : ('number' === typeof x) ? (x + 'px') : x
             });
-            
-            //if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
-            //    this.m_respsv_ctl = true;
-            //    mofron.func.responsive(this, 'width', x);
-            //    this.m_respsv_ctl = false;
-            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -878,12 +872,6 @@ mofron.Component = class extends mofron.Base {
             this.style({
                 'height'  : ('number' === typeof y) ? (y + 'px') : y
             });
-            
-            //if ( (true === this.isRespsv()) && (true !== this.m_respsv_ctl) ) {
-            //    this.m_respsv_ctl = true;
-            //    mofron.func.responsive(this, 'height', y);
-            //    this.m_respsv_ctl = false;
-            //}
         } catch (e) {
             console.error(e.stack);
             throw e;

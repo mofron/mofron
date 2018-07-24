@@ -37,9 +37,6 @@ mofron.Layout = class extends mofron.CompConf {
                 
                 if (false === skip_flg) {
                     /* check parameter count */
-                    if ((null !== this.getParam()) && (false === this.getParam().checkCount())) {
-                        throw new Error('invalid parameter count');
-                    }
                     this.contents(_idx, cmp_chd[_idx]);
                 }
                 this.m_execnt++;
@@ -50,9 +47,9 @@ mofron.Layout = class extends mofron.CompConf {
         }
     }
     
-    //contents (idx, tgt) {
-    //    console.warn('layout is not implements');
-    //}
+    contents (idx, tgt) {
+        console.warn('not implement');
+    }
     
     skipTarget (prm) {
         try {
