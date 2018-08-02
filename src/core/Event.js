@@ -11,10 +11,8 @@ mofron.Event = class extends mofron.CompConf {
     /**
      * initialize member
      *
-     * @param fnc : (option) function for event listener
-     * @param prm : (option) function parameter
      */
-    constructor (fnc, prm) {
+    constructor () {
         try {
             super();
             this.name('Event');
@@ -34,17 +32,33 @@ mofron.Event = class extends mofron.CompConf {
         try {
             if (undefined === fnc) {
                 /* getter */
-                return (undefined === this.m_handler) ? null : this.m_handler;
+                return [
+                    (undefined === this.m_handler) ? null : this.m_handler,
+                    this.handlerPrm()
+                ];
             }
             /* setter */
             if ('function' !== typeof fnc) {
                 throw new Error('invalid parameter');
             }
-            if (undefined === this.m_handler) {
-                this.m_handler = new Array(null,null);
+            this.m_handler = fnc;
+            if (undefined !== prm) {
+                this.handlerPrm(prm);
             }
-            this.m_handler[0] = fnc;
-            this.m_handler[1] = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    handlerPrm (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return this.m_hdlprm;
+            }
+            /* setter */
+            this.m_hdlprm = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -60,20 +74,5 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
     
-    prmOpt (po, p1, p2, p3, p4) {
-        try {
-            super.prmOpt(po, p1, p2, p3, p4);
-            let prm = this.param();
-            if ((null !== prm) && ('function' === typeof prm[0])) {
-                this.handler(
-                    prm[0],
-                    (1 < prm.length) ? prm[1] : undefined
-                );
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
 }
 /* end of file */

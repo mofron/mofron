@@ -2,6 +2,7 @@
  * @file theme.js
  * @author simpart
  */
+
 /**
  * @class mofron.theme
  * @brief theme defined class
@@ -10,12 +11,11 @@ mofron.Theme = class extends mofron.Base {
     /**
      * initialize member
      */
-    constructor (po) {
+    constructor (po, p1) {
         try {
-            super(po);
+            super();
             this.name('Theme');
-            this.m_conts = {};
-            this.execOption();
+            this.prmOpt(po, p1);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -99,101 +99,108 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    style (kv, idx) {
+    //style (kv, idx) {
+    //    try {
+    //        if ((undefined === kv) || ('number' === typeof kv)) {
+    //            /* getter */
+    //            return this.get('Style', kv);
+    //        }
+    //        /* setter */
+    //        if ('object' !== typeof kv) {
+    //            throw new Error('invalid parameter');
+    //        }
+    //        var style = this.get('Style');
+    //        for (var kv_idx in kv) {
+    //            style[kv_idx] = kv[kv_idx];
+    //        }
+    //        this.set('Style', style, idx, false);
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
+    
+    color (c1, c2, c3) {
         try {
-            if ((undefined === kv) || ('number' === typeof kv)) {
+            if (undefined === c1) {
                 /* getter */
-                return this.get('Style', kv);
+                return (undefined === this.m_color) ? [null,null,null] : this.m_color;
             }
             /* setter */
-            if ('object' !== typeof kv) {
+            if ( ((null !== c1) || (undefined !== c1)) && (true !== mofron.func.isObject(c1, 'Color')) ) {
                 throw new Error('invalid parameter');
             }
-            var style = this.get('Style');
-            for (var kv_idx in kv) {
-                style[kv_idx] = kv[kv_idx];
+            if ( ((null !== c2) || (undefined !== c2)) && (true !== mofron.func.isObject(c2, 'Color')) ) {
+                throw new Error('invalid parameter');
             }
-            this.set('Style', style, idx, false);
+            if ( ((null !== c3) || (undefined !== c3)) && (true !== mofron.func.isObject(c3, 'Color')) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            if (undefined === this.m_color) {
+                this.m_color = new Array(null,null,null);
+            }
+            this.m_color[0] = (undefined === c1) ? null : c1;
+            this.m_color[1] = (undefined === c2) ? null : c2;
+            this.m_color[2] = (undefined === c3) ? null : c3;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    color (clr, idx) {
+    component (prm) {
         try {
-            if ((undefined === clr) || ('number' === typeof clr)) {
+            if (undefined === prm) {
                 /* getter */
-                return this.get('Color', clr);
+                return (undefined === this.m_comp) ? null : this.m_comp;
             }
             /* setter */
-            if (false === mofron.func.isObject(clr, 'Color') ) {
-                if (('object' === typeof clr) && (undefined !== clr[0])) {
-                    for (var clr_idx in clr) {
-                        this.color(
-                            clr[clr_idx],
-                            parseInt(clr_idx)
-                        );
-                    }
-                    return;
+            if (true === Array.isArray(prm)) {
+                for (let pidx in prm) {
+                    this.component(prm[pidx]);
                 }
+                return;
+            }
+            if (true !== mofron.func.isObject(prm, 'Param')) {
                 throw new Error('invalid parameter');
             }
-            this.set('Color', clr, idx);
+            if (undefined === this.m_comp) {
+                this.m_comp = new Array();
+            }
+            this.m_comp.push(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    component (key, cmp, po) {
-        try {
-            if (undefined === cmp) {
-                /* getter */
-                let thm_cmp = this.get(key, 0);
-                if (null !== thm_cmp) {
-                    return (undefined === thm_cmp[1]) ?
-                               new thm_cmp[0]() : new thm_cmp[0](thm_cmp[1]);
-                }
-                return null;
-            }
-            /* setter */
-            if ('function' !== typeof cmp) {
-                throw new Error('invalid parameter');
-            }
-            this.set(key, [cmp, po], 0);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    font (fnt, idx) {
-        try {
-            if ((undefined === fnt) || ('number' == typeof fnt)) {
-                /* getter */
-                return this.get('Font', fnt);
-            }
-            /* setter */
-            if (false === mofron.func.isInclude(fnt, 'Font')) {
-                if (('object' === typeof fnt) && (undefined !== fnt[0])) {
-                    for (var fnt_idx in fnt) {
-                        this.font(
-                            fnt[fnt_idx],
-                            parseInt(fnt_idx)
-                        );
-                    }
-                    return;
-                }
-                throw new Error('invalid parameter');
-            }
-            fnt.pushTheme();
-            this.set('Font', fnt, idx);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //font (fnt, idx) {
+    //    try {
+    //        if ((undefined === fnt) || ('number' == typeof fnt)) {
+    //            /* getter */
+    //            return this.get('Font', fnt);
+    //        }
+    //        /* setter */
+    //        if (false === mofron.func.isInclude(fnt, 'Font')) {
+    //            if (('object' === typeof fnt) && (undefined !== fnt[0])) {
+    //                for (var fnt_idx in fnt) {
+    //                    this.font(
+    //                        fnt[fnt_idx],
+    //                        parseInt(fnt_idx)
+    //                    );
+    //                }
+    //                return;
+    //            }
+    //            throw new Error('invalid parameter');
+    //        }
+    //        fnt.pushTheme();
+    //        this.set('Font', fnt, idx);
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
     
     /**
      * get theme contents
@@ -272,35 +279,35 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    /**
-     * remove theme value
-     *
-     * @param key : (string) theme identify key
-     * @param idx : (number) remove index
-     */
-    del (key, idx) {
-        try {
-            if (undefined === this.m_conts[key][idx]) {
-                throw new Error('invalid parameter');
-            }
-            
-            var cnt = 0;
-            for (var cnt_key in this.m_conts) {
-                if (cnt_key === key) {
-                    this.m_conts[cnt_key].splice(idx,1);
-                    if (0 === this.m_conts[cnt_key].length) {
-                        this.m_conts.splice(cnt, 1);
-                    }
-                    return;
-                }
-                cnt++;
-            }
-            
-            throw new Error('invalid parameter');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    ///**
+    // * remove theme value
+    // *
+    // * @param key : (string) theme identify key
+    // * @param idx : (number) remove index
+    // */
+    //del (key, idx) {
+    //    try {
+    //        if (undefined === this.m_conts[key][idx]) {
+    //            throw new Error('invalid parameter');
+    //        }
+    //        
+    //        var cnt = 0;
+    //        for (var cnt_key in this.m_conts) {
+    //            if (cnt_key === key) {
+    //                this.m_conts[cnt_key].splice(idx,1);
+    //                if (0 === this.m_conts[cnt_key].length) {
+    //                    this.m_conts.splice(cnt, 1);
+    //                }
+    //                return;
+    //            }
+    //            cnt++;
+    //        }
+    //        
+    //        throw new Error('invalid parameter');
+    //    } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
 }
 /* end of file */
