@@ -884,7 +884,7 @@ mofron.Component = class extends mofron.Base {
                  (undefined === c2) &&
                  (undefined === c3) ) {
                 /* getter */
-                return [this.mainColor(), baseColor(), accentColor()];
+                return [this.mainColor(), this.baseColor(), this.accentColor()];
             }
             /* setter */
             if (undefined !== c1) {
@@ -989,43 +989,17 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    addSwitchTgt (key, prm) {
+    switchTgt (tgt, fnc, prm) {
         try {
-            if ( (('string' !== typeof key) && ('number' !== typeof key)) ||
-                 (undefined === prm) ||
-                 (true !== mofron.func.isObject(prm, 'Dom')) ) {
+            if (true !== mofron.func.isInclude(tgt, 'Dom')) {
                 throw new Error('invald parameter');
-            }
-            if ('number' === typeof key) {
-                key = key + '';
-            }
-            
-            if (undefined === this.m_swhtgt) {
-                this.m_swhtgt = {};
-            }
-            this.m_swhtgt[key] = prm;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    switchTgt (key, fnc) {
-        try {
-            if ( ( ('string'   !== typeof key) &&
-                   ('number'   !== typeof key) ) ||
-                   ('function' !== typeof fnc) ) {
-                throw new Error('invald parameter');
-            }
-            if ('number' === typeof key) {
-                key = key + '';
             }
             let tgt_buf = this.target();
-            if (undefined === this.m_swhtgt[key]) {
-                throw new Error('could not find switch target');
+            this.target(tgt);
+            if ('function' !== typeof fnc) {
+                throw new Error('invald parameter');
             }
-            this.target(this.m_swhtgt[key]);
-            fnc();
+            fnc(prm);
             this.target(tgt_buf);
         } catch (e) {
             console.error(e.stack);
