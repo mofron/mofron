@@ -27,7 +27,12 @@ mofron.Color = class extends mofron.Base {
                               null,  /* blue */
                               null   /* alpha */
                           );
-            this.rgba(r,g,b,a);
+            if ('string' === typeof r) {
+                let code = mofron.func.convColorCode(r);
+                this.rgba(code[0], code[1], code[2]);
+            } else {
+                this.rgba(r,g,b,a);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -500,6 +500,53 @@ module.exports = {
             console.error(e.stack);
             throw e;
         }
+    },
+    convColorCode : (prm) => {
+        try {
+            if ('string' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            
+            switch (prm) {
+                case 'black':
+                    return [0, 0, 0];
+                case 'gray':
+                    return [128, 128, 128];
+                case 'silver':
+                    return [192, 192, 192];
+                case 'white':
+                    return [255, 255, 255];
+                case 'blue':
+                    return [0, 0, 255];
+                case 'navy':
+                    return [0, 0, 128];
+                case 'teal':
+                    return [0, 128, 128];
+                case 'green':
+                    return [0, 128, 0];
+                case 'lime':
+                    return [0, 255, 0];
+                case 'aqua':
+                    return [0, 255, 255];
+                case 'yellow':
+                    return [255, 255, 0];
+                case 'red':
+                    return [255, 0, 0];
+                case 'fuchsia':
+                    return [255, 0, 255];
+                case 'olive':
+                    return [128, 128, 0];
+                case 'purple':
+                    return [128, 0, 128];
+                case 'maroon':
+                    return [128, 0, 0];
+                default:
+                    throw new Error('not supported color');
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
 };
 /* end of file */

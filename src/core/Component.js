@@ -728,8 +728,8 @@ mofron.Component = class extends mofron.Base {
             if (false === this.isInitDom()) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
-                /*** initialize dom contents ***/
                 this.initDomConts();
+                
                 if (null !== this.param()) {
                     let chk_prm = this.param();
                     let prm_map = this.prmMap();
@@ -878,24 +878,50 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    color (val) {
+    color (c1, c2, c3) {
         try {
-            if (undefined === val) {
+            if ( (undefined === c1) &&
+                 (undefined === c2) &&
+                 (undefined === c3) ) {
                 /* getter */
-                return mofron.func.getColor(this.style('background'));
+                return [this.mainColor(), baseColor(), accentColor()];
             }
             /* setter */
-            if (true !== mofron.func.isInclude(val, 'Color')) {
-                throw new Error('invalid parameter');
+            if (undefined !== c1) {
+                this.mainColor(c1);
             }
-            this.style({
-                'background' : val.getStyle()
-            });
+            if (undefined !== c2) {
+                this.baseColor(c2);
+            }
+            if (undefined !== c3) {
+                this.accentColor(c3);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
+    mainColor () {}
+    
+    baseColor (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return mofron.func.getColor(this.style('background'));
+            }
+            /* setter */
+            if (false === mofron.func.isInclude(prm, 'Color')) {
+                throw new Error('invalid parameter');
+            }
+            this.style({ 'background' : prm.getStyle() });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    accentColor () {}
     
     prmOpt (po, p1, p2, p3, p4) {
         super.prmOpt(po, p1, p2, p3, p4);
