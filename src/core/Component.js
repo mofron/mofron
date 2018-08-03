@@ -938,9 +938,7 @@ mofron.Component = class extends mofron.Base {
                 return (undefined === this.m_prmmap) ? [] : this.m_prmmap;
             }
             /* setter */
-            if (undefined === this.m_prmmap) {
-                this.m_prmmap = new Array();
-            }
+            this.m_prmmap = new Array();
             for (let idx in arguments) {
                 this.m_prmmap.push(arguments[idx]);
             }
