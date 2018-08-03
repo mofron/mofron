@@ -729,20 +729,20 @@ mofron.Component = class extends mofron.Base {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
                 /*** initialize dom contents ***/
-                if (null === this.param()) {
-                    /* this component is no parameter */
-                    this.initDomConts();
-                } else {
-                    let cmp_p = this.param();
-                    /* call init function with parameters specified */
-                    if (1 === cmp_p.length) {
-                        this.initDomConts(cmp_p[0]);
-                    } else if (2 === cmp_p.length) {
-                        this.initDomConts(cmp_p[0], cmp_p[1]);
-                    } else if (3 === cmp_p.length) {
-                        this.initDomConts(cmp_p[0], cmp_p[1], cmp_p[2]);
-                    } else {
-                        throw new Error('too many component parameters');
+                this.initDomConts();
+                if (null !== this.param()) {
+                    let chk_prm = this.param();
+                    let prm_map = this.prmMap();
+                    
+                    if (chk_prm.length > prm_map.length) {
+                        throw new Error('mismatch parameter check count');
+                    }
+                    let obj = this;
+                    for (let cidx in chk_prm) {
+                        if ('function' !== typeof obj[prm_map[cidx]]) {
+                            throw new Error('could not find method');
+                        }
+                        obj[prm_map[cidx]](chk_prm[cidx]);
                     }
                 }
             }
@@ -902,6 +902,25 @@ mofron.Component = class extends mofron.Base {
         
         if (null !== this.param()) {
             this.adom();
+        }
+    }
+    
+    prmMap () {
+        try {
+            if (0 === arguments.length) {
+                /* getter */
+                return (undefined === this.m_prmmap) ? [] : this.m_prmmap;
+            }
+            /* setter */
+            if (undefined === this.m_prmmap) {
+                this.m_prmmap = new Array();
+            }
+            for (let idx in arguments) {
+                this.m_prmmap.push(arguments[idx]);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
         }
     }
     
