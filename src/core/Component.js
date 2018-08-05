@@ -173,7 +173,7 @@ mofron.Component = class extends mofron.Base {
             if (true === rflg) {
                 return this.m_child;
             }
-            return this.target().component().parent();;
+            return this.target().component().parent();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -593,32 +593,30 @@ mofron.Component = class extends mofron.Base {
     /**
      * theme setter / getter
      *
-     * @param thm : (object) theme object
+     * @param prm : (object) moron.Theme object
      * @return (object) theme object
      */
-    theme (thm) {
+    theme (prm) {
         try {
-            if (undefined === thm) {
+            if (undefined === prm) {
                 /* getter */
                 if (undefined === this.m_theme) { 
                     this.m_theme = new mofron.Theme({});
-                    this.m_theme.target(this);
+                    this.m_theme.tgtComp(this);
                 }
                 return this.m_theme;
             }
             /* setter */
-            this.theme().setTheme(thm);
-            var chd = this.m_child;
-            for (var idx in chd) {
-                chd[idx].theme(thm);
+            this.theme().setTheme(prm);
+            let chd = this.getChild(true);
+            for (let cidx in chd) {
+                chd[cidx].theme(prm);
             }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    themeConts () {}
     
     /**
      * create componrnt DOM
@@ -742,6 +740,11 @@ mofron.Component = class extends mofron.Base {
                         if ('function' !== typeof obj[prm_map[cidx]]) {
                             throw new Error('could not find method');
                         }
+                        
+                        let set_opt = {};
+                        set_opt[prm_map[cidx]] = chk_prm[cidx];
+                        this.addOption(set_opt);
+                        
                         obj[prm_map[cidx]](chk_prm[cidx]);
                     }
                 }
@@ -955,11 +958,16 @@ mofron.Component = class extends mofron.Base {
             if (null === opt) {
                 return;
             }
+            let theme = null;
             if (undefined !== opt.theme) {
-                this.theme(opt.theme);
+                theme = opt.theme;
                 delete opt.theme;
             }
+            
             super.execOption(opt);
+            if (null !== theme) {
+                this.theme(theme);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -50,28 +50,6 @@ mofron.Base = class {
         }
     }
     
-    data (key, val) {
-        try {
-            if (undefined === val) {
-                /* getter */
-                if (undefined === this.m_data) {
-                    return null;
-                }
-                return (undefined === this.m_data[key]) ? null : this.m_data[key];
-            }
-            /* setter */
-            if ('string' !== typeof key) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === this.m_data) {
-                this.m_data = {};
-            }
-            this.m_data[key] = val;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
     
     getNameList () {
         try {
@@ -101,7 +79,7 @@ mofron.Base = class {
                 if (undefined === this.m_param) {
                     return null;
                 }
-                return ((undefined === pflg) || (false === pflg)) ? this.m_param.getParam() : this.m_param;
+                return ((undefined === pflg) || (false === pflg)) ? this.m_param.get() : this.m_param;
             }
             /* setter */
             this.m_param = prm;
@@ -220,6 +198,7 @@ mofron.Base = class {
             }
             
             for (var opt_idx in opt) {
+                this.isExecOpt(true);
                 if ('function' === typeof this[opt_idx]) {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
@@ -232,6 +211,24 @@ mofron.Base = class {
                     }
                 }
             }
+            this.isExecOpt(false);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isExecOpt (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_execopt) ? false : this.m_execopt;
+            }
+            /* setter */
+            if ('boolean' !== typeof prm) {
+                throw new Error('invalid paramter');
+            }
+            this.m_execopt = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;

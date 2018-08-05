@@ -22,24 +22,24 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    target (tgt) {
+    tgtComp (prm) {
         try {
-            if (undefined === tgt) {
+            if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_target) ? null : this.m_target;
+                return (undefined === this.m_tgtcomp) ? null : this.m_tgtcomp;
             }
             /* setter */
-            if (false === mofron.func.isInclude(tgt, 'Component')) {
+            if (false === mofron.func.isInclude(prm, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            this.m_target = tgt;
+            this.m_tgtcomp = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    override (flg) {
+    overwrite (flg) {
         try {
             if (undefined === flg) {
                 /* getter */
@@ -61,70 +61,30 @@ mofron.Theme = class extends mofron.Base {
      * 
      * @param thm : (mofron.theme object) theme
      */
-    setTheme (thm) {
+    setTheme (prm) {
         try {
-            if (false === mofron.func.isObject(thm, 'Theme')) {
+            if (false === mofron.func.isObject(prm, 'Theme')) {
                 throw new Error('invalid parameter');
             }
-            var thm_cnt = thm.get();
-            var set_flg = false;
-            for (var cnt_key in thm_cnt) {
-                for (var idx in thm_cnt[cnt_key]) {
-                    var _idx = parseInt(idx);
-                    if (null === thm_cnt[cnt_key][_idx]) {
-                        /* skip null contents */
-                        continue;
-                    }
-
-                    if ( (false === this.override()) &&
-                         (null  !== this.get(cnt_key, _idx)) ) {
-                        continue;
-                    }
-
-                    this.set(
-                        cnt_key,
-                        thm_cnt[cnt_key][_idx],
-                        _idx
-                    );
-                    set_flg = true;
-                }
+            let comp_thm = prm.component();
+            if (null !== comp_thm) {
+                this.compTheme(comp_thm);
             }
-            if (null === this.target()) {
-                throw new Error('could not find target component');
-            }
-            this.target().themeConts(this);
+    
+            let clr_thm  = prm.color();
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    //style (kv, idx) {
-    //    try {
-    //        if ((undefined === kv) || ('number' === typeof kv)) {
-    //            /* getter */
-    //            return this.get('Style', kv);
-    //        }
-    //        /* setter */
-    //        if ('object' !== typeof kv) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        var style = this.get('Style');
-    //        for (var kv_idx in kv) {
-    //            style[kv_idx] = kv[kv_idx];
-    //        }
-    //        this.set('Style', style, idx, false);
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
     
     color (c1, c2, c3) {
         try {
             if (undefined === c1) {
                 /* getter */
-                return (undefined === this.m_color) ? [null,null,null] : this.m_color;
+                return (undefined === this.m_color) ? null : this.m_color;
             }
             /* setter */
             if ( ((null !== c1) || (undefined !== c1)) && (true !== mofron.func.isObject(c1, 'Color')) ) {
@@ -149,11 +109,11 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    component (prm) {
+    component (prm, p2) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_comp) ? null : this.m_comp;
+                return (undefined === this.m_thmcomp) ? null : this.m_thmcomp;
             }
             /* setter */
             if (true === Array.isArray(prm)) {
@@ -162,69 +122,19 @@ mofron.Theme = class extends mofron.Base {
                 }
                 return;
             }
-            if (true !== mofron.func.isObject(prm, 'Param')) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === this.m_comp) {
-                this.m_comp = new Array();
-            }
-            this.m_comp.push(prm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    //font (fnt, idx) {
-    //    try {
-    //        if ((undefined === fnt) || ('number' == typeof fnt)) {
-    //            /* getter */
-    //            return this.get('Font', fnt);
-    //        }
-    //        /* setter */
-    //        if (false === mofron.func.isInclude(fnt, 'Font')) {
-    //            if (('object' === typeof fnt) && (undefined !== fnt[0])) {
-    //                for (var fnt_idx in fnt) {
-    //                    this.font(
-    //                        fnt[fnt_idx],
-    //                        parseInt(fnt_idx)
-    //                    );
-    //                }
-    //                return;
-    //            }
-    //            throw new Error('invalid parameter');
-    //        }
-    //        fnt.pushTheme();
-    //        this.set('Font', fnt, idx);
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-    
-    /**
-     * get theme contents
-     * 
-     * @param key : (string) theme identify key (option)
-     * @param idx : (number) get index (option)
-     * @return (object) theme value
-     */
-    get (key, idx) {
-        try {
-            if (undefined === key) {
-                return this.m_conts;
-            } else if ('string' !== typeof key) {
-                throw new Error('invalid parameter');
+            
+            if (undefined === this.m_thmcomp) {
+                this.m_thmcomp = {};
             }
             
-            var _idx = (undefined === idx) ? null : idx;
-            if (null === _idx) {
-                return (undefined === this.m_conts[key]) ? null : this.m_conts[key];
+            if ( (true === mofron.func.isObject(prm, 'Param')) &&
+                 (2 === prm.get().length) ) {
+                this.m_thmcomp[prm.get()[0]] = [prm.get()[1], false];
+            } else if ( ('string' !== typeof prm) ||
+                        (undefined !== p2) ) {
+                this.m_thmcomp[prm] = [p2, false];
             } else {
-                if (undefined === this.m_conts[key]) {
-                    return null;
-                }
-                return (undefined === this.m_conts[key][_idx]) ? null : this.m_conts[key][_idx];
+                throw new Error('invalid parameter');
             }
         } catch (e) {
             console.error(e.stack);
@@ -232,82 +142,59 @@ mofron.Theme = class extends mofron.Base {
         }
     }
     
-    /**
-     * set theme contents
-     * 
-     * @param key  : (string) theme contetent key
-     * @param val  : (object) theme element
-     * @param idx  : (number) set index
-     */
-    set (key, val, idx) {
+    compTheme (prm) {
         try {
-            var _val = (val === undefined) ? null : val;
-            var _idx = (idx === undefined) ? 0    : idx;
-            
-            if ( ('string' !== typeof key)  ||
-                 (null     === _val)        ||
-                 ('number' !== typeof _idx) ||
-                 (0         >  _idx) ) {
-                throw new Error('invalid parameter');
-            }
-            
-            if (undefined === this.m_conts[key]) {
-                this.m_conts[key] = new Array();
-            }
-            
-            var loop    = 0;
-            var set_flg = false;
-            for (;loop < 10; loop++) {
-                if (_idx === this.m_conts[key].length) {
-                    this.m_conts[key].push(val);
-                    set_flg = true;
-                    break;
-                } else if (_idx < this.m_conts[key].length) {
-                    this.m_conts[key][_idx] = val;
-                    set_flg = true;
-                    break;
-                } else {
-                    this.m_conts[key].push(null);
+            /* propagation theme */
+            let cmp_thm = this.component();
+            if (null === cmp_thm) {
+                for (let prm_key in prm) {
+                    this.component(prm_key, prm[prm_key][0]);
+                }
+            } else {
+                for (let prm_key in prm) {
+                    let set_flg = null;
+                    for (let cmp_key in cmp_thm) {
+                        if ( (cmp_key === prm_key) &&
+                             (true === this.overwrite()) ) {
+                            /* set overwrite theme component */
+                            this.m_thmcomp[cmp_key] = [prm[prm_key][0], false];
+                            set_flg = true;
+                            break;
+                        }
+                    }
+                    if (false === set_flg) {
+                        this.component(prm_key, prm[prm_key][0]);
+                    }
                 }
             }
-            if (false === set_flg) {
-                throw new Error('invalid parameter');
+            
+            /* replaced component */
+            cmp_thm     = this.component();
+            let chd     = this.tgtComp().getChild(true);
+            let key     = null;
+            let chk_cmp = null;
+            for (let cmp_key in cmp_thm) {
+                chk_cmp = cmp_thm[cmp_key][0];
+                for (let cidx in chd) {
+                    if ( (true === mofron.func.isInclude(chd[cidx],cmp_key)) &&
+                         (false === cmp_thm[cmp_key][1]) ) {
+                        if (undefined === mofron.comp[chk_cmp.name()]) {
+                            throw new Error('could not find component');
+                        }
+                        //console.log(new cmp_thm[cmp_key][0]({}));
+                        let rep_cmp = new mofron.comp[chk_cmp.name()](  //new cmp_thm[cmp_key][0](
+                            (null === chd[cidx].getOption()) ? undefined : chd[cidx].getOption()
+                        );
+                        rep_cmp.execOption(cmp_thm[cmp_key][0].getOption());
+                        this.tgtComp().updChild(chd[cidx], rep_cmp);
+                        this.m_thmcomp[cmp_key][1] = true;
+                    }
+                }
             }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    ///**
-    // * remove theme value
-    // *
-    // * @param key : (string) theme identify key
-    // * @param idx : (number) remove index
-    // */
-    //del (key, idx) {
-    //    try {
-    //        if (undefined === this.m_conts[key][idx]) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        
-    //        var cnt = 0;
-    //        for (var cnt_key in this.m_conts) {
-    //            if (cnt_key === key) {
-    //                this.m_conts[cnt_key].splice(idx,1);
-    //                if (0 === this.m_conts[cnt_key].length) {
-    //                    this.m_conts.splice(cnt, 1);
-    //                }
-    //                return;
-    //            }
-    //            cnt++;
-    //        }
-    //        
-    //        throw new Error('invalid parameter');
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
 }
 /* end of file */

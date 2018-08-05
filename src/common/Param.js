@@ -21,9 +21,7 @@ mofron.Param = class extends mofron.Base {
                 this.m_param.push(arguments[idx]); 
             }
             
-            if (0 === this.m_param.length) {
-                throw new Error('too few parameter');
-            } else if (5 <= this.m_param.length) {
+            if (5 <= this.m_param.length) {
                 throw new Error('too many parameters');
             }
         } catch (e) {
@@ -32,7 +30,7 @@ mofron.Param = class extends mofron.Base {
         }
     }
     
-    getParam () {
+    get () {
         try {
             return this.m_param;
         } catch (e) {
@@ -41,7 +39,16 @@ mofron.Param = class extends mofron.Base {
         }
     }
     
-    paramData (idx, val) {
+    add (prm) {
+        try {
+            this.get().push(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    data (idx, val) {
         try {
             if (undefined === val) {
                 /* getter */
@@ -67,7 +74,7 @@ mofron.Param = class extends mofron.Base {
             if ('string' !== typeof func) {
                 throw new Error('invalid parameter');
             }
-            var prm = this.getParam();
+            let prm = this.get();
             if (1 === prm.length) {
                 obj[func](prm[0]);
             } else if (2 === prm.length) {
