@@ -26,7 +26,7 @@ mofron.Layout = class extends mofron.CompConf {
                     continue;
                 }
                 /* check skip */
-                let skip = this.skipTarget();
+                let skip = this.skip();
                 skip_flg = false;
                 for (let sidx in skip) {
                     if (cmp_chd[_idx].getId() === skip[sidx]) {
@@ -51,7 +51,7 @@ mofron.Layout = class extends mofron.CompConf {
         console.warn('not implement');
     }
     
-    skipTarget (prm) {
+    skip (prm) {
         try {
             if (undefined === prm) {
                 /* getter */
@@ -60,7 +60,7 @@ mofron.Layout = class extends mofron.CompConf {
             /* setter */
             if (true === Array.isArray(prm)) {
                 for (let sidx in prm) {
-                    this.skipTarget(prm[sidx]);
+                    this.skip(prm[sidx]);
                 }
                 return;
             } else if (true === mofron.func.isInclude(prm,'Component')) {
