@@ -107,7 +107,32 @@ mofron.Base = class {
                 this.m_opt = {};
             }
             for (let oidx in opt) {
-                this.m_opt[oidx] = opt[oidx];
+                if (undefined === this.m_opt[oidx]) {
+                    this.m_opt[oidx] = opt[oidx];
+                } else {
+                    let lst_opt = this.listOption();
+                    let islist  = false;
+                    for (let lidx in lst_opt) {
+                        if (oidx === lst_opt[lidx]) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                    
+                    if (true === islist) {
+                        if (true === Array.isArray(opt[oidx])) {
+                            for (let ooidx in opt[oidx]) {
+                                this.m_opt[oidx].push(opt[oidx][ooidx]);
+                            }
+                        } else {
+                            for (let ooidx in opt[oidx]) {
+                                this.m_opt[oidx][ooidx] = opt[oidx][ooidx];
+                            }
+                        }
+                    } else {
+                        this.m_opt[oidx] = opt[oidx];
+                    }
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -197,8 +222,7 @@ mofron.Base = class {
                 return;
             }
             
-            for (var opt_idx in opt) {
-                this.isExecOpt(true);
+            for (let opt_idx in opt) {
                 if ('function' === typeof this[opt_idx]) {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
@@ -211,24 +235,32 @@ mofron.Base = class {
                     }
                 }
             }
-            this.isExecOpt(false);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    isExecOpt (prm) {
+    listOption (prm) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_execopt) ? false : this.m_execopt;
+                return (undefined === this.m_lstopt) ? null : this.m_lstopt;
             }
             /* setter */
-            if ('boolean' !== typeof prm) {
-                throw new Error('invalid paramter');
+            if (true === Array.isArray(prm)) {
+                for (let pidx in prm) {
+                    this.listOption(prm[pidx]);
+                }
+                return;
             }
-            this.m_execopt = prm;
+            if ('string' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_lstopt) {
+                this.m_lstopt = new Array();
+            }
+            this.m_lstopt.push(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;

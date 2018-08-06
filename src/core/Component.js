@@ -32,6 +32,9 @@ mofron.Component = class extends mofron.Base {
                                 null,        /* style */
                                 null         /* event */
                             );
+            this.listOption([
+                'child', 'layout', 'effect', 'event', 'respsv', 'style'
+            ]);
             this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
