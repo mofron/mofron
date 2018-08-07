@@ -118,11 +118,12 @@ module.exports = {
             if (('string' !== typeof val) || ('string' !== typeof tp)) {
                 return null;
             }
-            if (1 === val.split(tp).length) {
+            let sp_val = val.split(tp);
+            if (1 === sp_val.length) {
                 console.warn('unknown size type: ' + val);
                 return null;
             }
-            return parseInt(val.split(tp)[0]);
+            return (2 === sp_val[0].split('.').length) ? parseFloat(sp_val[0]) : parseInt(sp_val[0]);
         } catch (e) {
             console.error(e.stack);
             throw e;

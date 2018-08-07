@@ -852,34 +852,38 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    width (prm) {
+    width (prm, st) {
         try {
             if (undefined === prm) {
                 /* getter */
                 return mofron.func.getSize(this.style('width'), this.sizeType());
             }
             /* setter */
-            if ('number' !== typeof prm) {
+            if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
                 throw new Error('invalid parameter');
             }
-            this.style({'width'  : prm + this.sizeType()});
+            this.style({
+                'width' : prm + (undefined !== st) ? st : this.sizeType()
+            });
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    height (prm) {
+    height (prm, st) {
         try {
             if (undefined === prm) {
                 /* getter */
                 return mofron.func.getSize(this.style('height'), this.sizeType());
             }
             /* setter */
-            if ('number' !== typeof prm) {
+            if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
                 throw new Error('invalid parameter');
             }
-            this.style({'height'  : prm + this.sizeType()});
+            this.style({
+                'height' : prm + (undefined !== st) ? st : this.sizeType()
+            });
         } catch (e) {
             console.error(e.stack);
             throw e;
