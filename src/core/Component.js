@@ -852,32 +852,57 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    width (x) {
+    width (prm) {
         try {
-            if (undefined === x) {
+            if (undefined === prm) {
                 /* getter */
-                return mofron.func.getLength(this.style('width'));
+                return mofron.func.getSize(this.style('width'), this.sizeType());
             }
             /* setter */
-            this.style({
-                'width'  : ('number' === typeof x) ? (x + 'px') : x
-            });
+            if ('number' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            this.style({'width'  : prm + this.sizeType()});
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    height (y) {
+    height (prm) {
         try {
-            if (undefined === y) {
+            if (undefined === prm) {
                 /* getter */
-                return mofron.func.getLength(this.style('height'));
+                return mofron.func.getSize(this.style('height'), this.sizeType());
             }
             /* setter */
-            this.style({
-                'height'  : ('number' === typeof y) ? (y + 'px') : y
-            });
+            if ('number' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            this.style({'height'  : prm + this.sizeType()});
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    sizeType (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_siztp) ? 'rem' : this.m_siztp;
+            }
+            /* setter */
+            if ( ('string' !== typeof prm) ||
+                 ( ('px'  !== prm) &&
+                   ('%'   !== prm) &&
+                   ('em'  !== prm) &&
+                   ('rem' !== prm) &&
+                   ('vw'  !== prm) &&
+                   ('vh'  !== prm) ) ) {
+                throw new Error('invalid parameter');
+            }
+            this.m_siztp = prm;;
         } catch (e) {
             console.error(e.stack);
             throw e;
