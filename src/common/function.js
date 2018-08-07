@@ -179,6 +179,50 @@ module.exports = {
         }
     },
     
+    getRemBase : () => {
+        try {
+            let fsize = mofron.func.getSize(
+                document.documentElement.style[
+                    mofron.func.getCamel('font-size')
+                ],
+                '%'
+            );
+            if (null === fsize) {
+                throw new Error('invalid html font-size');
+            }
+            return 16 * (fsize / 100);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    convRem2Px : (prm) => {
+        try {
+            if ('number' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            return prm * mofron.func.getRemBase();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    convPx2Rem : (prm) => {
+        try {
+            if ('number' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            return prm / mofron.func.getRemBase();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    
+    
     isInclude : (obj, nm) => {
         try {
             if ((null === obj) || ('object' !== typeof obj)) {

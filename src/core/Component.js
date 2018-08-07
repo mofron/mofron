@@ -862,8 +862,9 @@ mofron.Component = class extends mofron.Base {
             if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
                 throw new Error('invalid parameter');
             }
+            let stp = (undefined !== st) ? st : this.sizeType();
             this.style({
-                'width' : prm + (undefined !== st) ? st : this.sizeType()
+                'width' : prm + stp
             });
         } catch (e) {
             console.error(e.stack);
@@ -881,8 +882,9 @@ mofron.Component = class extends mofron.Base {
             if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
                 throw new Error('invalid parameter');
             }
+            let stp = (undefined !== st) ? st : this.sizeType();
             this.style({
-                'height' : prm + (undefined !== st) ? st : this.sizeType()
+                'height' : prm + stp
             });
         } catch (e) {
             console.error(e.stack);
