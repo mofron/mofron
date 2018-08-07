@@ -113,15 +113,16 @@ module.exports = {
         }
     },
     
-    getLength : (val) => {
+    getSize : (val, tp) => {
         try {
-            if ('string' !== typeof val) {
+            if (('string' !== typeof val) || ('string' !== typeof tp)) {
                 return null;
             }
-            if ((val.length-2) === val.indexOf('px')) {
-                return parseInt(val.split('px')[0]);
+            if (1 === val.split(tp).length) {
+                console.warn('unknown size type: ' + val);
+                return null;
             }
-            return val;
+            return parseInt(val.split(tp)[0]);
         } catch (e) {
             console.error(e.stack);
             throw e;
