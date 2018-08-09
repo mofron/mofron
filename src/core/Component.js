@@ -854,7 +854,7 @@ mofron.Component = class extends mofron.Base {
     
     width (prm) {
         try {
-            return mf.func.compSize(this, 'width', prm);
+            return mofron.func.compSize(this, 'width', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -863,7 +863,7 @@ mofron.Component = class extends mofron.Base {
     
     height (prm) {
         try {
-            return mf.func.compSize(this, 'height', prm);
+            return mofron.func.compSize(this, 'height', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
