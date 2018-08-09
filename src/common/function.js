@@ -222,21 +222,75 @@ module.exports = {
     
     sizeDiff : (siz1, siz2) => {
         try {
-            if ('string' !== typeof siz1) {
+            let siz1_val = null;
+            if ('string' === typeof siz1) {
+                siz1_val = mofron.func.getSize(siz1);
+            } else if ('number' === typeof siz1) {
+                if ('string' !== typeof siz2) {
+                    throw new Error('invalid parameter');
+                }
+                siz1_val = [siz1, mofron.func.getSize(siz2)[1]];
+                if (null === siz1_val[1]) {
+                    throw new Error('invalid parameter');
+                }
+            } else {
                 throw new Error('invalid parameter');
             }
-            let siz1_val = mofron.func.getSize(siz1);
+            
             if ('string' === typeof siz2) {
                 let siz2_val = mofron.func.getSize(siz2);
                 if (siz1_val[1] !== siz2_val[1]) {
                     throw new Error('mismatched size type');
                 }
-                return (siz1_val[0] - siz2_val[1]) + siz1_val[1];
+                return (siz1_val[0] - siz2_val[0]) + siz1_val[1];
             } else if ('number' === typeof siz2) {
                 return (siz1_val[0] - siz2) + siz1_val[1];
             } else {
                 throw new Error('invalid parameter');
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    sizeSum : (p1,p2,p3,p4,p5) => {
+        try {
+            let stype   = null;
+            let chk_stp = null;
+            let aidx    = null;
+            let args    = [p1,p2,p3,p4,p5];
+            for (aidx in args) {
+                if (undefined === args[aidx]) {
+                    continue;
+                }
+                if ('string' === typeof args[aidx]) {
+                    chk_stp = mofron.func.getSize(args[aidx])[1];
+                    if (null === stype) {
+                        stype = chk_stp;
+                    }
+                    if ((stype !== null) && (null !== chk_stp) && (stype !== chk_stp)) {
+                        throw new Error('invalid parameter');
+                    }
+                } else if ((null !== args[aidx]) && ('number' !== typeof args[aidx])) {
+                    throw new Error('invalid parameter');
+                }
+            }
+            if (null === stype) {
+                throw new Error('could not find size type');
+            }
+            let ret_val = 0;
+            for (aidx in args) {
+                if (undefined === args[aidx]) {
+                    continue;
+                }
+                if ('string' === typeof args[aidx]) {
+                    ret_val += mofron.func.getSize(args[aidx])[0];
+                } else if ('number' === typeof args[aidx]) {
+                    ret_val += args[aidx];
+                }
+            }
+            return (ret_val + '') + stype;
         } catch (e) {
             console.error(e.stack);
             throw e;
