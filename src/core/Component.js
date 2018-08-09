@@ -852,40 +852,18 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    width (prm, st) {
+    width (prm) {
         try {
-            if (undefined === prm) {
-                /* getter */
-                return mofron.func.getSize(this.style('width'), this.sizeType());
-            }
-            /* setter */
-            if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
-                throw new Error('invalid parameter');
-            }
-            let stp = (undefined !== st) ? st : this.sizeType();
-            this.style({
-                'width' : prm + stp
-            });
+            return mf.func.compSize(this, 'width', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    height (prm, st) {
+    height (prm) {
         try {
-            if (undefined === prm) {
-                /* getter */
-                return mofron.func.getSize(this.style('height'), this.sizeType());
-            }
-            /* setter */
-            if (('number' !== typeof prm) || ((undefined !== st) && ('string' !== typeof st))) {
-                throw new Error('invalid parameter');
-            }
-            let stp = (undefined !== st) ? st : this.sizeType();
-            this.style({
-                'height' : prm + stp
-            });
+            return mf.func.compSize(this, 'height', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -907,6 +885,9 @@ mofron.Component = class extends mofron.Base {
                    ('vw'  !== prm) &&
                    ('vh'  !== prm) ) ) {
                 throw new Error('invalid parameter');
+            }
+            if (undefined !== this.m_siztp) {
+                throw new Error('could not change size type');
             }
             this.m_siztp = prm;;
         } catch (e) {

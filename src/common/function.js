@@ -115,51 +115,15 @@ module.exports = {
     
     getSize : (val, tp) => {
         try {
-            if (('string' !== typeof val) || ('string' !== typeof tp)) {
-                return null;
-            }
-            let sp_val = val.split(tp);
-            if (1 === sp_val.length) {
-                console.warn('unknown size type: ' + val);
-                return null;
-            }
-            return (2 === sp_val[0].split('.').length) ? parseFloat(sp_val[0]) : parseInt(sp_val[0]);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    },
-    
-    getCompSize : (cmp) => {
-        try {
-            if (false === mofron.func.isInclude(cmp, 'Component')) {
-                throw new Error('invalid parameter');
-            }
-            let wid = null;
-            let hei = null;
-            
-            /* get x-value */
-            if ('function' === (typeof cmp.width)) {
-                wid = cmp.width();
-            } else if ('function' === (typeof cmp.size)) {
-                wid = cmp.size().width;
-            } else {
-                wid = mofron.func.getLength(cmp.style('width'));
-            }
-            
-            /* get y-value */
-            if ('function' === (typeof cmp.height)) {
-                hei = cmp.height();
-            } else if ('function' === (typeof cmp.size)) {
-                hei = cmp.size().height;
-            } else {
-                hei = mofron.func.getLength(cmp.style('height'));
-            }
-            
-            return {
-                width  : wid,
-                height : hei
-            };
+            //if (('string' !== typeof val) || ('string' !== typeof tp)) {
+            //    return null;
+            //}
+            //let sp_val = val.split(tp);
+            //if (1 === sp_val.length) {
+            //    console.warn('unknown size type: ' + val);
+            //    return null;
+            //}
+            //return (2 === sp_val[0].split('.').length) ? parseFloat(sp_val[0]) : parseInt(sp_val[0]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -181,16 +145,16 @@ module.exports = {
     
     getRemBase : () => {
         try {
-            let fsize = mofron.func.getSize(
-                document.documentElement.style[
-                    mofron.func.getCamel('font-size')
-                ],
-                '%'
-            );
-            if (null === fsize) {
-                throw new Error('invalid html font-size');
-            }
-            return 16 * (fsize / 100);
+            //let fsize = mofron.func.getSize(
+            //    document.documentElement.style[
+            //        mofron.func.getCamel('font-size')
+            //    ],
+            //    '%'
+            //);
+            //if (null === fsize) {
+            //    throw new Error('invalid html font-size');
+            //}
+            //return 16 * (fsize / 100);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -221,7 +185,28 @@ module.exports = {
         }
     },
     
-    
+    compSize : (cmp, key, val) => {
+        try {
+            if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
+                 ('string' !== typeof key) ) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === val) {
+                /* getter */
+                return cmp.style(key);
+            }
+            /* setter */
+            let set_style  = {};
+            set_style[key] = ('number' === typeof val) ? (val + '') + cmp.sizeType() : val;
+            if ('string' !== typeof set_style[key]) {
+                throw new Error('invalid parameter');
+            }
+            cmp.style(set_style);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
     
     isInclude : (obj, nm) => {
         try {
