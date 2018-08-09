@@ -113,23 +113,6 @@ module.exports = {
         }
     },
     
-    getSize : (val, tp) => {
-        try {
-            //if (('string' !== typeof val) || ('string' !== typeof tp)) {
-            //    return null;
-            //}
-            //let sp_val = val.split(tp);
-            //if (1 === sp_val.length) {
-            //    console.warn('unknown size type: ' + val);
-            //    return null;
-            //}
-            //return (2 === sp_val[0].split('.').length) ? parseFloat(sp_val[0]) : parseInt(sp_val[0]);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    },
-    
     getStyleConts : (sel,cnt) => {
         try {
             var ret_val = sel + '{';
@@ -142,19 +125,48 @@ module.exports = {
             throw e;
         }
     },
+     
+    getSize : (prm) => {
+        try {
+            if ('string' !== typeof prm) {
+                if (null === prm) {
+                    return [0, null];
+                } else {
+                    throw new Error('invalid parameter');
+                }
+            }
+            let stype   = ['px', '%', 'em', 'rem', 'vw', 'vh'];
+            let sp_prm  = null;
+            let ret_val = null;
+            for (let sidx in stype) {
+                sp_prm = prm.split(stype[sidx]);
+                if (2 !== sp_prm.length) {
+                    continue;
+                }
+                ret_val = (2 === sp_prm[0].split('.').length) ? parseFloat(sp_prm[0]) : parseInt(sp_prm[0]);
+                if ((ret_val + '') !== sp_prm[0]) {
+                    continue;
+                }
+                return [ret_val, stype[sidx]];
+            }
+            throw new Error('not supported size type');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
     
     getRemBase : () => {
         try {
-            //let fsize = mofron.func.getSize(
-            //    document.documentElement.style[
-            //        mofron.func.getCamel('font-size')
-            //    ],
-            //    '%'
-            //);
-            //if (null === fsize) {
-            //    throw new Error('invalid html font-size');
-            //}
-            //return 16 * (fsize / 100);
+            let fsize = mofron.func.getSize(
+                document.documentElement.style[
+                    mofron.func.getCamel('font-size')
+                ]
+            );
+            if (null === fsize[1]) {
+                throw new Error('invalid html font-size');
+            }
+            return 16 * (fsize[0] / 100);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -202,6 +214,29 @@ module.exports = {
                 throw new Error('invalid parameter');
             }
             cmp.style(set_style);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    sizeDiff : (siz1, siz2) => {
+        try {
+            if ('string' !== typeof siz1) {
+                throw new Error('invalid parameter');
+            }
+            let siz1_val = mofron.func.getSize(siz1);
+            if ('string' === typeof siz2) {
+                let siz2_val = mofron.func.getSize(siz2);
+                if (siz1_val[1] !== siz2_val[1]) {
+                    throw new Error('mismatched size type');
+                }
+                return (siz1_val[0] - siz2_val[1]) + siz1_val[1];
+            } else if ('number' === typeof siz2) {
+                return (siz1_val[0] - siz2) + siz1_val[1];
+            } else {
+                throw new Error('invalid parameter');
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
