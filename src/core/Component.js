@@ -969,16 +969,20 @@ mofron.Component = class extends mofron.Base {
     execOption (opt) {
         try {
             this.adom();
-            opt = (undefined === opt) ? this.getOption() : opt;
-            if (null === opt) {
-                return;
+            let exe_opt = null;
+            let theme   = null;
+            if (undefined === opt) {
+                exe_opt = this.getOption();
+                if (undefined !== exe_opt.theme) {
+                    theme = exe_opt.theme;
+                    this.delOption('theme');
+                }
+            } else {
+                if (undefined !== opt.theme) {
+                    theme = opt.theme;
+                    delete opt.theme;
+                }
             }
-            let theme = null;
-            if (undefined !== opt.theme) {
-                theme = opt.theme;
-                delete opt.theme;
-            }
-            
             super.execOption(opt);
             if (null !== theme) {
                 this.theme(theme);

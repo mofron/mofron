@@ -213,7 +213,9 @@ module.exports = {
             if ('string' !== typeof set_style[key]) {
                 throw new Error('invalid parameter');
             }
-            cmp.style(set_style);
+            cmp.execOption({
+                style : set_style
+            });
         } catch (e) {
             console.error(e.stack);
             throw e;
