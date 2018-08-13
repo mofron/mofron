@@ -7,6 +7,7 @@ mofron.Effect = class extends mofron.CompConf {
     constructor (po) {
         try {
             super();
+            this.m_init = true;
             this.name('Effect');
         } catch (e) {
             console.error(e.stack);
@@ -16,45 +17,31 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (flg) {
         try {
-            //if (true === this.ignore()) {
-            //    return;
-            //}
-            
-            var _flg = (flg === undefined) ? true : flg;
+            let _flg = (flg === undefined) ? true : flg;
             if ('boolean' !== typeof _flg) {
                 throw new Error('invalid paramter');
             }
             
+            if (true === this.m_init) {
+                /* this is first execute */
+                this.contents(this.defStatus(), this.component());
+                this.m_init = false;
+                return;
+            }
+            
+            
+            
             if (0 === this.speed()) {
-               if (true === _flg) {
-                   this.contents(true, this.component());
-                   this.status(true);
-               } else {
-                   this.contents(false, this.component());
-                   this.status(false);
-               }
+               this.contents(_flg,  this.component());
             } else {
                 /* init exec */
-                if (true === _flg) {
-                    this.contents(false, this.component());
-                    this.status(false);
-                } else {
-                    this.contents(true,this.component());
-                    this.status(true);
-                }
-                
+                //this.contents(!_flg, this.component());
                 this.setConf(true);
                 
                 setTimeout(
                     (eff) => {
                         try {
-                            if (true === _flg) {
-                                eff.contents(true, eff.component());
-                                eff.status(true);
-                            } else {
-                                eff.contents(false, eff.component());
-                                eff.status(false);
-                            }
+                            eff.contents(_flg, eff.component());
                         } catch (e) {
                             console.error(e.stack);
                             throw e;
@@ -124,6 +111,7 @@ mofron.Effect = class extends mofron.CompConf {
             } else {
                 this.disable(cmp);
             }
+            this.status(flg);
         } catch (e) {
             console.error(e.stack);
             throw e;

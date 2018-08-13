@@ -58,7 +58,11 @@ mofron.CompConf = class extends mofron.Base {
                     if ('function' !== typeof obj[prm_map[cidx]]) {
                         throw new Error('could not find method');
                     }
-                    obj[prm_map[cidx]](chk_prm[cidx]);
+                    if (true === mofron.func.isObject(chk_prm[cidx], 'Param')) {
+                        chk_prm[cidx].exec(obj[prm_map[cidx]], prm_map[cidx]);
+                    } else {
+                        obj[prm_map[cidx]](chk_prm[cidx]);
+                    }
                 }
             }
             return ret;
@@ -75,9 +79,7 @@ mofron.CompConf = class extends mofron.Base {
                 return (undefined === this.m_prmmap) ? [] : this.m_prmmap;
             }
             /* setter */
-            if (undefined === this.m_prmmap) {
-                this.m_prmmap = new Array();
-            }
+            this.m_prmmap = new Array();
             for (let idx in arguments) {
                 this.m_prmmap.push(arguments[idx]);
             }

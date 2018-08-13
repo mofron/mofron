@@ -748,7 +748,11 @@ mofron.Component = class extends mofron.Base {
                         set_opt[prm_map[cidx]] = chk_prm[cidx];
                         this.addOption(set_opt);
                         
-                        obj[prm_map[cidx]](chk_prm[cidx]);
+                        if (true === mofron.func.isObject(chk_prm[cidx], 'Param')) {
+                            chk_prm[cidx].exec(obj[prm_map[cidx]], prm_map[cidx]);
+                        } else {
+                            obj[prm_map[cidx]](chk_prm[cidx]);
+                        }
                     }
                 }
             }
@@ -942,10 +946,15 @@ mofron.Component = class extends mofron.Base {
     accentColor () {}
     
     prmOpt (po, p1, p2, p3, p4) {
-        super.prmOpt(po, p1, p2, p3, p4);
-        
-        if (null !== this.param()) {
-            this.adom();
+        try {
+            super.prmOpt(po, p1, p2, p3, p4);
+            
+            if (null !== this.param()) {
+                this.adom();
+            }
+        } catch (e) {
+            console.log(e.stack);
+            throw e;
         }
     }
     

@@ -583,7 +583,13 @@ mofron.Dom = class extends mofron.Base {
         try {
             if (undefined === pnt) {
                 /* getter */
-                return (undefined === this.m_parent) ? null : this.m_parent;
+                if (undefined === this.m_parent) {
+                    return null;
+                }
+                if (true === mofron.func.isObject(this.m_parent, 'Adom')) {
+                    return this.m_parent.parent();
+                }
+                return this.m_parent;
             }
             /* setter */
             if ( (null  !== pnt) &&

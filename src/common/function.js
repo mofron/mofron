@@ -210,7 +210,7 @@ module.exports = {
             /* setter */
             let set_style  = {};
             set_style[key] = ('number' === typeof val) ? (val + '') + cmp.sizeType() : val;
-            if ('string' !== typeof set_style[key]) {
+            if ( ('string' !== typeof set_style[key]) && (null !== set_style[key])) {
                 throw new Error('invalid parameter');
             }
             cmp.execOption({
