@@ -857,43 +857,30 @@ mofron.Component = class extends mofron.Base {
     }
     
     width (prm) {
-        try {
-            return mofron.func.compSize(this, 'width', prm);
-        } catch (e) {
+        try { return this.sizeValue('width', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     height (prm) {
-        try {
-            return mofron.func.compSize(this, 'height', prm);
-        } catch (e) {
+        try { return this.sizeValue('height', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    sizeType (prm) {
+    sizeValue (key, val) {
         try {
-            if (undefined === prm) {
+            if (undefined === val) {
                 /* getter */
-                return (undefined === this.m_siztp) ? 'rem' : this.m_siztp;
+                return (undefined === this.m_sizeval[key]) ? null : this.m_sizeval[key];
             }
             /* setter */
-            if ( ('string' !== typeof prm) ||
-                 ( ('px'  !== prm) &&
-                   ('%'   !== prm) &&
-                   ('em'  !== prm) &&
-                   ('rem' !== prm) &&
-                   ('vw'  !== prm) &&
-                   ('vh'  !== prm) ) ) {
-                throw new Error('invalid parameter');
+            if (undefined === this.m_sizeval) {
+                this.m_sizeval = {};
             }
-            if (undefined !== this.m_siztp) {
-                throw new Error('could not change size type');
-            }
-            this.m_siztp = prm;;
+            this.m_sizeval[key] = mofron.func.setCompSize(this, key, val);
         } catch (e) {
             console.error(e.stack);
             throw e;
