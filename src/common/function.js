@@ -211,24 +211,46 @@ module.exports = {
         }
     }, 
     
-    sizeDiff : (p1, p2) => {
+    sizeCalcu : (p1, p2, flg) => {
         try {
             let prm1 = ('string' === typeof p1) ? mofron.func.getSizeObj(p1) : p1;
             let prm2 = ('string' === typeof p2) ? mofron.func.getSizeObj(p2) : p2;
             if ( (true !== mofron.func.isInclude(prm1, ['Base', 'Size'])) ||
-                 (true !== mofron.func.isInclude(prm2, ['Base', 'Size'])) ) {
+                 (true !== mofron.func.isInclude(prm2, ['Base', 'Size'])) ||
+                 ('boolean' !== typeof flg) ) {
                 throw new Error('invalid parameter');
             }
-            
             if (prm1.type() !== prm2.type()) {
                 if ((undefined === prm1.toPxnum()) || (undefined === prm2.toPxnum())) {
                     throw new Error('not supported type');
                 }
-                return new mofron.size.Pixel(prm1.toPxnum() - prm2.toPxnum());
+                if (true === flg) {
+                    return new mofron.size.Pixel(prm1.toPxnum() + prm2.toPxnum());
+                } else {
+                    return new mofron.size.Pixel(prm1.toPxnum() - prm2.toPxnum());
+                }
             } else {
-                return mofron.func.getSizeObj((prm1.value() - prm2.value()) + prm1.type());
+                if (true === flg) {
+                    return mofron.func.getSizeObj((prm1.value() + prm2.value()) + prm1.type());
+                } else {
+                    return mofron.func.getSizeObj((prm1.value() - prm2.value()) + prm1.type());
+                }
             }
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    sizeSum : (p1, p2) => {
+        try { return mofron.func.sizeCalcu(p1, p2, true); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    sizeDiff : (p1, p2) => {
+        try { return mofron.func.sizeCalcu(p1, p2, false); } catch (e) {
             console.error(e.stack);
             throw e;
         }
