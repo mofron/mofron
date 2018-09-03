@@ -12,9 +12,11 @@ mofron.size.Rem = class extends mofron.size.Base {
     /**
      *
      */
-    constructor (po) {
+    constructor (prm) {
         try {
-            super(po);
+            super(
+                ('number' === typeof prm) ? prm + 'rem' : prm
+            );
             this.name('Rem');
         } catch (e) {
             console.error(e.stack);
