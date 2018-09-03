@@ -3,7 +3,6 @@
  * @brief rem size data type
  * @author simpart
  */
-
 /**
  * @class Rem
  * @brief Rem Defined Class
@@ -26,7 +25,7 @@ mofron.size.Rem = class extends mofron.size.Base {
     
     toPxnum () {
         try {
-            return this.value() * mf.func.getRemBase();
+            return this.value() * mofron.func.getRemBase();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -35,7 +34,7 @@ mofron.size.Rem = class extends mofron.size.Base {
     
     px2Rem () {
         try {
-            return this.value() / mf.func.getRemBase();
+            return this.value() / mofron.func.getRemBase();
         } catch (e) {
             console.error(e.stack);
             throw e;

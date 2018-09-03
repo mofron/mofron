@@ -908,7 +908,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    mainColor () {}
+    mainColor () { return null; }
     
     baseColor (prm) {
         try {
@@ -927,7 +927,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    accentColor () {}
+    accentColor () { return null; }
     
     prmOpt (po, p1, p2, p3, p4) {
         try {
@@ -937,7 +937,7 @@ mofron.Component = class extends mofron.Base {
                 this.adom();
             }
         } catch (e) {
-            console.log(e.stack);
+            console.error(e.stack);
             throw e;
         }
     }
