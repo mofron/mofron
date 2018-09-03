@@ -196,17 +196,15 @@ module.exports = {
                 throw new Error('invalid parameter');
             }
             
+            let set_style  = {};
             if ('string' === typeof val) {
-                val = mofron.func.getSizeObj(val);
-            } else if (true !== mofron.func.isInclude(val, ['Base','Size'])) {
+                set_style[key] = val;
+            } else if (true === mofron.func.isInclude(val, ['Base','Size'])) {
+                set_style[key] = val.toString();
+            } else {
                 throw new Error('invalid parameter');
             }
-            let set_style  = {};
-            set_style[key] = val.value();
-            cmp.execOption({
-                style : set_style
-            });
-            return val;
+            cmp.execOption({ style : set_style });
         } catch (e) {
             console.error(e.stack);
             throw e;

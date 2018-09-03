@@ -12,14 +12,16 @@ mofron.size.Base = class extends mofron.Base {
     /**
      *
      */
-    constructor (po) {
+    constructor (siz) {
         try {
             super();
             this.name('Size');
-            this.prmOpt(po);
-            if (null !== this.param()) {
-                this.value(po);
+            if ('string' !== typeof siz) {
+                throw new Error('invalid parameter');
             }
+            let gsiz = mofron.func.getSize(siz);
+            this.value(gsiz[0]);
+            this.type(gsiz[1]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -59,17 +61,17 @@ mofron.size.Base = class extends mofron.Base {
         }
     }
     
-    number (prm) {
+    value (prm) {
         try {
             if (undefined === prm) {
                 /* getter */ 
-                return (undefined === this.m_number) ? 0 : this.m_number;
+                return (undefined === this.m_value) ? 0 : this.m_value;
             }
             /* setter */
             if ('number' !== typeof prm) {
                 throw new Error('invalid parameter');
             }
-            this.m_number = prm;
+            this.m_value = prm;
             //if (null !== this.component()) {
             //    let set_style = {};
             //    set_style[this.key()]
@@ -83,16 +85,9 @@ mofron.size.Base = class extends mofron.Base {
         }
     }
     
-    value (prm) {
+    toString () {
         try {
-            if (undefined === prm) {
-                /* getter */
-                return (null === this.type()) ? null : this.number() + this.type();
-            }
-            /* setter */
-            let siz = mofron.func.getSize(prm);
-            this.number(siz[0]);
-            this.type(siz[1]);
+            return (null === this.type()) ? null : this.value() + this.type(); 
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -100,6 +95,7 @@ mofron.size.Base = class extends mofron.Base {
     }
     
     toPxnum () {}
+    
     
     add (prm) {
         try {
@@ -128,13 +124,13 @@ mofron.size.Base = class extends mofron.Base {
                 if ((undefined === prm.toPxnum()) || (undefined === this.toPxnum())) {
                     throw new Error('different type');
                 }
-                this.number(
+                this.value(
                     (true === flg) ? this.toPxnum() + prm.toPxNum() : this.toPxnum() - prm.toPxnum()
                 );
                 this.type('px');
             } else {
-                this.number(
-                    (true === flg) ? this.number() + prm.number() : this.number() - prm.number()
+                this.value(
+                    (true === flg) ? this.value() + prm.value() : this.value() - prm.value()
                 );
             }
         } catch (e) {

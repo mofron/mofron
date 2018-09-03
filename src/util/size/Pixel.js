@@ -22,22 +22,6 @@ mofron.size.Pixel = class extends mofron.size.Base {
         }
     }
     
-    value (prm) {
-        try {
-            let ret = super.value(prm);
-            if (undefined === ret) {
-                /* setter */
-                if ('pixel' !== this.type()) {
-                    throw new Error('invalid parameter');
-                }
-            }
-            return ret;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     toPxnum () {
         try { return this.number(); } catch (e) {
             console.error(e.stack);

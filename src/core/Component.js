@@ -874,13 +874,10 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === val) {
                 /* getter */
-                return (undefined === this.m_sizeval[key]) ? null : this.m_sizeval[key];
+                return (null === this.style(key)) ? null : mofron.func.getSizeObj(this.style(key));
             }
             /* setter */
-            if (undefined === this.m_sizeval) {
-                this.m_sizeval = {};
-            }
-            this.m_sizeval[key] = mofron.func.setCompSize(this, key, val);
+            mofron.func.setCompSize(this, key, val);
         } catch (e) {
             console.error(e.stack);
             throw e;

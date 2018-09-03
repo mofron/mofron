@@ -22,25 +22,9 @@ mofron.size.Rem = class extends mofron.size.Base {
         }
     }
     
-    value (prm) {
-        try {
-            let ret = super.value(prm);
-            if (undefined === ret) {
-                /* setter */
-                if ('rem' !== this.type()) {
-                    throw new Error('invalid parameter');
-                }
-            }
-            return ret;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     toPxnum () {
         try {
-            return this.number() * mf.func.getRemBase();
+            return this.value() * mf.func.getRemBase();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -49,7 +33,7 @@ mofron.size.Rem = class extends mofron.size.Base {
     
     px2Rem () {
         try {
-            return this.number() / mf.func.getRemBase();
+            return this.value() / mf.func.getRemBase();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -60,7 +44,7 @@ mofron.size.Rem = class extends mofron.size.Base {
         try {
             super.calcu(prm, flg);
             if ('px' === this.type()) {
-                this.number(this.px2Rem());
+                this.value(this.px2Rem());
                 this.type('rem');
             }
         } catch (e) {
