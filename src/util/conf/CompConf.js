@@ -59,7 +59,7 @@ mofron.CompConf = class extends mofron.Base {
                         throw new Error('could not find method');
                     }
                     if (true === mofron.func.isObject(chk_prm[cidx], 'Param')) {
-                        chk_prm[cidx].exec(obj[prm_map[cidx]], prm_map[cidx]);
+                        chk_prm[cidx].exec(obj, prm_map[cidx]);
                     } else {
                         obj[prm_map[cidx]](chk_prm[cidx]);
                     }
