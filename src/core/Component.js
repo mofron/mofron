@@ -1017,7 +1017,7 @@ mofron.Component = class extends mofron.Base {
             if ('function' !== typeof fnc) {
                 throw new Error('invald parameter');
             }
-            fnc(prm);
+            fnc(this, prm);
             this.target(tgt_buf);
         } catch (e) {
             console.error(e.stack);

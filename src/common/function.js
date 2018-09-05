@@ -130,7 +130,7 @@ module.exports = {
         try {
             if ('string' !== typeof prm) {
                 if (null === prm) {
-                    return [0, null];
+                    return [0, 'px'];
                 } else {
                     throw new Error('invalid parameter');
                 }
@@ -242,8 +242,14 @@ module.exports = {
         }
     },
     
-    sizeSum : (p1, p2) => {
-        try { return mofron.func.sizeCalcu(p1, p2, true); } catch (e) {
+    sizeSum : (p1, p2, p3) => {
+        try {
+            let ret = mofron.func.sizeCalcu(p1, p2, true);
+            if (undefined !== p3) {
+                ret = mofron.func.sizeCalcu(ret, p3, true);
+            }
+            return ret;
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
