@@ -18,6 +18,7 @@ mofron.Event = class extends mofron.CompConf {
             this.name('Event');
             this.m_effect  = new Array();
             this.m_handler = new Array();
+            this.prmMap('handler');
         } catch (e) {
             console.error(e.stack);
             throw e;
