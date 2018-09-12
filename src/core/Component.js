@@ -243,7 +243,16 @@ mofron.Component = class extends mofron.Base {
                 }
             }
             if (null === upd_idx) {
-                throw new Error('invalid parameter');
+                chd = this.child();
+                for (let cidx in chd) {
+                    if (chd[cidx].getId() === o_chd.getId()) {
+                        upd_idx = cidx;
+                        break;
+                    }
+                }
+                if (null === upd_idx) {
+                    throw new Error('invalid parameter');
+                }
             }
             
             let old_tgt = chd[upd_idx].adom().parent();
@@ -874,7 +883,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === val) {
                 /* getter */
-                return (null === this.style(key)) ? null : mofron.func.getSizeObj(this.style(key));
+                return (null === this.style(key)) ? null : mofron.func.getSizeObj(this.style(key),this);
             }
             /* setter */
             mofron.func.setCompSize(this, key, val);
