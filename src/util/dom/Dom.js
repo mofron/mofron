@@ -184,7 +184,10 @@ mofron.Dom = class extends mofron.Base {
                  ('function' !== typeof (func)) ) {
                 throw new Error('invalid parameter');
             }
-            this.m_style_lis[key] = [func, prm];
+            if (undefined === this.m_style_lis[key]) {
+                this.m_style_lis[key] = new Array();
+            }
+            this.m_style_lis[key].push([func, prm]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -221,7 +224,9 @@ mofron.Dom = class extends mofron.Base {
                 for (let lis_idx in lisner) {
                     if (s_idx === lis_idx) {
                         lis_prm[lis_idx] = set_ret[s_idx];
-                        lisner[lis_idx][0](lis_prm, this, lisner[lis_idx][1]);
+                        for (let cbidx in lisner[lis_idx]) {
+                            lisner[lis_idx][cbidx][0](lis_prm, this, lisner[lis_idx][cbidx][1]);
+                        }
                     }
                 }
             }
@@ -630,21 +635,6 @@ mofron.Dom = class extends mofron.Base {
                 this.getRawDom().remove();
                 this.m_rawdom = null;
             }
-            //let chd = this.child();
-            //for (let cidx in chd) {
-            //    chd[cidx].destroy();
-            //}
-            //if ( (null !== this.parent()) &&
-            //     (true === mofron.func.isInclude(this.parent(), 'Dom')) ) {
-            //    var pnt_chd = this.parent().child();
-            //    for (var idx in pnt_chd) {
-            //        if (pnt_chd[idx].getId() === this.getId()) {
-            //            this.parent().delChild(parseInt(idx));
-            //            break;
-            //        }
-            //    }
-            //}
-            
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -17,7 +17,7 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (flg) {
         try {
-            let _flg = (flg === undefined) ? true : flg;
+            let _flg = (undefined === _flg) ? this.status() : flg;
             if ('boolean' !== typeof _flg) {
                 throw new Error('invalid paramter');
             }

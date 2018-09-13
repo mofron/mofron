@@ -160,11 +160,13 @@ module.exports = {
         try {
             let siz = mofron.func.getSize(prm);
             if ('px' === siz[1]) {
-                return new mofron.size.Pixel(prm);
+                return new mofron.size.Pixel(siz[0]+siz[1]);
             } else if ('rem' === siz[1]) {
-                return new mofron.size.Rem(prm);
+                return new mofron.size.Rem(siz[0]+siz[1]);
+            } else if ('%' === siz[1]) {
+                return new mofron.size.Percent(siz[0]+siz[1]);
             } else { 
-                return new mofron.size.Base(prm);
+                return new mofron.size.Base(siz[0]+siz[1]);
             }
         } catch (e) {
             console.error(e.stack);
@@ -255,8 +257,14 @@ module.exports = {
         }
     },
     
-    sizeDiff : (p1, p2) => {
-        try { return mofron.func.sizeCalcu(p1, p2, false); } catch (e) {
+    sizeDiff : (p1, p2, p3) => {
+        try {
+            let ret = mofron.func.sizeCalcu(p1, p2, false);
+            if (undefined !== p3) {
+                ret = mofron.func.sizeCalcu(ret, p3, false);
+            }
+            return ret;
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -383,16 +391,16 @@ module.exports = {
     
     rsizWinEvent : (func, prm, tlag) => {
         try {
-            var que_buf = null;
-            var param   = prm;
-            var time_lag = (undefined === tlag) ? 200 : tlag;
+            let que_buf = null;
+            let param   = prm;
+            let time_lag = (undefined === tlag) ? 200 : tlag;
             if ( ('function' !== typeof func) ||
                  ('number'   !== typeof time_lag) ) {
                 throw new Error('invalid parameter');
             }
             window.addEventListener(
                 'resize',
-                function() {
+                () => {
                     try {
                         clearTimeout(que_buf);
                         que_buf = setTimeout(func, time_lag, param);

@@ -866,14 +866,28 @@ mofron.Component = class extends mofron.Base {
     }
     
     width (prm) {
-        try { return this.sizeValue('width', prm); } catch (e) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return this.sizeValue('width').toString();
+            }
+            /* setter */
+            this.sizeValue('width', prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     height (prm) {
-        try { return this.sizeValue('height', prm); } catch (e) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return this.sizeValue('height').toString();
+            }
+            /* setter */
+            this.sizeValue('height', prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -881,12 +895,7 @@ mofron.Component = class extends mofron.Base {
     
     sizeValue (key, val) {
         try {
-            if (undefined === val) {
-                /* getter */
-                return (null === this.style(key)) ? null : mofron.func.getSizeObj(this.style(key),this);
-            }
-            /* setter */
-            mofron.func.setCompSize(this, key, val);
+            return (undefined === val) ? mofron.func.getSizeObj(this.style(key),this) : mofron.func.setCompSize(this, key, val);
         } catch (e) {
             console.error(e.stack);
             throw e;

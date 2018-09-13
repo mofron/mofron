@@ -28,23 +28,6 @@ mofron.size.Base = class extends mofron.Base {
         }
     }
     
-    //component (prm) {
-    //    try {
-    //        if (undefined === prm) {
-    //            /* getter */
-    //            return (undefined === this.m_comp) ? null :  this.m_comp;
-    //        }
-    //        /* setter */
-    //        if (true !== mofron.func.isInclude(prm, 'Component')) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        this.m_comp = prm;
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-    
     type (prm) {
         try {
             if (undefined === prm) {
@@ -72,13 +55,6 @@ mofron.size.Base = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             this.m_value = prm;
-            //if (null !== this.component()) {
-            //    let set_style = {};
-            //    set_style[this.key()]
-            //    this.component().style({
-            //        
-            //    });
-            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -97,43 +73,15 @@ mofron.size.Base = class extends mofron.Base {
     toPxnum () {}
     
     
-    add (prm) {
-        try {
-            this.calcu(prm, true);
-        } catch (e) {
+    sum (p1, p2) {
+        try { return mofron.func.sizeSum(this, p1, p2); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     } 
     
-    sub (prm) {
-        try {
-            this.calcu(prm, false);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    calcu (prm, flg) {
-        try {
-            if (true !== mofron.func.isInclude(prm, ['Base', 'Size'])) {
-                throw new Error('invalid parameter');
-            }
-            if (prm.type() !== this.type()) {
-                if ((undefined === prm.toPxnum()) || (undefined === this.toPxnum())) {
-                    throw new Error('different type');
-                }
-                this.value(
-                    (true === flg) ? this.toPxnum() + prm.toPxNum() : this.toPxnum() - prm.toPxnum()
-                );
-                this.type('px');
-            } else {
-                this.value(
-                    (true === flg) ? this.value() + prm.value() : this.value() - prm.value()
-                );
-            }
-        } catch (e) {
+    diff (p1, p2) {
+        try { return mofron.func.sizeDiff(this, p1, p2); } catch (e) {
             console.error(e.stack);
             throw e;
         }
