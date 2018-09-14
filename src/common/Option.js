@@ -30,7 +30,7 @@ mofron.Option = class extends mofron.Base {
                 throw new Error('invalid paramter');
             }
             let get_cmp = cmp[func]();
-            if (true !== mofron.func.isInclude(get_cmp, 'Component')) {
+            if (true !== mofron.func.isInclude(get_cmp, 'Base')) {
                 throw new Error('invalid paramter');
             }
             get_cmp.execOption(this.m_option);

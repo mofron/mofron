@@ -163,8 +163,6 @@ module.exports = {
                 return new mofron.size.Pixel(siz[0]+siz[1]);
             } else if ('rem' === siz[1]) {
                 return new mofron.size.Rem(siz[0]+siz[1]);
-            } else if ('%' === siz[1]) {
-                return new mofron.size.Percent(siz[0]+siz[1]);
             } else { 
                 return new mofron.size.Base(siz[0]+siz[1]);
             }
