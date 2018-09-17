@@ -439,7 +439,6 @@ module.exports = {
             
             if ( (undefined !== screen.orientation) &&
                  (null      === screen.orientation.onchange) ) {
-                //screen.orientation.onchange = nti_fnc;
                 screen.orientation.onchange = (evt) => {
                     try {
                         let ef = null;
@@ -533,6 +532,31 @@ module.exports = {
         }
     },
     vrtAngleEvent_func : new Array(),
+    
+    isVrtAngle : () => {
+        try {
+            if (('mobile' !== mofron.func.devType()) && ('tablet' !== mofron.func.devType())) {
+                return false;
+            }
+            return (window.innerHeight > window.innerWidth) ? true : false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isHrzAngle : () => {
+        try {
+            if (('mobile' !== mofron.func.devType()) && ('tablet' !== mofron.func.devType())) {
+                return false;
+            }
+            return (window.innerHeight < window.innerWidth) ? true : false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     devType : () => {
         try {
             let ua = navigator.userAgent;
