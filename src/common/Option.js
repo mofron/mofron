@@ -23,17 +23,17 @@ mofron.Option = class extends mofron.Base {
         }
     }
     
-    exec (cmp, func) {
+    exec (src, func) {
         try {
-            if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
-                 ('string' !== typeof func) ) {
+            if ( (true !== mofron.func.isInclude(src, 'Base')) ||
+                 ('function' !== typeof src[func]) ) {
                 throw new Error('invalid paramter');
             }
-            let get_cmp = cmp[func]();
-            if (true !== mofron.func.isInclude(get_cmp, 'Base')) {
+            let opt_tgt = tgt[func]();
+            if (true !== mofron.func.isInclude(opt_tgt, 'Base')) {
                 throw new Error('invalid paramter');
             }
-            get_cmp.execOption(this.m_option);
+            opt_tgt.execOption(this.m_option);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -11,28 +11,17 @@ mofron.Color = class extends mofron.Base {
     /**
      * initialize member
      *
-     * @param r : (number 0-255) red value (option)
+     * @param p1 : (number 0-255) red value (option), color string, null
      * @param g : (number 0-255) green value (option)
      * @param b : (number 0-255) blue alue (option)
      * @param a : (number 0-1)   alpha value (option)
      */
-    constructor (r,g,b,a) {
+    constructor (p1,g,b,a) {
         try {
             super();
             this.name('Color');
-            
-            this.m_rgba = new Array(
-                              null,  /* red */
-                              null,  /* green */
-                              null,  /* blue */
-                              null   /* alpha */
-                          );
-            if ('string' === typeof r) {
-                let code = mofron.func.convColorCode(r);
-                this.rgba(code[0], code[1], code[2]);
-            } else {
-                this.rgba(r,g,b,a);
-            }
+            this.m_rgba = [null, null, null, null]; /* red, green, blue, alpha */
+            this.rgba(p1,g,b,a);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -61,7 +50,7 @@ mofron.Color = class extends mofron.Base {
             var _alpha = (alpha === undefined) ?    1 : alpha;
             
             if ( (null === _red) && (null === _green) && (null === _blue) ) {
-
+                
             } else if ( (null !== _red) && (null !== _green) && (null !== _blue) ) {
                 if ( ('number' !== typeof _red) ||
                      ('number' !== typeof _green) ||
@@ -93,7 +82,7 @@ mofron.Color = class extends mofron.Base {
      * @return (string) none
      * @note return 'none' if rgb is null.
      */
-    getStyle () {
+    toString () {
         try {
             var rgba = this.rgba();
             var red   = rgba[0];

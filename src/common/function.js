@@ -72,41 +72,155 @@ module.exports = {
         }
     },
     
-    getColor : (sty) => {
+    getColor : (prm) => {
         try {
-            if ('none' === sty) {
-                return new mofron.Color();
-            } else if (null === sty) {
+            if (null === prm) {
                 return null;
-            }
-            
-            var color = null;
-            if (-1 !== sty.indexOf('rgba(') ) {
-                color = sty.substring(5);
-            } else if (-1 !== sty.indexOf('rgb(')) {
-                color = sty.substring(4);
+            } else if ('string' === typeof prm) {
+                if ('none' === prm) {
+                    return new mofron.Color();
+                } else if (0 === prm.indexOf('rgb')) {
+                    return convColorRgb(prm);
+                } else if (0 === prm.indexOf('#')) {
+                    return convColorHex(prm);
+                } else {
+                    return convColorName(prm);
+                }
+            } else if (true === Array.isArray(prm)) {
+                return new mofron.Color(prm[0], prm[1], prm[2], prm[3]);
             } else {
-                return null;
+                throw new Error('invalid parameter');
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    convColorRgba : (prm) => {
+        try {
+            let color = null;
+            if (0 === prm.indexOf('rgba(') ) {
+                color = prm.substring(5);
+            } else if (0 === prm.indexOf('rgb(')) {
+                color = prm.substring(4);
+            } else {
+                throw new Error('invalid parameter');
             }
             
-            color = color.substring(0,color.length-1);
+            color = color.substring(0, color.length-1);
             color = color.split(',');
             if (3 === color.length) {
                 return new mofron.Color(
-                               parseInt(color[0]),
-                               parseInt(color[1]),
-                               parseInt(color[2])
-                           );
+                     parseInt(color[0]),
+                     parseInt(color[1]),
+                     parseInt(color[2])
+                );
             } else if (4 === color.length) {
                 return new mofron.Color(
-                               parseInt(color[0]),
-                               parseInt(color[1]),
-                               parseInt(color[2]),
-                               parseInt(color[3])
-                           );
+                     parseInt(color[0]),
+                     parseInt(color[1]),
+                     parseInt(color[2]),
+                     parseInt(color[3])
+                );
             } else {
-                return null;
+                throw new Error('invalid parameter');
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    convColorHex : (prm) => {
+        try {
+            let clr = prm.substring(1);
+            if (6 !== clr.length) {
+                throw new Error('invalid parameter');
+            }
+            return new mofron.Color(
+                parseInt(clr.substring(0,2) ,16),
+                parseInt(clr.substring(2,2) ,16),
+                parseInt(clr.substring(4,2) ,16)
+            );
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    convColorName : (prm) => {
+        try {
+            if ('string' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+
+            switch (prm) {
+                case 'black':
+                    return new mofron.Color(0, 0, 0);
+                case 'gray':
+                    return new mofron.Color(128, 128, 128);
+                case 'silver':
+                    return new mofron.Color(192, 192, 192);
+                case 'white':
+                    return new mofron.Color(255, 255, 255);
+                case 'blue':
+                    return new mofron.Color(0, 0, 255);
+                case 'navy':
+                    return new mofron.Color(0, 0, 128);
+                case 'teal':
+                    return new mofron.Color(0, 128, 128);
+                case 'green':
+                    return new mofron.Color(0, 128, 0);
+                case 'lime':
+                    return new mofron.Color(0, 255, 0);
+                case 'aqua':
+                    return new mofron.Color(0, 255, 255);
+                case 'yellow':
+                    return new mofron.Color(255, 255, 0);
+                case 'red':
+                    return new mofron.Color(255, 0, 0);
+                case 'fuchsia':
+                    return new mofron.Color(255, 0, 255);
+                case 'olive':
+                    return new mofron.Color(128, 128, 0);
+                case 'purple':
+                    return new mofron.Color(128, 0, 128);
+                case 'maroon':
+                    return new mofron.Color(128, 0, 0);
+                default:
+                    throw new Error('not supported color');
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    setColor : (cmp, key, val) => {
+        try {
+            if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
+                 ('string' !== typeof key) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            let set_style  = {};
+            if ( (null === val) || ('string' === typeof val) ) {
+                set_style[key] = val;
+            } else if (true === mofron.func.isInclude(val, ['Base','Color'])) {
+                set_style[key] = val.toString();
+            } else if (true === Array.isArray(val)) {
+                if (3 === val.length) {
+                    set_style[key] = 'rgb('+ val[0] + ',' + val[1]  + ',' + val[2] +')';
+                } else if (4 === val.length) {
+                    set_style[key] = 'rgba('+ val[0] + ',' + val[1]  + ',' + val[2] + ',' + val[3] + ')';
+                } else {
+                    throw new Error('invalid parameter');
+                }
+            } else {
+                throw new Error('invalid parameter');
+            }
+            cmp.execOption({ style : set_style });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -126,11 +240,12 @@ module.exports = {
         }
     },
      
-    getSize : (prm) => {
+    getSize : (prm) => { 
         try {
+            let siz = null;
             if ('string' !== typeof prm) {
                 if (null === prm) {
-                    return [0, 'px'];
+                    return null; //siz = [0, 'px'];
                 } else {
                     throw new Error('invalid parameter');
                 }
@@ -147,18 +262,12 @@ module.exports = {
                 if ((ret_val + '') !== sp_prm[0]) {
                     continue;
                 }
-                return [ret_val, stype[sidx]];
+                siz = [ret_val, stype[sidx]];
             }
-            throw new Error('not supported size type');
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    },
-    
-    getSizeObj : (prm) => { 
-        try {
-            let siz = mofron.func.getSize(prm);
+            if (null === siz) {
+                throw new Error('not supported size type');
+            }
+            
             if ('px' === siz[1]) {
                 return new mofron.size.Pixel(siz[0]+siz[1]);
             } else if ('rem' === siz[1]) {
@@ -189,7 +298,7 @@ module.exports = {
         }
     },
     
-    setCompSize : (cmp, key, val) => {
+    setSize : (cmp, key, val) => {
         try {
             if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
                  ('string' !== typeof key) ) {
@@ -197,7 +306,7 @@ module.exports = {
             }
             
             let set_style  = {};
-            if ('string' === typeof val) {
+            if ( (null === val) || ('string' === typeof val) ) {
                 set_style[key] = val;
             } else if (true === mofron.func.isInclude(val, ['Base','Size'])) {
                 set_style[key] = val.toString();
@@ -616,52 +725,5 @@ module.exports = {
             throw e;
         }
     },
-    convColorCode : (prm) => {
-        try {
-            if ('string' !== typeof prm) {
-                throw new Error('invalid parameter');
-            }
-            
-            switch (prm) {
-                case 'black':
-                    return [0, 0, 0];
-                case 'gray':
-                    return [128, 128, 128];
-                case 'silver':
-                    return [192, 192, 192];
-                case 'white':
-                    return [255, 255, 255];
-                case 'blue':
-                    return [0, 0, 255];
-                case 'navy':
-                    return [0, 0, 128];
-                case 'teal':
-                    return [0, 128, 128];
-                case 'green':
-                    return [0, 128, 0];
-                case 'lime':
-                    return [0, 255, 0];
-                case 'aqua':
-                    return [0, 255, 255];
-                case 'yellow':
-                    return [255, 255, 0];
-                case 'red':
-                    return [255, 0, 0];
-                case 'fuchsia':
-                    return [255, 0, 255];
-                case 'olive':
-                    return [128, 128, 0];
-                case 'purple':
-                    return [128, 0, 128];
-                case 'maroon':
-                    return [128, 0, 0];
-                default:
-                    throw new Error('not supported color');
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
 };
 /* end of file */

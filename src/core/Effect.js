@@ -35,7 +35,6 @@ mofron.Effect = class extends mofron.CompConf {
                this.contents(_flg,  this.component());
             } else {
                 /* init exec */
-                //this.contents(!_flg, this.component());
                 this.setConf(true);
                 
                 setTimeout(
