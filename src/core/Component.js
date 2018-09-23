@@ -20,6 +20,7 @@ mofron.Component = class extends mofron.Base {
             
             /* initialize member */
             this.m_child  = new Array();
+            this.m_inncmp = {};
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
             
@@ -862,6 +863,29 @@ mofron.Component = class extends mofron.Base {
             if (null !== theme) {
                 this.theme(theme);
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    innerComp (prm, key, tmpl) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                if (undefined === this.m_inncmp[key]) {
+                    this.innerComp(new tmpl({}), key);
+                }
+                return this.m_inncmp[key];
+            }
+            /* setter */
+            if (true !== mofron.func.isInclude(prm, 'Component')) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined !== this.m_inncmp[key]) {
+                this.updChild(this.m_inncmp[key], prm);
+            }
+            this.m_inncmp[key] = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
