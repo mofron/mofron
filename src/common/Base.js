@@ -227,10 +227,49 @@ mofron.Base = class {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
+                    
+                    if ( (true === Array.isArray(opt[opt_idx])) &&
+                         (this[opt_idx].length > 1)             &&
+                         (opt[opt_idx].length === this[opt_idx].length) ) {
+                        
+                        switch (opt[opt_idx].length) {
+                            case 2:
+                                opt[opt_idx] = new mofron.Param(
+                                    opt[opt_idx][0],
+                                    opt[opt_idx][1]
+                                );
+                                break;
+                            case 3:
+                                opt[opt_idx] = new mofron.Param(
+                                    opt[opt_idx][0], 
+                                    opt[opt_idx][1],
+                                    opt[opt_idx][2]
+                                );
+                                break;
+                            case 4:
+                                opt[opt_idx] = new mofron.Param(
+                                    opt[opt_idx][0],  
+                                    opt[opt_idx][1],
+                                    opt[opt_idx][2],
+                                    opt[opt_idx][3]
+                                );
+                                break;
+                            case 5:
+                                opt[opt_idx] = new mofron.Param(
+                                    opt[opt_idx][0],
+                                    opt[opt_idx][1],
+                                    opt[opt_idx][2],
+                                    opt[opt_idx][3],
+                                    opt[opt_idx][4]
+                                );
+                                break;
+                        }
+                    }
+                    
                     if ( (true === mofron.func.isObject(opt[opt_idx],'Param')) ||
                          (true === mofron.func.isObject(opt[opt_idx],'Option')) ) {
                         opt[opt_idx].exec(this, opt_idx);
-                    }else {
+                    } else {
                         this[opt_idx](opt[opt_idx]);
                     }
                 }
