@@ -8,20 +8,22 @@
  * @class Size
  * @brief Size Defined Class
  */
-mofron.size.Base = class extends mofron.Base {
+mofron.size.Size = class extends mofron.Base {
     /**
      *
      */
-    constructor (siz) {
+    constructor (siz, tp) {
         try {
             super();
             this.name('Size');
-            if ('string' !== typeof siz) {
-                throw new Error('invalid parameter');
+            
+            if ( ('number' === typeof siz) && ('string' === typeof tp) ) {
+                this.value(siz);
+                this.type(tp);
+            } else {
+                this.value(mofron.func.getSizeValue(siz));
+                this.type(mofron.func.getSizeType(siz));
             }
-            let gsiz = mofron.func.getSize(siz);
-            this.value(gsiz[0]);
-            this.type(gsiz[1]);
         } catch (e) {
             console.error(e.stack);
             throw e;

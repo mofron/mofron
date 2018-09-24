@@ -406,28 +406,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    getConfig (tp, nm) {
-        try {
-            if ( ( ('layout' !== tp) &&
-                   ('effect' !== tp) &&
-                   ('event'  !== tp) &&
-                   ('respsv' !== tp) ) ||
-                   ('string' !== typeof nm) ) {
-                throw new Error('invalid prameter');
-            }
-            let cnf = this[tp]();
-            for (let cidx in cnf) {
-                if (cnf[cidx].name() === nm) {
-                    return cnf[cidx];
-                }
-            }
-            return null;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    } 
-    
     delConfig (prm) {
         try {
             if (true !== mofron.func.isInclude(prm, 'CompConf')) {
@@ -456,6 +434,15 @@ mofron.Component = class extends mofron.Base {
                     throw new Error('invalid parameter');
                 }
                 return this.m_conf[idx];
+            } else if ('string' === typeof prm) {
+                /* getter */
+                let cnf = this.config(idx);
+                for (let cidx in cnf) {
+                    if (cnf[cidx].name() === prm) {
+                        return cnf[cidx];
+                    }
+                }
+                return null;
             }
             /* setter */
             if (true === Array.isArray(prm)) {
@@ -874,7 +861,7 @@ mofron.Component = class extends mofron.Base {
             if (undefined === prm) {
                 /* getter */
                 if (undefined === this.m_inncmp[key]) {
-                    this.innerComp(new tmpl({}), key);
+                    this[key](new tmpl({}), key);
                 }
                 return this.m_inncmp[key];
             }

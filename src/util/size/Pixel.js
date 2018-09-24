@@ -8,15 +8,13 @@
  * @class Pixel
  * @brief Pixel Defined Class
  */
-mofron.size.Pixel = class extends mofron.size.Base {
+mofron.size.Pixel = class extends mofron.size.Size {
     /**
      *
      */
     constructor (prm) {
         try {
-            super(
-                ('number' === typeof prm) ? prm + 'px' : prm
-            );
+            super(prm, 'px');
             this.name('Pixel');
         } catch (e) {
             console.error(e.stack);

@@ -7,15 +7,13 @@
  * @class Rem
  * @brief Rem Defined Class
  */
-mofron.size.Rem = class extends mofron.size.Base {
+mofron.size.Rem = class extends mofron.size.Size {
     /**
      *
      */
     constructor (prm) {
         try {
-            super(
-                ('number' === typeof prm) ? prm + 'rem' : prm
-            );
+            super(prm, 'rem');
             this.name('Rem');
         } catch (e) {
             console.error(e.stack);

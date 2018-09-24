@@ -15,7 +15,7 @@ require('./src/util/conf/CompConf.js');
 require('./src/util/dom/Dom.js');
 require('./src/util/dom/Adom.js');
 
-require('./src/util/size/Base.js');
+require('./src/util/size/Size.js');
 require('./src/util/size/Rem.js');
 require('./src/util/size/Pixel.js');
 

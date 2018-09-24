@@ -21,6 +21,9 @@ mofron.Effect = class extends mofron.CompConf {
             if ('boolean' !== typeof _flg) {
                 throw new Error('invalid paramter');
             }
+            if ((undefined === flg) && (true === this.m_init)) {
+                return;
+            }
             
             if (true === this.m_init) {
                 /* this is first execute */
@@ -28,8 +31,6 @@ mofron.Effect = class extends mofron.CompConf {
                 this.m_init = false;
                 return;
             }
-            
-            
             
             if (0 === this.speed()) {
                this.contents(_flg,  this.component());

@@ -239,7 +239,37 @@ module.exports = {
             throw e;
         }
     },
-     
+    
+    getSizeValue : (prm) => {
+        try {
+            let type = mofron.func.getSizeType(prm);
+            sp_prm = prm.split(type);
+            return (2 === sp_prm[0].split('.').length) ? parseFloat(sp_prm[0]) : parseInt(sp_prm[0]);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    getSizeType : (prm) => {
+        try {
+            let stype   = ['px', '%', 'rem', 'em', 'vw', 'vh'];
+            let sp_prm  = null;
+            let ret_val = null;
+            for (let sidx in stype) {
+                sp_prm = prm.split(stype[sidx]);
+                if (2 !== sp_prm.length) {
+                    continue;
+                }
+                return stype[sidx];
+            }
+            throw new Error('not supported size type');
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     getSize : (prm) => { 
         try {
             let siz = null;
@@ -250,30 +280,14 @@ module.exports = {
                     throw new Error('invalid parameter');
                 }
             }
-            let stype   = ['px', '%', 'em', 'rem', 'vw', 'vh'];
-            let sp_prm  = null;
-            let ret_val = null;
-            for (let sidx in stype) {
-                sp_prm = prm.split(stype[sidx]);
-                if (2 !== sp_prm.length) {
-                    continue;
-                }
-                ret_val = (2 === sp_prm[0].split('.').length) ? parseFloat(sp_prm[0]) : parseInt(sp_prm[0]);
-                if ((ret_val + '') !== sp_prm[0]) {
-                    continue;
-                }
-                siz = [ret_val, stype[sidx]];
-            }
-            if (null === siz) {
-                throw new Error('not supported size type');
-            }
-            
-            if ('px' === siz[1]) {
-                return new mofron.size.Pixel(siz[0]+siz[1]);
-            } else if ('rem' === siz[1]) {
-                return new mofron.size.Rem(siz[0]+siz[1]);
-            } else { 
-                return new mofron.size.Base(siz[0]+siz[1]);
+            let sval  = mofron.func.getSizeValue(prm);
+            let stype = mofron.func.getSizeType(prm);
+            if ('px' === stype) {
+                return new mofron.size.Pixel(sval);
+            } else if ('rem' === stype) {
+                return new mofron.size.Rem(sval);
+            } else {
+                return new mofron.size.Size(sval, stype);
             }
         } catch (e) {
             console.error(e.stack);
@@ -322,8 +336,8 @@ module.exports = {
     
     sizeCalcu : (p1, p2, flg) => {
         try {
-            let prm1 = ('string' === typeof p1) ? mofron.func.getSizeObj(p1) : p1;
-            let prm2 = ('string' === typeof p2) ? mofron.func.getSizeObj(p2) : p2;
+            let prm1 = ('string' === typeof p1) ? mofron.func.getSize(p1) : p1;
+            let prm2 = ('string' === typeof p2) ? mofron.func.getSize(p2) : p2;
             if ( (true !== mofron.func.isInclude(prm1, ['Base', 'Size'])) ||
                  (true !== mofron.func.isInclude(prm2, ['Base', 'Size'])) ||
                  ('boolean' !== typeof flg) ) {
@@ -340,9 +354,9 @@ module.exports = {
                 }
             } else {
                 if (true === flg) {
-                    return mofron.func.getSizeObj((prm1.value() + prm2.value()) + prm1.type());
+                    return mofron.func.getSize((prm1.value() + prm2.value()) + prm1.type());
                 } else {
-                    return mofron.func.getSizeObj((prm1.value() - prm2.value()) + prm1.type());
+                    return mofron.func.getSize((prm1.value() - prm2.value()) + prm1.type());
                 }
             }
         } catch (e) {
@@ -357,7 +371,7 @@ module.exports = {
             if (undefined !== p3) {
                 ret = mofron.func.sizeCalcu(ret, p3, true);
             }
-            return ret;
+            return ret.toString();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -370,7 +384,7 @@ module.exports = {
             if (undefined !== p3) {
                 ret = mofron.func.sizeCalcu(ret, p3, false);
             }
-            return ret;
+            return ret.toString();
         } catch (e) {
             console.error(e.stack);
             throw e;
