@@ -398,7 +398,7 @@ mofron.Component = class extends mofron.Base {
             /* init config */
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
-                cnf[cfidx].execute((1 === idx) ? (cnf[cfidx].defStatus()) : undefined);
+                cnf[cfidx].execute();
             }
         } catch (e) {
             console.error(e.stack);
@@ -412,6 +412,7 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
+            /* delete config from member */
             for (let idx in this.m_conf) {
                 let cnf = this.config(idx);
                 for (let cidx in cnf) {
@@ -420,6 +421,8 @@ mofron.Component = class extends mofron.Base {
                     }
                 }
             }
+            /* delete component from config */
+            prm.component(null);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -17,23 +17,28 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (flg) {
         try {
-            let _flg = (undefined === _flg) ? this.status() : flg;
-            if ('boolean' !== typeof _flg) {
+            if (undefined === flg) {
+                /* called by init */
+                if (false === this.m_init) {
+                    /* since it has already executed, nothing to do. */
+                    return;
+                }
+                flg = this.defStatus();
+                this.m_init = true;
+            } else if ('boolean' !== typeof flg) {
                 throw new Error('invalid paramter');
             }
-            if ((undefined === flg) && (true === this.m_init)) {
+            
+            if (null === this.component()) {
+                /* this effect has already deleted, notihing to do. */
                 return;
             }
-            
-            if (true === this.m_init) {
-                /* this is first execute */
-                this.contents(this.defStatus(), this.component());
-                this.m_init = false;
+            if (true === this.suspend()) {
                 return;
             }
             
             if (0 === this.speed()) {
-               this.contents(_flg,  this.component());
+               this.contents(flg,  this.component());
             } else {
                 /* init exec */
                 this.setConf(true);
@@ -41,7 +46,7 @@ mofron.Effect = class extends mofron.CompConf {
                 setTimeout(
                     (eff) => {
                         try {
-                            eff.contents(_flg, eff.component());
+                            eff.contents(flg, eff.component());
                         } catch (e) {
                             console.error(e.stack);
                             throw e;
@@ -143,23 +148,6 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    defStatus (sts) {
-        try {
-            if (undefined === sts) {
-                /* getter */
-                return (undefined === this.m_defsts) ? true : this.m_defsts;
-            }
-            /* setter */
-            if ('boolean' !== typeof sts) {
-                throw new Error('invalid parameter');
-            }
-            this.m_defsts = sts;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     speed (spd) {
         try {
             if (undefined === spd) {
@@ -193,6 +181,13 @@ mofron.Effect = class extends mofron.CompConf {
             this.m_callback[0] = fnc;
             this.m_callback[1] = prm;
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    suspend (prm) {
+        try { return this.member('suspend', false, prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }

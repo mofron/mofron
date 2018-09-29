@@ -10,7 +10,8 @@
 mofron.Base = class {
     constructor () {
         try {
-            this.m_name = new Array();
+            this.m_name   = new Array();
+            this.m_member = {};
             this.name('Base');
         } catch (e) {
             console.error(e.stack);
@@ -66,6 +67,33 @@ mofron.Base = class {
                 this.m_id = mofron.func.getId();
             }
             return this.m_id;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    member (key, ini, prm) {
+        try {
+            if (('string' !== typeof key) || ('function' !== typeof this[key])) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === prm) {
+                /* getter */
+                if (undefined === this.m_member[key]) {
+                    this[key](ini);
+                }
+                return this.m_member[key];
+            }
+            /* setter */
+            if (true === mofron.func.isInclude(ini, 'Base')) {
+                if (true !== mofron.func.isInclude(prm, ini.getNameList())) {
+                    throw new Error('invalid parameter');
+                }
+            } else if (typeof ini !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            this.m_member[key] = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;

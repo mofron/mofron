@@ -80,11 +80,11 @@ module.exports = {
                 if ('none' === prm) {
                     return new mofron.Color();
                 } else if (0 === prm.indexOf('rgb')) {
-                    return convColorRgb(prm);
+                    return mofron.func.convColorRgb(prm);
                 } else if (0 === prm.indexOf('#')) {
-                    return convColorHex(prm);
+                    return mofron.func.convColorHex(prm);
                 } else {
-                    return convColorName(prm);
+                    return mofron.func.convColorName(prm);
                 }
             } else if (true === Array.isArray(prm)) {
                 return new mofron.Color(prm[0], prm[1], prm[2], prm[3]);

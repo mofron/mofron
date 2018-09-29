@@ -25,7 +25,7 @@ mofron.CompConf = class extends mofron.Base {
                 return (undefined === this.m_comp) ? null : this.m_comp;
             }
             /* setter */
-            if (false === mofron.func.isInclude(prm, 'Component') ) {
+            if ( (null !== prm) && (true !== mofron.func.isInclude(prm, 'Component'))  ) {
                 throw new Error('invalid parameter');
             }
             this.m_comp = prm;

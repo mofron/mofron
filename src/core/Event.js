@@ -111,23 +111,9 @@ mofron.Event = class extends mofron.CompConf {
             let ret = super.component(prm);
             if (undefined === ret) { 
                 let evt_eff = this.kickEffect();
-                let cmp_eff = this.component().effect();
-                let chk_eff = false;
                  
                 for (let evt_idx in evt_eff) {
-                    chk_eff = false;
-                    for (let cmp_idx in cmp_eff) {
-                        if (evt_eff[evt_idx].getId() === cmp_eff[cmp_idx].getId()) {
-                            chk_eff = true;
-                            break;
-                        }
-                    }
-                    if (false === chk_eff) {
-                        this.component().execOption({
-                            effect : [ evt_eff[evt_idx] ]
-                        });
-                    }
-                    evt_eff[evt_idx].defStatus(false);
+                    evt_eff[evt_idx].suspend(true);
                 }
                 let thisevt = this;
                 this.handler(

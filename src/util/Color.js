@@ -28,6 +28,16 @@ mofron.Color = class extends mofron.Base {
         }
     }
     
+    rgb (r, g, b) {
+        try {
+            let ret = this.rgba(r, g, b);
+            return (undefined !== ret) ? [ret[0], ret[1], ret[2]] : undefined;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * get rgba value
      * 
