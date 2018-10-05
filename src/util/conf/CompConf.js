@@ -47,23 +47,7 @@ mofron.CompConf = class extends mofron.Base {
         try {
             let ret = super.param(prm, pflg);
             if (undefined === ret) {
-                let chk_prm = this.param();
-                let prm_map = this.prmMap();
-                
-                if (chk_prm.length > prm_map.length) {
-                    throw new Error('mismatch parameter check count');
-                }
-                let obj = this;
-                for (let cidx in chk_prm) {
-                    if ('function' !== typeof obj[prm_map[cidx]]) {
-                        throw new Error('could not find method');
-                    }
-                    if (true === mofron.func.isObject(chk_prm[cidx], 'Param')) {
-                        chk_prm[cidx].exec(obj, prm_map[cidx]);
-                    } else {
-                        obj[prm_map[cidx]](chk_prm[cidx]);
-                    }
-                }
+                mofron.func.execPrmMap(this);
             }
             return ret;
         } catch (e) {

@@ -51,11 +51,8 @@ mofron.Base = class {
         }
     }
     
-    
     getNameList () {
-        try {
-            return this.m_name;
-        } catch (e) {
+        try { return this.m_name; } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -73,27 +70,61 @@ mofron.Base = class {
         }
     }
     
-    member (key, ini, prm) {
+    member (key, tp, prm) {
         try {
             if (('string' !== typeof key) || ('function' !== typeof this[key])) {
                 throw new Error('invalid parameter');
             }
             if (undefined === prm) {
                 /* getter */
-                if (undefined === this.m_member[key]) {
-                    this[key](ini);
-                }
-                return this.m_member[key];
+                return (undefined === this.m_member[key]) ? null : this.m_member[key];
+            } else if (null === prm) {
+                /* delete */
+                this.m_member[key] = prm;
+                return;
             }
             /* setter */
-            if (true === mofron.func.isInclude(ini, 'Base')) {
-                if (true !== mofron.func.isInclude(prm, ini.getNameList())) {
-                    throw new Error('invalid parameter');
-                }
-            } else if (typeof ini !== typeof prm) {
+            if ( (true === mofron.func.isInclude(prm, 'Base')) &&
+                 (false === mofron.func.isInclude(prm, tp)) ) {
+                throw new Error('invalid parameter');
+            } else if (tp !== typeof prm) {
                 throw new Error('invalid parameter');
             }
             this.m_member[key] = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    arrayMember (key, tp, prm) {
+        try {
+            if ( ('string' !== typeof key) || ('function' !== typeof this[key]) ) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_member[key]) ? [] : this.m_member[key];
+            }
+            /* setter */
+            if (true === Array.isArray(prm)) {
+                for (let aidx in prm) {
+                    this.arrayMember(key, tp, prm[aidx]);
+                }
+                return;
+            }
+            
+            if ( (true === mofron.func.isInclude(prm, 'Base')) &&
+                 (false === mofron.func.isInclude(prm, tp)) ) {
+                throw new Error('invalid parameter');
+            } else if (tp !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            
+            if (undefined === this.m_member[key]) {
+                this.m_member[key] = new Array();
+            }
+            this.m_member[key].push(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -255,43 +286,16 @@ mofron.Base = class {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
-                    
                     if ( (true === Array.isArray(opt[opt_idx])) &&
                          (this[opt_idx].length > 1)             &&
                          (opt[opt_idx].length === this[opt_idx].length) ) {
                         
-                        switch (opt[opt_idx].length) {
-                            case 2:
-                                opt[opt_idx] = new mofron.Param(
-                                    opt[opt_idx][0],
-                                    opt[opt_idx][1]
-                                );
-                                break;
-                            case 3:
-                                opt[opt_idx] = new mofron.Param(
-                                    opt[opt_idx][0], 
-                                    opt[opt_idx][1],
-                                    opt[opt_idx][2]
-                                );
-                                break;
-                            case 4:
-                                opt[opt_idx] = new mofron.Param(
-                                    opt[opt_idx][0],  
-                                    opt[opt_idx][1],
-                                    opt[opt_idx][2],
-                                    opt[opt_idx][3]
-                                );
-                                break;
-                            case 5:
-                                opt[opt_idx] = new mofron.Param(
-                                    opt[opt_idx][0],
-                                    opt[opt_idx][1],
-                                    opt[opt_idx][2],
-                                    opt[opt_idx][3],
-                                    opt[opt_idx][4]
-                                );
-                                break;
+                        /* execute array type param */
+                        let opt_prm = new mofron.Param();
+                        for (let o_pidx in opt[opt_idx]) {
+                            opt_prm.add(opt[opt_idx][o_pidx]);
                         }
+                        opt[opt_idx] = opt_prm;
                     }
                     
                     if ( (true === mofron.func.isObject(opt[opt_idx],'Param')) ||

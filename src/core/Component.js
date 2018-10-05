@@ -23,9 +23,7 @@ mofron.Component = class extends mofron.Base {
             this.m_inncmp = {};
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
-            
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
-            
             this.listOption([ 'child', 'layout', 'effect', 'event', 'respsv', 'style' ]);
             this.prmOpt(po);
         } catch (e) {
@@ -34,20 +32,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    /*** method ***/
-    
-    name (nm) {
-        try {
-            if (undefined === nm) {
-                return super.name();
-            }
-            super.name(nm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
+    /*** dom method ***/
     /**
      * child target setter / getter
      * 
@@ -138,6 +123,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    /*** child method ***/
     /**
      * child component setter / getter
      * 
@@ -149,12 +135,7 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === chd) {
                 /* getter */
-                this.adom();  // for before initDomConts()
-                if (true === this.isInnerTarget()) {
-                    /* target is inner component */
-                    return this.target().component().child();
-                }
-                return this.m_child;
+                return this.getChild();
             }
             /* setter */
             if (true !== Array.isArray(chd)) {
@@ -172,10 +153,11 @@ mofron.Component = class extends mofron.Base {
     
     getChild (rflg) {
         try {
-            if (true === rflg) {
+            this.adom();
+            if ( (true === rflg) || true !== this.isInnerTarget() ) {
                 return this.m_child;
             }
-            return this.target().component().parent();
+            return this.target().component().child();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -284,7 +266,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    
     /**
      * parent getter / setter
      *
@@ -338,6 +319,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    
     /**
      * style getter / setter
      *
@@ -346,15 +328,7 @@ mofron.Component = class extends mofron.Base {
      * @return (object) style object
      */
     style (kv, los) {
-        try {
-            if ( ('string'  === typeof kv) ||
-                 (undefined === kv) ) {
-                /* getter */
-                return this.styleTgt().style(kv);
-            }
-            /* setter */
-            this.styleTgt().style(kv, los);
-        } catch (e) {
+        try { return this.styleTgt().style(kv, los); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -461,9 +435,6 @@ mofron.Component = class extends mofron.Base {
             this.m_conf[idx].push(prm);
             prm.component(this);
             if (true === this.adom().isPushed()) {
-                if ( (1 === idx) && (false === prm.defStatus()) ) {
-                    return;
-                }
                 prm.execute();
             }
         } catch (e) {
@@ -549,8 +520,8 @@ mofron.Component = class extends mofron.Base {
     
     beforeRender () {
         try {
-            var chd = this.getChild(true);
-            for (var idx in chd) {
+            let chd = this.getChild(true);
+            for (let idx in chd) {
                 chd[idx].beforeRender();
             }
         } catch (e) {
@@ -561,8 +532,8 @@ mofron.Component = class extends mofron.Base {
     
     afterRender () {
         try {
-            var chd = this.getChild(true);
-            for (var idx in chd) {
+            let chd = this.getChild(true);
+            for (let idx in chd) {
                 chd[idx].afterRender();
             }
         } catch (e) {
@@ -603,28 +574,7 @@ mofron.Component = class extends mofron.Base {
                 this.initDomConts();
                 
                 if (null !== this.param()) {
-                    let chk_prm = this.param();
-                    let prm_map = this.prmMap();
-                    
-                    if (chk_prm.length > prm_map.length) {
-                        throw new Error('mismatch parameter check count');
-                    }
-                    let obj = this;
-                    for (let cidx in chk_prm) {
-                        if ('function' !== typeof obj[prm_map[cidx]]) {
-                            throw new Error('could not find method');
-                        }
-                        
-                        let set_opt = {};
-                        set_opt[prm_map[cidx]] = chk_prm[cidx];
-                        this.addOption(set_opt);
-                        
-                        if (true === mofron.func.isObject(chk_prm[cidx], 'Param')) {
-                            chk_prm[cidx].exec(obj[prm_map[cidx]], prm_map[cidx]);
-                        } else {
-                            obj[prm_map[cidx]](chk_prm[cidx]);
-                        }
-                    }
+                    mofron.func.execPrmMap(this);
                 }
             }
         } catch (e) {
@@ -645,9 +595,7 @@ mofron.Component = class extends mofron.Base {
     }
     
     isInitDom () {
-        try {
-            return (null === this.m_adom) ? false : true;
-        } catch (e) {
+        try { return (null === this.m_adom) ? false : true; } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -759,41 +707,21 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    /*** color method ***/
     color (c1, c2, c3) {
         try {
-            if ( (undefined === c1) &&
-                 (undefined === c2) &&
-                 (undefined === c3) ) {
-                /* getter */
-                return [this.mainColor(), this.baseColor(), this.accentColor()];
-            }
-            /* setter */
-            if (undefined !== c1) {
-                this.mainColor(c1);
-            }
-            if (undefined !== c2) {
-                this.baseColor(c2);
-            }
-            if (undefined !== c3) {
-                this.accentColor(c3);
-            }
+            return [this.mainColor(c1), this.baseColor(c2), this.accentColor(c3)];
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    
     mainColor () { return null; }
     
     baseColor (prm) {
         try {
-            if (undefined === prm) {
-                /* getter */
-                return this.style('background');
-            }
-            /* setter */
-            mofron.func.setColor(this, 'background', prm);
+            return this.tgtColor('background', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -802,30 +730,32 @@ mofron.Component = class extends mofron.Base {
     
     accentColor () { return null; }
     
-    prmOpt (po, p1, p2, p3, p4) {
+    tgtColor (tgt, val) {
         try {
-            super.prmOpt(po, p1, p2, p3, p4);
-            
-            if (null !== this.param()) {
-                this.adom();
-            }
+            return (undefined === val) ? this.style(tgt) : mofron.func.setColor(this, tgt, val);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    prmMap () {
+    prmOpt (po, p1, p2, p3, p4) {
         try {
-            if (0 === arguments.length) {
-                /* getter */
-                return (undefined === this.m_prmmap) ? [] : this.m_prmmap;
-            }
-            /* setter */
-            this.m_prmmap = new Array();
-            for (let idx in arguments) {
-                this.m_prmmap.push(arguments[idx]);
-            }
+            this.adom();
+            super.prmOpt(po, p1, p2, p3, p4);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    prmMap (p1,p2,p3,p4,p5) {
+        try {
+            return this.arrayMember(
+                "prmMap",
+                "string",
+                (0 === arguments.length) ? undefined : new mofron.Param(p1,p2,p3,p4,p5).get()
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;

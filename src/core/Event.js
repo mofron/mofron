@@ -106,39 +106,9 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
     
-    component (prm) {
-        try {
-            let ret = super.component(prm);
-            if (undefined === ret) { 
-                let evt_eff = this.kickEffect();
-                 
-                for (let evt_idx in evt_eff) {
-                    evt_eff[evt_idx].suspend(true);
-                }
-                let thisevt = this;
-                this.handler(
-                    (p1,p2,p3,p4,p5) => {
-                        try {
-                            thisevt.execEffect(
-                                thisevt.kickEffect(),
-                                [p1,p2,p3,p4,p5]
-                            );
-                        } catch (e) {
-                            console.error(e.stack);
-                            throw e;
-                        }
-                    }
-                );
-            }
-            return ret;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     kickEffect (prm) {
         try {
+            
             if (undefined === prm) {
                 /* getter */
                 return this.m_effect;
@@ -153,7 +123,25 @@ mofron.Event = class extends mofron.CompConf {
             if (true !== mofron.func.isInclude(prm, 'Effect')) {
                 throw new Error('invalid parameter');
             }
+            prm.suspend(true);
             this.m_effect.push(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    execEffect_pri (prm) {
+        try {
+            
+            console.log("test");
+            
+            let eff = this.kickEffect();
+            for (let eidx in eff) {
+                eff[eidx].suspend(false);
+                this.execEffect(eff[eidx], prm);
+                eff[eidx].suspend(true);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -162,9 +150,7 @@ mofron.Event = class extends mofron.CompConf {
     
     execEffect (eff, prm) {
         try {
-            for (let eidx in eff) {
-                eff[eidx].execute(true);
-            }
+            eff.execute(true);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -20,7 +20,6 @@ require('./src/util/size/Rem.js');
 require('./src/util/size/Pixel.js');
 
 require('./src/util/Color.js');
-require('./src/util/Font.js');
 require('./src/util/Theme.js');
 require('./src/util/CompCtrl.js');
 

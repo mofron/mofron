@@ -203,7 +203,8 @@ mofron.Dom = class extends mofron.Base {
      */
     style (kv, los) {
         try {
-            if ( (undefined === kv) || ('string' === typeof kv) ) {
+            if ( (undefined === kv) ||
+                 ('string' === typeof kv) ) {
                 /* getter */
                 return this.m_style.get(kv);
             }

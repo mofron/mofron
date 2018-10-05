@@ -31,9 +31,7 @@ mofron.Param = class extends mofron.Base {
     }
     
     get () {
-        try {
-            return this.m_param;
-        } catch (e) {
+        try { return this.m_param; } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -41,7 +39,9 @@ mofron.Param = class extends mofron.Base {
     
     add (prm) {
         try {
-            this.get().push(prm);
+            if (undefined !== prm) {
+                this.get().push(prm);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

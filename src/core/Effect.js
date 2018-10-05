@@ -23,8 +23,7 @@ mofron.Effect = class extends mofron.CompConf {
                     /* since it has already executed, nothing to do. */
                     return;
                 }
-                flg = this.defStatus();
-                this.m_init = true;
+                flg = this.status();
             } else if ('boolean' !== typeof flg) {
                 throw new Error('invalid paramter');
             }
@@ -36,6 +35,8 @@ mofron.Effect = class extends mofron.CompConf {
             if (true === this.suspend()) {
                 return;
             }
+            
+            this.m_init = true;
             
             if (0 === this.speed()) {
                this.contents(flg,  this.component());
@@ -135,7 +136,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             if (undefined === sts) {
                 /* getter */
-                return (undefined === this.m_sts) ? false : this.m_sts;
+                return (undefined === this.m_sts) ? true : this.m_sts;
             }
             /* setter */
             if ('boolean' !== typeof sts) {

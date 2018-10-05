@@ -32,6 +32,29 @@ module.exports = {
         }
     },
     
+    execPrmMap : (tgt) => {
+        try {
+            if (true !== mofron.func.isInclude(tgt, 'Base')) {
+                throw new Error('invalid parameter');
+            }
+            let chk_prm = tgt.param();
+            let prm_map = tgt.prmMap();
+            
+            if (chk_prm.length > prm_map.length) {
+                throw new Error('mismatch parameter check count');
+            }
+            //let obj = this;
+            let opt = {};
+            for (let cidx in chk_prm) {
+                opt[prm_map[cidx]] = chk_prm[cidx];
+                tgt.execOption(opt);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+     
     getCamel : (sty) => {
         try {
             if ('string' !== (typeof sty)) {
@@ -72,6 +95,7 @@ module.exports = {
         }
     },
     
+    /*** color functions ***/
     getColor : (prm) => {
         try {
             if (null === prm) {
@@ -80,7 +104,7 @@ module.exports = {
                 if ('none' === prm) {
                     return new mofron.Color();
                 } else if (0 === prm.indexOf('rgb')) {
-                    return mofron.func.convColorRgb(prm);
+                    return mofron.func.convColorRgba(prm);
                 } else if (0 === prm.indexOf('#')) {
                     return mofron.func.convColorHex(prm);
                 } else {
@@ -88,6 +112,8 @@ module.exports = {
                 }
             } else if (true === Array.isArray(prm)) {
                 return new mofron.Color(prm[0], prm[1], prm[2], prm[3]);
+            } else if (true === mofron.func.isInclude(prm, 'Color')) {
+                return prm;
             } else {
                 throw new Error('invalid parameter');
             }
@@ -227,6 +253,75 @@ module.exports = {
         }
     },
     
+    /*** font functions ***/
+    setFontFace : (fnt, pth) => {
+        try {
+            if ( ('string' !== typeof fnt) || ('string' !== typeof pth) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            for (let pidx in mofron.func.fontBuff) {
+                if (pth === mofron.func.fontBuff[pidx]) {
+                    return;
+                }
+            }
+            mofron.func.fontBuff.push(pth);
+            
+            /* format */
+            let pth_spt = pth.split('.');
+            let format  = '';
+            if ('woff' === pth_spt[pth_spt.length-1]) {
+                format = "format('woff')";
+            } else if ('ttf' === pth_spt[pth_spt.length-1]) {
+                format = "format('truetype')";
+            } else if ('otf' === pth_spt[pth_spt.length-1]) {
+                format = "format('opentype')";
+            } else if ('eot' === pth_spt[pth_spt.length-1]) {
+                format = "format('embedded-opentype')";
+            } else if ( ('svg' === pth_spt[pth_spt.length-1]) || ('svgz' === pth_spt[pth_spt.length-1])) {
+                format = "format('svg')";
+            }
+
+            let style = {
+                'font-family' : fnt,
+                'src' : "url('" + pth + "') " + format
+            };
+            mofron.func.addHeadConts({
+                tag      : 'style',
+                contents : mofron.func.getStyleConts('@font-face',style)
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    setFontLink : (fnt, pth) => {
+        try {
+            if ( ('string' !== typeof fnt) || ('string' !== typeof pth) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            for (let pidx in mofron.func.fontBuff) {
+                if (pth === mofron.func.fontBuff[pidx]) {
+                    return;
+                }
+            }
+            mofron.func.fontBuff.push(pth);
+            
+            mofron.func.addHeadConts({
+                tag  : 'link',
+                attr : { href : pth,
+                         rel  : 'stylesheet' }
+            });
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    fontBuff : [],
+    
     getStyleConts : (sel,cnt) => {
         try {
             var ret_val = sel + '{';
@@ -240,6 +335,7 @@ module.exports = {
         }
     },
     
+    /*** size functions ***/
     getSizeValue : (prm) => {
         try {
             let type = mofron.func.getSizeType(prm);
@@ -510,6 +606,7 @@ module.exports = {
         }
     },
     
+    /*** event functions ***/
     rsizWinEvent : (func, prm, tlag) => {
         try {
             let que_buf = null;
@@ -680,6 +777,7 @@ module.exports = {
         }
     },
     
+    /*** access type functions ***/
     devType : () => {
         try {
             let ua = navigator.userAgent;
