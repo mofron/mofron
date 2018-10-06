@@ -47,8 +47,8 @@ module.exports = {
             let opt = {};
             for (let cidx in chk_prm) {
                 opt[prm_map[cidx]] = chk_prm[cidx];
-                tgt.execOption(opt);
             }
+            tgt.execOption(opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -98,7 +98,7 @@ module.exports = {
     /*** color functions ***/
     getColor : (prm) => {
         try {
-            if (null === prm) {
+            if ((null === prm) || (undefined === prm)) {
                 return null;
             } else if ('string' === typeof prm) {
                 if ('none' === prm) {
@@ -370,7 +370,7 @@ module.exports = {
         try {
             let siz = null;
             if ('string' !== typeof prm) {
-                if (null === prm) {
+                if ((null === prm) || (undefined === prm)) {
                     return null; //siz = [0, 'px'];
                 } else {
                     throw new Error('invalid parameter');

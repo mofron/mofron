@@ -433,7 +433,9 @@ mofron.Component = class extends mofron.Base {
             }
             
             this.m_conf[idx].push(prm);
-            prm.component(this);
+            if (null === prm.component()) {
+                prm.component(this);
+            }
             if (true === this.adom().isPushed()) {
                 prm.execute();
             }
@@ -572,10 +574,6 @@ mofron.Component = class extends mofron.Base {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
                 this.initDomConts();
-                
-                if (null !== this.param()) {
-                    mofron.func.execPrmMap(this);
-                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -741,21 +739,17 @@ mofron.Component = class extends mofron.Base {
     
     prmOpt (po, p1, p2, p3, p4) {
         try {
+            if (undefined === po) {
+                return;
+            }
+            this.setPrmOpt(po, p1, p2, p3, p4);
+            let opt = this.getOption();
             this.adom();
-            super.prmOpt(po, p1, p2, p3, p4);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    prmMap (p1,p2,p3,p4,p5) {
-        try {
-            return this.arrayMember(
-                "prmMap",
-                "string",
-                (0 === arguments.length) ? undefined : new mofron.Param(p1,p2,p3,p4,p5).get()
-            );
+            if (null !== opt) {
+                this.execOption();
+            } else if ( (null !== this.param()) && (0 !== this.prmMap().length) ) {
+                mofron.func.execPrmMap(this);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -789,23 +783,23 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    innerComp (prm, key, tmpl) {
+    innerComp (key, val, tmpl) {
         try {
-            if (undefined === prm) {
+            if (undefined === val) {
                 /* getter */
                 if (undefined === this.m_inncmp[key]) {
-                    this[key](new tmpl({}), key);
+                    this[key](new tmpl({}));
                 }
                 return this.m_inncmp[key];
             }
             /* setter */
-            if (true !== mofron.func.isInclude(prm, 'Component')) {
+            if (true !== mofron.func.isInclude(val, 'Component')) {
                 throw new Error('invalid parameter');
             }
             if (undefined !== this.m_inncmp[key]) {
-                this.updChild(this.m_inncmp[key], prm);
+                this.updChild(this.m_inncmp[key], val);
             }
-            this.m_inncmp[key] = prm;
+            this.m_inncmp[key] = val;
         } catch (e) {
             console.error(e.stack);
             throw e;

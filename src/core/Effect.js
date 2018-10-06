@@ -188,7 +188,7 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     suspend (prm) {
-        try { return this.member('suspend', false, prm); } catch (e) {
+        try { return this.member('suspend', 'boolean', prm, false); } catch (e) {
             console.error(e.stack);
             throw e;
         }

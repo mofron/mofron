@@ -70,14 +70,17 @@ mofron.Base = class {
         }
     }
     
-    member (key, tp, prm) {
+    member (key, tp, prm, ini) {
         try {
             if (('string' !== typeof key) || ('function' !== typeof this[key])) {
                 throw new Error('invalid parameter');
             }
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_member[key]) ? null : this.m_member[key];
+                if (undefined === this.m_member[key]) {
+                    return (undefined === ini) ? null : ini;
+                }
+                return this.m_member[key];
             } else if (null === prm) {
                 /* delete */
                 this.m_member[key] = prm;
@@ -250,6 +253,8 @@ mofron.Base = class {
             let opt = this.getOption();
             if (null !== opt) {
                 this.execOption();
+            } else if ( (null !== this.param()) && (0 !== this.prmMap().length) ) {
+                mofron.func.execPrmMap(this);
             }
         } catch (e) {
             console.error(e.stack);
@@ -307,6 +312,13 @@ mofron.Base = class {
                 }
             }
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    prmMap (map) {
+        try { return this.arrayMember("prmMap", "string", map); } catch (e) {
             console.error(e.stack);
             throw e;
         }

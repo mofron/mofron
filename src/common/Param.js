@@ -40,6 +40,12 @@ mofron.Param = class extends mofron.Base {
     add (prm) {
         try {
             if (undefined !== prm) {
+                if ('object' === typeof prm) {
+                    for (let pidx in prm) {
+                        this.add(prm[pidx]);
+                    }
+                    return;
+                }
                 this.get().push(prm);
             }
         } catch (e) {

@@ -43,19 +43,6 @@ mofron.CompConf = class extends mofron.Base {
         console.warn('not implement');
     }
     
-    param (prm, pflg) {
-        try {
-            let ret = super.param(prm, pflg);
-            if (undefined === ret) {
-                mofron.func.execPrmMap(this);
-            }
-            return ret;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     prmMap () {
         try {
             if (0 === arguments.length) {
