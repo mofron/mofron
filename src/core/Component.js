@@ -372,7 +372,9 @@ mofron.Component = class extends mofron.Base {
             /* init config */
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
-                cnf[cfidx].execute();
+                if (this.getId() === cnf[cfidx].component().getId() ) {
+                    cnf[cfidx].execute();
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -431,7 +433,9 @@ mofron.Component = class extends mofron.Base {
             if (true !== mofron.func.isInclude(prm, 'CompConf')) {
                 throw new Error('invalid parameter');
             }
-            
+            if (true === this.isInnerTarget()) {
+                this.target().component().config(idx, prm);
+            }
             this.m_conf[idx].push(prm);
             if (null === prm.component()) {
                 prm.component(this);
