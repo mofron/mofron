@@ -7,7 +7,7 @@ mofron.Effect = class extends mofron.CompConf {
     constructor (po) {
         try {
             super();
-            this.m_init = true;
+            //this.m_init = true;
             this.name('Effect');
         } catch (e) {
             console.error(e.stack);
@@ -19,7 +19,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             if (undefined === flg) {
                 /* called by init */
-                if (false === this.m_init) {
+                if (true === this.isExecd()) {
                     /* since it has already executed, nothing to do. */
                     return;
                 }
@@ -36,7 +36,7 @@ mofron.Effect = class extends mofron.CompConf {
                 return;
             }
             
-            this.m_init = true;
+            this.isExecd(true);
             
             if (0 === this.speed()) {
                this.contents(flg,  this.component());
@@ -112,11 +112,7 @@ mofron.Effect = class extends mofron.CompConf {
     
     contents (flg, cmp) {
         try {
-            if (true === flg) {
-                this.enable(cmp);
-            } else {
-                this.disable(cmp);
-            }
+            (true === flg) ? this.enable(cmp) : this.disable(cmp);
             this.status(flg);
         } catch (e) {
             console.error(e.stack);
@@ -133,34 +129,14 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     status (sts) {
-        try {
-            if (undefined === sts) {
-                /* getter */
-                return (undefined === this.m_sts) ? true : this.m_sts;
-            }
-            /* setter */
-            if ('boolean' !== typeof sts) {
-                throw new Error('invalid parameter');
-            }
-            this.m_sts = sts;
-        } catch (e) {
+        try { return this.member('status', 'boolean', sts, true); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    speed (spd) {
-        try {
-            if (undefined === spd) {
-                /* getter */
-                return (undefined === this.m_speed) ? 0 : this.m_speed;
-            }
-            /* setter */
-            if ('number' != (typeof spd)) {
-                throw new Error('invalid parameter');
-            }
-            this.m_speed = spd;
-        } catch (e) {
+    speed (prm) {
+        try { return this.member('speed', 'number', prm, 0);  } catch (e) {
             console.error(e.stack);
             throw e;
         }

@@ -10,7 +10,6 @@
 mofron.Base = class {
     constructor () {
         try {
-            this.m_name   = new Array();
             this.m_member = {};
             this.name('Base');
         } catch (e) {
@@ -28,23 +27,8 @@ mofron.Base = class {
      */
     name (nm) {
         try {
-            if (undefined === nm) {
-                if (0 === this.m_name.length) {
-                    return null;
-                }
-                return this.m_name[this.m_name.length-1];
-            }
-            if ( !( ('string' === (typeof nm)) ||
-                    ( ('object' === (typeof nm)) && (undefined !== nm[0])) ) ) {
-                throw new Error('invalid parameter');
-            }
-            if ('object' === (typeof nm)) {
-                for (var idx in nm) {
-                    this.m_name.push(nm[idx]);
-                }
-            } else {
-                this.m_name.push(nm);
-            }
+            let ret = this.arrayMember('name', 'string', nm);
+            return ((undefined !== ret) && (0 < ret.length)) ? ret[ret.length-1] : ret;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -52,7 +36,7 @@ mofron.Base = class {
     }
     
     getNameList () {
-        try { return this.m_name; } catch (e) {
+        try { return this.arrayMember('name'); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -87,9 +71,21 @@ mofron.Base = class {
                 return;
             }
             /* setter */
-            if ( (true === mofron.func.isInclude(prm, 'Base')) &&
-                 (false === mofron.func.isInclude(prm, tp)) ) {
-                throw new Error('invalid parameter');
+            if (true === mofron.func.isInclude(prm, 'Base')) {
+                if (false === mofron.func.isInclude(prm, tp)) {
+                    throw new Error('invalid parameter');
+                }
+            } else if (true === Array.isArray(tp)) {
+                let hit = false;
+                for (let tidx in tp) {
+                    if (tp[tidx] === prm) {
+                        hit = true;
+                        break;
+                    }
+                }
+                if (true !== hit) {
+                    throw new Error('invalid parameter');
+                }
             } else if (tp !== typeof prm) {
                 throw new Error('invalid parameter');
             }
@@ -110,7 +106,7 @@ mofron.Base = class {
                 return (undefined === this.m_member[key]) ? [] : this.m_member[key];
             }
             /* setter */
-            if (true === Array.isArray(prm)) {
+            if ( (true === Array.isArray(prm)) && (false === Array.isArray(tp))) {
                 for (let aidx in prm) {
                     this.arrayMember(key, tp, prm[aidx]);
                 }
@@ -120,6 +116,19 @@ mofron.Base = class {
             if ( (true === mofron.func.isInclude(prm, 'Base')) &&
                  (false === mofron.func.isInclude(prm, tp)) ) {
                 throw new Error('invalid parameter');
+            } else if (true === Array.isArray(tp)) {
+                if (tp.length !== prm.length) {
+                    throw new Error('mismatched array length');
+                }
+                for (let tidx in tp) {
+                    if (null === tp[tidx]) { 
+                        continue;
+                    } else if (tp[tidx] !== typeof prm[tidx]) {
+                        throw new Error('invalid parameter');
+                    }
+                }
+            } else if (null === tp) {
+                
             } else if (tp !== typeof prm) {
                 throw new Error('invalid parameter');
             }
@@ -152,9 +161,7 @@ mofron.Base = class {
     }
     
     getOption () {
-        try {
-            return (undefined === this.m_opt) ? null : this.m_opt;
-        } catch (e) {
+        try { return (undefined === this.m_opt) ? null : this.m_opt; } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -180,6 +187,8 @@ mofron.Base = class {
                             break;
                         }
                     }
+                    
+                    opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
                     
                     if (true === islist) {
                         if (true === Array.isArray(opt[oidx])) {
@@ -291,17 +300,8 @@ mofron.Base = class {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
-                    if ( (true === Array.isArray(opt[opt_idx])) &&
-                         (this[opt_idx].length > 1)             &&
-                         (opt[opt_idx].length === this[opt_idx].length) ) {
-                        
-                        /* execute array type param */
-                        let opt_prm = new mofron.Param();
-                        for (let o_pidx in opt[opt_idx]) {
-                            opt_prm.add(opt[opt_idx][o_pidx]);
-                        }
-                        opt[opt_idx] = opt_prm;
-                    }
+                    
+                    opt[opt_idx] = this.getFuncPrm(opt_idx, opt[opt_idx]);
                     
                     if ( (true === mofron.func.isObject(opt[opt_idx],'Param')) ||
                          (true === mofron.func.isObject(opt[opt_idx],'Option')) ) {
@@ -318,36 +318,56 @@ mofron.Base = class {
     }
     
     prmMap (map) {
-        try { return this.arrayMember("prmMap", "string", map); } catch (e) {
+        try {
+            if (undefined === map) {
+                /* getter */
+                return (undefined === this.m_map) ? [] : this.m_map;
+            }
+            /* setter */
+            if ('string' === typeof map) { 
+                this.m_map = [map];
+                return;
+            } if (true === Array.isArray(map)) {
+                for (let midx in map) {
+                    if ('string' !== typeof map[midx]) {
+                        throw new Error('invalid parameter');
+                    }
+                }
+                this.m_map = map;
+                return;
+            }
+            throw new Error('invalid parameter');
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    listOption (prm) {
+    listOption (lst) {
+        try { return this.arrayMember("listOption", "string", lst); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getFuncPrm (idx, prm) {
         try {
-            if (undefined === prm) {
-                /* getter */
-                return (undefined === this.m_lstopt) ? null : this.m_lstopt;
-            }
-            /* setter */
-            if (true === Array.isArray(prm)) {
+            if ( (true === Array.isArray(prm)) &&
+                 (this[idx].length > 1)        &&
+                 (prm.length === this[idx].length) ) {
+                /* array type param */
+                let ret_prm = new mofron.Param();
                 for (let pidx in prm) {
-                    this.listOption(prm[pidx]);
+                    ret_prm.add(prm[pidx]);
                 }
-                return;
+                return ret_prm;
             }
-            if ('string' !== typeof prm) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === this.m_lstopt) {
-                this.m_lstopt = new Array();
-            }
-            this.m_lstopt.push(prm);
+            return prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
+
     }
 }
 /* end of file */

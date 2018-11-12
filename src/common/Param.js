@@ -12,18 +12,8 @@ mofron.Param = class extends mofron.Base {
         try {
             super();
             this.name('Param');
-            
             this.m_param = new Array();
-            for (let idx in arguments) {
-                if (undefined === arguments[idx]) {
-                    continue;
-                }
-                this.m_param.push(arguments[idx]); 
-            }
-            
-            if (5 <= this.m_param.length) {
-                throw new Error('too many parameters');
-            }
+            this.add(arguments);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -39,14 +29,22 @@ mofron.Param = class extends mofron.Base {
     
     add (prm) {
         try {
-            if (undefined !== prm) {
-                if ('object' === typeof prm) {
-                    for (let pidx in prm) {
-                        this.add(prm[pidx]);
-                    }
-                    return;
+            if ( (null !== prm)                 &&
+                 ('object' === typeof prm)      &&
+                 (false === Array.isArray(prm)) &&
+                 (undefined !== prm['length'])  &&
+                 (false === mofron.func.isInclude(prm, 'Base')) ) {
+                /* prm is argument object */
+                for (let arg_idx in prm) {
+                    this.add(prm[arg_idx]);
                 }
-                this.get().push(prm);
+                return;
+            } else if (undefined === prm) {
+                return;
+            }
+            this.get().push(prm);
+            if (5 <= this.get().length) {
+                throw new Error('too many parameters');
             }
         } catch (e) {
             console.error(e.stack);
@@ -77,11 +75,13 @@ mofron.Param = class extends mofron.Base {
             if ((null === obj) || ('object' !== typeof obj)) {
                 throw new Error('invalid paramter');
             }
-            if ('string' !== typeof func) {
+            if ('function' !== typeof obj[func]) {
                 throw new Error('invalid parameter');
             }
             let prm = this.get();
-            if (1 === prm.length) {
+            if (0 === prm.length) {
+                obj[func]();
+            } else if (1 === prm.length) {
                 obj[func](prm[0]);
             } else if (2 === prm.length) {
                 obj[func](prm[0], prm[1]);

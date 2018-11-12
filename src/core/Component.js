@@ -25,6 +25,7 @@ mofron.Component = class extends mofron.Base {
             this.m_target = new Array(null, null, null); /* child, style, event */
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
             this.listOption([ 'child', 'layout', 'effect', 'event', 'respsv', 'style' ]);
+            this.prmMap('child');
             this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
@@ -513,11 +514,11 @@ mofron.Component = class extends mofron.Base {
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
-            /* after push event */
-            this.afterRender();
             
             this.initConfig(2); // event
             
+            /* after push event */
+            this.afterRender();
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -722,9 +723,7 @@ mofron.Component = class extends mofron.Base {
     mainColor () { return null; }
     
     baseColor (prm) {
-        try {
-            return this.tgtColor('background', prm);
-        } catch (e) {
+        try { return this.tgtColor('background', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -747,9 +746,13 @@ mofron.Component = class extends mofron.Base {
                 return;
             }
             this.setPrmOpt(po, p1, p2, p3, p4);
-            let opt = this.getOption();
+            let opt_flg = false;
+            if ( (null !== this.getOption()) &&
+                 (0 !== Object.keys(this.getOption()).length) ) {
+                opt_flg = true;
+            }
             this.adom();
-            if (null !== opt) {
+            if (true === opt_flg) {
                 this.execOption();
             } else if ( (null !== this.param()) && (0 !== this.prmMap().length) ) {
                 mofron.func.execPrmMap(this);

@@ -17,8 +17,8 @@ mofron.Layout = class extends mofron.CompConf {
     
     execute () {
         try {
-            var cmp_chd = this.component().child();
-            var _idx    = null;
+            var cmp_chd  = this.component().child();
+            var _idx     = null;
             let skip_flg = false;
             for (var idx in cmp_chd) {
                 _idx = parseInt(idx);
@@ -41,6 +41,7 @@ mofron.Layout = class extends mofron.CompConf {
                 }
                 this.m_execnt++;
             }
+            this.isExecd(true);
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -54,7 +54,10 @@ mofron.Event = class extends mofron.CompConf {
             let prm = null;
             
             for (let hidx in hdl) {
-                prm = new mofron.Param(this.component(), hdl[hidx][1]);
+                prm = new mofron.Param(
+                    this.component(),
+                    (undefined === hdl[hidx][1]) ? null : hdl[hidx][1]
+                );
                 prm.add(arguments);
                 prm.exec(
                     { handler : hdl[hidx][0] },
@@ -70,7 +73,10 @@ mofron.Event = class extends mofron.CompConf {
     }
     
     execute () {
-        try { this.contents(this.component().eventTgt()); } catch (e) {
+        try {
+            this.contents(this.component().eventTgt());
+            this.isExecd(true);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -103,7 +109,6 @@ mofron.Event = class extends mofron.CompConf {
     
     execEffect_pri (prm) {
         try {
-console.log(prm);
             let eff = this.kickEffect();
             for (let eidx in eff) {
                 eff[eidx].suspend(false);

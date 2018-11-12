@@ -43,12 +43,35 @@ module.exports = {
             if (chk_prm.length > prm_map.length) {
                 throw new Error('mismatch parameter check count');
             }
-            //let obj = this;
             let opt = {};
             for (let cidx in chk_prm) {
                 opt[prm_map[cidx]] = chk_prm[cidx];
             }
             tgt.execOption(opt);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    execFunc : (fnc, prm) => {
+        try {
+            let caller = null;
+            let exec   = { func : null };
+            
+            for (let fidx in fnc) {
+                /* set param */
+                caller = new mofron.Param(fnc[fidx][1]);
+                if (true === mofron.func.isInclude(prm, 'Param')) {
+                    let fprm = prm.get();
+                    for (let pidx in fprm) {
+                        caller.add(fprm[pidx]);
+                    }
+                }
+                /* execute func */
+                exec['func'] = fnc[fidx][0];
+                caller.exec(exec, 'func');
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -371,7 +394,7 @@ module.exports = {
             let siz = null;
             if ('string' !== typeof prm) {
                 if ((null === prm) || (undefined === prm)) {
-                    return null; //siz = [0, 'px'];
+                    return null;
                 } else {
                     throw new Error('invalid parameter');
                 }
@@ -398,10 +421,10 @@ module.exports = {
                     mofron.func.getCamel('font-size')
                 ]
             );
-            if (null === fsize[1]) {
+            if (null === fsize.type()) {
                 throw new Error('invalid html font-size');
             }
-            return 16 * (fsize[0] / 100);
+            return 16 * (fsize.value() / 100);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -434,6 +457,15 @@ module.exports = {
         try {
             let prm1 = ('string' === typeof p1) ? mofron.func.getSize(p1) : p1;
             let prm2 = ('string' === typeof p2) ? mofron.func.getSize(p2) : p2;
+            
+            if ( (null == prm1) &&
+                 (true === mofron.func.isInclude(prm2, ['Base', 'Size'])) ) {
+                return prm2;
+            } else if ( (null == prm2) && 
+                        (true === mofron.func.isInclude(prm1, ['Base', 'Size'])) ) {
+                return prm1;
+            }
+            
             if ( (true !== mofron.func.isInclude(prm1, ['Base', 'Size'])) ||
                  (true !== mofron.func.isInclude(prm2, ['Base', 'Size'])) ||
                  ('boolean' !== typeof flg) ) {
@@ -449,11 +481,25 @@ module.exports = {
                     return new mofron.size.Pixel(prm1.toPxnum() - prm2.toPxnum());
                 }
             } else {
-                if (true === flg) {
-                    return mofron.func.getSize((prm1.value() + prm2.value()) + prm1.type());
-                } else {
-                    return mofron.func.getSize((prm1.value() - prm2.value()) + prm1.type());
+                let val_1 = prm1.value();
+                let val_2 = prm2.value();
+                let is_float = false;
+                if ( (false === Number.isInteger(val_1)) ||
+                     (false === Number.isInteger(val_2)) ) {
+                    is_float = true;
+                    val_1 = val_1 * 1000;
+                    val_2 = val_2 * 1000;
                 }
+                let ret_val = null;
+                if (true === flg) {
+                    ret_val = mofron.func.getSize((val_1 + val_2) + prm1.type());
+                } else {
+                    ret_val = mofron.func.getSize((val_1 - val_2) + prm1.type());
+                }
+                if (true === is_float) {
+                    ret_val.value(ret_val.value()/1000);
+                }
+                return ret_val;
             }
         } catch (e) {
             console.error(e.stack);
@@ -481,6 +527,31 @@ module.exports = {
                 ret = mofron.func.sizeCalcu(ret, p3, false);
             }
             return ret.toString();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    flo2int : (prm) => {
+        try {
+            if ('number' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            let chk = null;
+            let pos = 0;
+            let wei = 1;
+            
+            chk = prm + '';
+            pos = chk.indexOf('.');
+            if (-1 === pos) {
+                return [ prm, 1 ];
+            }
+            
+            for (pos = ((chk.length-1) - pos) ; 0 < pos ; pos--) {
+                wei = wei * 10;
+            }
+            return [ prm * wei, wei ];
         } catch (e) {
             console.error(e.stack);
             throw e;
