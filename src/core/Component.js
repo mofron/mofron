@@ -434,7 +434,7 @@ mofron.Component = class extends mofron.Base {
             if (true !== mofron.func.isInclude(prm, 'CompConf')) {
                 throw new Error('invalid parameter');
             }
-            if (true === this.isInnerTarget()) {
+            if ( (true === this.isInnerTarget()) && (1 !== idx)) {
                 this.target().component().config(idx, prm);
             }
             this.m_conf[idx].push(prm);

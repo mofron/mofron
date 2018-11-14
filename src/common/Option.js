@@ -29,7 +29,7 @@ mofron.Option = class extends mofron.Base {
                  ('function' !== typeof src[func]) ) {
                 throw new Error('invalid paramter');
             }
-            let opt_tgt = tgt[func]();
+            let opt_tgt = src[func]();
             if (true !== mofron.func.isInclude(opt_tgt, 'Base')) {
                 throw new Error('invalid paramter');
             }
