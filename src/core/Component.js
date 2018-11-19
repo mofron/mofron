@@ -504,11 +504,12 @@ mofron.Component = class extends mofron.Base {
             
             /* set child config */
             this.initConfig(0); // layout
-            this.initConfig(1); // effect
             this.initConfig(3); // responsive
             
             /* before push event */
             this.beforeRender();
+            
+            this.initConfig(1); // effect
             
             /* execute render */
             this.adom().pushDom(
@@ -604,8 +605,9 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    visible (flg) {
+    visible (flg, eff) {
         try {
+            let _eff = ('boolean' !== eff) ? true : eff;
             if (undefined === flg) {
                 /* getter */
                 return  ( (false   === this.isInitDom()) ||
@@ -630,6 +632,11 @@ mofron.Component = class extends mofron.Base {
             if (null === this.parent()) {
                 if (false === this.adom().isPushed()) {
                     this.render();
+                }
+            } else if ((true === this.adom().isPushed()) && (true === _eff) ) {
+                let eff = this.effect();
+                for (let eidx in eff) {
+                    eff[eidx].execute(true);
                 }
             }
         } catch (e) {
