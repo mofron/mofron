@@ -636,7 +636,7 @@ mofron.Component = class extends mofron.Base {
             } else if ((true === this.adom().isPushed()) && (true === _eff) ) {
                 let eff = this.effect();
                 for (let eidx in eff) {
-                    eff[eidx].execute(true);
+                    eff[eidx].execute(flg);
                 }
             }
         } catch (e) {

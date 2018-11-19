@@ -15,6 +15,28 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
+    component (prm) {
+        try {
+            let ret = super.component(prm);
+            if ( (0 !== this.speed()) && (undefined !== prm) ) {
+                /* update effect speed */
+                let eff = prm.effect();
+                for (let eidx in eff) {
+                    eff[eidx].speed(this.speed());
+                }
+            } else if ( (0 === this.speed()) &&
+                        (undefined !== prm)  &&
+                        (0 !== prm.effect().length) ) {
+                /* inheritanced speed */
+                this.speed(prm.effect()[0].speed());
+            }
+            return ret;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     execute (flg) {
         try {
             if (undefined === flg) {
@@ -23,7 +45,12 @@ mofron.Effect = class extends mofron.CompConf {
                     /* since it has already executed, nothing to do. */
                     return;
                 }
-                flg = this.status();
+                if ('none' === this.component().adom().style('display')) {
+                    /* initialize visible is false */
+                    flg = false;
+                } else {
+                    flg = this.status();
+                }
             } else if ('boolean' !== typeof flg) {
                 throw new Error('invalid paramter');
             }
@@ -38,29 +65,29 @@ mofron.Effect = class extends mofron.CompConf {
             
             this.isExecd(true);
             
-            if (0 === this.speed()) {
-               this.contents(flg,  this.component());
-            } else {
-                /* init exec */
+            if ( (true === this.isFirst()) && (0 !== this.speed()) ) {
                 this.setConf(true);
-                
-                setTimeout(
-                    (eff) => {
-                        try {
-                            eff.contents(flg, eff.component());
-                        } catch (e) {
-                            console.error(e.stack);
-                            throw e;
-                        }
-                    }, 50, this
-                );
             }
-            
+            /* wait render */
             setTimeout(
                 (eff) => {
+                    try { eff.contents(flg, eff.component()); } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                }, 50, this
+            );
+            
+            /* execute inner callback */
+            this.setIcbid();
+            setTimeout(
+                (eff, id) => {
                     try {
-                        if ( (0 < eff.speed()) &&
-                             (eff.getId() === eff.component().effect()[0].getId()) ) {
+                        if (id < eff.getIcbid()) {
+                            /* skip inner callback for avoid redundant */
+                            return;
+                        }
+                        if ( (true === eff.isLast()) && (0 !== eff.speed()) ) {
                             eff.setConf(false);
                         }
                         if (null != eff.callback()) {
@@ -71,8 +98,9 @@ mofron.Effect = class extends mofron.CompConf {
                         throw e;
                     }
                 },
-                this.speed() * 1000,
-                this
+                this.speed() * 1000 + 50,
+                this,
+                this.getIcbid()
             );
             
         } catch (e) {
@@ -142,6 +170,36 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
+    isFirst () {
+        try {
+            let eff = this.component().effect();
+            for (let eidx in eff) {
+                if (this.getId() === eff[eidx].getId()) {
+                    return (0 == eidx) ? true : false;
+                }
+            }
+            return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isLast () {
+        try {
+            let eff = this.component().effect();
+            for (let eidx in eff) {
+                if (this.getId() === eff[eidx].getId()) {
+                    return ((eff.length-1) == eidx) ? true : false;
+                }
+            }
+            return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     callback (fnc, prm) {
         try {
             if (undefined === fnc) {
@@ -157,6 +215,28 @@ mofron.Effect = class extends mofron.CompConf {
             }
             this.m_callback[0] = fnc;
             this.m_callback[1] = prm;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setIcbid () {
+        try {
+            if (undefined === this.m_icbstk) {
+                this.m_icbstk = [null];
+                return;
+            }
+            this.m_icbstk.push(null);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getIcbid () {
+        try {
+            return this.m_icbstk.length;
         } catch (e) {
             console.error(e.stack);
             throw e;
