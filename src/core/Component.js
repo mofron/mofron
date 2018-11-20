@@ -374,7 +374,11 @@ mofron.Component = class extends mofron.Base {
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
                 if (this.getId() === cnf[cfidx].component().getId() ) {
-                    cnf[cfidx].execute();
+                    cnf[cfidx].execute(
+                        undefined,
+                        undefined,
+                        (1 === idx) ? true : undefined,
+                    );
                 }
             }
         } catch (e) {
@@ -618,14 +622,23 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
+            /* set 'display' css */
+            let scb = undefined;
             if (true === flg) {
                 if ('none' === this.adom().style('display')) {
                     this.adom().style({ 'display' : null });
                 }
             } else {
-                this.adom().style({ 'display' : 'none' });
                 if (false === this.adom().isPushed()) {
+                    this.adom().style({ 'display' : 'none' });
                     return;
+                } else {
+                    scb = (p1) => {
+                        try { p1.adom().style({ 'display' : 'none' }); } catch (e) {
+                            console.error(e.stack);
+                            throw e;
+                        }
+                    }
                 }
             }
             
@@ -636,7 +649,7 @@ mofron.Component = class extends mofron.Base {
             } else if ((true === this.adom().isPushed()) && (true === _eff) ) {
                 let eff = this.effect();
                 for (let eidx in eff) {
-                    eff[eidx].execute(flg);
+                    eff[eidx].execute(flg, scb, true);
                 }
             }
         } catch (e) {

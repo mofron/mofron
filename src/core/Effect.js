@@ -37,9 +37,9 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    execute (flg) {
+    execute (cflg, scb, iflg) {
         try {
-            if (undefined === flg) {
+            if (undefined === cflg) {
                 /* called by init */
                 if (true === this.isExecd()) {
                     /* since it has already executed, nothing to do. */
@@ -47,11 +47,11 @@ mofron.Effect = class extends mofron.CompConf {
                 }
                 if ('none' === this.component().adom().style('display')) {
                     /* initialize visible is false */
-                    flg = false;
+                    cflg = false;
                 } else {
-                    flg = this.status();
+                    cflg = this.status();
                 }
-            } else if ('boolean' !== typeof flg) {
+            } else if ('boolean' !== typeof cflg) {
                 throw new Error('invalid paramter');
             }
             
@@ -59,19 +59,22 @@ mofron.Effect = class extends mofron.CompConf {
                 /* this effect has already deleted, notihing to do. */
                 return;
             }
-            if (true === this.suspend()) {
+            
+            if ( ((true === cflg) && (true === this.suspend()[0])) ||
+                 ((false === cflg) && (true === this.suspend()[1])) ) {
                 return;
             }
             
             this.isExecd(true);
             
-            if ( (true === this.isFirst()) && (0 !== this.speed()) ) {
+            if ( ((true === this.isFirst()) && (0 !== this.speed())) ||
+                 (true !== iflg) ) {
                 this.setConf(true);
             }
             /* wait render */
             setTimeout(
                 (eff) => {
-                    try { eff.contents(flg, eff.component()); } catch (e) {
+                    try { eff.contents(cflg, eff.component()); } catch (e) {
                         console.error(e.stack);
                         throw e;
                     }
@@ -87,9 +90,21 @@ mofron.Effect = class extends mofron.CompConf {
                             /* skip inner callback for avoid redundant */
                             return;
                         }
-                        if ( (true === eff.isLast()) && (0 !== eff.speed()) ) {
+                        if ( ((true === eff.isLast()) && (0 !== eff.speed())) ||
+                             (true !== iflg) ) {
                             eff.setConf(false);
                         }
+                        
+                        /* simple callback */
+                        if (null != scb) {
+                            if ('function' === typeof scb) {
+                                scb(eff.component());
+                            } else if (true === Array.isArray(scb)) {
+                                scb[0](eff.component(), scb[1]);
+                            }
+                        }
+                        
+                        /* common callback */
                         if (null != eff.callback()) {
                             eff.callback()[0](eff.callback()[1]);
                         }
@@ -244,7 +259,27 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     suspend (prm) {
-        try { return this.member('suspend', 'boolean', prm, false); } catch (e) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_suspend) ? [false, false] : this.m_suspend;
+            }
+            /* setter */
+            if (undefined === this.m_suspend) {
+                this.m_suspend = [false, false];
+            }
+            if (true === Array.isArray(prm)) {
+                if ( ('boolean' !== typeof prm[0]) ||
+                     ('boolean' !== typeof prm[1]) ) {
+                    throw new Error('invalid parameter');
+                }
+                this.m_suspend = [prm[0], prm[1]];
+            } else if ('boolean' === typeof prm) {
+                this.m_suspend = [prm, prm];
+            } else {
+                throw new Error('invalid parameter');
+            }
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
