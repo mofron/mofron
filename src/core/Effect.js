@@ -7,7 +7,6 @@ mofron.Effect = class extends mofron.CompConf {
     constructor (po) {
         try {
             super();
-            //this.m_init = true;
             this.name('Effect');
         } catch (e) {
             console.error(e.stack);
@@ -26,7 +25,8 @@ mofron.Effect = class extends mofron.CompConf {
                 }
             } else if ( (0 === this.speed()) &&
                         (undefined !== prm)  &&
-                        (0 !== prm.effect().length) ) {
+                        (0 !== prm.effect().length) &&
+                        (0 !== prm.effect()[0].speed())  ) {
                 /* inheritanced speed */
                 this.speed(prm.effect()[0].speed());
             }
@@ -39,38 +39,17 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (cflg, scb, iflg) {
         try {
+            this.initConf(iflg);
+            if (true === this.isSkipped(cflg)) {
+                return;
+            }
             if (undefined === cflg) {
-                /* called by init */
-                if (true === this.isExecd()) {
-                    /* since it has already executed, nothing to do. */
-                    return;
-                }
-                if ('none' === this.component().adom().style('display')) {
-                    /* initialize visible is false */
-                    cflg = false;
-                } else {
-                    cflg = this.status();
-                }
-            } else if ('boolean' !== typeof cflg) {
-                throw new Error('invalid paramter');
-            }
-            
-            if (null === this.component()) {
-                /* this effect has already deleted, notihing to do. */
-                return;
-            }
-            
-            if ( ((true === cflg) && (true === this.suspend()[0])) ||
-                 ((false === cflg) && (true === this.suspend()[1])) ) {
-                return;
+                let disp = this.component().adom().style('display');
+                cflg = ('none' === disp) ? false : this.status();
             }
             
             this.isExecd(true);
             
-            if ( ((true === this.isFirst()) && (0 !== this.speed())) ||
-                 (true !== iflg) ) {
-                this.setConf(true);
-            }
             /* wait render */
             setTimeout(
                 (eff) => {
@@ -90,11 +69,6 @@ mofron.Effect = class extends mofron.CompConf {
                             /* skip inner callback for avoid redundant */
                             return;
                         }
-                        if ( ((true === eff.isLast()) && (0 !== eff.speed())) ||
-                             (true !== iflg) ) {
-                            eff.setConf(false);
-                        }
-                        
                         /* simple callback */
                         if (null != scb) {
                             if ('function' === typeof scb) {
@@ -118,6 +92,21 @@ mofron.Effect = class extends mofron.CompConf {
                 this.getIcbid()
             );
             
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    forcedExec (flg, scb) {
+        try {
+            let sus = this.suspend();
+            this.suspend(
+                (true === flg) ? false : sus[0],
+                (false === flg) ? false : sus[1]
+            );
+            this.execute(flg, scb, false);
+            this.suspend(sus);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -153,6 +142,30 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
+    initConf (iflg) {
+        try {
+            if ( ((true === this.isFirst()) && (0 !== this.speed())) ||
+                 (true !== iflg) ) {
+                this.setConf(true);
+            }
+            if ( (true === this.isLast()) || (true !== iflg) ) {
+                setTimeout(
+                    (p1) => {
+                        try { p1.setConf(false); } catch (e) {
+                            console.error(e.stack);
+                            throw e;
+                        }
+                    },
+                    this.speed() * 1000 + 50,
+                    this
+                );
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     contents (flg, cmp) {
         try {
             (true === flg) ? this.enable(cmp) : this.disable(cmp);
@@ -179,7 +192,25 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     speed (prm) {
-        try { return this.member('speed', 'number', prm, 0);  } catch (e) {
+        try {
+            if ( (undefined !== prm) && (null !== this.component()) ) {
+                /* setter */
+                let eff = this.component().effect();
+                for (let eidx in eff) {
+                    if (prm !== eff[eidx].speed()) {
+                        eff[eidx].setSpeed(prm);
+                    }
+                }
+            }
+            return this.member('speed', 'number', prm, 0);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    setSpeed (prm) {
+        try { this.member('speed', 'number', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -207,6 +238,37 @@ mofron.Effect = class extends mofron.CompConf {
                 if (this.getId() === eff[eidx].getId()) {
                     return ((eff.length-1) == eidx) ? true : false;
                 }
+            }
+            return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isSkipped (flg) {
+        try {
+            if (undefined === flg) {
+                if (true === this.isExecd()) {
+                    /* since it has already executed, nothing to do. */
+                    return true;
+                }
+                let disp = this.component().adom().style('display');
+                flg = ('none' === disp) ? false : this.status(); 
+            }
+            
+            if ('boolean' !== typeof flg) {
+                throw new Error('invalid paramter');
+            }
+            
+            if ( ((true === flg) && (true === this.suspend()[0])) ||
+                 ((false === flg) && (true === this.suspend()[1])) ) {
+                return true;
+            }
+            
+            if (null === this.component()) {
+                /* this effect has already deleted, notihing to do. */
+                return true;
             }
             return false;
         } catch (e) {
@@ -258,9 +320,9 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    suspend (prm) {
+    suspend (flg, dis) {
         try {
-            if (undefined === prm) {
+            if (undefined === flg) {
                 /* getter */
                 return (undefined === this.m_suspend) ? [false, false] : this.m_suspend;
             }
@@ -268,18 +330,32 @@ mofron.Effect = class extends mofron.CompConf {
             if (undefined === this.m_suspend) {
                 this.m_suspend = [false, false];
             }
-            if (true === Array.isArray(prm)) {
-                if ( ('boolean' !== typeof prm[0]) ||
-                     ('boolean' !== typeof prm[1]) ) {
+            if (true === Array.isArray(flg)) {
+                if ( ('boolean' !== typeof flg[0]) ||
+                     ('boolean' !== typeof flg[1]) ) {
                     throw new Error('invalid parameter');
                 }
-                this.m_suspend = [prm[0], prm[1]];
-            } else if ('boolean' === typeof prm) {
-                this.m_suspend = [prm, prm];
+                this.m_suspend = [flg[0], flg[1]];
+            }
+            
+            if ( ('boolean' === typeof flg) && (undefined === dis) ) {
+                this.m_suspend = [flg, flg];
             } else {
-                throw new Error('invalid parameter');
+                if ('boolean' === typeof flg) {
+                    this.m_suspend[0] = flg;
+                }
+                if ('boolean' === typeof dis) {
+                    this.m_suspend[1] = dis;
+                }
             }
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    execOrder (prm) {
+        try { return this.member('execOrder', 'number', prm, 0); } catch (e) {
             console.error(e.stack);
             throw e;
         }

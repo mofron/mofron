@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "0.23.4",
+  "version": "0.23.5",
   "description": "front-end framework for javascript",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "expose-loader": "",
     "webpack": "",
     "webpack-cli": "",
+    "uglifyjs-webpack-plugin" : "",
     
     "mofron-comp-accordion": "",
     "mofron-comp-button": "",

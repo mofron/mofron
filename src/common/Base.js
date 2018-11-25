@@ -113,9 +113,10 @@ mofron.Base = class {
                 return;
             }
             
-            if ( (true === mofron.func.isInclude(prm, 'Base')) &&
-                 (false === mofron.func.isInclude(prm, tp)) ) {
-                throw new Error('invalid parameter');
+            if (true === mofron.func.isInclude(prm, 'Base')) {
+                if (false === mofron.func.isInclude(prm, tp) ) {
+                    throw new Error('invalid parameter');
+                }
             } else if (true === Array.isArray(tp)) {
                 if (tp.length !== prm.length) {
                     throw new Error('mismatched array length');
