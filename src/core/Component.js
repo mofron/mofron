@@ -192,9 +192,8 @@ mofron.Component = class extends mofron.Base {
             } else {
                 this.m_child.splice(idx, 0, chd);
             }
-            
             if ( (null !== this.m_adom) &&
-                 (this.adom().isPushed()) ) {
+                 (true === this.adom().isPushed()) ) {
                 /* render child */
                 let lo = this.layout();
                 for(var lo_idx in lo) {
@@ -349,45 +348,53 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    /**
+     * @return (boolean) execute flag
+     */
     execEffect (flg, scb, idx) {
         try {
-            let _idx     = (undefined === idx) ? 0 : idx;
+            let _idx = (undefined === idx) ? 0 : idx;
             if ('number' !== typeof _idx) {
                 throw new Error('invalid parameter');
             }
             
             let eff      = this.effect();
-            let exec_flg = false;
-            let scb_func = null;
+            let scb_func = undefined;
             
+            /* exec check */
+            let exe_chk = false;
             for (let eidx in eff) {
-                scb_func = null;
                 
-                if (_idx !== eff[eidx].execOrder()) {
-                    continue;
-                }
-                
-                if (false === eff[eidx].isSkipped(flg)) {
-                    exec_flg = true;
-                }
-                eff[eidx].execute(flg, undefined, true);
-            }
-            if (true === exec_flg) {
-                setTimeout(
-                    (p1) => {
-                        try { p1.execEffect(flg, scb, _idx + 1); } catch (e) {
-                            console.error(e.stack);
-                            throw e;
+                if (_idx === eff[eidx].execOrder()) {
+                    
+                    if (true === eff[eidx].isLastExec(flg, _idx)) {
+                        /* this is last of _idx effect group */
+                        if (false === eff[eidx].isLastExec(flg)) {
+                            /* exists next order effect */
+                            scb_func = (p1) => {
+                                p1.execEffect(flg, scb, _idx+1);
+                            }
+                        } else {
+                            /* this is last in all effect */
+                            scb_func = scb;
                         }
-                    },
-                    eff[0].speed()*1000 + 100,
-                    this
-                );
-            } else {
-                if ('function' === typeof scb) {
-                    scb(this);
+                    }
+                    
+                    let eff_ret = eff[eidx].execute(flg, scb_func, true);
+                    if (true === eff_ret) {
+                        exe_chk = true;
+                    }
+                } else if ( (_idx < eff[eidx].execOrder()) &&
+                            (false === eff[eidx].isSkipped(flg)) ) {
+                    exe_chk = true;
                 }
+                
             }
+            if (false === exe_chk) {
+                /* there is no executable effect object, callback doesn't call */
+                return false;
+            }
+            return true;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -417,7 +424,7 @@ mofron.Component = class extends mofron.Base {
             }
             /* init config */
             if (1 == idx) {
-                this.execEffect();
+                this.execEffect(this.visible());
                 return;
             }
             let cnf = this.config(idx);
@@ -557,12 +564,13 @@ mofron.Component = class extends mofron.Base {
             /* before push event */
             this.beforeRender();
             
-            this.initConfig(1); // effect
+            //this.initConfig(1); // effect
             
             /* execute render */
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
+            this.initConfig(1); // effect
             
             this.initConfig(2); // event
             
@@ -598,24 +606,56 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    destroy () {
+    destroy (cb) {
         try {
             if (null === this.m_adom) {
                 throw new Error('not initialized yet');
             }
-            /* delete at dom level */
-            this.adom().destroy();
             
-            /* delete at component level */
-            if (null !== this.parent()) {
-               var chd = this.parent().child(); // children from parent
-               for (var idx in chd) {
-                   if (chd[idx].adom().getId() === this.adom().getId()) {
-                       this.parent().delChild(parseInt(idx));  // separated from parent
-                       break;
-                   }
-               }
+            let des_fnc = (d_cmp) => {
+                try {
+                    /* delete at dom level */
+                    d_cmp.adom().destroy();
+                    
+                    /* delete at component level */
+                    if (null !== d_cmp.parent()) {
+                        let chd = d_cmp.parent().child(); // children from parent
+                        for (let idx in chd) {
+                            if (chd[idx].adom().getId() === d_cmp.adom().getId()) {
+                                d_cmp.parent().delChild(parseInt(idx));  // separated from parent
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if ('function' === typeof cb) {
+                        cb(this);
+                    }
+                    
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
             }
+            if ( (true === this.target().isPushed()) && (true === this.visible()) ) {
+                this.visible(false, des_fnc);
+            } else {
+                des_fnc(this);
+            }
+            
+            ///* delete at dom level */
+            //this.adom().destroy();
+            //
+            ///* delete at component level */
+            //if (null !== this.parent()) {
+            //   var chd = this.parent().child(); // children from parent
+            //   for (var idx in chd) {
+            //       if (chd[idx].adom().getId() === this.adom().getId()) {
+            //           this.parent().delChild(parseInt(idx));  // separated from parent
+            //           break;
+            //       }
+            //   }
+            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -655,7 +695,9 @@ mofron.Component = class extends mofron.Base {
     
     visible (flg, eff) {
         try {
-            let _eff = ('boolean' !== eff) ? true : eff;
+            //let eff_func = ('function' === typeof eff) ? eff : undefined;
+            //let _eff = (false !== eff) ? true : false;
+            
             if (undefined === flg) {
                 /* getter */
                 return  ( (false   === this.isInitDom()) ||
@@ -666,32 +708,44 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            /* set 'display' css */
-            let scb = undefined;
+            /* configure css value */
+            let scb = null;
             if (true === flg) {
                 if ('none' === this.adom().style('display')) {
                     this.adom().style({ 'display' : null });
                 }
             } else {
-                if (false === this.adom().isPushed()) {
-                    this.adom().style({ 'display' : 'none' });
-                    return;
-                } else {
+                //if (false === this.adom().isPushed()) {
+                //    this.adom().style({ 'display' : 'none' });
+                //    return;
+                //} else {
                     scb = (p1) => {
-                        try { p1.adom().style({ 'display' : 'none' }); } catch (e) {
+                        try {
+                            p1.adom().style({ 'display' : 'none' });
+                            if ('function' === typeof eff) {
+                                eff(p1);
+                            }
+                        } catch (e) {
                             console.error(e.stack);
                             throw e;
                         }
                     }
-                }
+                //}
             }
             
-            if (null === this.parent()) {
-                if (false === this.adom().isPushed()) {
-                    this.render();
+            if ( (true === flg) &&
+                 (null === this.parent()) &&
+                 (false === this.adom().isPushed()) ) {
+                /* root component */
+                /* not supported eff parameter */
+                this.render();
+            } else if ((true === this.adom().isPushed()) && (false !== eff) ) {
+                if ( (false === this.execEffect(flg, scb)) &&
+                     ('function' === typeof scb) ) {
+                    scb(this);
                 }
-            } else if ((true === this.adom().isPushed()) && (true === _eff) ) {
-                this.execEffect(flg, scb);
+            } else {
+                ('function' === typeof scb) ? scb(this) : undefined;
             }
         } catch (e) {
             console.error(e.stack);

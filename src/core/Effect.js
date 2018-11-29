@@ -8,6 +8,7 @@ mofron.Effect = class extends mofron.CompConf {
         try {
             super();
             this.name('Effect');
+            this.m_execonf = {};
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -17,18 +18,23 @@ mofron.Effect = class extends mofron.CompConf {
     component (prm) {
         try {
             let ret = super.component(prm);
-            if ( (0 !== this.speed()) && (undefined !== prm) ) {
-                /* update effect speed */
+            if (undefined !== prm) {
+                /* component setter */
                 let eff = prm.effect();
-                for (let eidx in eff) {
-                    eff[eidx].speed(this.speed());
+                if ( (0 !== this.speed()[0]) || (0 !== this.speed()[1]) ) {
+                    if ( (0 !== eff.length) &&
+                         ((this.speed()[0] !== eff[0].speed()[0]) || (this.speed()[1] !== eff[0].speed()[1])) ) {
+                        /* update effect speed */
+                        for (let eidx in eff) {
+                            eff[eidx].speed(this.speed()[0], this.speed()[1]);
+                        }
+                    }
+                } else {
+                    if (0 !== eff.length) {
+                        /* inheritanced speed */
+                        this.speed(eff[0].speed()[0], eff[0].speed()[1]);
+                    }
                 }
-            } else if ( (0 === this.speed()) &&
-                        (undefined !== prm)  &&
-                        (0 !== prm.effect().length) &&
-                        (0 !== prm.effect()[0].speed())  ) {
-                /* inheritanced speed */
-                this.speed(prm.effect()[0].speed());
             }
             return ret;
         } catch (e) {
@@ -39,59 +45,91 @@ mofron.Effect = class extends mofron.CompConf {
     
     execute (cflg, scb, iflg) {
         try {
-            this.initConf(iflg);
+            let init = this.isInit();
+            
             if (true === this.isSkipped(cflg)) {
-                return;
+                /* this effect is skipped */
+                this.isInit(false);
+                return false;
             }
-            if (undefined === cflg) {
-                let disp = this.component().adom().style('display');
-                cflg = ('none' === disp) ? false : this.status();
+            this.isInit(false);
+            
+            if (true === this.isFirstExec(cflg)) {
+                if ( (true !== init) || (false !== cflg) ) {
+                    this.setConf(this.speed()[(true === cflg) ? 0 : 1]);
+                }
             }
             
-            this.isExecd(true);
+            /* callback before execute */
+            let bfcb = this.beforeExec();
+            if (null !== bfcb) {
+                for (let bidx in bfcb) {
+                    bfcb[bidx][0](this, cflg, bfcb[bidx][1]);
+                }
+            }
             
-            /* wait render */
+            /* execute effect */
             setTimeout(
-                (eff) => {
-                    try { eff.contents(cflg, eff.component()); } catch (e) {
-                        console.error(e.stack);
-                        throw e;
-                    }
-                }, 50, this
-            );
-            
-            /* execute inner callback */
-            this.setIcbid();
-            setTimeout(
-                (eff, id) => {
-                    try {
-                        if (id < eff.getIcbid()) {
-                            /* skip inner callback for avoid redundant */
-                            return;
-                        }
-                        /* simple callback */
-                        if (null != scb) {
-                            if ('function' === typeof scb) {
-                                scb(eff.component());
-                            } else if (true === Array.isArray(scb)) {
-                                scb[0](eff.component(), scb[1]);
-                            }
-                        }
-                        
-                        /* common callback */
-                        if (null != eff.callback()) {
-                            eff.callback()[0](eff.callback()[1]);
-                        }
-                    } catch (e) {
+                (tdp1) => {
+                    try { tdp1.contents(cflg, tdp1.component()); } catch (e) {
                         console.error(e.stack);
                         throw e;
                     }
                 },
-                this.speed() * 1000 + 50,
-                this,
-                this.getIcbid()
+                this.delay()[(true === cflg) ? 0 : 1] + 50, // 50ms wait for render
+                this
             );
             
+            /* execute inner callback */
+            this.setIcbid();
+            let inn_cb = (eff, icb_id) => {
+                try {
+                    if (icb_id < eff.getIcbid()) {
+                        /* skip inner callback for avoid redundant */
+                        return;
+                    }
+                    
+                    if ( (true === eff.isLastExec(cflg)) ||
+                         (true !== iflg) ) {
+                        /* reset css conf */
+                        eff.setConf(null); 
+                    }
+                    
+                    /* simple callback */
+                    if (null != scb) {
+                        if ('function' === typeof scb) {
+                            /* callback without param */
+                            scb(eff.component(), eff);
+                        } else if ( (true === Array.isArray(scb)) &&
+                                    ('function' === typeof scb[0]) ) {
+                            /* callback with param */
+                            scb[0](eff.component(), eff, scb[1]);
+                        }
+                    }
+                    
+                    /* common callback */
+                    if (null != eff.callback()) {
+                        eff.callback()[0](eff.component(), eff, eff.callback()[1]);
+                    }
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
+            }
+            let inn_delay = this.speed()[(true === cflg) ? 0 : 1] + 50;
+            /* get the largest value of delay in component effect */
+            let eff     = this.component().effect();
+            let eff_dly = 0;
+            let chk_dly = null;
+            for (let eidx in eff) {
+                chk_dly = eff[eidx].delay()[(true === cflg) ? 0 : 1];
+                if (eff_dly < chk_dly) {
+                    eff_dly = chk_dly;
+                }
+            }
+            setTimeout(inn_cb, inn_delay + eff_dly, this, this.getIcbid());
+            
+            return true;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -113,19 +151,26 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    setConf (en) {
+    /**
+     * @param p1 enable flag
+     */
+    setConf (spd) {
         try {
-            if ('boolean' !== typeof en) {
+            if ( !((null === spd) || ('number' === typeof spd)) ) {
                 throw new Error('invalid paramter');
             }
-            var adom = this.component().adom();
-            if (true === en) {
+            if (0 === spd) {
+                /* effect is not animation mode. nothing to do */
+                return;
+            }
+            let adom = this.component().adom();
+            if (null !== spd) {
                 adom.style({
-                    '-webkit-transition' : ((1000 * this.speed())) + 'ms all linear 0s',
-                    '-moz-transition'    : 'all ' + ((1000 * this.speed())) + 'ms',
-                    '-ms-transition'     : 'all ' + ((1000 * this.speed())) + 'ms',
-                    '-o-transition'      : 'all ' + ((1000 * this.speed())) + 'ms',
-                    'transtion'          : ((1000 * this.speed())) + 'ms all linear 0s'
+                    '-webkit-transition' : spd + 'ms all linear 0s',
+                    '-moz-transition'    : 'all ' + spd + 'ms',
+                    '-ms-transition'     : 'all ' + spd + 'ms',
+                    '-o-transition'      : 'all ' + spd + 'ms',
+                    'transtion'          : spd + 'ms all linear 0s'
                 });
             } else {
                 adom.style({
@@ -135,30 +180,6 @@ mofron.Effect = class extends mofron.CompConf {
                     '-o-transition'      : null,
                     'transtion'          : null
                 });
-            }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    initConf (iflg) {
-        try {
-            if ( ((true === this.isFirst()) && (0 !== this.speed())) ||
-                 (true !== iflg) ) {
-                this.setConf(true);
-            }
-            if ( (true === this.isLast()) || (true !== iflg) ) {
-                setTimeout(
-                    (p1) => {
-                        try { p1.setConf(false); } catch (e) {
-                            console.error(e.stack);
-                            throw e;
-                        }
-                    },
-                    this.speed() * 1000 + 50,
-                    this
-                );
             }
         } catch (e) {
             console.error(e.stack);
@@ -191,37 +212,65 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    speed (prm) {
+    speed (prm, dis) {
         try {
-            if ( (undefined !== prm) && (null !== this.component()) ) {
-                /* setter */
+            if ( ((undefined !== prm) && ('number' !== typeof prm)) ||
+                 ((undefined !== dis) && ('number' !== typeof dis)) ) {
+                throw new Error('invalid parameter');
+            }
+            let ret = this.execConfig('speed', prm, dis);
+            if ( (undefined === ret) && (null !== this.component()) ) {
+                /* setter, speed value is common to all effect of component */
                 let eff = this.component().effect();
+                let chk = null;
                 for (let eidx in eff) {
-                    if (prm !== eff[eidx].speed()) {
-                        eff[eidx].setSpeed(prm);
+                    chk = eff[eidx].speed();
+                    if ( (this.speed()[0] !== chk[0]) || (this.speed()[1] !== chk[1])) {
+                        /* update speed */
+                        eff[eidx].setSpeed(prm, dis);
                     }
                 }
             }
-            return this.member('speed', 'number', prm, 0);
+            return (null === ret) ? [0, 0] : ret;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    setSpeed (prm) {
-        try { this.member('speed', 'number', prm); } catch (e) {
+    setSpeed (prm, dis) {
+        try {
+            if ( ((undefined !== prm) && ('number' !== typeof prm)) ||
+                 ((undefined !== dis) && ('number' !== typeof dis)) ) {
+                throw new Error('invalid parameter');
+            }
+            this.execConfig('speed', prm, dis);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    isFirst () {
+    delay (prm, dis) {
+        try {
+            if ( ((undefined !== prm) && ('number' !== typeof prm)) ||
+                 ((undefined !== dis) && ('number' !== typeof dis)) ) {
+                throw new Error('invalid parameter');
+            }
+            let ret = this.execConfig('delay', prm, dis);
+            return (null === ret) ? [0, 0] : ret;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isFirstExec (flg) {
         try {
             let eff = this.component().effect();
             for (let eidx in eff) {
-                if (this.getId() === eff[eidx].getId()) {
-                    return (0 == eidx) ? true : false;
+                if (false === eff[eidx].isSkipped(flg)) {
+                    return (this.getId() === eff[eidx].getId()) ? true : false;
                 }
             }
             return false;
@@ -231,15 +280,46 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    isLast () {
+    isLastExec (flg, ord) {
         try {
-            let eff = this.component().effect();
-            for (let eidx in eff) {
-                if (this.getId() === eff[eidx].getId()) {
-                    return ((eff.length-1) == eidx) ? true : false;
+            let eff     = this.component().effect();
+            let chk_tgt = [];
+            
+            /* get check target list */
+            if ('number' === typeof ord) {
+                for (let eidx in eff) {
+                    if (ord === eff[eidx].execOrder()) {
+                        chk_tgt.push(eff[eidx]);
+                    }
+                }
+            } else {
+                chk_tgt = eff;
+            }
+            
+            /* skip check */
+            if (true === this.isSkipped(flg)) {
+                /* this effect will skip */ 
+                return false;
+            }
+            
+            for (let tidx in chk_tgt) {
+                if (this.getId() === chk_tgt[tidx].getId()) {
+                    if (tidx == chk_tgt.length-1) {
+                        /* this effect is last */
+                        return true;
+                    }
+                    
+                    for (let tidx_2=parseInt(tidx)+1; tidx_2 < chk_tgt.length ;tidx_2++) {
+                        if (false === chk_tgt[tidx_2].isSkipped(flg)) {
+                            /* there is a effect to be executed after this effect */
+                            return false;
+                        }
+                    }
+                    /* this effect will be executed at the end */
+                    return true;
                 }
             }
-            return false;
+            throw new Error('mismatched components');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -248,29 +328,45 @@ mofron.Effect = class extends mofron.CompConf {
     
     isSkipped (flg) {
         try {
-            if (undefined === flg) {
-                if (true === this.isExecd()) {
-                    /* since it has already executed, nothing to do. */
-                    return true;
-                }
-                let disp = this.component().adom().style('display');
-                flg = ('none' === disp) ? false : this.status(); 
-            }
-            
-            if ('boolean' !== typeof flg) {
-                throw new Error('invalid paramter');
+            if ( (true === this.isInit()) && (flg !== this.status()) ) {
+                /* mismatch status */
+                return true;
             }
             
             if ( ((true === flg) && (true === this.suspend()[0])) ||
                  ((false === flg) && (true === this.suspend()[1])) ) {
+                /* suspend */
                 return true;
             }
             
-            if (null === this.component()) {
-                /* this effect has already deleted, notihing to do. */
-                return true;
-            }
             return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isInit (prm) {
+        try { return this.member('isInit', 'boolean', prm, true); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    beforeExec (fnc, prm) {
+        try {
+            if (undefined === fnc) {
+                /* getter */
+                return (undefined === this.m_bfexec) ? null : this.m_bfexec;
+            }
+            /* setter */
+            if ('function' !== typeof fnc) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === this.m_callback) {
+                this.m_bfexec = [];
+            }
+            this.m_bfexec.push([fnc, prm]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -320,32 +416,43 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
-    suspend (flg, dis) {
+    suspend (prm, dis) {
         try {
-            if (undefined === flg) {
+            if ( ((undefined !== prm) && ('boolean' !== typeof prm)) ||
+                 ((undefined !== dis) && ('boolean' !== typeof dis)) ) {
+                throw new Error('invalid parameter');
+            }
+            let ret = this.execConfig('suspend', prm, dis);
+            return (null === ret) ? [false, false] : ret;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /* enable/disable config interface */
+    execConfig (nm, prm, dis) {
+        try {
+            if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_suspend) ? [false, false] : this.m_suspend;
+                return (undefined === this.m_execonf[nm]) ? null : this.m_execonf[nm];
             }
             /* setter */
-            if (undefined === this.m_suspend) {
-                this.m_suspend = [false, false];
+            if ('string' !== typeof nm) {
+                 throw new Error('invalid parameter');
             }
-            if (true === Array.isArray(flg)) {
-                if ( ('boolean' !== typeof flg[0]) ||
-                     ('boolean' !== typeof flg[1]) ) {
-                    throw new Error('invalid parameter');
-                }
-                this.m_suspend = [flg[0], flg[1]];
+            if (undefined === this.m_execonf[nm]) {
+                this.m_execonf[nm] = [null, null];
             }
             
-            if ( ('boolean' === typeof flg) && (undefined === dis) ) {
-                this.m_suspend = [flg, flg];
+            if ( (undefined !== prm) && (undefined === dis) ) {
+                this.m_execonf[nm] = [prm, prm];
             } else {
-                if ('boolean' === typeof flg) {
-                    this.m_suspend[0] = flg;
+                if (undefined !== prm) {
+                    this.m_execonf[nm][0] = prm;
                 }
-                if ('boolean' === typeof dis) {
-                    this.m_suspend[1] = dis;
+                if (undefined !== dis) {
+                    this.m_execonf[nm][1] = dis;
                 }
             }
         } catch (e) {
