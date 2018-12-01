@@ -54,7 +54,9 @@ mofron.Effect = class extends mofron.CompConf {
             }
             this.isInit(false);
             
-            if (true === this.isFirstExec(cflg)) {
+            if (true !== iflg) {
+                this.setConf(this.speed()[(true === cflg) ? 0 : 1]);
+            } else if (true === this.isFirstExec(cflg)) {
                 if ( (true !== init) || (false !== cflg) ) {
                     this.setConf(this.speed()[(true === cflg) ? 0 : 1]);
                 }
@@ -144,7 +146,7 @@ mofron.Effect = class extends mofron.CompConf {
                 (false === flg) ? false : sus[1]
             );
             this.execute(flg, scb, false);
-            this.suspend(sus);
+            this.suspend(sus[0], sus[1]);
         } catch (e) {
             console.error(e.stack);
             throw e;
