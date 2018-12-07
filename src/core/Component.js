@@ -919,7 +919,8 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             if (undefined !== this.m_inncmp[key]) {
-                this.updChild(this.m_inncmp[key], val);
+                let pnt = this.m_inncmp[key].parent();
+                pnt.updChild(this.m_inncmp[key], val);
             }
             this.m_inncmp[key] = val;
         } catch (e) {

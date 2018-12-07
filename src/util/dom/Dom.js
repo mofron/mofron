@@ -313,15 +313,20 @@ mofron.Dom = class extends mofron.Base {
      * 
      * @param name : (string) class name
      */
-    className (name) {
+    className (name, rew) {
         try {
             if (undefined === name) {
                 /* getter */
                 return this.m_classnm.get();
             }
             /* setter */
+            if (true === rew) {
+                let cls = this.className();
+                for (let cidx in cls) {
+                    this.m_classnm.rem(cls[cidx]);
+                }
+            }
             this.m_classnm.add(name);
-            //this.execConfListener('className', name);
             this.value(null);
         } catch (e) {
             console.error(e.stack);

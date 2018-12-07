@@ -48,7 +48,7 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
     
-    execHandler () {
+    execHandler (ep) {
         try {
             let hdl = this.handler();
             let prm = null;
@@ -56,16 +56,19 @@ mofron.Event = class extends mofron.CompConf {
             for (let hidx in hdl) {
                 prm = new mofron.Param(
                     this.component(),
-                    (undefined === hdl[hidx][1]) ? null : hdl[hidx][1]
+                    ep,
+                    (undefined === hdl[hidx][1]) ? undefined : hdl[hidx][1]
                 );
-                prm.add(arguments);
                 prm.exec(
                     { handler : hdl[hidx][0] },
                     'handler'
                 );
             }
             
-            this.execEffect_pri(arguments);
+            let eff = this.kickEffect();
+            for (let eidx in eff) {
+                this.execEffect(eff[eidx], ep);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -73,56 +76,21 @@ mofron.Event = class extends mofron.CompConf {
     }
     
     execute () {
-        try {
-            this.contents(this.component().eventTgt());
-            this.isExecd(true);
-        } catch (e) {
+        try { this.contents(this.component().eventTgt()); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     kickEffect (prm) {
-        try {
-            
-            if (undefined === prm) {
-                /* getter */
-                return this.m_effect;
-            }
-            /* setter */
-            if (true === Array.isArray(prm)) {
-                for (let pidx in prm) {
-                    this.kickEffect(prm[pidx]);
-                }
-                return;
-            }
-            if (true !== mofron.func.isInclude(prm, 'Effect')) {
-                throw new Error('invalid parameter');
-            }
-            prm.suspend(true);
-            this.m_effect.push(prm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    execEffect_pri (prm) {
-        try {
-            let eff = this.kickEffect();
-            for (let eidx in eff) {
-                eff[eidx].suspend(false);
-                this.execEffect(eff[eidx], prm);
-                eff[eidx].suspend(true);
-            }
-        } catch (e) {
+        try { return this.arrayMember('kickEffect', 'Effect', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     execEffect (eff, prm) {
-        try { eff.execute(true); } catch (e) {
+        try { eff.forcedExec( ('boolean' === typeof prm) ? prm : true ); } catch (e) {
             console.error(e.stack);
             throw e;
         }

@@ -95,6 +95,21 @@ mofron.DomConf = class extends mofron.Base {
         }
     }
     
+    rem (key) {
+        try {
+            if (undefined !== this.m_conts[key]) {
+                delete this.m_conts[key];
+            }
+            if (true === this.target().isPushed()) {
+                 /* target is already rendered */
+                 this.rrem(key);
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     rrem () {
         try {
             console.warn('not implement');
