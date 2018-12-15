@@ -189,8 +189,8 @@ module.exports = {
             }
             return new mofron.Color(
                 parseInt(clr.substring(0,2) ,16),
-                parseInt(clr.substring(2,2) ,16),
-                parseInt(clr.substring(4,2) ,16)
+                parseInt(clr.substring(2,4) ,16),
+                parseInt(clr.substring(4,6) ,16)
             );
         } catch (e) {
             console.error(e.stack);

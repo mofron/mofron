@@ -25,6 +25,24 @@ mofron.Event = class extends mofron.CompConf {
         }
     }
     
+    component (prm) {
+        try {
+            if (undefined !== prm) {
+                let kick_eff = this.kickEffect();
+                for (let kidx in kick_eff) {
+                    if (null === kick_eff[kidx].component()) {
+                        kick_eff[kidx].execOption({ suspend : true });
+                        prm.effect([ kick_eff[kidx] ]);
+                    }
+                }
+            }
+            return super.component(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * set function for event listener
      *

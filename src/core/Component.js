@@ -619,7 +619,7 @@ mofron.Component = class extends mofron.Base {
                     
                     /* delete at component level */
                     if (null !== d_cmp.parent()) {
-                        let chd = d_cmp.parent().child(); // children from parent
+                        let chd = d_cmp.parent().getChild(true); // children from parent
                         for (let idx in chd) {
                             if (chd[idx].adom().getId() === d_cmp.adom().getId()) {
                                 d_cmp.parent().delChild(parseInt(idx));  // separated from parent
@@ -642,20 +642,6 @@ mofron.Component = class extends mofron.Base {
             } else {
                 des_fnc(this);
             }
-            
-            ///* delete at dom level */
-            //this.adom().destroy();
-            //
-            ///* delete at component level */
-            //if (null !== this.parent()) {
-            //   var chd = this.parent().child(); // children from parent
-            //   for (var idx in chd) {
-            //       if (chd[idx].adom().getId() === this.adom().getId()) {
-            //           this.parent().delChild(parseInt(idx));  // separated from parent
-            //           break;
-            //       }
-            //   }
-            //}
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -695,13 +681,18 @@ mofron.Component = class extends mofron.Base {
     
     visible (flg, eff) {
         try {
-            //let eff_func = ('function' === typeof eff) ? eff : undefined;
-            //let _eff = (false !== eff) ? true : false;
-            
+            let chd = this.adom().child();
             if (undefined === flg) {
                 /* getter */
-                return  ( (false   === this.isInitDom()) ||
-                          ('none' === this.adom().style('display')) ) ? false : true;
+                for (let cidx in chd) {
+                    if ('none' !== chd[cidx].style('display')) {
+                        return true;
+                    }
+                }
+                return false;
+                
+                //return  ( (false   === this.isInitDom()) ||
+                //          ('none' === this.adom().style('display')) ) ? false : true;
             }
             /* setter */
             if ('boolean' !== typeof flg) {
@@ -711,26 +702,43 @@ mofron.Component = class extends mofron.Base {
             /* configure css value */
             let scb = null;
             if (true === flg) {
-                if ('none' === this.adom().style('display')) {
-                    this.adom().style({ 'display' : null });
-                }
-            } else {
-                //if (false === this.adom().isPushed()) {
-                //    this.adom().style({ 'display' : 'none' });
-                //    return;
-                //} else {
-                    scb = (p1) => {
-                        try {
-                            p1.adom().style({ 'display' : 'none' });
-                            if ('function' === typeof eff) {
-                                eff(p1);
-                            }
-                        } catch (e) {
-                            console.error(e.stack);
-                            throw e;
+                //if ('none' === this.adom().style('display')) {
+                    let buf = this.dispBuff();
+                    for (let cidx in chd) {
+                        if ('none' === chd[cidx].style('display')) {
+                            chd[cidx].style({
+                                'display' : ( ('none' !== buf[cidx]) && (null !== buf[cidx]) ) ? buf[cidx] : null
+                            });
                         }
                     }
+                    //this.adom().style({
+                    //    'display' : (null !== this.dispBuff()) ? this.dispBuff() : null
+                    //});
                 //}
+            } else {
+                //let disp = this.adom().style('display');
+                //if ( ('none' !== disp) && (null !== disp) ) { 
+                //    this.dispBuff(disp);
+                //}
+                let comp = this;
+                scb = (p1) => {
+                    try {
+                        let chd = p1.adom().child();
+                        let buf = [];
+                        for (let cidx in chd) {
+                            buf.push(chd[cidx].style('display'));
+                        }
+                        comp.dispBuff(buf);
+                         
+                        p1.adom().style({ 'display' : 'none' });
+                        if ('function' === typeof eff) {
+                            eff(p1);
+                        }
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                }
             }
             
             if ( (true === flg) &&
@@ -747,6 +755,29 @@ mofron.Component = class extends mofron.Base {
             } else {
                 ('function' === typeof scb) ? scb(this) : undefined;
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    dispBuff (prm) {
+        try {
+            if (undefined === prm) {
+                if (undefined === this.m_disp_buf) {
+                    let chd = this.adom().child();
+                    let ret = [];
+                    for (let cidx in chd) {
+                        ret.push(null);
+                    }
+                    return ret;
+                }
+                return this.m_disp_buf;
+            }
+            if (true !== Array.isArray(prm)) {
+                throw new Error('invalid parameter');
+            }
+            this.m_disp_buf = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
