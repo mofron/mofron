@@ -32,6 +32,35 @@ module.exports = {
         }
     },
     
+    
+    objkey : (key, val) => {
+        try {
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            let buff   = mofron.objkey;
+            let sp_key = key.split('.');
+            for (let kidx in sp_key) {
+                
+                if (undefined === buff[sp_key[kidx]]) {
+                    buff[sp_key[kidx]] = {};
+                }
+                
+                if (kidx == sp_key.length-1) {
+                    if (undefined === val) {
+                        return buff[sp_key[kidx]];
+                    } else {
+                        buff[sp_key[kidx]] = val;
+                    }
+                }
+                buff = buff[sp_key[kidx]];
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     execPrmMap : (tgt) => {
         try {
             if (true !== mofron.func.isInclude(tgt, 'Base')) {

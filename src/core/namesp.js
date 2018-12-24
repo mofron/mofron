@@ -10,6 +10,7 @@ module.exports = {
     respsv : {},
     size   : {},
     func   : {},
+    objkey : {},
     theme  : null,
     root   : new Array(),
     debug  : false

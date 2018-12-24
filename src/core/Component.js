@@ -690,9 +690,6 @@ mofron.Component = class extends mofron.Base {
                     }
                 }
                 return false;
-                
-                //return  ( (false   === this.isInitDom()) ||
-                //          ('none' === this.adom().style('display')) ) ? false : true;
             }
             /* setter */
             if ('boolean' !== typeof flg) {
@@ -702,24 +699,15 @@ mofron.Component = class extends mofron.Base {
             /* configure css value */
             let scb = null;
             if (true === flg) {
-                //if ('none' === this.adom().style('display')) {
-                    let buf = this.dispBuff();
-                    for (let cidx in chd) {
-                        if ('none' === chd[cidx].style('display')) {
-                            chd[cidx].style({
-                                'display' : ( ('none' !== buf[cidx]) && (null !== buf[cidx]) ) ? buf[cidx] : null
-                            });
-                        }
+                let buf = this.dispBuff();
+                for (let cidx in chd) {
+                    if ('none' === chd[cidx].style('display')) {
+                        chd[cidx].style({
+                            'display' : ( ('none' !== buf[cidx]) && (null !== buf[cidx]) ) ? buf[cidx] : null
+                        });
                     }
-                    //this.adom().style({
-                    //    'display' : (null !== this.dispBuff()) ? this.dispBuff() : null
-                    //});
-                //}
+                }
             } else {
-                //let disp = this.adom().style('display');
-                //if ( ('none' !== disp) && (null !== disp) ) { 
-                //    this.dispBuff(disp);
-                //}
                 let comp = this;
                 scb = (p1) => {
                     try {
@@ -975,24 +963,6 @@ mofron.Component = class extends mofron.Base {
                 pnt_buf = pnt_buf.parent();
             }
             return false;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    switchTgt (tgt, fnc, prm) {
-        try {
-            if (true !== mofron.func.isInclude(tgt, 'Dom')) {
-                throw new Error('invald parameter');
-            }
-            let tgt_buf = this.target();
-            this.target(tgt);
-            if ('function' !== typeof fnc) {
-                throw new Error('invald parameter');
-            }
-            fnc(this, prm);
-            this.target(tgt_buf);
         } catch (e) {
             console.error(e.stack);
             throw e;

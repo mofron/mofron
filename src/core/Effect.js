@@ -71,13 +71,14 @@ mofron.Effect = class extends mofron.CompConf {
             }
             
             /* execute effect */
+            let conts_func = (tdp1) => {
+                try { tdp1.contents(cflg, tdp1.component()); } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
+            };
             setTimeout(
-                (tdp1) => {
-                    try { tdp1.contents(cflg, tdp1.component()); } catch (e) {
-                        console.error(e.stack);
-                        throw e;
-                    }
-                },
+                conts_func,
                 this.delay()[(true === cflg) ? 0 : 1] + 50, // 50ms wait for render
                 this
             );

@@ -11,6 +11,7 @@ mofron.Base = class {
     constructor () {
         try {
             this.m_member = {};
+            this.m_buff   = {};
             this.name('Base');
         } catch (e) {
             console.error(e.stack);
@@ -368,7 +369,36 @@ mofron.Base = class {
             console.error(e.stack);
             throw e;
         }
-
+    }
+    
+    data (key, val) {
+        try {
+            if ('string' !== typeof key) {
+                throw new Error('invalid parameter');
+            }
+            if (undefined === val) {
+                /* getter */
+                return (undefined === this.m_buff[key]) ? null : this.m_buff[key];
+            }
+            /* setter */
+            this.m_buff[key] = val;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    objkey (key) {
+        try {
+            let ret = this.member('objkey', 'string', key);
+            if (undefined === key) {
+                return ret;
+            }
+            mofron.func.objkey(key, this);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
 }
 /* end of file */
