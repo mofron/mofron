@@ -351,7 +351,7 @@ mofron.Component = class extends mofron.Base {
     /**
      * @return (boolean) execute flag
      */
-    execEffect (flg, scb, idx) {
+    execEffect (flg, scb, idx, ini) {
         try {
             let _idx = (undefined === idx) ? 0 : idx;
             if ('number' !== typeof _idx) {
@@ -380,7 +380,10 @@ mofron.Component = class extends mofron.Base {
                         }
                     }
                     
+                    eff[eidx].isInit((true === ini) ? true : ini);
                     let eff_ret = eff[eidx].execute(flg, scb_func, true);
+                    eff[eidx].isInit((true === ini) ? false : ini);
+                    
                     if (true === eff_ret) {
                         exe_chk = true;
                     }
@@ -424,12 +427,13 @@ mofron.Component = class extends mofron.Base {
             }
             /* init config */
             if (1 == idx) {
-                this.execEffect(this.visible());
+                this.execEffect(this.visible(), undefined, undefined, true);
                 return;
             }
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
                 cnf[cfidx].execute();
+                cnf[cfidx].isInited(true);
             }
         } catch (e) {
             console.error(e.stack);
@@ -546,6 +550,22 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    tmpl (tmpl, prm) {
+        try {
+            if (true !== mofron.func.isInclude(tmpl, 'Template')) {
+                throw new Error('invalid parameter');
+            }
+            /* get option template */
+            fnc = tmpl.tmpl();
+            if (null !== fnc) {
+                this.execOption(fnc(prm));
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * create componrnt DOM
      * 
@@ -650,10 +670,12 @@ mofron.Component = class extends mofron.Base {
     
     initDomContsCtl() {
         try {
-            if (false === this.isInitDom()) {
+            if (null === this.m_adom) {
                 this.adom(new mofron.Adom());
                 this.adom().component(this);
+                this.isIniting(true);
                 this.initDomConts();
+                this.isIniting(false);
             }
         } catch (e) {
             console.error(e.stack);
@@ -672,8 +694,8 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    isInitDom () {
-        try { return (null === this.m_adom) ? false : true; } catch (e) {
+    isIniting (prm) {
+        try { return this.member('isIniting', 'boolean', prm, false); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -914,7 +936,33 @@ mofron.Component = class extends mofron.Base {
                     delete opt.theme;
                 }
             }
+            let opt_buf = null;
+            if (true === this.isIniting()) {
+                opt_buf = {};
+                Object.assign(opt_buf, this.getOption());
+                
+                for (let oidx in opt_buf) {
+                    if ('object' === typeof opt_buf[oidx]) {
+                        let set_buf = {};
+                        Object.assign(set_buf, opt_buf[oidx]);
+                        opt_buf[oidx] = set_buf;
+                    }
+                }
+            }
             super.execOption(opt);
+            if (null !== opt_buf) {
+                // avoid option overwrite
+                for (let oidx1 in opt_buf) {
+                    for (let oidx2 in opt) {
+                        if (oidx1 === oidx2) {
+                            let ret_opt = {};
+                            ret_opt[oidx1] = opt_buf[oidx1];
+                            this.addOption(ret_opt);
+                        }
+                    }
+                }
+            }
+            
             if (null !== theme) {
                 this.theme(theme);
             }

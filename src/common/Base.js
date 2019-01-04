@@ -388,13 +388,13 @@ mofron.Base = class {
         }
     }
     
-    objkey (key) {
+    objkey (key, ary) {
         try {
             let ret = this.member('objkey', 'string', key);
             if (undefined === key) {
                 return ret;
             }
-            mofron.func.objkey(key, this);
+            mofron.func.objkey(key, this, ary);
         } catch (e) {
             console.error(e.stack);
             throw e;

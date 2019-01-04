@@ -94,7 +94,11 @@ mofron.Event = class extends mofron.CompConf {
     }
     
     execute () {
-        try { this.contents(this.component().eventTgt()); } catch (e) {
+        try {
+            if (false === this.isInited()) {
+                this.contents(this.component().eventTgt());
+            }
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }

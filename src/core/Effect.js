@@ -49,10 +49,10 @@ mofron.Effect = class extends mofron.CompConf {
             
             if (true === this.isSkipped(cflg)) {
                 /* this effect is skipped */
-                this.isInit(false);
+                //this.isInit(false);
                 return false;
             }
-            this.isInit(false);
+            //this.isInit(false);
             
             if (true !== iflg) {
                 this.setConf(this.speed()[(true === cflg) ? 0 : 1]);
@@ -142,10 +142,7 @@ mofron.Effect = class extends mofron.CompConf {
     forcedExec (flg, scb) {
         try {
             let sus = this.suspend();
-            this.suspend(
-                (true === flg) ? false : sus[0],
-                (false === flg) ? false : sus[1]
-            );
+            this.suspend(false);
             this.execute(flg, scb, false);
             this.suspend(sus[0], sus[1]);
         } catch (e) {
@@ -350,7 +347,7 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     isInit (prm) {
-        try { return this.member('isInit', 'boolean', prm, true); } catch (e) {
+        try { return this.member('isInit', 'boolean', prm, false); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -434,7 +431,7 @@ mofron.Effect = class extends mofron.CompConf {
     }
     
     /* enable/disable config interface */
-    execConfig (nm, prm, dis) {
+    execConfig (nm, prm, dis, ow) {
         try {
             if (undefined === prm) {
                 /* getter */
@@ -454,7 +451,7 @@ mofron.Effect = class extends mofron.CompConf {
                 if (undefined !== prm) {
                     this.m_execonf[nm][0] = prm;
                 }
-                if (undefined !== dis) {
+                if ( (undefined !== dis) && (false !== ow) ) {
                     this.m_execonf[nm][1] = dis;
                 }
             }

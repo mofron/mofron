@@ -33,7 +33,7 @@ module.exports = {
     },
     
     
-    objkey : (key, val) => {
+    objkey : (key, val, ary) => {
         try {
             if ('string' !== typeof key) {
                 throw new Error('invalid parameter');
@@ -43,14 +43,22 @@ module.exports = {
             for (let kidx in sp_key) {
                 
                 if (undefined === buff[sp_key[kidx]]) {
-                    buff[sp_key[kidx]] = {};
+                    if (undefined !== val) {
+                        buff[sp_key[kidx]] = (true === ary) ? [] : {};
+                    } else {
+                        return null;
+                    }
                 }
                 
                 if (kidx == sp_key.length-1) {
                     if (undefined === val) {
                         return buff[sp_key[kidx]];
                     } else {
-                        buff[sp_key[kidx]] = val;
+                        if (true === ary) {
+                            buff[sp_key[kidx]].push(val);
+                        } else {
+                            buff[sp_key[kidx]] = val;
+                        }
                     }
                 }
                 buff = buff[sp_key[kidx]];
@@ -595,10 +603,10 @@ module.exports = {
             if ('function' !== typeof obj.name) {
                 return false;
             }
-            var chk_nm  = ('string' === typeof nm) ? [nm] : nm;
-            var chk_idx = 0;
-            var name_lst = obj.getNameList();
-            for (var idx in name_lst) {
+            let chk_nm  = ('string' === typeof nm) ? [nm] : nm;
+            let chk_idx = 0;
+            let name_lst = obj.getNameList();
+            for (let idx in name_lst) {
                 if(chk_nm[chk_idx] === name_lst[idx]) {
                     chk_idx++;
                     if (chk_nm.length === chk_idx) {
@@ -611,6 +619,61 @@ module.exports = {
                 }
             }
             return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isComp : (obj, nm) => {
+        try { return mofron.func.isInclude(obj, ['Base', 'Component', nm]); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isEvent : (obj, nm) => {
+        try {
+            return mofron.func.isInclude(
+                obj,
+                ['Base', 'CompConf', 'Event',  nm]
+            );
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isEffect : (obj, nm) => {
+        try {
+            return mofron.func.isInclude(
+                obj, 
+                ['Base', 'CompConf', 'Effect',  nm]
+            );
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isLayout : (obj, nm) => {
+        try {
+            return mofron.func.isInclude(
+                obj, 
+                ['Base', 'CompConf', 'Layout',  nm]
+            );
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isRespsv : (obj, nm) => {
+        try {
+            return mofron.func.isInclude(
+                obj, 
+                ['Base', 'CompConf', 'Respsv',  nm]
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;

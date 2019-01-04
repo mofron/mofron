@@ -39,5 +39,12 @@ mofron.CompConf = class extends mofron.Base {
             throw e;
         }
     }
+
+    isInited (prm) {
+        try { return this.member('isInited', 'boolean', prm, false); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
