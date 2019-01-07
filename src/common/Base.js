@@ -11,7 +11,7 @@ mofron.Base = class {
     constructor () {
         try {
             this.m_member = {};
-            this.m_buff   = {};
+            this.m_data   = {};
             this.name('Base');
         } catch (e) {
             console.error(e.stack);
@@ -63,7 +63,11 @@ mofron.Base = class {
             if (undefined === prm) {
                 /* getter */
                 if (undefined === this.m_member[key]) {
-                    return (undefined === ini) ? null : ini;
+                    if (undefined !== ini) {
+                        this.m_member[key] = ini;
+                        return ini;
+                    }
+                    return null;
                 }
                 return this.m_member[key];
             } else if (null === prm) {
@@ -371,17 +375,22 @@ mofron.Base = class {
         }
     }
     
-    data (key, val) {
+    data (prm, val) {
         try {
-            if ('string' !== typeof key) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === val) {
+            if ( ('string' === typeof prm) && (undefined === val) ) {
                 /* getter */
-                return (undefined === this.m_buff[key]) ? null : this.m_buff[key];
+                return (undefined === this.m_data[prm]) ? null : this.m_data[prm];
             }
             /* setter */
-            this.m_buff[key] = val;
+            if ('string' === typeof prm) {
+                this.m_data[prm] = val;
+            } else if ('object' === typeof prm) {
+                for (let pidx in prm) {
+                    this.data(pidx, prm[pidx]);
+                }
+            } else {
+                throw new Error('invalid parameter');
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

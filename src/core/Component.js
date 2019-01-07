@@ -319,7 +319,6 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    
     /**
      * style getter / setter
      *

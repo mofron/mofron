@@ -28,5 +28,6 @@ require('./src/core/Layout.js');
 require('./src/core/Event.js');
 require('./src/core/Effect.js');
 require('./src/core/Respsv.js');
+require('./src/core/Template.js');
 
 module.exports = mofron;

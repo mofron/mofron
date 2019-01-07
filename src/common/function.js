@@ -626,7 +626,17 @@ module.exports = {
     },
     
     isComp : (obj, nm) => {
-        try { return mofron.func.isInclude(obj, ['Base', 'Component', nm]); } catch (e) {
+        try {
+            let inc_prm = ['Base', 'Component'];
+            if ('string' === typeof nm) {
+                inc_prm.push(nm);
+            } else if (true === Array.isArray(nm)) {
+                for (let nidx in nm) {
+                    inc_prm.push(nm[nidx]);
+                }
+            }
+            return mofron.func.isInclude(obj, inc_prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -634,10 +644,15 @@ module.exports = {
     
     isEvent : (obj, nm) => {
         try {
-            return mofron.func.isInclude(
-                obj,
-                ['Base', 'CompConf', 'Event',  nm]
-            );
+            let inc_prm = ['Base', 'CompConf', 'Event'];
+            if ('string' === typeof nm) {
+                inc_prm.push(nm);
+            } else if (true === Array.isArray(nm)) {
+                for (let nidx in nm) {
+                    inc_prm.push(nm[nidx]);
+                }
+            } 
+            return mofron.func.isInclude(obj, inc_prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -646,10 +661,15 @@ module.exports = {
     
     isEffect : (obj, nm) => {
         try {
-            return mofron.func.isInclude(
-                obj, 
-                ['Base', 'CompConf', 'Effect',  nm]
-            );
+            let inc_prm = ['Base', 'CompConf', 'Effect'];
+            if ('string' === typeof nm) {
+                inc_prm.push(nm);
+            } else if (true === Array.isArray(nm)) {
+                for (let nidx in nm) {
+                    inc_prm.push(nm[nidx]);
+                }
+            }
+            return mofron.func.isInclude(obj, inc_prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -658,10 +678,15 @@ module.exports = {
     
     isLayout : (obj, nm) => {
         try {
-            return mofron.func.isInclude(
-                obj, 
-                ['Base', 'CompConf', 'Layout',  nm]
-            );
+            let inc_prm = ['Base', 'CompConf', 'Layout'];
+            if ('string' === typeof nm) {
+                inc_prm.push(nm);
+            } else if (true === Array.isArray(nm)) {
+                for (let nidx in nm) {
+                    inc_prm.push(nm[nidx]);
+                }
+            }
+            return mofron.func.isInclude(obj, inc_prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -670,10 +695,15 @@ module.exports = {
     
     isRespsv : (obj, nm) => {
         try {
-            return mofron.func.isInclude(
-                obj, 
-                ['Base', 'CompConf', 'Respsv',  nm]
-            );
+            let inc_prm = ['Base', 'CompConf', 'Respsv'];
+            if ('string' === typeof nm) {
+                inc_prm.push(nm);
+            } else if (true === Array.isArray(nm)) {
+                for (let nidx in nm) {
+                    inc_prm.push(nm[nidx]);
+                }
+            }
+            return mofron.func.isInclude(obj, inc_prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
