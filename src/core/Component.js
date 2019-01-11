@@ -981,7 +981,12 @@ mofron.Component = class extends mofron.Base {
                 return this.m_inncmp[key];
             }
             /* setter */
-            if (true !== mofron.func.isInclude(val, 'Component')) {
+            if (null === val) {
+                if (undefined !== this.m_inncmp[key]) {
+                    this.m_inncmp[key].destroy();
+                }
+                return;
+            } else if (true !== mofron.func.isComp(val)) {
                 throw new Error('invalid parameter');
             }
             if (undefined !== this.m_inncmp[key]) {
