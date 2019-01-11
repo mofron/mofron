@@ -199,7 +199,12 @@ mofron.Component = class extends mofron.Base {
                 for(var lo_idx in lo) {
                     lo[lo_idx].execute();
                 }
-                chd.render();
+                
+                if (undefined !== idx) {
+                    chd.adom().parent().update();
+                } else { 
+                    chd.render();
+                }
             }
         } catch (e) {
             console.error(e.stack);

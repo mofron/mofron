@@ -468,12 +468,11 @@ mofron.Dom = class extends mofron.Base {
      */
     pushDom (tgt, upd) {
         try {
-            var _upd = (undefined === upd) ? false : upd;
-            if ('boolean' !== typeof _upd) {
+            if (undefined !== upd) {
                 throw new Error('invalid parameter');
             }
             
-            if ((false === _upd) && (true === this.isPushed())) {
+            if (true === this.isPushed()) {
                 throw new Error('already pushed');
             }
             
@@ -483,13 +482,19 @@ mofron.Dom = class extends mofron.Base {
                 return;
             }
             
-            var tgt_dom = (null === this.parent()) ? document.body : this.parent().getRawDom();
-            if (false === _upd) {
-                tgt_dom.insertAdjacentHTML('beforeend',this.value());
-            } else {
-                tgt_dom.innerHTML = this.value();
-            }
+            let tgt_dom = (null === this.parent()) ? document.body : this.parent().getRawDom();
+            tgt_dom.insertAdjacentHTML('beforeend',this.value());
             this.setPushed();
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    update () {
+        try {
+            let tgt_dom = this.getRawDom();
+            tgt_dom.innerHTML = this.value();
         } catch (e) {
             console.error(e.stack);
             throw e;
