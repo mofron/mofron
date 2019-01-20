@@ -495,6 +495,11 @@ mofron.Dom = class extends mofron.Base {
         try {
             let tgt_dom = this.getRawDom();
             tgt_dom.innerHTML = this.value();
+            
+            let chd = this.child();
+            for (let cidx in chd) {
+                chd[cidx].setPushed();
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

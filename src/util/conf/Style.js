@@ -47,7 +47,7 @@ mofron.Style = class extends mofron.DomConf {
      */
     rget (key) {
         try {
-            var val = this.target().getRawDom().style[key];
+            let val = this.target().getRawDom().style[mofron.func.getCamel(key)];
             return ((undefined === val) || ("" === val)) ? null : val;
         } catch (e) {
             console.error(e.stack);
@@ -57,7 +57,7 @@ mofron.Style = class extends mofron.DomConf {
     
     rrem (key) {
         try {
-            this.target().getRawDom().style[key] = "";
+            this.target().getRawDom().style[mofron.func.getCamel(key)] = "";
         } catch (e) {
             console.error(e.stack);
             throw e;
