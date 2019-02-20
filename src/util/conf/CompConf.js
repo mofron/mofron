@@ -1,10 +1,7 @@
 /**
  * @file CompConf.js
+ * @brief component config interface
  * @author simpart
- */
-/**
- * @class CompConf
- * @brief Interface of Component Config
  */
 mofron.CompConf = class extends mofron.Base {
     
@@ -33,18 +30,18 @@ mofron.CompConf = class extends mofron.Base {
         console.warn('not implement');
     }
     
-    isExecd (flg) {
-        try { return this.member('isExecd', 'boolean', flg, false); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //isExecd (flg) {
+    //    try { return this.member('isExecd', 'boolean', flg, false); } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
 
-    isInited (prm) {
-        try { return this.member('isInited', 'boolean', prm, false); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
+    //isInited (prm) {
+    //    try { return this.member('isInited', 'boolean', prm, false); } catch (e) {
+    //        console.error(e.stack);
+    //        throw e;
+    //    }
+    //}
 }
 /* end of file */

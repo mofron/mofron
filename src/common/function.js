@@ -69,6 +69,46 @@ module.exports = {
         }
     },
     
+    /**
+     * component display function
+     *
+     * @param p1 (Component) target component
+     * @param p2 (boolean) visible flag
+     */
+    compDisp : (cmp, flg) => {
+        try {
+            /* check parameter */
+            if ( (false === mofron.func.isComp(cmp)) ||
+                 ('boolean' !== typeof flg) ) {
+                throw new Error('invalid parameter');
+            }
+            
+            let dbuf = [];
+            let achd = cmp.adom().child();
+            if (true === flg) {
+                dbuf = cmp.data(cmp.getId()).dispBuff;
+                for (let cidx in achd) {
+                    if ('none' === achd[cidx].style('display')) {
+                        achd[cidx].style({
+                            'display' : ( ('none' !== dbuf[cidx]) && (null !== dbuf[cidx]) ) ? dbuf[cidx] : null
+                        });
+                    }
+                }
+            } else {
+                for (let cidx in achd) {
+                    dbuf.push(achd[cidx].style('display'));
+                }
+                let cbuf = cmp.data(cmp.getId());
+                cbuf.dispBuff = dbuf;
+                cmp.data(cmp.getId(), cbuf);
+                cmp.adom().style({ 'display' : 'none' });
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     execPrmMap : (tgt) => {
         try {
             if (true !== mofron.func.isInclude(tgt, 'Base')) {
@@ -108,6 +148,154 @@ module.exports = {
                 /* execute func */
                 exec['func'] = fnc[fidx][0];
                 caller.exec(exec, 'func');
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    /**
+     * execute component effect by order
+     *
+     * @param p1 (Component) component
+     * @param p2 (number) execute id
+     * @param p3 (object) simple callback [function, mixed]
+     * @param p4 (number) order index
+     */
+    execEffect : (eff, eid, scb, oidx) => {
+        try {
+            let _oidx = (undefined !== typeof oidx) ? 0 : oidx;
+            let _scb  = null;
+            if (undefined !== scb) {
+                _scb = (true === Array.isArray(scb)) ? [scb[0], scb[1], true] : [scb, null, true];
+            }
+            /* check parameter */
+            if ( (true !== Array.isArray(eff)) || 
+                 ('number' !== typeof eid)    ||
+                 ('number' !== typeof _oidx) ) {
+                throw new Error('invalid parameter');
+            }
+            let exec    = false;   // exec flag
+            let spd_cnf = false;
+            for (let eidx in eff) {
+                
+                if ( (_oidx !== eff[eidx].order()) ||
+                     (true === eff[eidx].suspend()[eid]) ) {
+                    /* not execute target */
+                    if (_oidx < eff[eidx].order()) {
+                        exec = true;
+                    }
+                    continue;
+                }
+                
+                /* execute effect */
+                if (eidx == mofron.func.getLastIndex(eff, eid, _oidx)) {
+                    /* this is last index in this order index, execute next order index */
+                    if (eidx == mofron.func.getLastIndex(eff, eid)) {
+                        /* this is last index in this execute number */
+                        eff[eidx].execOption({ callback: _scb });
+                    } else {
+                        /* set callback that execute next order */
+                        eff[eidx].callback(
+                            () => {
+                                try { mofron.func.execEffect(eff, eid, scb, _oidx+1); } catch (e) {
+                                    console.error(e.stack);
+                                    throw e;
+                                }
+                            },
+                            null,
+                            true
+                        );
+                    }
+                }
+                eff[eidx].execute(eid);
+                exec = true;
+                
+            }
+            return exec;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    confSpeed : (eff, spd) => {
+        try {
+            let adom = eff.component().adom();
+            if (null === spd) { 
+                /* delete speed config */
+                adom.style({
+                    '-webkit-transition' : null,
+                    '-moz-transition'    : null,
+                    '-ms-transition'     : null,
+                    '-o-transition'      : null,
+                    'transtion'          : null
+                });
+                
+            } if (0 !== spd) {
+                /* set speed config */
+                adom.style({ 
+                    '-webkit-transition' : spd + 'ms all linear 0s',
+                    '-moz-transition'    : 'all ' + spd + 'ms',
+                    '-ms-transition'     : 'all ' + spd + 'ms',
+                    '-o-transition'      : 'all ' + spd + 'ms',
+                    'transtion'          : spd + 'ms all linear 0s'
+                });
+            } 
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    getLastIndex : (eff, eid, ord) => {
+        try {
+            let tgt_lst = [];
+            for (let eidx in eff) {
+                if ('number' === typeof eff[eidx].speed()[eid]) {
+                    /* exists execute config */
+                    if ( ('number' === typeof ord) && (ord !== eff[eidx].order()) ) {
+                        /* mismatched execute order */
+                        continue;
+                    }
+                    tgt_lst.push(eff[eidx]);
+                }
+            }
+            if (0 === tgt_lst.length) {
+                return null;
+            }
+            let last = tgt_lst[tgt_lst.length-1];
+            for (let eidx2 in eff) {
+                if (eff[eidx2].getId() === last.getId()) {
+                    return parseInt(eidx2);
+                }
+            }
+            return null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    /**
+     * 
+     * 
+     */
+    updSpeed : (cmp, eff) => {
+        try {
+            let c_eff = cmp.effect();
+            let e_spd = eff.speed();
+            for (let sp_idx in e_spd) {
+                if (0 !== e_spd[sp_idx]) {
+                    /* update other effect speed */
+                    for (let ce_idx in c_eff) {
+                        if (eff.getId() === c_eff[ce_idx]) {
+                            continue;
+                        }
+                        c_eff[ce_idx].speed(e_spd[sp_idx], parseInt(sp_idx));
+                    }
+                }
             }
         } catch (e) {
             console.error(e.stack);

@@ -21,7 +21,6 @@ require('./src/util/size/Pixel.js');
 
 require('./src/util/Color.js');
 require('./src/util/Theme.js');
-require('./src/util/CompCtrl.js');
 
 require('./src/core/Component.js');
 require('./src/core/Layout.js');

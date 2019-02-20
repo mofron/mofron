@@ -26,6 +26,8 @@ mofron.Component = class extends mofron.Base {
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
             this.listOption([ 'child', 'layout', 'effect', 'event', 'respsv', 'style' ]);
             this.prmMap('child');
+            
+            this.data(this.getId(), {});
             this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
@@ -112,13 +114,6 @@ mofron.Component = class extends mofron.Base {
             /* setter */
             return this.target(tgt, 2);
         } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    getDomChild (flg) {
-        try { return (true === flg) ? this.target().child() : this.adom().child(); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -353,55 +348,26 @@ mofron.Component = class extends mofron.Base {
     }
     
     /**
-     * @return (boolean) execute flag
+     * execute effect
+     *
+     * @param p1 (number) execute id
+     * @param p2 (function, array) callback
+     * @return (boolean) execute result
      */
-    execEffect (flg, scb, idx, ini) {
+    execEffect (eid, cb) {
+        try { return mofron.func.execEffect(this.effect(), eid, cb); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    initEffect () {
         try {
-            let _idx = (undefined === idx) ? 0 : idx;
-            if ('number' !== typeof _idx) {
-                throw new Error('invalid parameter');
+            let chd = this.getChild(true);
+            for (let cidx in chd) {
+                chd[cidx].initEffect();
             }
-            
-            let eff      = this.effect();
-            let scb_func = undefined;
-            
-            /* exec check */
-            let exe_chk = false;
-            for (let eidx in eff) {
-                
-                if (_idx === eff[eidx].execOrder()) {
-                    
-                    if (true === eff[eidx].isLastExec(flg, _idx)) {
-                        /* this is last of _idx effect group */
-                        if (false === eff[eidx].isLastExec(flg)) {
-                            /* exists next order effect */
-                            scb_func = (p1) => {
-                                p1.execEffect(flg, scb, _idx+1);
-                            }
-                        } else {
-                            /* this is last in all effect */
-                            scb_func = scb;
-                        }
-                    }
-                    
-                    eff[eidx].isInit((true === ini) ? true : ini);
-                    let eff_ret = eff[eidx].execute(flg, scb_func, true);
-                    eff[eidx].isInit((true === ini) ? false : ini);
-                    
-                    if (true === eff_ret) {
-                        exe_chk = true;
-                    }
-                } else if ( (_idx < eff[eidx].execOrder()) &&
-                            (false === eff[eidx].isSkipped(flg)) ) {
-                    exe_chk = true;
-                }
-                
-            }
-            if (false === exe_chk) {
-                /* there is no executable effect object, callback doesn't call */
-                return false;
-            }
-            return true;
+            this.execEffect((true === this.visible()) ? 0 : 1);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -430,14 +396,10 @@ mofron.Component = class extends mofron.Base {
                 chd[cidx].initConfig(idx);
             }
             /* init config */
-            if (1 == idx) {
-                this.execEffect(this.visible(), undefined, undefined, true);
-                return;
-            }
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
                 cnf[cfidx].execute();
-                cnf[cfidx].isInited(true);
+                //cnf[cfidx].isInited(true);
             }
         } catch (e) {
             console.error(e.stack);
@@ -527,27 +489,57 @@ mofron.Component = class extends mofron.Base {
     }
     
     /**
-     * theme setter / getter
-     *
-     * @param prm : (object) moron.Theme object
-     * @return (object) theme object
+     * set theme
+     * 
+     * @param p1 (array) replace target component name
+     * @param p1 (object) theme parameter (for set multiple theme)
+     * @param p2 (Component) replace component
      */
-    theme (prm) {
+    theme (prm, cmp) {
         try {
-            if (undefined === prm) {
-                /* getter */
-                if (undefined === this.m_theme) { 
-                    this.m_theme = new mofron.Theme({});
-                    this.m_theme.tgtComp(this);
-                }
-                return this.m_theme;
-            }
-            /* setter */
-            this.theme().setTheme(prm);
-            let chd = this.getChild(true);
-            for (let cidx in chd) {
-                chd[cidx].theme(prm);
-            }
+//            if ( (false === Array.isArray(prm)) &&
+//                 ('object' === typeof prm) ) {
+//                for (let pidx in prm) {
+//                    this.theme(pidx, prm[pidx]);
+//                }
+//                return;
+//            }
+//            
+//            if ( (true !== Array.isArray(prm)) &&
+//                 (true !== mofron.func.isComp(cmp)) ) {
+//                throw new Error('invalid parameter');
+//            }
+//            
+//            let chd = this.getChild(true);
+//            for (let cidx in chd) {
+//                chd[cidx].theme(prm, cmp);
+//            }
+//            
+//            //let opt = null;
+//            let rep_cmp = null;
+//            for (let cidx2 in chd) {
+//                if (true === mf.func.isInclude(chd[cidx2], prm)) {
+//                    /* replace component */
+//                    rep_cmp = new cmp(chd[cidx2].getOption());
+//                    this.updChild(chd[cidx2], rep_cmp);
+//                }
+//            }
+//            
+            
+////            if (undefined === prm) {
+////                /* getter */
+////                if (undefined === this.m_theme) { 
+////                    this.m_theme = new mofron.Theme({});
+////                    this.m_theme.tgtComp(this);
+////                }
+////                return this.m_theme;
+////            }
+////            /* setter */
+////            this.theme().setTheme(prm);
+////            let chd = this.getChild(true);
+////            for (let cidx in chd) {
+////                chd[cidx].theme(prm);
+////            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -587,19 +579,16 @@ mofron.Component = class extends mofron.Base {
             
             /* before push event */
             this.beforeRender();
-            
-            //this.initConfig(1); // effect
-            
             /* execute render */
             this.adom().pushDom(
                 (null === this.parent()) ? null : this.parent().target()
             );
-            this.initConfig(1); // effect
-            
-            this.initConfig(2); // event
-            
             /* after push event */
             this.afterRender();
+            
+            this.initEffect();
+            this.initConfig(2); // event
+            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -705,13 +694,13 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    visible (flg, eff) {
+    visible (flg, cb) {
         try {
-            let chd = this.adom().child();
             if (undefined === flg) {
                 /* getter */
-                for (let cidx in chd) {
-                    if ('none' !== chd[cidx].style('display')) {
+                let achd = this.adom().child();
+                for (let cidx in achd) {
+                    if ('none' !== achd[cidx].style('display')) {
                         return true;
                     }
                 }
@@ -722,76 +711,44 @@ mofron.Component = class extends mofron.Base {
                 throw new Error('invalid parameter');
             }
             
-            /* configure css value */
-            let scb = null;
             if (true === flg) {
-                let buf = this.dispBuff();
-                for (let cidx in chd) {
-                    if ('none' === chd[cidx].style('display')) {
-                        chd[cidx].style({
-                            'display' : ( ('none' !== buf[cidx]) && (null !== buf[cidx]) ) ? buf[cidx] : null
-                        });
-                    }
-                }
+                /* enable display a component */
+                /* execute effect 'after' enabled */
+                mofron.func.compDisp(this, flg);
             } else {
-                let comp = this;
-                scb = (p1) => {
-                    try {
-                        let chd = p1.adom().child();
-                        let buf = [];
-                        for (let cidx in chd) {
-                            buf.push(chd[cidx].style('display'));
-                        }
-                        comp.dispBuff(buf);
-                         
-                        p1.adom().style({ 'display' : 'none' });
-                        if ('function' === typeof eff) {
-                            eff(p1);
-                        }
-                    } catch (e) {
-                        console.error(e.stack);
-                        throw e;
+                /* disable display a component */
+                /* execute effect 'before' disabled */
+                //this.style({ 'display' : 'none' });
+            }
+            
+            if ( (null === this.parent()) &&
+                 (false === this.adom().isPushed()) &&
+                 (true === flg) ) {
+                /* this is root component and rendering process */
+                this.render();
+                return;
+            }
+            
+            let scb = (p1) => {
+                try {
+                    if (false === flg) {
+                        mofron.func.compDisp(p1, flg);
                     }
+                    if ('function' === typeof cb) {
+                        cb(p1);
+                    }
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
                 }
             }
             
-            if ( (true === flg) &&
-                 (null === this.parent()) &&
-                 (false === this.adom().isPushed()) ) {
-                /* root component */
-                /* not supported eff parameter */
-                this.render();
-            } else if ((true === this.adom().isPushed()) && (false !== eff) ) {
-                if ( (false === this.execEffect(flg, scb)) &&
-                     ('function' === typeof scb) ) {
-                    scb(this);
-                }
-            } else {
-                ('function' === typeof scb) ? scb(this) : undefined;
+            if (false === this.adom().isPushed()) {
+                scb(this);
+            } else if (false === this.execEffect((true === flg) ? 0 : 1, scb)) {
+                /* execute effect */
+                scb(this);
             }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    dispBuff (prm) {
-        try {
-            if (undefined === prm) {
-                if (undefined === this.m_disp_buf) {
-                    let chd = this.adom().child();
-                    let ret = [];
-                    for (let cidx in chd) {
-                        ret.push(null);
-                    }
-                    return ret;
-                }
-                return this.m_disp_buf;
-            }
-            if (true !== Array.isArray(prm)) {
-                throw new Error('invalid parameter');
-            }
-            this.m_disp_buf = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -928,6 +885,7 @@ mofron.Component = class extends mofron.Base {
             this.adom();
             let exe_opt = null;
             let theme   = null;
+            let visible = null;
             if (undefined === opt) {
                 exe_opt = this.getOption();
                 if (undefined !== exe_opt.theme) {
@@ -938,6 +896,10 @@ mofron.Component = class extends mofron.Base {
                 if (undefined !== opt.theme) {
                     theme = opt.theme;
                     delete opt.theme;
+                }
+                if (undefined !== opt.visible) {
+                    visible = opt.visible;
+                    delete opt.visible;
                 }
             }
             let opt_buf = null;
@@ -953,7 +915,11 @@ mofron.Component = class extends mofron.Base {
                     }
                 }
             }
+            
+            /* check visible */
             super.execOption(opt);
+            
+            
             if (null !== opt_buf) {
                 // avoid option overwrite
                 for (let oidx1 in opt_buf) {
@@ -969,6 +935,9 @@ mofron.Component = class extends mofron.Base {
             
             if (null !== theme) {
                 this.theme(theme);
+            }
+            if (null !== visible) {
+                 this.visible(visible);
             }
         } catch (e) {
             console.error(e.stack);

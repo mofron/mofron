@@ -101,23 +101,40 @@ mofron.Base = class {
         }
     }
     
-    arrayMember (key, tp, prm) {
+    arrayMember (key, tp, prm, idx) {
         try {
             if ( ('string' !== typeof key) || ('function' !== typeof this[key]) ) {
                 throw new Error('invalid parameter');
             }
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_member[key]) ? [] : this.m_member[key];
+                if (undefined === idx) {
+                    return (undefined === this.m_member[key]) ? [] : this.m_member[key];
+                }
+                if ( (undefined === this.m_member[key]) ||
+                     (undefined === this.m_member[key][idx]) ) {
+                    return null;
+                }
+                return this.m_member[key][idx];
             }
-            /* setter */
-            if ( (true === Array.isArray(prm)) && (false === Array.isArray(tp))) {
-                for (let aidx in prm) {
-                    this.arrayMember(key, tp, prm[aidx]);
+            if ( (true === Array.isArray(prm)) && ('object' !== tp) ) {
+                for (let pidx in prm) {
+                    this.arrayMember(key, tp, prm[pidx], idx);
                 }
                 return;
             }
             
+            if (undefined === prm) {
+                /* delete member */
+                if (undefined === idx) {
+                    this.m_member[key] = undefined;
+                } else if (undefined !== this.m_member[key][idx]) {
+                    this.m_member[key].splice(idx, 1);
+                }
+                return;
+            }
+            
+            /* setter */
             if (true === mofron.func.isInclude(prm, 'Base')) {
                 if (false === mofron.func.isInclude(prm, tp) ) {
                     throw new Error('invalid parameter');
@@ -133,8 +150,6 @@ mofron.Base = class {
                         throw new Error('invalid parameter');
                     }
                 }
-            } else if (null === tp) {
-                
             } else if (tp !== typeof prm) {
                 throw new Error('invalid parameter');
             }
