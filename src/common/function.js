@@ -13,14 +13,14 @@ module.exports = {
      */
     getId : (tgt) => {
         try {
-            var _tgt = (tgt === undefined) ? null : tgt;
-            var ipf  = "aid";
+            let _tgt = (tgt === undefined) ? null : tgt;
+            let ipf  = "aid";
             if (null !== _tgt) {
                 ipf = _tgt.name();
             }
-            var ret_id = ipf + '-' + new Date().getTime() + '-';
-            var loop   = 0;
-            var val    = 0;
+            let ret_id = ipf + '-' + new Date().getTime() + '-';
+            let loop   = 0;
+            let val    = 0;
             for (loop = 0; loop < 8; loop++) {
                 val = Math.random() * 16 | 0;
                 ret_id += (loop == 12 ? 4 : loop == 16 ? val & 3 | 8 : val).toString(16);
@@ -158,7 +158,7 @@ module.exports = {
     /**
      * execute component effect by order
      *
-     * @param p1 (Component) component
+     * @param p1 (Effect) effect
      * @param p2 (number) execute id
      * @param p3 (object) simple callback [function, mixed]
      * @param p4 (number) order index
@@ -166,7 +166,7 @@ module.exports = {
     execEffect : (eff, eid, scb, oidx) => {
         try {
             let _oidx = (undefined !== typeof oidx) ? 0 : oidx;
-            let _scb  = null;
+            let _scb  = [()=>{}, null, true];
             if (undefined !== scb) {
                 _scb = (true === Array.isArray(scb)) ? [scb[0], scb[1], true] : [scb, null, true];
             }
@@ -180,20 +180,25 @@ module.exports = {
             let spd_cnf = false;
             for (let eidx in eff) {
                 
-                if ( (_oidx !== eff[eidx].order()) ||
-                     (true === eff[eidx].suspend()[eid]) ) {
-                    /* not execute target */
+                if (true === eff[eidx].isSkipped(eid, _oidx)) {
                     if (_oidx < eff[eidx].order()) {
                         exec = true;
                     }
                     continue;
                 }
-                
                 /* execute effect */
                 if (eidx == mofron.func.getLastIndex(eff, eid, _oidx)) {
                     /* this is last index in this order index, execute next order index */
                     if (eidx == mofron.func.getLastIndex(eff, eid)) {
                         /* this is last index in this execute number */
+                        let dis_spd = (ds_lef) => {
+                            try { mofron.func.confSpeed(ds_lef, null); } catch (e) {
+                                console.error(e.stack);
+                                throw e;
+                            }
+                        }
+                        let lst_eff = eff[eidx];
+                        eff[eidx].execOption({ callback: [dis_spd, lst_eff, true] });
                         eff[eidx].execOption({ callback: _scb });
                     } else {
                         /* set callback that execute next order */
@@ -209,7 +214,11 @@ module.exports = {
                         );
                     }
                 }
-                eff[eidx].execute(eid);
+                
+                if (eidx == mofron.func.getFirstIndex(eff, eid, _oidx)) {
+                    mofron.func.confSpeed(eff[eidx], eff[eidx].speed());
+                }
+                eff[eidx].execute();
                 exec = true;
                 
             }
@@ -222,6 +231,7 @@ module.exports = {
     
     confSpeed : (eff, spd) => {
         try {
+            //let spd  = eff.speed();
             let adom = eff.component().adom();
             if (null === spd) { 
                 /* delete speed config */
@@ -249,19 +259,32 @@ module.exports = {
         }
     },
     
+    getFirstIndex : (eff, eid, ord) => {
+        try {
+            for (let eidx in eff) {
+                if (false === eff[eidx].isSkipped(eid, ord)) {
+                    return parseInt(eidx);
+                }
+            }
+            return null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     getLastIndex : (eff, eid, ord) => {
         try {
             let tgt_lst = [];
             for (let eidx in eff) {
-                if ('number' === typeof eff[eidx].speed()[eid]) {
-                    /* exists execute config */
-                    if ( ('number' === typeof ord) && (ord !== eff[eidx].order()) ) {
-                        /* mismatched execute order */
-                        continue;
-                    }
-                    tgt_lst.push(eff[eidx]);
+                if (eid !== eff[eidx].eid()) {
+                    continue;
+                } else if ( ('number' === typeof ord) && (ord !== eff[eidx].order()) ) {
+                    continue;
                 }
+                tgt_lst.push(eff[eidx]);
             }
+            
             if (0 === tgt_lst.length) {
                 return null;
             }
@@ -278,31 +301,32 @@ module.exports = {
         }
     },
     
-    /**
-     * 
-     * 
-     */
-    updSpeed : (cmp, eff) => {
+    effCallback : (eff) => {
         try {
-            let c_eff = cmp.effect();
-            let e_spd = eff.speed();
-            for (let sp_idx in e_spd) {
-                if (0 !== e_spd[sp_idx]) {
-                    /* update other effect speed */
-                    for (let ce_idx in c_eff) {
-                        if (eff.getId() === c_eff[ce_idx]) {
-                            continue;
+            let cb = eff.callback();
+            let upd_cb = [];
+            if (null !== cb) {
+                let exec = () => {
+                    for (let cidx in cb) {
+                        cb[cidx][0](cb[cidx][1]);
+                        if (false === cb[cidx][2]) {
+                            upd_cb.push(cb[cidx]);
                         }
-                        c_eff[ce_idx].speed(e_spd[sp_idx], parseInt(sp_idx));
+                        eff.callback(undefined, parseInt(cidx));
                     }
-                }
+                    /* update callback */
+                    for (let cidx2 in upd_cb) {
+                        eff.callback(upd_cb);
+                    }
+                };
+                setTimeout(exec, (null === eff.speed()) ? 0 : eff.speed());
             }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     },
-     
+    
     getCamel : (sty) => {
         try {
             if ('string' !== (typeof sty)) {
