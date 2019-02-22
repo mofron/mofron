@@ -243,7 +243,7 @@ mofron.Base = class {
             if (0 === prm_cnt) {
                 return;
             } else if (1 === prm_cnt) {
-                if ('object' === typeof po) {
+                if ( (null !== po) && ('object' === typeof po) ) {
                     if ("undefined" === typeof po[0]) {
                         if (true === mofron.func.isInclude(po, 'Base')) {
                             /* this is parameter */

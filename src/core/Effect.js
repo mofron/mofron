@@ -21,12 +21,6 @@ mofron.Effect = class extends mofron.CompConf {
      */
     execute () {
         try {
-            /* callback before execute */
-            let bf = this.beforeEvent();
-            for (let bidx in bf) {
-                bf[bidx][0](this, bf[bidx][1]);
-            }
-            
             /* execute effect */
             let exec = (exe_eff) => {
                 try {

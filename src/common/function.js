@@ -165,7 +165,7 @@ module.exports = {
      */
     execEffect : (eff, eid, scb, oidx) => {
         try {
-            let _oidx = (undefined !== typeof oidx) ? 0 : oidx;
+            let _oidx = (undefined === oidx) ? 0 : oidx;
             let _scb  = [()=>{}, null, true];
             if (undefined !== scb) {
                 _scb = (true === Array.isArray(scb)) ? [scb[0], scb[1], true] : [scb, null, true];
@@ -219,6 +219,14 @@ module.exports = {
                 }
                 
                 if (eidx == mofron.func.getFirstIndex(eff, eid, _oidx)) {
+                    /* first execute initialize */
+                    let eid_eff = mofron.func.getEffect(eff, eid);
+                    for (let eeidx in eid_eff) {
+                        let bf = eff[eeidx].beforeEvent();
+                        for (let bidx in bf) {
+                            bf[bidx][0](eid_eff[eeidx], bf[bidx][1]);
+                        }
+                    }
                     mofron.func.confSpeed(eff[eidx], eff[eidx].speed());
                 }
                 eff[eidx].execute();
@@ -287,6 +295,27 @@ module.exports = {
         }
     },
     
+    getEffect : (eff_lst, eid, ord) => {
+        try {
+            let ret = [];
+            for (let eidx in eff_lst) {
+                if ( (undefined !== eid) && (undefined !== ord) ) {
+                    if ( (eid === eff_lst[eidx].eid()) && (ord === eff_lst[eidx].order())) {
+                        ret.push(eff_lst[eidx]);
+                    }
+                } else if (undefined !== eid) {
+                    if (eid === eff_lst[eidx].eid()) {
+                        ret.push(eff_lst[eidx]);
+                    }
+                }
+            }
+            return ret;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     getFirstIndex : (eff, eid, ord) => {
         try {
             for (let eidx in eff) {
@@ -344,7 +373,7 @@ module.exports = {
                     }
                     /* update callback */
                     for (let cidx2 in upd_cb) {
-                        eff.callback(upd_cb);
+                        eff.callback(upd_cb[cidx2]);
                     }
                 };
                 setTimeout(exec, (null === eff.speed()) ? 0 : eff.speed());
