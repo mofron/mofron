@@ -176,6 +176,9 @@ module.exports = {
                  ('number' !== typeof _oidx) ) {
                 throw new Error('invalid parameter');
             }
+            
+            mofron.func.updEffSpeed(eff, eid, _oidx);
+            
             let exec    = false;   // exec flag
             let spd_cnf = false;
             for (let eidx in eff) {
@@ -223,6 +226,31 @@ module.exports = {
                 
             }
             return exec;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    updEffSpeed : (eff, eid, ord) => {
+        try {
+            let tgt = [];
+            let spd = 0;
+            for (let eidx in eff) {
+                if (true === eff[eidx].isSkipped(eid, ord)) {
+                    continue;
+                }
+                tgt.push(eff[eidx]);
+                if ( ('number' === typeof eff[eidx].speed()) && (spd < eff[eidx].speed()) ) {
+                    spd = eff[eidx].speed();
+                }
+            }
+            
+            if (0 < spd) {
+                for (let tidx in tgt) {
+                    tgt[tidx].speed(spd);
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -305,7 +333,7 @@ module.exports = {
         try {
             let cb = eff.callback();
             let upd_cb = [];
-            if (null !== cb) {
+            if (0 !== cb.length) {
                 let exec = () => {
                     for (let cidx in cb) {
                         cb[cidx][0](cb[cidx][1]);
