@@ -57,7 +57,7 @@ mofron.Base = class {
     
     member (key, tp, prm, ini) {
         try {
-            if (('string' !== typeof key) || ('function' !== typeof this[key])) {
+            if ('string' !== typeof key) {
                 throw new Error('invalid parameter');
             }
             if (undefined === prm) {
@@ -101,9 +101,10 @@ mofron.Base = class {
         }
     }
     
+    
     arrayMember (key, tp, prm, idx) {
         try {
-            if ( ('string' !== typeof key) || ('function' !== typeof this[key]) ) {
+            if ('string' !== typeof key) {
                 throw new Error('invalid parameter');
             }
             if (undefined === prm) {
@@ -158,6 +159,19 @@ mofron.Base = class {
                 this.m_member[key] = new Array();
             }
             this.m_member[key].push(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getMember (key, idx) {
+        try {
+            if (undefined === idx) {
+                return this.member(key, null, undefined);
+            } else {
+                return this.arrayMember(key, null, undefined, (null === idx) ? undefined : idx);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -298,6 +312,18 @@ mofron.Base = class {
                 throw new Error('invalid parameter');
             }
             delete this.m_opt[key];
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    option (prm) {
+        try {
+            if (undefined === prm) {
+                return this.getOption();
+            }
+            this.execOption(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;

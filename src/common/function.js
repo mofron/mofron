@@ -384,6 +384,29 @@ module.exports = {
         }
     },
     
+    getCompConf : (cmp_lst, nm, tag) => {
+        try {
+            let ret = [];
+            for (let cidx in cmp_lst) {
+                if (true !== mofron.func.isInclude(cmp_lst[cidx], nm)) {
+                    continue;
+                }
+                if (undefined === tag) {
+                    ret.push(cmp_lst[cidx]);
+                    continue;
+                }
+                
+                if (tag === cmp_lst[cidx].tag()) {
+                    return cmp_lst[cidx];
+                }
+            }
+            return (0 !== ret.length) ? ret : null;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     getCamel : (sty) => {
         try {
             if ('string' !== (typeof sty)) {

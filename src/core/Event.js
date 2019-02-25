@@ -68,6 +68,10 @@ mofron.Event = class extends mofron.CompConf {
     
     execHandler (ep) {
         try {
+            if (true === this.suspend()) {
+                return;
+            }
+            
             let hdl = this.handler();
             let prm = null;
             
@@ -95,9 +99,10 @@ mofron.Event = class extends mofron.CompConf {
     
     execute () {
         try {
-            //if (false === this.isInited()) {
+            if (false === this.isInited()) {
                 this.contents(this.component().eventTgt());
-            //}
+                this.isInited(true);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

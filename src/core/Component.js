@@ -399,7 +399,6 @@ mofron.Component = class extends mofron.Base {
             let cnf = this.config(idx);
             for (let cfidx in cnf) {
                 cnf[cfidx].execute();
-                //cnf[cfidx].isInited(true);
             }
         } catch (e) {
             console.error(e.stack);
@@ -437,15 +436,15 @@ mofron.Component = class extends mofron.Base {
                     throw new Error('invalid parameter');
                 }
                 return this.m_conf[idx];
+            } else if ( (true === Array.isArray(prm)) &&
+                        (2 === prm.length) &&
+                        ('string' === typeof prm[0]) &&
+                        ('string' === typeof prm[1]) ) {
+                /* getter */
+                return mofron.func.getCompConf(this.config(idx), prm[0], prm[1]);
             } else if ('string' === typeof prm) {
                 /* getter */
-                let cnf = this.config(idx);
-                for (let cidx in cnf) {
-                    if (cnf[cidx].name() === prm) {
-                        return cnf[cidx];
-                    }
-                }
-                return null;
+                return mofron.func.getCompConf(this.config(idx), prm);
             }
             /* setter */
             if (true === Array.isArray(prm)) {

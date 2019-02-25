@@ -26,22 +26,29 @@ mofron.CompConf = class extends mofron.Base {
         console.warn('not implement');
     }
     
-    contents (p1, p2) {
+    contents (p1) {
         console.warn('not implement');
     }
     
-    //isExecd (flg) {
-    //    try { return this.member('isExecd', 'boolean', flg, false); } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-
-    //isInited (prm) {
-    //    try { return this.member('isInited', 'boolean', prm, false); } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
+    tag (prm) {
+        try { return this.member('tag', 'string', prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    isInited (prm) {
+        try { return this.member('isInited', 'boolean', prm, false); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    suspend (prm, idx) {
+        try { return this.member('suspend', 'boolean', prm, false); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */

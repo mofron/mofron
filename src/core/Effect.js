@@ -21,10 +21,15 @@ mofron.Effect = class extends mofron.CompConf {
      */
     execute () {
         try {
+            if (true === this.isSkipped(this.eid(), this.order())) {
+                return;
+            }
+            
             /* execute effect */
             let exec = (exe_eff) => {
                 try {
                     exe_eff.contents(exe_eff.component());
+                    exe_eff.isInited(true);
                     /* execute callback */
                     mofron.func.effCallback(this);
                 } catch (e) {
@@ -139,13 +144,6 @@ mofron.Effect = class extends mofron.CompConf {
      */
     speed (prm) {
         try { return this.member('speed', 'number', prm); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    suspend (prm, idx) {
-        try { return this.member('suspend', 'boolean', prm, false); } catch (e) {
             console.error(e.stack);
             throw e;
         }
