@@ -744,7 +744,7 @@ mofron.Component = class extends mofron.Base {
             
             if (false === this.adom().isPushed()) {
                 scb(this);
-            } else if (false === this.execEffect((true === flg) ? 0 : 1, scb)) {
+            } else if (false === this.execEffect((true === flg) ? 0 : 1, [scb, this])) {
                 /* execute effect */
                 scb(this);
             }
