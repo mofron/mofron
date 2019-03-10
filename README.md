@@ -36,7 +36,7 @@ edit src/js/ctrl/init/index.js
 let Login = require('mofron-comp-login');    // add
 let start = (rt) => {
     try {
-        new Login().visible(true);           // add
+        return new Login().visible(true);           // add
     } catch (e) {
         console.error(e.stack);
         throw e;
