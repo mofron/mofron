@@ -30,24 +30,18 @@ npm install mofron mofron-comp-login
 ```
 
 
-edit src/js/ctrl/init/index.js
+edit tag/index.mof
 
-```javascript
-let Login = require('mofron-comp-login');    // add
-let start = (rt) => {
-    try {
-        return new Login().visible(true);           // add
-    } catch (e) {
-        console.error(e.stack);
-        throw e;
-    }
-}
+```xml
+<require tag='login' name='mofron-comp-login'></require>
+
+<login title='Test Login'></login>
 ```
 
 create a js file for browser 
 
 ```bash
-./tool/build.sh
+./tool/tagbuild.sh
 ```
 
 Please access to index.html, then you can see a login page.
