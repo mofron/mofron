@@ -775,7 +775,7 @@ module.exports = {
             } else {
                 throw new Error('invalid parameter');
             }
-            cmp.execOption({ style : set_style });
+            cmp.style(set_style);
         } catch (e) {
             console.error(e.stack);
             throw e;

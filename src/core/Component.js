@@ -497,7 +497,12 @@ mofron.Component = class extends mofron.Base {
     theme (prm, cmp) {
         try {
             if (true === Array.isArray(prm)) {
-                this.theme(prm[0], prm[1]);
+                for (let pidx in prm) {
+                    if (false === Array.isArray(prm[pidx])) {
+                        throw new Error('invalid parameter');
+                    }
+                    this.theme(prm[pidx][0], prm[pidx][1]);
+                }
                 return;
             }
             
@@ -507,9 +512,10 @@ mofron.Component = class extends mofron.Base {
             }
             
             for (let cidx2 in chd) {
-                if (true === mofron.func.isComp(chd[cidx2], prm)) {
+                if (true === mofron.func.isInclude(chd[cidx2], prm)) {
                     /* replace child */
                     let rep_chd = (true === mofron.func.isComp(cmp)) ? cmp : new cmp();
+console.log("theme");
                     rep_chd.option(chd[cidx2].option());
                     this.updChild(chd[cidx2], rep_chd);
                     /* replace config component */
