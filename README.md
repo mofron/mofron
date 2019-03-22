@@ -1,8 +1,7 @@
 # mofron
 
 mofron is JavaScript Framework for Web UI.<br>
-It has a simple interface like .NET, Swing.<br>
-It makes possible to development front-end by only js.
+It makes possible to development front-end by only simple tag.
 
 ## Install
 
@@ -33,7 +32,9 @@ npm install mofron mofron-comp-login
 edit tag/index.mof
 
 ```xml
-<require tag='login' name='mofron-comp-login'></require>
+<require>
+    <tag module='mofron-comp-login'>login</tag>
+</require>
 
 <login title='Test Login'></login>
 ```
