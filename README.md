@@ -45,4 +45,5 @@ Create a js file for browser:
 ```
 
 Access index.html to see a login page.
-![login](https://raw.githubusercontent.com/mofron/mofron/image/login-comp.png)
+![login](https://raw.githubusercontent.com/mofron/mofron/image/image/login-comp.png)
+
