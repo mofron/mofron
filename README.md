@@ -44,6 +44,6 @@ Create a js file for browser:
 ./tool/tagbuild.sh
 ```
 
-Access index.html to see a ![login page](https://codepen.io/mofronjs/details/XGGjqj).
+Access index.html to see a [login page](https://codepen.io/mofronjs/details/XGGjqj).
 ![login](https://raw.githubusercontent.com/mofron/mofron/image/image/login-comp.png)
 
