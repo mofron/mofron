@@ -515,7 +515,6 @@ mofron.Component = class extends mofron.Base {
                 if (true === mofron.func.isInclude(chd[cidx2], prm)) {
                     /* replace child */
                     let rep_chd = (true === mofron.func.isComp(cmp)) ? cmp : new cmp();
-console.log("theme");
                     rep_chd.option(chd[cidx2].option());
                     this.updChild(chd[cidx2], rep_chd);
                     /* replace config component */
