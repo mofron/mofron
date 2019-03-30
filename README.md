@@ -10,8 +10,7 @@ npm install mofron
 ```
 
 ## Quick Start
-This is a sample for [login component](https://github.com/simpart/mofron-comp-login.git).
-By using this component you can simplify the build of a login page.
+This is a [login component](https://github.com/simpart/mofron-comp-login.git) sample.
 
 Install mofron develop env:
 
