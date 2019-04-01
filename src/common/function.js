@@ -109,6 +109,23 @@ module.exports = {
         }
     },
     
+    repInncmp : (cmp, ocmp, ncmp) => {
+        try {
+            let ret = false;
+            let inn = cmp.innerComp();
+            for (let in_idx in inn) {
+                if (ocmp.getId() === inn[in_idx].getId()) {
+                    cmp.innerComp(in_idx, ncmp);
+                    ret = true;
+                }
+            }
+            return ret;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     execPrmMap : (tgt) => {
         try {
             if (true !== mofron.func.isInclude(tgt, 'Base')) {
