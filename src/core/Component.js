@@ -501,44 +501,66 @@ mofron.Component = class extends mofron.Base {
      * set theme
      * 
      * @param p1 (array) replace target component name
-     * @param p1 (object) theme parameter (for set multiple theme)
-     * @param p2 (Component) replace component
+     * @param p2 (Component) replace component or option
+     * @param p3 (object) option (ignore, level, cmpopt)
      */
-    theme (prm, cmp) {
+    theme (prm, rep, opt) {
         try {
+            let _opt = (undefined === opt) ? {} : opt;
             if ( ('object' === typeof prm) && (false === Array.isArray(prm)) ) {
                 for (let pidx in prm) {
-                    this.theme(pidx, prm[pidx]);
+                    this.theme(pidx, prm[pidx], _opt);
                 }
+                return;
+            }
+            
+            /* check ignore */
+            let ign = false;
+            for (let ig_idx in _opt.ignore) {
+                if (true === mofron.func.isInclude(this, _opt.ignore[ig_idx])) {
+                    ign = true;
+                    break;
+                }
+            }
+            if (true === ign) {
                 return;
             }
             
             let chd = this.getChild(true);
             for (let cidx in chd) {
-                chd[cidx].theme(prm, cmp);
+                if ('number' === typeof _opt.level) {
+                    /* check level */
+                    _opt.lv_count = (undefined === _opt.lv_count) ? 1 : _opt.lv_count+1;
+                    if (_opt.level < _opt.lv_count) {
+                        continue;
+                    }
+                    chd[cidx].theme(prm, rep, _opt);
+                }
             }
             
             /* check child */
-            let rep_lst = [];
             for (let cidx2 in chd) {
                 if (true === mofron.func.isInclude(chd[cidx2], prm)) {
-                    let rep_chd = (true === mofron.func.isComp(cmp)) ? cmp : new cmp();
-                    rep_lst.push(rep_chd);
-                    
-                    /* copy option */
-                    rep_chd.option(chd[cidx2].option());
-                    
-                    /* replace child */
-                    this.updChild(chd[cidx2], rep_chd);
-                    
-                    /* replace config component */
-                    for (let i=0; i < this.m_conf.length; i++) {
-                        let rep_cnf = rep_chd.config(i);
-                        for (let ridx in rep_cnf) {
-                            rep_cnf[ridx].component(rep_chd);
+                    if ( (false === mofron.func.isInclude(rep, 'Base')) &&
+                         (false === Array.isArray(rep)) &&
+                         ('object' === typeof rep) ) {
+                        /* replace type is option */
+                        chd[cidx2].option(rep);
+                    } else if (true === mofron.func.isComp(rep)) {
+                        /* replace type is component */
+                        let rep_chd = new cmp(_opt.cmpopt);
+                        /* copy option */
+                        rep_chd.option(chd[cidx2].option());
+                        /* replace child */
+                        this.updChild(chd[cidx2], rep_chd);
+                        /* replace config component */
+                        for (let i=0; i < this.m_conf.length; i++) {
+                            let rep_cnf = rep_chd.config(i);
+                            for (let ridx in rep_cnf) {
+                                rep_cnf[ridx].component(rep_chd);
+                            }
                         }
                     }
-                    
                 }
             }
         } catch (e) {

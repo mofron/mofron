@@ -1027,13 +1027,16 @@ module.exports = {
             if ('function' !== typeof obj.name) {
                 return false;
             }
-            if ('string' !== typeof nm) {
-                throw new Error('invalid parameter');
+            if ('string' === typeof nm) {
+                return (nm === obj.name()) ? true : false;
+            } else if (true === Array.isArray(nm)) {
+                if ( (true === mofron.func.isInclude(obj, nm)) &&
+                     (obj.name() === nm[nm.length-1]) ) {
+                    return true;
+                }
+                return false;
             }
             
-            if (nm === obj.name()) {
-                return true;
-            }
             return false;
         } catch (e) {
             console.error(e.stack);

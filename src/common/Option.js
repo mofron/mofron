@@ -16,7 +16,7 @@ mofron.Option = class extends mofron.Base {
             if ( ('object' !== typeof opt) || (true === Array.isArray(opt))) {
                 throw new Error('invalid parameter');
             }
-            this.m_option = opt;
+            this.contents(opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -33,8 +33,15 @@ mofron.Option = class extends mofron.Base {
             if (true !== mofron.func.isInclude(opt_tgt, 'Base')) {
                 throw new Error('invalid paramter');
             }
-            opt_tgt.execOption(this.m_option);
+            opt_tgt.execOption(this.contents());
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    contents (prm) {
+        try { return this.member('contents', 'object', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
