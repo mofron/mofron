@@ -442,7 +442,9 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === prm) {
                 /* getter */
-                if (undefined === this.m_conf[idx]) {
+                if (undefined === idx) {
+                    return this.m_conf;
+                } else if (undefined === this.m_conf[idx]) {
                     throw new Error('invalid parameter');
                 }
                 return this.m_conf[idx];
@@ -502,7 +504,7 @@ mofron.Component = class extends mofron.Base {
      * 
      * @param p1 (array) replace target component name
      * @param p2 (Component) replace component or option
-     * @param p3 (object) option (ignore, level, cmpopt)
+     * @param p3 (object) option (ignore, level)
      */
     theme (prm, rep, opt) {
         try {
@@ -534,32 +536,49 @@ mofron.Component = class extends mofron.Base {
                     if (_opt.level < _opt.lv_count) {
                         continue;
                     }
-                    chd[cidx].theme(prm, rep, _opt);
                 }
+                chd[cidx].theme(prm, rep, _opt);
             }
             
             /* check child */
+            let replace = (cp, tg, rp) => {
+                try {
+                    let ret = new rp();
+                    /* copy option */
+                    ret.option(tg.option());
+                    /* replace child */
+                    cp.updChild(tg, ret);
+                    /* replace config component */
+                    let cnf_len = cp.config().length;
+                    for (let i=0; i < cnf_len; i++) {
+                        let rep_cnf = ret.config(i);
+                        for (let ridx in rep_cnf) {
+                            rep_cnf[ridx].component(ret);
+                        }
+                    }
+                    return ret;
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
+            };
+            
             for (let cidx2 in chd) {
                 if (true === mofron.func.isInclude(chd[cidx2], prm)) {
-                    if ( (false === mofron.func.isInclude(rep, 'Base')) &&
-                         (false === Array.isArray(rep)) &&
-                         ('object' === typeof rep) ) {
-                        /* replace type is option */
+                    
+                    if ('function' === typeof rep) {
+                        /* class */
+                        replace(this, chd[cidx2], rep);
+                    } else if ( (true === Array.isArray(rep)) &&
+                                ('function' === typeof rep[0]) &&
+                                ( ('object' === typeof rep[1]) &&
+                                  (false === mofron.func.isInclude(rep[1], 'Base')) ) ) {
+                        /* class with option */
+                        replace(this, chd[cidx2], rep[0]).option(rep[1]);
+                    } else if ( ('object' === typeof rep) &&
+                                (false === mofron.func.isInclude(rep, 'Base')) ) {
+                        /* option */
                         chd[cidx2].option(rep);
-                    } else if (true === mofron.func.isComp(rep)) {
-                        /* replace type is component */
-                        let rep_chd = new cmp(_opt.cmpopt);
-                        /* copy option */
-                        rep_chd.option(chd[cidx2].option());
-                        /* replace child */
-                        this.updChild(chd[cidx2], rep_chd);
-                        /* replace config component */
-                        for (let i=0; i < this.m_conf.length; i++) {
-                            let rep_cnf = rep_chd.config(i);
-                            for (let ridx in rep_cnf) {
-                                rep_cnf[ridx].component(rep_chd);
-                            }
-                        }
                     }
                 }
             }
