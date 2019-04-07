@@ -1,6 +1,6 @@
 # mofron
 
-mofron is JavaScript Framework for Web UI.<br>
+mofron is module based  front-end framework.<br>
 It makes possible to development front-end by only simple tag.
 
 ## Install
