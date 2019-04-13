@@ -588,16 +588,12 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    tmpl (tmpl, prm) {
+    template (tmpl, prm) {
         try {
-            if (true !== mofron.func.isInclude(tmpl, 'Template')) {
+            if ('function' !== typeof tmpl) {
                 throw new Error('invalid parameter');
             }
-            /* get option template */
-            fnc = tmpl.tmpl();
-            if (null !== fnc) {
-                this.execOption(fnc(prm));
-            }
+            this.child(tmpl(prm));
         } catch (e) {
             console.error(e.stack);
             throw e;
