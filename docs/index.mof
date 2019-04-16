@@ -1,0 +1,83 @@
+<require>
+    <tag module="mofron-comp-text">Text</tag>
+    <tag module="mofron-comp-appbase">Appbs</tag>
+    <tag module="mofron-comp-prjtop">Prjtop</tag>
+    <tag module="mofron-comp-image">Image</tag>
+    <tag module="mofron-comp-frame">Frame</tag>
+    <tag module="mofron-comp-fontawesome">Icon</tag>
+    <tag module="mofron-effect-synchei">Synchei</tag>
+    <tag module="mofron-effect-synwhei">Synwhei</tag>
+    <tag module="mofron-effect-shadow">Shadow</tag>
+    <tag module="mofron-effect-hrzpos">Hrzpos</tag>
+    <tag module="mofron-effect-fade">Fade</tag>
+    <tag module="mofron-effect-dev">efHrzcnt</tag>
+    <tag module="mofron-layout-padding">Padding</tag>
+    <tag module="mofron-layout-grid">Grid</tag>
+    <tag module="mofron-layout-hrzcenter">HrzCent</tag>
+</require>
+
+<template name=ftframe>
+    <Component>
+        <Frame name=@test effect=efHrzcnt(90) baseColor=255,253,255 shadow='0.015rem'>
+            <style>padding-bottom: 0.2rem; height:null;</style>
+            <Text effect=Hrzpos('center') size='0.25rem' style="margin-top:0.1rem;">@title</Text>
+            <Component layout=HrzCent(85)>
+                <Text size='0.18rem'>@desc</Text>
+            </Component>
+        </Frame>
+    </Component>
+</template>
+
+<Appbs title='mofron' mainColor=240,230,250 effect=Fade(true,1000)>
+    <theme>
+        <Text mainColor=120,120,120></Text>
+    </theme>
+    <option>
+        <header logo='./img/logo.png' effect=Shadow({blur:'0.4rem'})>
+            <navi>
+                <Text>DOCS</Text>
+                
+            </navi>
+        </header>
+    </option>
+    
+    <Prjtop baseColor=253,245,253 button='Get Started' effect=Synwhei('-50%') name=prjtop>
+        <option>
+            <text size='0.4rem' style='z-index:10;'>The module based front-end framework.</text>
+        </option>
+        <Image path='./img/mofron_tp.png' effect=Synchei(prjtop)>
+            <style>position:absolute; left:1.5rem; top:-0.2rem; z-index:1;</style>
+        </Image>
+    </Prjtop>
+    <Component baseColor=250,250,250 layout=Padding('top','0.15rem',false)>
+        <Text effect=Hrzpos('center') size='0.35rem'>"What's mofron?"</Text>
+        <Component effect=efHrzcnt(90) layout=Grid([33.3,33.3,33.3])>
+<!--
+            <respsv>
+                <mobile type=iphone>
+                </mobile>
+                <mobile type=default>
+                </mobile>
+            </respsv>
+-->
+            <template name=ftframe title="Module Based">
+                <desc>
+                    All components are made up of node modules.Select the required components from the mofron module.You can create a web page by building it.
+                </desc>
+            </template>
+            <template name=ftframe title="Repaceable">
+                <desc>
+                    Components can be replaced. It is possible to replace the inner component of the UI component already built.This feature will minimize the impact on design and feature changes. so you will get powerful support for web development maintenance.
+                </desc>
+            </template>
+            <template name=ftframe title="Simple Tags">
+                <desc>
+                    Not only UI components but also powerful functions such as effects and layout can be used through simple tags.
+                </desc>
+            </template>
+        </Component>
+    </Component>
+    <Component baseColor=250,250,250 layout=Padding('top','0.15rem',false)>
+        <Text effect=Hrzpos('center') size='0.35rem' mainColor=130,130,130>Why mofron?</Text>
+    </Component>
+</Appbs>
