@@ -1111,6 +1111,16 @@ module.exports = {
         }
     },
     
+    addHeadStyle : (prm) => {
+        try {
+            let set_prm = {tag: 'style', attr: { type: "text/css" }, contents: prm};
+            mofron.func.addHeadConts(set_prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
     /*** event functions ***/
     rsizWinEvent : (func, prm, tlag) => {
         try {

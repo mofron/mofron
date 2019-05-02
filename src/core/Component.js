@@ -24,7 +24,7 @@ mofron.Component = class extends mofron.Base {
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
-            this.listOption([ 'child', 'layout', 'effect', 'event', 'respsv', 'style' ]);
+            this.listOption([ 'child', 'layout', 'effect', 'event', 'style' ]);
             this.prmMap('child');
             
             this.data(this.getId(), {});
@@ -224,7 +224,7 @@ mofron.Component = class extends mofron.Base {
                 }
             }
             if (null === upd_idx) { 
-                cmp_chd = cmp.getChild(true);
+                cmp_chd = this.getChild(true);
                 for (let cidx2 in cmp_chd) {
                     if (cmp_chd[cidx2].getId() === o_chd.getId()) {
                         upd_idx = cidx2;
@@ -392,7 +392,26 @@ mofron.Component = class extends mofron.Base {
     }
     
     respsv (prm) {
-        try { return this.config(3, prm); } catch (e) {
+        try {
+            for (let pidx in prm) {
+                if (pidx === mofron.func.devType()) {
+                    for (let pidx2 in prm[pidx][0]) {
+                        if (pidx2 === "os") {
+                            if (prm[pidx][0][pidx2] === mofron.func.osType()) {
+                                this.option(prm[pidx][1]);
+                            }
+                        } else if (pidx2 === "browser") {
+                            if (prm[pidx][0][pidx2] === mofron.func.brsType()) {
+                                this.option(prm[pidx][1]);
+                            }
+                        }
+                    }
+                    if (0 === Object.keys(prm[pidx][0]).length) { 
+                        this.option(prm[pidx][1]);
+                    }
+                }
+            }
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
