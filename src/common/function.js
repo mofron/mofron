@@ -599,23 +599,37 @@ module.exports = {
                 throw new Error('invalid parameter');
             }
             
-            let set_style  = {};
-            if ( (null === val) || ('string' === typeof val) ) {
-                set_style[key] = val;
-            } else if (true === mofron.func.isInclude(val, ['Base','Color'])) {
-                set_style[key] = val.toString();
-            } else if (true === Array.isArray(val)) {
-                if (3 === val.length) {
-                    set_style[key] = 'rgb('+ val[0] + ',' + val[1]  + ',' + val[2] +')';
-                } else if (4 === val.length) {
-                    set_style[key] = 'rgba('+ val[0] + ',' + val[1]  + ',' + val[2] + ',' + val[3] + ')';
-                } else {
-                    throw new Error('invalid parameter');
+            let get_style_val = (p1, p2) => {
+                try {
+                    let v = null;
+                    if ( (null === p2) || ('string' === typeof p2) ) {
+                        v = p2;
+                    } else if (true === mofron.func.isInclude(p2, ['Base','Color'])) {
+                        v = p2.toString();
+                    } else if (true === Array.isArray(p2)) {
+                        if (3 === p2.length) {
+                            v = "rgb(" + p2[0] + "," + p2[1]  + "," + p2[2] + ")";
+                        } else if (4 === p2.length) {
+                            v = "rgba(" + p2[0] + "," + p2[1]  + "," + p2[2] + "," + p2[3] + ")";
+                        } else {
+                            throw new Error('invalid parameter');
+                        }
+                    }
+                    let ret = {};
+                    ret[p1] = v;
+                    return ret;
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
                 }
-            } else {
-                throw new Error('invalid parameter');
             }
-            cmp.execOption({ style : set_style });
+            
+            if ( (true === Array.isArray(val)) && (2 === val.length) ) {
+                /* with option */
+                cmp.option({ style : [get_style_val(key,val[0]), val[1]] });
+            } else {
+                cmp.option({ style: get_style_val(key,val) });
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

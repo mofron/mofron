@@ -332,12 +332,12 @@ mofron.Component = class extends mofron.Base {
     /**
      * style getter / setter
      *
-     * @param kv (object) 
-     * @param los (boolean) loose flag
+     * @param kv (object) style contetns
+     * @param los (object) option
      * @return (object) style object
      */
-    style (kv, los) {
-        try { return this.styleTgt().style(kv, los); } catch (e) {
+    style (kv, opt) {
+        try { return this.styleTgt().style(kv, opt); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -894,7 +894,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    mainColor () { return null; }
+    mainColor (prm) { return null; }
     
     baseColor (prm) {
         try { return this.tgtColor('background', prm); } catch (e) {
@@ -903,7 +903,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    accentColor () { return null; }
+    accentColor (prm) { return null; }
     
     tgtColor (tgt, val) {
         try {
@@ -914,6 +914,7 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
+    /* option method */
     prmOpt (po, p1, p2, p3, p4) {
         try {
             if (undefined === po) {

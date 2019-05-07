@@ -198,11 +198,13 @@ mofron.Dom = class extends mofron.Base {
      * style setter / getter
      *
      * @param kv : (object) key-value object
+     * @param opt: (object) option
      * @return (string) : value of style
      * @return (object) : style object
      */
-    style (kv, los) {
+    style (kv, opt) {
         try {
+            let _opt = (undefined === opt) ? {} : opt;
             if ( (undefined === kv) ||
                  ('string' === typeof kv) ) {
                 /* getter */
@@ -210,12 +212,17 @@ mofron.Dom = class extends mofron.Base {
             }
             let set_ret = null;
             /* setter */
-            if (true === los) {
+            if (true === _opt.loose) {
                 this.m_style.protect(true);
                 set_ret = this.m_style.set(kv);
                 this.m_style.protect(false);
+            } else if (true === _opt.locked) {
+                this.m_style.set(kv, _opt.forced);
+                for (let kidx in kv) {
+                    this.m_style.lock(kidx);
+                }
             } else if ('object' === typeof kv) {
-                set_ret = this.m_style.set(kv);
+                set_ret = this.m_style.set(kv, _opt.forced);
             }
             
             /* execute style listener */

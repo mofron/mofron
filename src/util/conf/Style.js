@@ -23,6 +23,25 @@ mofron.Style = class extends mofron.DomConf {
         }
     }
     
+    set (kv, fc) {
+        try {
+            if (true !== fc) {
+                let lck = this.lock();
+                for (let kidx in kv) {
+                    for (let lidx in lck) {
+                        if (kidx === lck[lidx]) {
+                            delete kv[kidx];
+                        }
+                    }
+                }
+            }
+            super.set(kv);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * set style
      *
@@ -79,4 +98,12 @@ mofron.Style = class extends mofron.DomConf {
             throw e;
         }
     }
+    
+    lock (prm) {
+        try { return this.arrayMember('lock', 'string', prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
+/* end of file */
