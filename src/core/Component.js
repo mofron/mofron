@@ -16,7 +16,7 @@ mofron.Component = class extends mofron.Base {
     constructor (po) {
         try {
             super();
-            this.name('Component');
+            this.name("Component");
             
             /* initialize member */
             this.m_child  = new Array();
@@ -24,8 +24,8 @@ mofron.Component = class extends mofron.Base {
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
-            this.listOption([ 'child', 'layout', 'effect', 'event', 'style' ]);
-            this.prmMap('child');
+            this.listOption([ "child", "layout", "effect", "event", "style" ]);
+            this.prmMap("child");
             
             this.data(this.getId(), {});
             this.prmOpt(po);
@@ -337,21 +337,48 @@ mofron.Component = class extends mofron.Base {
      * @return (object) style object
      */
     style (kv, opt) {
-        try { return this.styleTgt().style(kv, opt); } catch (e) {
+        try {
+            if (undefined === kv) {
+                /* getter */
+                return this.m_opt.style;
+            }
+            let ret = this.styleTgt().style(kv, opt);
+            if (undefined !== ret) {
+                return ret;
+            }
+            
+            if (undefined === this.m_opt.style) {
+                this.m_opt.style = {};
+            }
+            for (let kidx in kv) {
+                if (true === Array.isArray(this.m_opt.style)) {
+                    this.m_opt.style[0][kidx] = this.styleTgt().style(kidx);
+                } else {
+                    this.m_opt.style[kidx] = this.styleTgt().style(kidx);
+                }
+            }
+            if (true === Array.isArray(this.m_opt.style)) {
+                this.m_opt.style = this.m_opt.style[0];
+            }
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     layout (prm) {
-        try { return this.config(0, prm); } catch (e) {
+        try {
+            return this.config(0, prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     effect (prm) {
-        try { return this.config(1, prm); } catch (e) {
+        try {
+            return this.config(1, prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -385,7 +412,9 @@ mofron.Component = class extends mofron.Base {
     }
     
     event (prm) {
-        try { return this.config(2, prm); } catch (e) {
+        try {
+            return this.config(2, prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }

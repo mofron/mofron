@@ -12,6 +12,7 @@ mofron.Base = class {
         try {
             this.m_member = {};
             this.m_data   = {};
+            this.m_opt    = {};
             this.name('Base');
         } catch (e) {
             console.error(e.stack);
@@ -196,7 +197,9 @@ mofron.Base = class {
     }
     
     getOption () {
-        try { return (undefined === this.m_opt) ? null : this.m_opt; } catch (e) {
+        try {
+            return ( (undefined === this.m_opt) || (0 === Object.keys(this.m_opt).length)) ? null : this.m_opt;
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -207,33 +210,45 @@ mofron.Base = class {
             if ('object' !== typeof opt) {
                 throw new Error('invalid parameter');
             }
-            if (undefined === this.m_opt) {
-                this.m_opt = {};
-            }
-            for (let oidx in opt) {
-                if (undefined === this.m_opt[oidx]) {
-                    this.m_opt[oidx] = opt[oidx];
-                } else {
-                    let lst_opt = this.listOption();
-                    let islist  = false;
-                    for (let lidx in lst_opt) {
-                        if (oidx === lst_opt[lidx]) {
-                            islist = true;
+            //if (undefined === this.m_opt) {
+            //    this.m_opt = {};
+            //}
+            
+            let is_list = (i,l) => {
+                try {
+                    let r = false;
+                    for (let li in l) {
+                        if (i === l[li]) {
+                            r = true;
                             break;
                         }
                     }
-                    
+                    return r;
+                } catch (e) {
+                    console.error(e.stack);
+                    throw new Error('invalid parameter');
+                }
+            }
+            
+            for (let oidx in opt) {
+                if (undefined === this.m_opt[oidx]) {
+                    this.m_opt[oidx] = opt[oidx];
+                    if ( (true === is_list(oidx, this.listOption())) &&
+                         (false === Array.isArray(opt[oidx]))) {
+                        this.m_opt[oidx] = [opt[oidx]];
+                    }
+                } else {
                     opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
-                    
-                    if (true === islist) {
+                    if (true === is_list(oidx, this.listOption())) {
+                        if (false === Array.isArray(this.m_opt[oidx])) {
+                            this.m_opt[oidx] = [this.m_opt[oidx]];
+                        }
                         if (true === Array.isArray(opt[oidx])) {
                             for (let ooidx in opt[oidx]) {
                                 this.m_opt[oidx].push(opt[oidx][ooidx]);
                             }
                         } else {
-                            for (let ooidx in opt[oidx]) {
-                                this.m_opt[oidx][ooidx] = opt[oidx][ooidx];
-                            }
+                            this.m_opt[oidx].push(opt[oidx]);
                         }
                     } else {
                         this.m_opt[oidx] = opt[oidx];
