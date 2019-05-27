@@ -1,32 +1,77 @@
 <require>
     <tag module="mofron-comp-text">Text</tag>
+    <tag module="mofron-comp-linktxt">Link</tag>
     <tag module="mofron-comp-appbase">Appbs</tag>
     <tag module="mofron-comp-prjtop">Prjtop</tag>
     <tag module="mofron-comp-image">Image</tag>
+    <tag module="mofron-comp-ttlframe">TtlFrame</tag>
     <tag module="mofron-comp-frame">Frame</tag>
+    <tag module="mofron-comp-ujarakbtn">Button</tag>
     <tag module="mofron-comp-fontawesome">Icon</tag>
+    <tag module="mofron-comp-footer">Footer</tag>
     <tag module="mofron-effect-synchei">Synchei</tag>
-    <tag module="mofron-effect-synwhei">Synwhei</tag>
+    <tag module="mofron-effect-syncwin">Syncwin</tag>
+    <tag module="mofron-effect-synwwid">Synwwid</tag>
     <tag module="mofron-effect-shadow">Shadow</tag>
     <tag module="mofron-effect-hrzpos">Hrzpos</tag>
     <tag module="mofron-effect-fade">Fade</tag>
-    <tag module="mofron-effect-dev">efHrzcnt</tag>
+    <tag module="mofron-effect-hrzcenter">efHrzcnt</tag>
     <tag module="mofron-layout-padding">Padding</tag>
     <tag module="mofron-layout-grid">Grid</tag>
     <tag module="mofron-layout-hrzcenter">HrzCent</tag>
+    <tag module="mofron-layout-margin">Margin</tag>
+    <tag module="mofron-event-link">evLink</tag>
+    <tag module="../comp/SlideShare.js">SlideShare</tag>
+    <tag src="./tag/whats.mof">Whats</tag>
+    <tag src="./tag/why.mof">Why</tag>
+    <tag src="./tag/detail.mof">Detail</tag>
 </require>
 
+<responsive>
+    <mobile orientation=portrait>800</mobile>
+    <mobile orientation=landscape>1400</mobile>
+    <tablet>800</tablet>
+    <iPhone>3000</iPhone>
+    <default>625</default>
+</responsive>
+
 <template name=ftframe>
-    <Component>
-        <Frame name=@test effect=efHrzcnt(90) baseColor=255,253,255 shadow='0.015rem'>
+    <Component tag=@title>
+        <TtlFrame name=@frm_name effect=efHrzcnt(90) mainColor=240,230,250 baseColor=255,253,255 shadow="0.015rem">
             <style>padding-bottom: 0.2rem; height:null;</style>
-            <Text effect=Hrzpos('center') size='0.25rem' style="margin-top:0.1rem;">@title</Text>
-            <Component layout=HrzCent(85)>
-                <Text size='0.18rem'>@desc</Text>
+            <title>
+                <Text effect=Hrzpos("center") size="0.25rem" style="margin-top:0.1rem;">@title</Text>
+            </title>
+            <Component layout=HrzCent(85) style="margin-top:0.2rem;">
+                <Text size="0.18rem">@desc</Text>
             </Component>
-        </Frame>
+            <Button name=@btn_name height="0.35rem" effect=efHrzcnt(50) accentColor=240,230,250 clickEvent=what_btn_clk>
+                <style>margin-top:0.2rem;</style>
+                <text>
+                    <Text size="0.2rem" mainColor="#0073bb">"Detail"</Text>
+                </text>
+            </Button>
+        </TtlFrame>
     </Component>
 </template>
+<!-- /console.log(window.pageYOffset); -->
+
+<script name=what_btn_clk param=p1,p2,p3 run=init>
+    try {
+        let tag     = p1.tag();
+        let scr_val = 0;
+        if (undefined !== tag["Module Based"]) {
+            mf.objkey.dtl_modsb.target().getRawDom().scrollIntoView(true);
+        } else if (undefined !== tag["Replaceable"]) {
+            mf.objkey.dtl_repl.target().getRawDom().scrollIntoView(true);
+        } else if (undefined !== tag["Utility Functions"]) {
+            mf.objkey.dtl_utlfnc.target().getRawDom().scrollIntoView(true);
+        }
+    } catch (e) {
+        console.error(e.stack);
+        throw new Error(e.stack);
+    }
+</script>
 
 <Appbs title='mofron' mainColor=240,230,250 effect=Fade(true,1000)>
     <theme>
@@ -35,49 +80,26 @@
     <option>
         <header logo='./img/logo.png' effect=Shadow({blur:'0.4rem'})>
             <navi>
-                <Text>DOCS</Text>
-                
+                <Link size='0.2rem' url='./',true >Docs</Link>
+                <Icon size='0.35rem' event=evLink(['https://github.com/mofron/mofron',true])>fab fa-github</Icon>
+                <Icon size='0.35rem' event=evLink(['https://twitter.com/mofronjs',true])>fab fa-twitter</Icon>
             </navi>
         </header>
     </option>
-    
-    <Prjtop baseColor=253,245,253 button='Get Started' effect=Synwhei('-50%') name=prjtop>
+    <Prjtop baseColor=253,245,253 button='Get Started' effect=Syncwin([true,true],['0px','-50%']) name=prjtop>
+        <theme>
+            <Button mainColor=240,230,250></Button>
+        </theme>
         <option>
-            <text size='0.4rem' style='z-index:10;'>The module based front-end framework.</text>
+            <text size='0.4rem' style='z-index:10;'>The module based frontend framework.</text>
         </option>
-        <Image path='./img/mofron_tp.png' effect=Synchei(prjtop)>
-            <style>position:absolute; left:1.5rem; top:-0.2rem; z-index:1;</style>
-        </Image>
     </Prjtop>
-    <Component baseColor=250,250,250 layout=Padding('top','0.15rem',false)>
-        <Text effect=Hrzpos('center') size='0.35rem'>"What's mofron?"</Text>
-        <Component effect=efHrzcnt(90) layout=Grid([33.3,33.3,33.3])>
-<!--
-            <respsv>
-                <mobile type=iphone>
-                </mobile>
-                <mobile type=default>
-                </mobile>
-            </respsv>
--->
-            <template name=ftframe title="Module Based">
-                <desc>
-                    All components are made up of node modules.Select the required components from the mofron module.You can create a web page by building it.
-                </desc>
-            </template>
-            <template name=ftframe title="Repaceable">
-                <desc>
-                    Components can be replaced. It is possible to replace the inner component of the UI component already built.This feature will minimize the impact on design and feature changes. so you will get powerful support for web development maintenance.
-                </desc>
-            </template>
-            <template name=ftframe title="Simple Tags">
-                <desc>
-                    Not only UI components but also powerful functions such as effects and layout can be used through simple tags.
-                </desc>
-            </template>
-        </Component>
-    </Component>
-    <Component baseColor=250,250,250 layout=Padding('top','0.15rem',false)>
-        <Text effect=Hrzpos('center') size='0.35rem' mainColor=130,130,130>Why mofron?</Text>
-    </Component>
+    <Why></Why>
+    <Whats></Whats>
+    <Detail></Detail>
 </Appbs>
+<Footer mainColor=190,190,190 baseColor=240,230,250 height="1rem">
+    <Text effect=Hrzpos("center") style="margin-top:0.2rem;" mainColor=120,120,120 size="0.18rem">
+        Released under the MIT License
+    </Text>
+</Footer>

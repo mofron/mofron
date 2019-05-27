@@ -21,6 +21,7 @@ mofron.Component = class extends mofron.Base {
             /* initialize member */
             this.m_child  = new Array();
             this.m_inncmp = {};
+            this.m_tag    = {};
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
@@ -303,6 +304,14 @@ mofron.Component = class extends mofron.Base {
             for (let lidx in lis) {
                 lis[lidx][0](this, lis[lidx][1]);
             }
+            
+            let ptag = pnt.tag();
+            let chd  = this.getChild(true);
+            for (let tidx in ptag) {
+                for (let cidx in chd) {
+                    chd[cidx].tag(ptag[tidx]);
+                }
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -438,6 +447,29 @@ mofron.Component = class extends mofron.Base {
                     if (0 === Object.keys(prm[pidx][0]).length) { 
                         this.option(prm[pidx][1]);
                     }
+                }
+            }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    tag (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return this.m_tag;
+            }
+            if ('string' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            this.m_tag[prm] = null;
+            
+            if (undefined !== prm) {
+                let chd = this.getChild(true);
+                for (let cidx in chd) {
+                    chd[cidx].tag(prm);
                 }
             }
         } catch (e) {

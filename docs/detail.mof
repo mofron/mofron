@@ -1,0 +1,14 @@
+<Component layout=Padding('top','0.4rem',false)>
+    <Component baseColor=250,250,250 width='100%'>
+        <Text name=dtl_modsb effect=Hrzpos('center') size='0.35rem'>Module Based</Text>
+        <SlideShare effect=Hrzpos('center') src="//www.slideshare.net/slideshow/embed_code/key/FEMhsyd6vq2yTt" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; max-width: 100%;"></SlideShare>
+    </Component>
+    <Component baseColor=250,250,250 width='100%'>
+        <Text name=dtl_repl effect=Hrzpos('center') size='0.35rem'>Replaceable</Text>
+        <SlideShare effect=Hrzpos('center') src="//www.slideshare.net/slideshow/embed_code/key/1mlaDQYdlDnfwo" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; max-width: 100%;"></SlideShare>
+    </Component>
+    <Component baseColor=250,250,250 width='100%' style="padding-bottom:0.5rem;">
+        <Text name=dtl_utlfnc effect=Hrzpos('center') size='0.35rem'>Utility Functions</Text>
+        <SlideShare effect=Hrzpos('center') src="//www.slideshare.net/slideshow/embed_code/key/yJNyDxiyf5JUQA" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; max-width: 100%;"></SlideShare>
+    </Component>
+</Component>

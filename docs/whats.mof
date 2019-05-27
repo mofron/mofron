@@ -1,0 +1,32 @@
+<Component baseColor=250,250,250 layout=Padding('top','0.2rem',false) width='100%'>
+    <Text effect=Hrzpos('center') size='0.35rem'>"What is a mofron?"</Text>
+    <Component effect=efHrzcnt(90)>
+        <respsv>
+            <mobile>
+                <layout>
+                    <Margin>"top","0.2rem"</Margin>
+                </layout>
+            </mobile>
+            <other>
+                <layout>
+                    <Grid>[33.3, 33.3, 33.3]</Grid>
+                </layout>
+            </other>
+        </respsv>
+        <template name=ftframe title="Module Based" btn_name="modbase_btn">
+            <desc>
+                All components are made up of node modules. It makes simple to build a web page.
+            </desc>
+        </template>
+        <template name=ftframe title="Replaceable" btn_name="repl_btn">
+            <desc>
+                UI components can be replaced. This feature will minimize the impact on design and feature changes. For example, it makes easy to shift from mockup to production.
+            </desc>
+        </template>
+        <template name=ftframe title="Utility Functions" btn_name="utlfnc_btn">
+            <desc>
+                The mofron has some utility functions such as 'effects' and 'layout'. it makes easy to build a web page without JS and CSS.
+            </desc>
+        </template>
+    </Component>
+</Component>
