@@ -14,7 +14,7 @@
     "webpack": "",
     "webpack-cli": "",
     "uglifyjs-webpack-plugin" : "",
-    "mofron-tag": "",
+    "mofron-tag": ""
   },
   "repository": {
     "type": "git",
