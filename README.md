@@ -1,48 +1,13 @@
-# mofron
+# [mofron](https://mofron.github.io/mofron/)
 
-mofron is module based front-end framework.<br>
-It makes possible to development front-end by only simple tag.
+mofron is module based frontend framework.<br>
 
-## Install
+* **Module Based:** All components are made up of node modules. It makes simple to build a web page.
+* **Replaceable:** UI components can be replaced. This feature will minimize the impact on design and feature changes. For example, it makes easy to shift from mockup to production.
+* **Utility Functions:** The mofron has some utility functions such as 'effects' and 'layout'. it makes easy to build a web page without JS and CSS.
 
-```bash
-npm install mofron
-```
+## Install and Quick Start
 
-## Quick Start
-This is a [login component](https://github.com/simpart/mofron-comp-login.git) sample.
+You can see [documentation](https://mofron.github.io/mofron/docs.html
 
-Install mofron develop env:
-
-```bash
-cd (deploy target dir)
-git clone https://github.com/mofron/env-template.git (dirname)
-cd (dirname)
-./tool/init/centos.sh
-```
-Install mofron and login component:
-
-```bash
-npm install mofron mofron-comp-login
-```
-
-
-Edit tag/index.mof:
-
-```xml
-<require>
-    <tag module='mofron-comp-login'>login</tag>
-</require>
-
-<login title='Test Login'></login>
-```
-
-Create a js file for browser:
-
-```bash
-./tool/tagbuild.sh
-```
-
-Access index.html to see a [login page](https://codepen.io/mofronjs/details/XGGjqj).
-![login](https://raw.githubusercontent.com/mofron/mofron/image/image/login-comp.png)
 
