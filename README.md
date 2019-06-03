@@ -8,6 +8,6 @@ mofron is module based frontend framework.<br>
 
 ## Install and Quick Start
 
-You can see [documentation](https://mofron.github.io/mofron/docs.html
+You can see [documentation](https://mofron.github.io/mofron/docs.html)
 
 
