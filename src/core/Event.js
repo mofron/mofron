@@ -117,7 +117,17 @@ mofron.Event = class extends mofron.CompConf {
     }
     
     execEffect (eff, prm) {
-        try { eff.forcedExec( ('boolean' === typeof prm) ? prm : true ); } catch (e) {
+        try {
+            if ("boolean" !== typeof prm) {
+                console.warn("execute effect is not implements");
+                return;
+            }
+            if ( (true === prm) && (0 === eff.eid()) ) {
+                eff.forcedExec();
+            } else if ( (false === prm) && (1 === eff.eid()) ) {
+                eff.forcedExec();
+            }
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }

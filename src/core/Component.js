@@ -25,7 +25,7 @@ mofron.Component = class extends mofron.Base {
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
             this.m_conf   = new Array([], [], [], []);   /* layout, effect, event, respsv */
-            this.listOption([ "child", "layout", "effect", "event", "style" ]);
+            this.listOption(["child", "layout", "effect", "event", "style" ]);
             this.prmMap("child");
             
             this.data(this.getId(), {});
@@ -347,28 +347,43 @@ mofron.Component = class extends mofron.Base {
      */
     style (kv, opt) {
         try {
-            if (undefined === kv) {
-                /* getter */
-                return this.m_opt.style;
-            }
-            let ret = this.styleTgt().style(kv, opt);
-            if (undefined !== ret) {
-                return ret;
-            }
-            
-            if (undefined === this.m_opt.style) {
-                this.m_opt.style = {};
-            }
-            for (let kidx in kv) {
-                if (true === Array.isArray(this.m_opt.style)) {
-                    this.m_opt.style[0][kidx] = this.styleTgt().style(kidx);
-                } else {
-                    this.m_opt.style[kidx] = this.styleTgt().style(kidx);
+            if (true === Array.isArray(kv)) {
+                for (let kv_idx in kv) {
+                    if (true === Array.isArray(kv[kv_idx])) {
+                        this.style(kv[kv_idx][0], kv[kv_idx][1]);
+                    } else {
+                        this.style(kv[kv_idx]);
+                    }
                 }
+                return;
             }
-            if (true === Array.isArray(this.m_opt.style)) {
-                this.m_opt.style = this.m_opt.style[0];
+            if ("string" === typeof kv) {
+                return this.styleTgt().style(kv, opt);
+            } else if (undefined === kv) {
+                throw new Error("invalid parameter");
             }
+            /* check option */
+            let chk = this.option().style;
+            if (true === Array.isArray(chk)) {
+                let chk_style = (true === Array.isArray(chk[chk.length-1])) ? chk[chk.length-1][0] : chk[chk.length-1];
+                if (Object.keys(chk_style).length !== Object.keys(kv).length) {
+                    chk = null;
+                } else {
+                    for (let chk_idx in chk_style) {
+                        if (undefined === kv[chk_idx]) {
+                            chk = null;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                chk = null;
+            }
+            if (null === chk) {
+                 this.option({ style: (undefined !== opt) ? [kv, opt] : kv });
+                 return;
+            }
+            this.styleTgt().style(kv, opt); 
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -554,9 +569,9 @@ mofron.Component = class extends mofron.Base {
             
             this.m_conf[idx].push(prm);
             
-            if (null === prm.component()) {
+            //if (null === prm.component()) {
                 prm.component(this);
-            }
+            //}
             if (true === this.adom().isPushed()) {
                 prm.execute();
             }
@@ -625,17 +640,21 @@ mofron.Component = class extends mofron.Base {
                 try {
                     let ret = new rp();
                     /* copy option */
+                    //let tg_opt = tg.option();
+                    //delete tg_opt.style;
+                    
                     ret.option(tg.option());
+                    
                     /* replace child */
                     cp.updChild(tg, ret);
-                    /* replace config component */
-                    let cnf_len = cp.config().length;
-                    for (let i=0; i < cnf_len; i++) {
-                        let rep_cnf = ret.config(i);
-                        for (let ridx in rep_cnf) {
-                            rep_cnf[ridx].component(ret);
-                        }
-                    }
+                    ///* replace config component */
+                    //let cnf_len = cp.config().length;
+                    //for (let i=0; i < cnf_len; i++) {
+                    //    let rep_cnf = ret.config(i);
+                    //    for (let ridx in rep_cnf) {
+                    //        rep_cnf[ridx].component(ret);
+                    //    }
+                    //}
                     return ret;
                 } catch (e) {
                     console.error(e.stack);
@@ -981,16 +1000,14 @@ mofron.Component = class extends mofron.Base {
             if (undefined === po) {
                 return;
             }
-            this.setPrmOpt(po, p1, p2, p3, p4);
-            let opt_flg = false;
-            if ( (null !== this.getOption()) &&
-                 (0 !== Object.keys(this.getOption()).length) ) {
-                opt_flg = true;
-            }
             this.adom();
-            if (true === opt_flg) {
-                this.execOption();
+            let opt = this.setPrmOpt(po, p1, p2, p3, p4);
+            
+            if (undefined !== opt) {
+                /* option */
+                this.execOption(opt);
             } else if ( (null !== this.param()) && (0 !== this.prmMap().length) ) {
+                /* parameter */
                 mofron.func.execPrmMap(this);
             }
         } catch (e) {

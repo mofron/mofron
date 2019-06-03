@@ -35,7 +35,7 @@ mofron.Style = class extends mofron.DomConf {
                     }
                 }
             }
-            super.set(kv);
+            return super.set(kv);
         } catch (e) {
             console.error(e.stack);
             throw e;

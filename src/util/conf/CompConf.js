@@ -44,7 +44,7 @@ mofron.CompConf = class extends mofron.Base {
         }
     }
     
-    suspend (prm, idx) {
+    suspend (prm) {
         try { return this.member('suspend', 'boolean', prm, false); } catch (e) {
             console.error(e.stack);
             throw e;

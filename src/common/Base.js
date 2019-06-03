@@ -198,7 +198,7 @@ mofron.Base = class {
     
     getOption () {
         try {
-            return ( (undefined === this.m_opt) || (0 === Object.keys(this.m_opt).length)) ? null : this.m_opt;
+            return ( (undefined === this.m_opt) || (0 === Object.keys(this.m_opt).length)) ? {} : this.m_opt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -214,11 +214,12 @@ mofron.Base = class {
             //    this.m_opt = {};
             //}
             
-            let is_list = (i,l) => {
+            let lst_opt = this.listOption();
+            let is_list = (i) => {
                 try {
                     let r = false;
-                    for (let li in l) {
-                        if (i === l[li]) {
+                    for (let li in lst_opt) {
+                        if (i === lst_opt[li]) {
                             r = true;
                             break;
                         }
@@ -231,30 +232,54 @@ mofron.Base = class {
             }
             
             for (let oidx in opt) {
+                let chk_opt = this.getFuncPrm(oidx, opt[oidx]);
+                
                 if (undefined === this.m_opt[oidx]) {
                     this.m_opt[oidx] = opt[oidx];
-                    if ( (true === is_list(oidx, this.listOption())) &&
-                         (false === Array.isArray(opt[oidx]))) {
-                        this.m_opt[oidx] = [opt[oidx]];
-                    }
-                } else {
-                    opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
-                    if (true === is_list(oidx, this.listOption())) {
-                        if (false === Array.isArray(this.m_opt[oidx])) {
-                            this.m_opt[oidx] = [this.m_opt[oidx]];
+                    if (true === is_list(oidx)) {
+                        if ( (false === Array.isArray(opt[oidx])) ||
+                             (true === mofron.func.isObject(chk_opt, ["Base","Param"])) ) {
+                            this.m_opt[oidx] = [opt[oidx]];
                         }
-                        if (true === Array.isArray(opt[oidx])) {
+                    }
+                    
+                    //this.m_opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
+                    //if ( (true === is_list(oidx)) &&
+                    //     (false === Array.isArray(opt[oidx]))) {
+                    //    this.m_opt[oidx] = [opt[oidx]];
+                    //}
+                } else {
+                    //opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
+                    if (true === is_list(oidx)) {
+                        if ( (false === Array.isArray(opt[oidx])) ||
+                             (true === mofron.func.isObject(chk_opt, ["Base","Param"])) ) {
+                            this.m_opt[oidx].push(opt[oidx]);
+                        } else {
                             for (let ooidx in opt[oidx]) {
                                 this.m_opt[oidx].push(opt[oidx][ooidx]);
                             }
-                        } else {
-                            this.m_opt[oidx].push(opt[oidx]);
                         }
                     } else {
                         this.m_opt[oidx] = opt[oidx];
                     }
+                    
+                    //if (true === is_list(oidx, this.listOption())) {
+                    //    if (false === Array.isArray(this.m_opt[oidx])) {
+                    //        this.m_opt[oidx] = [this.m_opt[oidx]];
+                    //    }
+                    //    if (true === Array.isArray(opt[oidx])) {
+                    //        for (let ooidx in opt[oidx]) {
+                    //            this.m_opt[oidx].push(opt[oidx][ooidx]);
+                    //        }
+                    //    } else {
+                    //        this.m_opt[oidx].push(opt[oidx]);
+                    //    }
+                    //} else {
+                    //    this.m_opt[oidx] = opt[oidx];
+                    //}
                 }
             }
+            return opt;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -288,10 +313,12 @@ mofron.Base = class {
                             }
                         }
                         /* this is option */
-                        this.addOption(po);
+                        return po;
+                        //return this.addOption(po);
                     } else {
                         /* this is paramter */
                         this.param(new mofron.Param(po));
+                        return;
                     }
                 } else {
                     /* this is paramter */
@@ -308,10 +335,10 @@ mofron.Base = class {
     
     prmOpt (po, p1, p2, p3, p4) {
         try {
-            this.setPrmOpt(po, p1, p2, p3, p4);
-            let opt = this.getOption();
-            if (null !== opt) {
-                this.execOption();
+            let opt = this.setPrmOpt(po, p1, p2, p3, p4);
+            //let opt = this.getOption();
+            if (undefined !== opt) {
+                this.execOption(opt);
             } else if ( (null !== this.param()) && (0 !== this.prmMap().length) ) {
                 mofron.func.execPrmMap(this);
             }
@@ -347,21 +374,15 @@ mofron.Base = class {
     
     execOption (opt) {
         try {
-            if (undefined !== opt) {
-                this.addOption(opt);
-            } else {
-                opt = this.getOption();
-            }
-            
-            if (null === opt) {
-                return;
-            }
-            
             for (let opt_idx in opt) {
                 if ('function' === typeof this[opt_idx]) {
                     if ('name' === this[opt_idx]) {
                         throw new Error('invalid option name');
                     }
+                    
+                    let add_opt = {};
+                    add_opt[opt_idx] = opt[opt_idx];
+                    this.addOption(add_opt);
                     
                     opt[opt_idx] = this.getFuncPrm(opt_idx, opt[opt_idx]);
                     
