@@ -1,0 +1,43 @@
+<div name=mcthm visible=false style="padding-bottom:0.3rem;" effect=Fade()>
+    <layout>
+        <HrzCent>80</HrzCent>
+        <loMargin>"top","0.3rem"</loMargin>
+    </layout>
+    <BdrHeading mainColor=175,100,240>
+        <text>
+            <Text size="0.35rem" font="Iceland">Quick Start &gt; Theme</Text>
+        </text>
+    </BdrHeading>
+    <div>
+        <Text font="Quicksand" size="0.2rem">Theme function is configure about the inner component.The theme function is easily set the design etc. for component child components</Text>
+        <Text font="Quicksand" size="0.2rem">The following is change font samples. The setting by theme affects even the last child component of the target component.</Text>
+    </div>
+    <div>
+        <Text>./tag/index.mof:</Text>
+        <Frame baseColor=245,245,250 height=null width="100%">
+            <div style="padding:0.1rem;">
+                <TagText>&lt;require&gt;</TagText>
+                <TagText indentConf=1>tag module='mofron-comp-login'&gt;Login&lt;/tag&gt;</TagText>
+                <TagText>&lt;/require&gt;</TagText>
+                <TagText> </TagText>
+                <TagText>&lt;Login title='mofron'&gt;</TagText>
+                <TagText indentConf=1>&lt;theme&gt;</TagText>
+                <TagText indentConf=2>&lt;Text font='cursive'&gt;&lt;/Text&gt;</TagText>
+                <TagText indentConf=1>&lt;/theme&gt;</TagText>
+                <TagText>&lt;/Login&gt;</TagText>
+            </div>
+        </Frame>
+    </div>
+    <div>
+        <Frame size="100%","3.5rem" baseColor=255,255,255>
+            <Login title="mofron" height="3.5rem">
+                <theme>
+                    <Text font="cursive"></Text>
+                </theme>
+                <option>
+                    <header bind=false></header>
+                </option>
+            </Login>
+        </Frame>
+    </div>
+</div>

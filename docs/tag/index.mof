@@ -14,17 +14,19 @@
     <tag module="mofron-effect-synwwid">Synwwid</tag>
     <tag module="mofron-effect-shadow">Shadow</tag>
     <tag module="mofron-effect-hrzpos">Hrzpos</tag>
+    <tag module="mofron-effect-vrtpos">Vrtpos</tag>
     <tag module="mofron-effect-fade">Fade</tag>
     <tag module="mofron-effect-hrzcenter">efHrzcnt</tag>
     <tag module="mofron-layout-padding">Padding</tag>
     <tag module="mofron-layout-grid">Grid</tag>
     <tag module="mofron-layout-hrzcenter">HrzCent</tag>
     <tag module="mofron-layout-margin">Margin</tag>
+    <tag module="mofron-layout-horizon">loHoriz</tag>
     <tag module="mofron-event-link">evLink</tag>
     <tag module="../comp/SlideShare.js">SlideShare</tag>
-    <tag src="./tag/whats.mof">Whats</tag>
-    <tag src="./tag/why.mof">Why</tag>
-    <tag src="./tag/detail.mof">Detail</tag>
+    <tag src="./tag/index/whats.mof">Whats</tag>
+    <tag src="./tag/index/why.mof">Why</tag>
+    <tag src="./tag/index/detail.mof">Detail</tag>
 </require>
 
 <responsive>
@@ -40,10 +42,10 @@
         <TtlFrame name=@frm_name effect=efHrzcnt(90) mainColor=240,230,250 baseColor=255,253,255 shadow="0.015rem">
             <style>padding-bottom: 0.2rem; height:null;</style>
             <title>
-                <Text effect=Hrzpos("center") size="0.25rem" style="margin-top:0.1rem;">@title</Text>
+                <Text effect=Hrzpos("center") style="font-size:0.45rem;" font="Iceland">@title</Text>
             </title>
             <Component layout=HrzCent(85) style="margin-top:0.2rem;">
-                <Text size="0.18rem">@desc</Text>
+                <Text size="0.23rem" font="Quicksand">@desc</Text>
             </Component>
             <Button name=@btn_name height="0.35rem" effect=efHrzcnt(50) accentColor=240,230,250 clickEvent=what_btn_clk>
                 <style>margin-top:0.2rem;</style>
@@ -54,7 +56,6 @@
         </TtlFrame>
     </Component>
 </template>
-<!-- /console.log(window.pageYOffset); -->
 
 <script name=what_btn_clk param=p1,p2,p3 run=init>
     try {
@@ -73,31 +74,66 @@
     }
 </script>
 
-<Appbs title='mofron' mainColor=240,230,250 effect=Fade(true,1000)>
+<script run=init>
+let stbtn = () => {
+    window.location.href = "./docs.html";
+}
+</script>
+
+<Appbs mainColor=240,230,250 effect=Fade(true,1000)>
+    <title>
+        <Text font="Iceland" style="font-size:0.45rem;">"mofron"</Text>
+    </title>
+    <style>-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;</style>
     <theme>
         <Text mainColor=120,120,120></Text>
     </theme>
     <option>
         <header logo='./img/logo.png' effect=Shadow({blur:'0.4rem'})>
             <navi>
-                <Link size='0.2rem' url='./',true >Docs</Link>
+                <Link size='0.2rem' url='./docs.html',true >Docs</Link>
                 <Icon size='0.35rem' event=evLink(['https://github.com/mofron/mofron',true])>fab fa-github</Icon>
                 <Icon size='0.35rem' event=evLink(['https://twitter.com/mofronjs',true])>fab fa-twitter</Icon>
             </navi>
         </header>
     </option>
-    <Prjtop baseColor=253,245,253 button='Get Started' effect=Syncwin([true,true],['0px','-50%']) name=prjtop>
+    <Prjtop baseColor=253,245,253 effect=Syncwin([true,true],['0px','-50%']) name=prjtop>
         <theme>
-            <Button mainColor=240,230,250></Button>
+            <Button replace=Button accentColor=240,230,250></Button>
         </theme>
         <option>
-            <text size='0.4rem' style='z-index:10;'>The module based frontend framework.</text>
+            <text size='0.6rem' style='z-index:10;' font="Iceland">The module based frontend framework.</text>
+            <button clickEvent=stbtn>'Get Started'</button>
         </option>
     </Prjtop>
     <Why></Why>
     <Whats></Whats>
     <Detail></Detail>
 </Appbs>
+
+<div baseColor=250,250,250 style="padding-bottom:0.5rem;">
+    <respsv>
+        <mobile>
+            <layout>
+                <HrzCent>95</HrzCent>
+            </layout>
+        </mobile>
+        <other>
+            <layout>
+                <HrzCent>35</HrzCent>
+            </layout>
+        </other>
+    </respsv>
+    <Frame baseColor=253,245,253 effect=Hrzpos("center") layout=loHoriz() shadow="0.015rem">
+        <event>
+            <evLink>"./docs.html"</evLink>
+        </event>
+        <Image path="./img/logo.png" height="1rem">
+            <style>margin-left:0.8rem;</style>
+        </Image>
+        <Text size="0.2rem" mainColor=120,120,120 effect=Vrtpos("center") style="margin-left:0.3rem;">Get Started</Text>
+    </Frame>
+</div>
 <Footer mainColor=190,190,190 baseColor=240,230,250 height="1rem">
     <Text effect=Hrzpos("center") style="margin-top:0.2rem;" mainColor=120,120,120 size="0.18rem">
         Released under the MIT License

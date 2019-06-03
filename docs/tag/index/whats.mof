@@ -1,5 +1,5 @@
-<Component baseColor=250,250,250 layout=Padding('top','0.2rem',false) width='100%'>
-    <Text effect=Hrzpos('center') size='0.35rem'>"What is a mofron?"</Text>
+<div baseColor=250,250,250 layout=Padding('top','0.2rem',false) width='100%'>
+    <Text effect=Hrzpos('center') size="0.5rem" font="Iceland">"What is a mofron?"</Text>
     <Component effect=efHrzcnt(90)>
         <respsv>
             <mobile>
@@ -29,4 +29,4 @@
             </desc>
         </template>
     </Component>
-</Component>
+</div>
