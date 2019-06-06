@@ -640,10 +640,11 @@ mofron.Component = class extends mofron.Base {
                 try {
                     let ret = new rp();
                     /* copy option */
-                    //let tg_opt = tg.option();
-                    //delete tg_opt.style;
-                    
-                    ret.option(tg.option());
+                    let tg_opt = tg.option();
+                    ret.option(tg_opt);
+                    if ( (undefined === tg_opt.child) && (0 !== tg.child().length) ) {
+                        ret.option({ child: tg.child() });
+                    }
                     
                     /* replace child */
                     cp.updChild(tg, ret);
