@@ -1,6 +1,6 @@
 # [mofron](https://mofron.github.io/mofron/)
 
-mofron is module based frontend framework.<br>
+[mofron](https://mofron.github.io/mofron/) is module based frontend framework.<br>
 
 * **Module Based:** All components are made up of node modules. It makes simple to build a web page.
 * **Replaceable:** UI components can be replaced. This feature will minimize the impact on design and feature changes. For example, it makes easy to shift from mockup to production.
