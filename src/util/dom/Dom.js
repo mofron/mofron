@@ -290,13 +290,6 @@ mofron.Dom = class extends mofron.Base {
                 return this.m_prop.get(kv);
             }
             /* setter */
-            var chgcnf = {};
-            for (var kv_idx in kv) {
-                if (kv[kv_idx] !== this.prop(kv_idx)) {
-                    chgcnf[kv_idx] = kv[kv_idx];
-                }
-            }
-            
             if ('string' === typeof kv) {
                 var set_obj = {};
                 set_obj[kv] = val;
@@ -304,10 +297,6 @@ mofron.Dom = class extends mofron.Base {
             } else {
                 this.m_prop.set(kv);
             }
-            
-            //if (0 !== chgcnf.length) {
-            //    this.execConfListener ('prop', chgcnf);
-            //}
             this.value(null);
         } catch (e) {
             console.error(e.stack);
@@ -376,33 +365,6 @@ mofron.Dom = class extends mofron.Base {
             throw e;
         }
     }
-    
-    //addConfListener (fnc, prm) {
-    //    try {
-    //        if ('function' !== typeof fnc) {
-    //            throw new Error('invalid parameter');
-    //        }
-    //        this.m_cnflis.push([fnc, prm]);
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
-    //
-    //execConfListener (type, prm) {
-    //    try {
-    //        for (var idx in this.m_cnflis) {
-    //            this.m_cnflis[idx][0](
-    //                type,
-    //                prm,
-    //                this.m_cnflis[idx][1]
-    //            );
-    //        }
-    //    } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
     
     /**
      * dom string setter / getter
@@ -544,6 +506,9 @@ mofron.Dom = class extends mofron.Base {
                     break;
                 }
             }
+            
+            let prop = this.m_prop.get(); // for set property
+            
             if (null === tgt_pnt) {
                 this.m_rawdom = document.querySelector('#' + this.getId());
             } else {
@@ -555,7 +520,6 @@ mofron.Dom = class extends mofron.Base {
             }
             
             /* set property */
-            var prop = this.m_prop.get();
             for (var idx in prop) {
                 this.prop(idx, prop[idx]);
             }

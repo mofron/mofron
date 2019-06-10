@@ -47,8 +47,7 @@ mofron.DomConf = class extends mofron.Base {
             
             let ret = {};
             for (var idx in kv) {
-                if ( ((true === this.protect()) && (undefined !== this.m_conts[idx])) ||
-                     (kv[idx] === this.m_conts[idx])  ) {
+                if ( (true === this.protect()) && (undefined !== this.m_conts[idx]) ) {
                     continue;
                 }
                 
