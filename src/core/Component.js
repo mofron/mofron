@@ -1038,6 +1038,10 @@ mofron.Component = class extends mofron.Base {
                     visible = opt.visible;
                     delete opt.visible;
                 }
+                if (undefined !== opt.prmOpt) {
+                    this.prmOpt(opt.prmOpt);
+                    delete opt.prmOpt;
+                }
             }
             let opt_buf = null;
             if (true === this.isIniting()) {
@@ -1053,7 +1057,6 @@ mofron.Component = class extends mofron.Base {
                 }
             }
             
-            /* check visible */
             super.execOption(opt);
             
             
