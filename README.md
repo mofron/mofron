@@ -14,3 +14,6 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 
 * **[Text](https://github.com/mofron/mofron-comp-text.git)**
 * **[Button](https://github.com/mofron/mofron-comp-button.git)**
+* **[Header](https://github.com/mofron/mofron-comp-header)**
+* **[Input](https://github.com/mofron/mofron-comp-input)**
+* **[CheckBox](https://github.com/mofron/mofron-comp-checkbox)**
