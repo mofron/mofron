@@ -18,6 +18,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 * **[Button](https://github.com/mofron/mofron-comp-button.git)**
 * **[Header](https://github.com/mofron/mofron-comp-header)**
 * **[Frame](https://github.com/mofron/mofron-comp-frame.git)**
+* **[Image](https://github.com/mofron/mofron-comp-image.git)**
 
 ### Form
 
