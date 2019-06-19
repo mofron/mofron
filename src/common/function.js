@@ -148,20 +148,23 @@ module.exports = {
         }
     },
     
-    execFunc : (fnc, prm) => {
+    execEvents : (fnc, prm) => {
         try {
             let caller = null;
             let exec   = { func : null };
             
             for (let fidx in fnc) {
                 /* set param */
-                caller = new mofron.Param(fnc[fidx][1]);
+                caller = new mofron.Param();
                 if (true === mofron.func.isInclude(prm, 'Param')) {
                     let fprm = prm.get();
                     for (let pidx in fprm) {
                         caller.add(fprm[pidx]);
                     }
+                } else {
+                    caller.add(prm);
                 }
+                caller.add(fnc[fidx][1]);
                 /* execute func */
                 exec['func'] = fnc[fidx][0];
                 caller.exec(exec, 'func');
