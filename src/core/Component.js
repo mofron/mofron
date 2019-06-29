@@ -886,6 +886,8 @@ mofron.Component = class extends mofron.Base {
             } else if (false === this.execEffect((true === flg) ? 0 : 1, [scb, this])) {
                 /* execute effect */
                 scb(this);
+            } else if ("function" === typeof cb) {
+                cb();
             }
         } catch (e) {
             console.error(e.stack);
