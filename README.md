@@ -30,9 +30,22 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 
 
 ## Default Event
-* **[Click](https://github.com/mofron/mofron-event-click)** 
+|    |           |         |       |
+|:--:|:---------:|:-------:|:-----:|
+| Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  |  |
+| Focus     | Hover     | Style  | Resize      |
+| MouseOver | MouseOut  | Grag   |     |
 
 ## Default Effect
+|        |        |         |       |
+|:------:|:------:|:-------:|:-----:|
+| Fade   | Radius | Shadow  | Blur  |
+| HrzPos | VrtPos | Slant   | Scale |
+
 
 ## Default Layout
 
+|        |        |         |       |
+|:------:|:------:|:-------:|:-----:|
+| Margin  | Relative | Padding | Grid  |
+| HrzCenter | Horizon |         |       |
