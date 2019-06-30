@@ -22,7 +22,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 |  Link                                                    | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
 |  Accordion                                               | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
 |  Loading                                                 | TextArea                                                   | | |
-|                                                          | FileSel                                                    | | |
+|  Split                                                   | FileSel                                                    | | |
 |                                                          | Switch                                                     | | |
 
 
