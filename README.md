@@ -25,7 +25,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 |  Link                                                    | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
 |  Accordion                                               | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
 |  Loading                                                 | TextArea                                                   | | |
-|  Split                                                   | FileSel                                                    | | |
+|  [Split](https://github.com/mofron/mofron-comp-split)    | FileSel                                                    | | |
 |                                                          | Switch                                                     | | |
 
 
@@ -34,7 +34,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 |:--:|:---------:|:-------:|:-----:|
 | Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  |  |
 | Focus     | Hover     | Style  | Resize      |
-| MouseOver | MouseOut  | Grag   |     |
+| MouseOver | MouseOut  | [Drag](https://github.com/mofron/mofron-event-drag) |     |
 
 ## Default Effect
 |        |        |         |       |
