@@ -32,8 +32,8 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 ## Default Event
 |    |           |         |       |
 |:--:|:---------:|:-------:|:-----:|
-| Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  |  |
-| Focus     | Hover     | Style  | Resize      |
+| Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  | Focus |
+| ClkFocus  | Hover     | Style  | Resize  |
 | MouseOver | MouseOut  | [Drag](https://github.com/mofron/mofron-event-drag) |     |
 
 ## Default Effect
