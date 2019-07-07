@@ -836,6 +836,9 @@ mofron.Component = class extends mofron.Base {
         try {
             if (undefined === flg) {
                 /* getter */
+                if (false === this.adom().isPushed()) {
+                    return false;
+                }
                 let achd = this.adom().child();
                 for (let cidx in achd) {
                     if ('none' !== achd[cidx].style('display')) {

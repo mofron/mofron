@@ -119,7 +119,9 @@ mofron.Base = class {
                 }
                 return this.m_member[key][idx];
             }
-            if ( (true === Array.isArray(prm)) && ('object' !== tp) ) {
+            if ( (true === Array.isArray(prm)) &&
+                 (true !== Array.isArray(tp)) &&
+                 ("object" !== tp) ) {
                 for (let pidx in prm) {
                     this.arrayMember(key, tp, prm[pidx], idx);
                 }

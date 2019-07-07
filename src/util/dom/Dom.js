@@ -172,22 +172,14 @@ mofron.Dom = class extends mofron.Base {
     
     styleListener (key, func, prm) {
         try {
-            if (undefined === key) {
-                /* getter */
-                return (undefined === this.m_style_lis) ? [] : this.m_style_lis;
+            if (null === key) {
+                key = "";
             }
-            /* setter */
-            if (undefined === this.m_style_lis) {
-                this.m_style_lis = {};
-            }
-            if ( ('string'   !== typeof (key)) ||
-                 ('function' !== typeof (func)) ) {
-                throw new Error('invalid parameter');
-            }
-            if (undefined === this.m_style_lis[key]) {
-                this.m_style_lis[key] = new Array();
-            }
-            this.m_style_lis[key].push([func, prm]);
+            return this.arrayMember(
+                       "styleListener",
+                       ["string", "function", null],
+                       (undefined === key) ? key :  [key,func,prm]
+                   );
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -226,16 +218,14 @@ mofron.Dom = class extends mofron.Base {
             }
             
             /* execute style listener */
-            let lisner  = this.styleListener();
-            let lis_prm = {};
-            for (let s_idx in set_ret) {
-                for (let lis_idx in lisner) {
-                    if (s_idx === lis_idx) {
-                        lis_prm[lis_idx] = set_ret[s_idx];
-                        for (let cbidx in lisner[lis_idx]) {
-                            lisner[lis_idx][cbidx][0](lis_prm, this, lisner[lis_idx][cbidx][1]);
-                        }
-                    }
+            let lisner = this.styleListener();
+            for (let lidx in lisner) {
+                if ("" === lisner[lidx][0]) {
+                    lisner[lidx][1](this, set_ret, lisner[lidx][2]);
+                } else if (undefined !== set_ret[lisner[lidx][0]]) {
+                    let ev_prm = {};
+                    ev_prm[lisner[lidx][0]] = set_ret[lisner[lidx][0]];
+                    lisner[lidx][1](this, ev_prm, lisner[lidx][2]);
                 }
             }
             
