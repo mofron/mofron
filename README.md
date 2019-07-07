@@ -33,7 +33,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 |    |           |         |       |
 |:--:|:---------:|:-------:|:-----:|
 | Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  | Focus |
-| ClkFocus  | Hover     | Style  | Resize  |
+| ClkFocus  | Hover     | [Style](https://github.com/mofron/mofron-event-style)  | Resize  |
 | MouseOver | MouseOut  | [Drag](https://github.com/mofron/mofron-event-drag) |     |
 
 ## Default Effect
