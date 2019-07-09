@@ -24,9 +24,9 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 | [Image](https://github.com/mofron/mofron-comp-image.git) | [Radio](https://github.com/mofron/mofron-comp-radio.git) | Tree |  |
 |  [LinkTxt](https://github.com/mofron/mofron-comp-linktxt)| [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
 |  Accordion                                               | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
-|  Loading                                                 | TextArea                                                   | | |
-|  [Split](https://github.com/mofron/mofron-comp-split)    | FileSel                                                    | | |
-|                                                          | Switch                                                     | | |
+|  ModalFil                                                | TextArea                                                   | | |
+|  Loading                                                 | FileSel                                                    | | |
+|  [Split](https://github.com/mofron/mofron-comp-split)    | Switch                                                     | | |
 
 
 ## Default Event
