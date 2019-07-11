@@ -390,10 +390,16 @@ module.exports = {
                 }
                 
                 if (tag === cmp_lst[cidx].tag()) {
-                    return cmp_lst[cidx];
+                    ret.push(cmp_lst[cidx]);
                 }
             }
-            return (0 !== ret.length) ? ret : null;
+            if (0 === ret.length) {
+                return null;
+            } else if (1 === ret.length) {
+                return ret[0];
+            } else {
+                return ret;
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

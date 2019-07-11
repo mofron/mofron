@@ -209,7 +209,7 @@ mofron.Dom = class extends mofron.Base {
                 set_ret = this.m_style.set(kv);
                 this.m_style.protect(false);
             } else if (true === _opt.locked) {
-                this.m_style.set(kv, _opt.forced);
+                set_ret = this.m_style.set(kv, _opt.forced);
                 for (let kidx in kv) {
                     this.m_style.lock(kidx);
                 }
