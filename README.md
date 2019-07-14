@@ -48,5 +48,5 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 
 |        |        |         |       |
 |:------:|:------:|:-------:|:-----:|
-| Margin  | Relative | Padding | Grid  |
+| Margin  | [Relative](https://github.com/mofron/mofron-layout-relative) | Padding | Grid  |
 | HrzCenter | Horizon |         |       |
