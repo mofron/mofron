@@ -32,8 +32,8 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 ## Default Event
 |    |           |         |       |
 |:--:|:---------:|:-------:|:-----:|
-| Common    |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  | Focus |
-| ClkFocus  | Hover     | [Style](https://github.com/mofron/mofron-event-style)  | Resize  |
+| [Common](https://github.com/mofron/mofron-event-common) |  OnCommon | [Click](https://github.com/mofron/mofron-event-click)  | Focus |
+| [ClkFocus](https://github.com/mofron/mofron-event-clkfocus) | Hover     | [Style](https://github.com/mofron/mofron-event-style)  | Resize  |
 | MouseOver | MouseOut  | [Drag](https://github.com/mofron/mofron-event-drag) |     |
 
 ## Default Effect
@@ -48,5 +48,5 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 
 |        |        |         |       |
 |:------:|:------:|:-------:|:-----:|
-| Margin  | Relative | Padding | Grid  |
+| Margin  | [Relative](https://github.com/mofron/mofron-layout-relative) | Padding | Grid  |
 | HrzCenter | Horizon |         |       |
