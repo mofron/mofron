@@ -998,23 +998,6 @@ module.exports = {
         }
     },
     
-    isRespsv : (obj, nm) => {
-        try {
-            let inc_prm = ['Base', 'CompConf', 'Respsv'];
-            if ('string' === typeof nm) {
-                inc_prm.push(nm);
-            } else if (true === Array.isArray(nm)) {
-                for (let nidx in nm) {
-                    inc_prm.push(nm[nidx]);
-                }
-            }
-            return mofron.func.isInclude(obj, inc_prm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    },
-    
     isObject : (obj, nm) => {
         try {
             if ((null === obj) || ('object' !== typeof obj)) {
@@ -1033,6 +1016,24 @@ module.exports = {
                 return false;
             }
             
+            return false;
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+    
+    isChild (pnt, cmp) {
+        try {
+            let ret = false;
+            let chd = pnt.getChild(true);
+            for (let cidx in chd) {
+                if (true === mofron.func.isChild(chd[cidx], cmp)) {
+                    return true;
+                } else if (chd[cidx].getId() === cmp.getId()) {
+                    return true;
+                }
+            }
             return false;
         } catch (e) {
             console.error(e.stack);
