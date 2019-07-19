@@ -41,7 +41,7 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 |:------:|:------:|:-------:|:-----:|
 | Fade   | Radius | Shadow  | Blur  |
 | HrzPos | VrtPos | Slant   | Scale |
-|SyncWin |        |         |       |
+|SyncWin | [Position](https://github.com/mofron/mofron-effect-position) |         |       |
 
 
 ## Default Layout
