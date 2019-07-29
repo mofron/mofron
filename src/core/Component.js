@@ -25,7 +25,7 @@ mofron.Component = class extends mofron.Base {
             this.m_theme  = {};
             this.m_adom   = null;
             this.m_target = new Array(null, null, null); /* child, style, event */
-            this.m_conf   = new Array([], [], []);   /* layout, effect, event, respsv */
+            this.m_conf   = new Array([], [], []);   /* layout, effect, event */
             this.listOption(["child", "layout", "effect", "event", "style" ]);
             this.prmMap("child");
             
@@ -429,7 +429,9 @@ mofron.Component = class extends mofron.Base {
             for (let cidx in chd) {
                 chd[cidx].initEffect();
             }
-            this.execEffect((true === this.visible()) ? 0 : 1);
+            this.execEffect(
+                (true === this.visible()) ? 0 : 1
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -622,8 +624,25 @@ mofron.Component = class extends mofron.Base {
             if ("object" !== typeof thm) {
                 throw new Error("invalid parameter");
             }
-            for (let tidx2 in thm) {
-                this.m_theme[tidx2] = thm[tidx2];
+            /* format data */
+            for (let tidx in thm) {
+                if ( ("object" === typeof thm[tidx]) &&
+                     (false === mofron.func.isInclude(thm[tidx], 'Base')) ) {
+                    /* param theme is option */
+                    thm[tidx] = [undefined, thm[tidx]];
+                } else if ("function" === typeof thm[tidx]) {
+                    /* param theme is class */
+                    thm[tidx] = [thm[tidx], {}];
+                } else if ( (true === Array.isArray(thm)) &&
+                            ("function" === typeof thm[tidx][0]) &&
+                            ("object" === typeof thm[tidx][1]) &&
+                            (false === mofron.func.isInclude(thm[tidx][1], 'Base')) ) {
+                    /* param theme is class with option */
+                    /* nothing to do */
+                } else {
+                    throw new Error("invalid parameter");
+                }
+                this.m_theme[tidx] = thm[tidx];
             }
         } catch (e) {
             console.error(e.stack);
@@ -641,7 +660,23 @@ mofron.Component = class extends mofron.Base {
             /* call child theme */
             let thm = this.theme();
             for (let tidx in thm) {
-                prm[tidx] = thm[tidx]
+                if (undefined === prm[tidx]) {
+                    prm[tidx] = thm[tidx];
+                } else if (undefined === thm[tidx][0]) {
+                    /* member theme is option */
+                    for (let oidx in thm[tidx][1]) {
+                        prm[tidx][1][oidx] = thm[tidx][1][oidx];
+                    }
+                } else if (undefined === prm[tidx][0]) {
+                    /* parent theme is option */
+                    for (let oidx in prm[tidx][1]) {
+                        thm[tidx][1][oidx] = prm[tidx][1][oidx];
+                    }
+                    prm[tidx] = thm[tidx];
+                } else {
+                    /* parent theme is already set class */
+                    prm[tidx] = thm[tidx];
+                }
             }
             let chd = this.getChild(true);
             for (let cidx in chd) {
@@ -655,6 +690,7 @@ mofron.Component = class extends mofron.Base {
                     /* copy option */
                     let tg_opt = tg.option();
                     ret.option(tg_opt);
+                    
                     if ( (undefined === tg_opt.child) && (0 !== tg.child().length) ) {
                         ret.option({ child: tg.child() });
                     }
@@ -674,20 +710,18 @@ mofron.Component = class extends mofron.Base {
                     
                     if (true === mofron.func.isInclude(chd[cidx2], pidx)) {
                         /* this child component is theme target */
-                        if ('function' === typeof prm[pidx]) {
+                        if ( (undefined !== prm[pidx][0]) &&
+                             (undefined === prm[pidx][1]) ) {
                             /* theme type is class */
-                            replace(this, chd[cidx2], prm[pidx]);
-                        } else if ( (true === Array.isArray(prm[pidx])) &&
-                                    ('function' === typeof prm[pidx][0]) &&
-                                    ( ('object' === typeof prm[pidx][1]) &&
-                                      (false === mofron.func.isInclude(prm[pidx][1], 'Base')) ) ) {
+                            replace(this, chd[cidx2], prm[pidx][0]);
+                        } else if ( (undefined !== prm[pidx][0]) &&
+                                    (undefined !== prm[pidx][1]) ) {
                             /* theme type is class with option */
                             replace(this, chd[cidx2], prm[pidx][0]).option(prm[pidx][1]);
-                            
-                        } else if ( ('object' === typeof prm[pidx]) &&
-                                    (false === mofron.func.isInclude(prm[pidx], 'Base')) ) {
-                            /* option */
-                            chd[cidx2].option(prm[pidx]);
+                        } else if ( (undefined === prm[pidx][0]) &&
+                                    (undefined !== prm[pidx][1]) ) {
+                            /* theme type is option */
+                            chd[cidx2].option(prm[pidx][1]);
                         }
                     }
                 }
@@ -737,8 +771,8 @@ mofron.Component = class extends mofron.Base {
             this.afterRender();
             
             this.initEffect();
-            this.initConfig(2); // event
             
+            this.initConfig(2); // event
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -843,6 +877,7 @@ mofron.Component = class extends mofron.Base {
             throw e;
         }
     }
+    
     
     visible (flg, cb) {
         try {
@@ -950,33 +985,27 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    width (prm) {
+    fsize (x, y) {
         try {
-            return (undefined === prm) ? this.style('width') : this.sizeValue('width', prm);
+            if (undefined === x) {
+                return this.size();
+            }
+            this.size([x,{locked:true}], [y,{locked:true}]);
         } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    width (prm) {
+        try { return mofron.func.cmpSize(this, "width", prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     height (prm) {
-        try {
-            return (undefined === prm) ? this.style('height') : this.sizeValue('height', prm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    sizeValue (key, val) {
-        try {
-            if (undefined === val) {
-                /* getter */
-                return mofron.func.getSize(this.style(key),this);
-            }
-            /* setter */
-            mofron.func.setSize(this, key, val);
-        } catch (e) {
+        try { return mofron.func.cmpSize(this, "height", prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -995,22 +1024,13 @@ mofron.Component = class extends mofron.Base {
     mainColor (prm) { return null; }
     
     baseColor (prm) {
-        try { return this.tgtColor('background', prm); } catch (e) {
+        try { return mofron.func.cmpColor(this, "background", prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     accentColor (prm) { return null; }
-    
-    tgtColor (tgt, val) {
-        try {
-            return (undefined === val) ? this.style(tgt) : mofron.func.setColor(this, tgt, val);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
     
     /* option method */
     prmOpt (po, p1, p2, p3, p4) {

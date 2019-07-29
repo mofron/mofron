@@ -196,7 +196,6 @@ mofron.Dom = class extends mofron.Base {
      */
     style (kv, opt) {
         try {
-            let _opt = (undefined === opt) ? {} : opt;
             if ( (undefined === kv) ||
                  ('string' === typeof kv) ) {
                 /* getter */

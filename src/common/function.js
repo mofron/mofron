@@ -187,7 +187,7 @@ module.exports = {
                     /* this is last index in this order index, execute next order index */
                     if (eidx == mofron.func.getLastIndex(eff, eid)) {
                         /* this is last index in this execute number */
-                        let dis_spd = (ds_lef) => {
+                        let dis_spd = (ds1,ds2,ds_lef) => {
                             try { mofron.func.confSpeed(ds_lef, null); } catch (e) {
                                 console.error(e.stack);
                                 throw e;
@@ -215,7 +215,7 @@ module.exports = {
                     /* first execute initialize */
                     let eid_eff = mofron.func.getEffect(eff, eid);
                     for (let eeidx in eid_eff) {
-                        let bf = eff[eeidx].beforeEvent();
+                        let bf = eid_eff[eeidx].beforeEvent();
                         for (let bidx in bf) {
                             bf[bidx][0](eid_eff[eeidx], bf[bidx][1]);
                         }
@@ -226,6 +226,7 @@ module.exports = {
                 exec = true;
                 
             }
+            
             return exec;
         } catch (e) {
             console.error(e.stack);
@@ -358,7 +359,7 @@ module.exports = {
             if (0 !== cb.length) {
                 let exec = () => {
                     for (let cidx in cb) {
-                        cb[cidx][0](cb[cidx][1]);
+                        cb[cidx][0](eff.component(), eff, cb[cidx][1]);
                         if (false === cb[cidx][2]) {
                             upd_cb.push(cb[cidx]);
                         }
@@ -574,11 +575,14 @@ module.exports = {
         }
     },
     
-    setColor : (cmp, key, val) => {
+    cmpColor : (cmp, key, val) => {
         try {
             if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
                  ('string' !== typeof key) ) {
                 throw new Error('invalid parameter');
+            }
+            if (undefined === val) {
+                return cmp.style(key);
             }
             
             let get_style_val = (p1, p2) => {
@@ -773,14 +777,22 @@ module.exports = {
         }
     },
     
-    setSize : (cmp, key, val) => {
+    cmpSize : (cmp, key, val) => {
         try {
             if ( (true !== mofron.func.isInclude(cmp, 'Component')) ||
                  ('string' !== typeof key) ) {
                 throw new Error('invalid parameter');
             }
+            if (undefined === val) {
+                return cmp.style(key);
+            }
             
             let set_style  = {};
+            let opt        = undefined;
+            if (true === Array.isArray(val)) {
+                opt = val[1];
+                val = val[0];
+            }
             if ( (null === val) || ('string' === typeof val) ) {
                 set_style[key] = val;
             } else if (true === mofron.func.isInclude(val, ['Base','Size'])) {
@@ -788,7 +800,7 @@ module.exports = {
             } else {
                 throw new Error('invalid parameter');
             }
-            cmp.style(set_style);
+            cmp.style(set_style, opt);
         } catch (e) {
             console.error(e.stack);
             throw e;

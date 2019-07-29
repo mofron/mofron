@@ -77,7 +77,20 @@ mofron.Base = class {
                 return;
             }
             /* setter */
-            if (true === mofron.func.isInclude(prm, 'Base')) {
+            if ( ("color" === tp) || ("size" === tp) ) {
+                if (true === Array.isArray(prm)) {
+                    if (2 === prm.length) {
+                        let pbuf = null;
+                        pbuf = ("color" === tp) ? mofron.func.getColor(prm[0]) : mofron.func.getSize(prm[0]);
+                        pbuf.option(prm[1]);
+                        prm = pbuf;
+                    } else {
+                        prm = mofron.func.getColor(prm);
+                    }
+                } else {
+                    prm = ("color" === tp) ?  mofron.func.getColor(prm) : mofron.func.getSize(prm);
+                }
+            } else if (true === mofron.func.isInclude(prm, 'Base')) {
                 if (false === mofron.func.isInclude(prm, tp)) {
                     throw new Error('invalid parameter');
                 }

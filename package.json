@@ -1,6 +1,6 @@
 {
   "name": "mofron",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "module based front-end framework",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "author": "simparts",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/simpart/mofron/issues"
+    "url": "https://github.com/mofron/mofron/issues"
   },
   "homepage": "https://mofron.github.io/mofron/",
   "devDependencies": {

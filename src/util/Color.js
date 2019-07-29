@@ -11,17 +11,17 @@ mofron.Color = class extends mofron.Base {
     /**
      * initialize member
      *
-     * @param p1 : (number 0-255) red value (option), color string, null
-     * @param g : (number 0-255) green value (option)
-     * @param b : (number 0-255) blue alue (option)
-     * @param a : (number 0-1)   alpha value (option)
      */
-    constructor (p1,g,b,a) {
+    constructor (prm) {
         try {
             super();
             this.name('Color');
             this.m_rgba = [null, null, null, null]; /* red, green, blue, alpha */
-            this.rgba(p1,g,b,a);
+            if ("string" === prm) {
+                this.value(prm);
+            } else if (true === Array.isArray(prm)) {
+                this.rgba(prm[0], prm[1], prm[2], prm[3]);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -85,6 +85,27 @@ mofron.Color = class extends mofron.Base {
         }
     }
     
+    value (prm) {
+        try { return this.member("value", "string", prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    option (prm) {
+        try { return this.member("option", "object", prm, {}); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+
+    toStyle () {
+        try { return [this.toString(), this.option()]; } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     /**
      * get coloe style value
      *
@@ -94,6 +115,10 @@ mofron.Color = class extends mofron.Base {
      */
     toString () {
         try {
+            if (null !== this.value()) {
+                return this.value();
+            }
+            
             var rgba = this.rgba();
             var red   = rgba[0];
             var green = rgba[1];
