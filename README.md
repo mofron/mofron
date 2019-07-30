@@ -22,11 +22,13 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 | [Header](https://github.com/mofron/mofron-comp-header) | [CheckBox](https://github.com/mofron/mofron-comp-checkbox) | [Menu](https://github.com/mofron/mofron-comp-menu) | Progress |
 | [Frame](https://github.com/mofron/mofron-comp-frame.git) | [CheckList](https://github.com/mofron/mofron-comp-checklist.git) | Carousel |  Tooltip |
 | [Image](https://github.com/mofron/mofron-comp-image.git)   | [Radio](https://github.com/mofron/mofron-comp-radio.git) | Tree |  |
-|  [LinkTxt](https://github.com/mofron/mofron-comp-linktxt)  | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
-|  Accordion                                                 | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
-|  [ModalFil](https://github.com/mofron/mofron-comp-modalfil)| TextArea                                                   | | |
-|  [Loading](https://github.com/mofron/mofron-comp-loading)  | FileSel                                                    | | |
-|  [Split](https://github.com/mofron/mofron-comp-split)      | Switch                                                     | | |
+|  Heading  | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
+|  [LinkTxt](https://github.com/mofron/mofron-comp-linktxt)   | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
+| Accordion                                                   |  TextArea                                                   | | |
+|  [ModalFil](https://github.com/mofron/mofron-comp-modalfil)  | FileSel                                                    | | |
+|  [Loading](https://github.com/mofron/mofron-comp-loading)      | Switch                                                     | | |
+| [Split](https://github.com/mofron/mofron-comp-split) |  | | |
+
 
 
 ## Default Event
