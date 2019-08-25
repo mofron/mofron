@@ -997,15 +997,15 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    width (prm) {
-        try { return mofron.func.cmpSize(this, "width", prm); } catch (e) {
+    width (prm, opt) {
+        try { return mofron.func.cmpSize(this, "width", [prm,opt]); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    height (prm) {
-        try { return mofron.func.cmpSize(this, "height", prm); } catch (e) {
+    height (prm, opt) {
+        try { return mofron.func.cmpSize(this, "height", [prm,opt]); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -1021,16 +1021,16 @@ mofron.Component = class extends mofron.Base {
         }
     }
     
-    mainColor (prm) { return null; }
+    mainColor (prm, opt) { return null; }
     
-    baseColor (prm) {
-        try { return mofron.func.cmpColor(this, "background", prm); } catch (e) {
+    baseColor (prm, opt) {
+        try { return mofron.func.cmpColor(this, "background", [prm,opt]); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    accentColor (prm) { return null; }
+    accentColor (prm, opt) { return null; }
     
     /* option method */
     prmOpt (po, p1, p2, p3, p4) {

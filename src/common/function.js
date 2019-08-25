@@ -463,7 +463,7 @@ module.exports = {
                     return mofron.func.convColorName(prm);
                 }
             } else if (true === Array.isArray(prm)) {
-                return new mofron.Color(prm[0], prm[1], prm[2], prm[3]);
+                return new mofron.Color(prm);
             } else if (true === mofron.func.isInclude(prm, 'Color')) {
                 return prm;
             } else {
@@ -581,6 +581,11 @@ module.exports = {
                  ('string' !== typeof key) ) {
                 throw new Error('invalid parameter');
             }
+	    let opt = undefined;
+	    if (true === Array.isArray(val)) {
+	        val = val[0];
+		opt = val[1];
+	    }
             if (undefined === val) {
                 return cmp.style(key);
             }
@@ -609,13 +614,8 @@ module.exports = {
                     throw e;
                 }
             }
-            
-            if ( (true === Array.isArray(val)) && (2 === val.length) ) {
-                /* with option */
-                cmp.option({ style : [get_style_val(key,val[0]), val[1]] });
-            } else {
-                cmp.option({ style: get_style_val(key,val) });
-            }
+            /* set color */
+            cmp.option({ style : [get_style_val(key,val), opt] });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -783,16 +783,15 @@ module.exports = {
                  ('string' !== typeof key) ) {
                 throw new Error('invalid parameter');
             }
+	    let opt = undefined;
+	    if (true === Array.isArray(val)) {
+	        opt = val[1];
+	        val = val[0];
+	    }
             if (undefined === val) {
                 return cmp.style(key);
             }
-            
             let set_style  = {};
-            let opt        = undefined;
-            if (true === Array.isArray(val)) {
-                opt = val[1];
-                val = val[0];
-            }
             if ( (null === val) || ('string' === typeof val) ) {
                 set_style[key] = val;
             } else if (true === mofron.func.isInclude(val, ['Base','Size'])) {
