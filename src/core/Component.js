@@ -977,8 +977,16 @@ mofron.Component = class extends mofron.Base {
                 return [this.width(), this.height()];
             }
             /* setter */
-            this.width(x);
-            this.height(y);
+	    if (true === Array.isArray(x)) {
+                this.width(x[0], x[1]);
+	    } else {
+                this.width(x);
+	    }
+	    if (true === Array.isArray(y)) {
+                this.height(y[0], y[1]);
+            } else {
+	        this.height(y);
+	    }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -1014,7 +1022,28 @@ mofron.Component = class extends mofron.Base {
     /*** color method ***/
     color (c1, c2, c3) {
         try {
-            return [this.mainColor(c1), this.baseColor(c2), this.accentColor(c3)];
+	    if (undefined === c1) {
+	        /* getter */
+                return [this.mainColor(), this.baseColor(), this.accentColor()];
+	    }
+	    /* main color */
+	    if ( (true === Array.isArray(c1)) && ('object' === typeof c1[1]) ) {
+                this.mainColor(c1[0], c1[1]);
+	    } else {
+                this.mainColor(c1);
+	    }
+            /* base color */
+            if ( (true === Array.isArray(c2)) && ('object' === typeof c2[1]) ) {
+                this.baseColor(c2[0], c2[1]);
+            } else {
+                this.baseColor(c2);
+            }
+	    /* accent color */
+            if ( (true === Array.isArray(c3)) && ('object' === typeof c3[1])) {
+                this.accentColor(c3[0], c3[1]);
+            } else {
+                this.accentColor(c3);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

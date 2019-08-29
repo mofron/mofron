@@ -583,10 +583,10 @@ module.exports = {
             }
 	    let opt = undefined;
 	    if (true === Array.isArray(val)) {
-	        val = val[0];
-		opt = val[1];
+	        _val = val[0];
+		_opt = val[1];
 	    }
-            if (undefined === val) {
+            if ((undefined === val) || (undefined === _val)) {
                 return cmp.style(key);
             }
             
@@ -615,7 +615,7 @@ module.exports = {
                 }
             }
             /* set color */
-            cmp.option({ style : [get_style_val(key,val), opt] });
+            cmp.option({ style : [get_style_val(key,_val), _opt] });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -783,23 +783,24 @@ module.exports = {
                  ('string' !== typeof key) ) {
                 throw new Error('invalid parameter');
             }
-	    let opt = undefined;
-	    if (true === Array.isArray(val)) {
-	        opt = val[1];
-	        val = val[0];
+	    let _val = val;
+	    let _opt = undefined;
+	    if (true === Array.isArray(_val)) {
+	        _opt = val[1];
+	        _val = val[0];
 	    }
-            if (undefined === val) {
+            if (undefined === _val) {
                 return cmp.style(key);
             }
             let set_style  = {};
-            if ( (null === val) || ('string' === typeof val) ) {
-                set_style[key] = val;
-            } else if (true === mofron.func.isInclude(val, ['Base','Size'])) {
-                set_style[key] = val.toString();
+            if ( (null === _val) || ('string' === typeof _val) ) {
+                set_style[key] = _val;
+            } else if (true === mofron.func.isInclude(_val, ['Base','Size'])) {
+                set_style[key] = _val.toString();
             } else {
                 throw new Error('invalid parameter');
             }
-            cmp.style(set_style, opt);
+            cmp.style(set_style, _opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -886,6 +887,19 @@ module.exports = {
         }
     },
     
+    roundUp : (prm) => {
+        try {
+            let flo = mofron.func.flo2int(prm);
+            if (1000 > flo[1]) {
+                return prm;
+	    }
+	    return Math.floor(flo[0]/flo[1]*100)/100;
+	} catch (e) {
+	    console.error(e.stack);
+            throw e;
+	}
+    },
+
     flo2int : (prm) => {
         try {
             if ('number' !== typeof prm) {
