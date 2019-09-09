@@ -87,6 +87,9 @@ module.exports = {
             let achd = cmp.adom().child();
             if (true === flg) {
                 dbuf = cmp.data(cmp.getId()).dispBuff;
+		if (undefined === dbuf) {
+                    dbuf = [null];
+                }
                 for (let cidx in achd) {
                     if ('none' === achd[cidx].style('display')) {
                         achd[cidx].style({
@@ -160,6 +163,8 @@ module.exports = {
         try {
             let _oidx = (undefined === oidx) ? 0 : oidx;
             let _scb  = [()=>{}, null, true];
+            let exec  = false;   // exec flag
+            
             if (undefined !== scb) {
                 _scb = (true === Array.isArray(scb)) ? [scb[0], scb[1], true] : [scb, null, true];
             }
@@ -171,21 +176,34 @@ module.exports = {
             }
             
             mofron.func.updEffSpeed(eff, eid, _oidx);
-            
-            let exec    = false;   // exec flag
+            let sp_eff = [];
+	    /* execute 0 speed effect */
+	    for (let eidx1 in eff) {
+	        if (null === eff[eidx1].speed()) {
+		    if ( (eidx1 == eff.length-1) && (0 === sp_eff.length)) {
+                        /* last execute index */
+                        eff[eidx1].option({ callback: _scb });
+		    }
+		    eff[eidx1].execute();
+                    exec = true;
+		} else {
+                    sp_eff.push(eff[eidx1]);
+		}
+	    }
+
             let spd_cnf = false;
-            for (let eidx in eff) {
+            for (let eidx in sp_eff) {
                 
-                if (true === eff[eidx].isSkipped(eid, _oidx)) {
-                    if (_oidx < eff[eidx].order()) {
+                if (true === sp_eff[eidx].isSkipped(eid, _oidx)) {
+                    if (_oidx < sp_eff[eidx].order()) {
                         exec = true;
                     }
                     continue;
                 }
                 /* execute effect */
-                if (eidx == mofron.func.getLastIndex(eff, eid, _oidx)) {
+                if (eidx == mofron.func.getLastIndex(sp_eff, eid, _oidx)) {
                     /* this is last index in this order index, execute next order index */
-                    if (eidx == mofron.func.getLastIndex(eff, eid)) {
+                    if (eidx == mofron.func.getLastIndex(sp_eff, eid)) {
                         /* this is last index in this execute number */
                         let dis_spd = (ds1,ds2,ds_lef) => {
                             try { mofron.func.confSpeed(ds_lef, null); } catch (e) {
@@ -193,14 +211,14 @@ module.exports = {
                                 throw e;
                             }
                         }
-                        let lst_eff = eff[eidx];
-                        eff[eidx].execOption({ callback: [dis_spd, lst_eff, true] });
-                        eff[eidx].execOption({ callback: _scb });
+                        let lst_eff = sp_eff[eidx];
+                        sp_eff[eidx].execOption({ callback: [dis_spd, lst_eff, true] });
+                        sp_eff[eidx].execOption({ callback: _scb });
                     } else {
                         /* set callback that execute next order */
-                        eff[eidx].callback(
+                        sp_eff[eidx].callback(
                             () => {
-                                try { mofron.func.execEffect(eff, eid, scb, _oidx+1); } catch (e) {
+                                try { mofron.func.execEffect(sp_eff, eid, scb, _oidx+1); } catch (e) {
                                     console.error(e.stack);
                                     throw e;
                                 }
@@ -211,18 +229,18 @@ module.exports = {
                     }
                 }
                 
-                if (eidx == mofron.func.getFirstIndex(eff, eid, _oidx)) {
+                if (eidx == mofron.func.getFirstIndex(sp_eff, eid, _oidx)) {
                     /* first execute initialize */
-                    let eid_eff = mofron.func.getEffect(eff, eid);
+                    let eid_eff = mofron.func.getEffect(sp_eff, eid);
                     for (let eeidx in eid_eff) {
                         let bf = eid_eff[eeidx].beforeEvent();
                         for (let bidx in bf) {
                             bf[bidx][0](eid_eff[eeidx], bf[bidx][1]);
                         }
                     }
-                    mofron.func.confSpeed(eff[eidx], eff[eidx].speed());
+                    mofron.func.confSpeed(sp_eff[eidx], sp_eff[eidx].speed());
                 }
-                eff[eidx].execute();
+                sp_eff[eidx].execute();
                 exec = true;
                 
             }
@@ -250,7 +268,9 @@ module.exports = {
             
             if (0 < spd) {
                 for (let tidx in tgt) {
-                    tgt[tidx].speed(spd);
+		    if (null !== tgt[tidx].speed()) {
+                        tgt[tidx].speed(spd);
+		    }
                 }
             }
         } catch (e) {
@@ -360,15 +380,15 @@ module.exports = {
                 let exec = () => {
                     for (let cidx in cb) {
                         cb[cidx][0](eff.component(), eff, cb[cidx][1]);
-                        if (false === cb[cidx][2]) {
-                            upd_cb.push(cb[cidx]);
-                        }
-                        eff.callback(undefined, parseInt(cidx));
                     }
-                    /* update callback */
-                    for (let cidx2 in upd_cb) {
-                        eff.callback(upd_cb[cidx2]);
-                    }
+		    /* delete one-time callback */
+                    for (let cidx2=0; cidx2 < cb.length ;cidx2++) {
+                        if (true === cb[cidx2][2]) {
+                            /* one-time callback */
+			    eff.delCallback(cidx2);
+			    cidx2--;
+			}
+		    }
                 };
                 setTimeout(exec, (null === eff.speed()) ? 0 : eff.speed());
             }
@@ -762,12 +782,26 @@ module.exports = {
     
     getRemBase : () => {
         try {
-            let fsize = mofron.func.getSize(
-                document.documentElement.style[
-                    mofron.func.getCamel('font-size')
-                ]
-            );
-            if (null === fsize.type()) {
+	    let dev_tp = mofron.func.devType();
+	    let fsize  = null;
+            if ( ('mobile' === dev_tp) || ('tablet' === dev_tp) ) {
+                if (true === mofron.func.isVrtAngle()) {
+		    fsize = mofron.func.getSize(mofron.fsize.vertical);
+		} else {
+		    fsize = mofron.func.getSize(mofron.fsize.horizon);
+		}
+	    } else if ('other' === dev_tp) {
+                fsize = mofron.func.getSize(
+                    document.documentElement.style[
+                        mofron.func.getCamel('font-size')
+                    ]
+                );
+                if (null === fsize.type()) {
+                    throw new Error('invalid html font-size');
+                }
+                return 16 * (fsize.value() / 100);
+	    }
+	    if (null === fsize.type()) {
                 throw new Error('invalid html font-size');
             }
             return 16 * (fsize.value() / 100);
@@ -1293,7 +1327,7 @@ module.exports = {
     isVrtAngle : () => {
         try {
             if (('mobile' !== mofron.func.devType()) && ('tablet' !== mofron.func.devType())) {
-                return false;
+                return ('other' === mofron.func.devType()) ? true : false;
             }
             return (window.innerHeight > window.innerWidth) ? true : false;
         } catch (e) {

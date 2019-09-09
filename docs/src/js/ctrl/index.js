@@ -9,6 +9,8 @@ require('expose-loader?app!../conf/namesp.js');
 const base = require('../conf/basestyle.js');
 const comp = require('../init/index.js');
 
+console.log(comp);
+
 try {
     base.init();
     app.root.child(comp);

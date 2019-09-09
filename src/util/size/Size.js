@@ -86,21 +86,8 @@ mofron.size.Size = class extends mofron.Base {
         }
     }
     
-    toPxnum () {}
-    
-    
-    //sum (p1, p2) {
-    //    try { return mofron.func.sizeSum(this, p1, p2); } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //} 
-    
-    //diff (p1, p2) {
-    //    try { return mofron.func.sizeDiff(this, p1, p2); } catch (e) {
-    //        console.error(e.stack);
-    //        throw e;
-    //    }
-    //}
+    toPxnum () {
+        return null;
+    }
 }
 /* end of file */

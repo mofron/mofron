@@ -934,10 +934,8 @@ mofron.Component = class extends mofron.Base {
             if (false === this.adom().isPushed()) {
                 scb(this);
             } else if (false === this.execEffect((true === flg) ? 0 : 1, [scb, this])) {
-                /* execute effect */
+                /* it doesn't execute effect, only callback */
                 scb(this);
-            } else if ("function" === typeof cb) {
-                cb();
             }
         } catch (e) {
             console.error(e.stack);

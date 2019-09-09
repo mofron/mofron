@@ -141,16 +141,6 @@ mofron.Base = class {
                 return;
             }
             
-            if (undefined === prm) {
-                /* delete member */
-                if (undefined === idx) {
-                    this.m_member[key] = undefined;
-                } else if (undefined !== this.m_member[key][idx]) {
-                    this.m_member[key].splice(idx, 1);
-                }
-                return;
-            }
-            
             /* setter */
             if (true === mofron.func.isInclude(prm, 'Base')) {
                 if (false === mofron.func.isInclude(prm, tp) ) {
@@ -225,9 +215,6 @@ mofron.Base = class {
             if ('object' !== typeof opt) {
                 throw new Error('invalid parameter');
             }
-            //if (undefined === this.m_opt) {
-            //    this.m_opt = {};
-            //}
             
             let lst_opt = this.listOption();
             let is_list = (i) => {
@@ -258,13 +245,7 @@ mofron.Base = class {
                         }
                     }
                     
-                    //this.m_opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
-                    //if ( (true === is_list(oidx)) &&
-                    //     (false === Array.isArray(opt[oidx]))) {
-                    //    this.m_opt[oidx] = [opt[oidx]];
-                    //}
                 } else {
-                    //opt[oidx] = this.getFuncPrm(oidx, opt[oidx]);
                     if (true === is_list(oidx)) {
                         if ( (false === Array.isArray(opt[oidx])) ||
                              (true === mofron.func.isObject(chk_opt, ["Base","Param"])) ) {
@@ -277,21 +258,6 @@ mofron.Base = class {
                     } else {
                         this.m_opt[oidx] = opt[oidx];
                     }
-                    
-                    //if (true === is_list(oidx, this.listOption())) {
-                    //    if (false === Array.isArray(this.m_opt[oidx])) {
-                    //        this.m_opt[oidx] = [this.m_opt[oidx]];
-                    //    }
-                    //    if (true === Array.isArray(opt[oidx])) {
-                    //        for (let ooidx in opt[oidx]) {
-                    //            this.m_opt[oidx].push(opt[oidx][ooidx]);
-                    //        }
-                    //    } else {
-                    //        this.m_opt[oidx].push(opt[oidx]);
-                    //    }
-                    //} else {
-                    //    this.m_opt[oidx] = opt[oidx];
-                    //}
                 }
             }
             return opt;

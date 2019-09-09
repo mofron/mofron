@@ -1,141 +1,69 @@
 <require>
     <tag module="mofron-comp-text">Text</tag>
+    <tag module="mofron-comp-appbase">AppBase</tag>
+    <tag module="mofron-effect-fade">Fade</tag>
     <tag module="mofron-comp-linktxt">Link</tag>
-    <tag module="mofron-comp-appbase">Appbs</tag>
+    <tag module="mofron-comp-aweicon">Icon</tag>
     <tag module="mofron-comp-prjtop">Prjtop</tag>
     <tag module="mofron-comp-image">Image</tag>
-    <tag module="mofron-comp-ttlframe">TtlFrame</tag>
-    <tag module="mofron-comp-frame">Frame</tag>
-    <tag module="mofron-comp-ujarakbtn">Button</tag>
-    <tag module="mofron-comp-fontawesome">Icon</tag>
     <tag module="mofron-comp-footer">Footer</tag>
-    <tag module="mofron-effect-synchei">Synchei</tag>
-    <tag module="mofron-effect-syncwin">Syncwin</tag>
-    <tag module="mofron-effect-synwwid">Synwwid</tag>
+    <tag src="./tag/index/whats.mof">Whats</tag>
+    <!-- event -->
+    <tag module="mofron-event-link">evLink</tag>
+    <!-- effect -->
     <tag module="mofron-effect-shadow">Shadow</tag>
     <tag module="mofron-effect-hrzpos">Hrzpos</tag>
     <tag module="mofron-effect-vrtpos">Vrtpos</tag>
-    <tag module="mofron-effect-fade">Fade</tag>
-    <tag module="mofron-effect-hrzcenter">efHrzcnt</tag>
-    <tag module="mofron-layout-padding">Padding</tag>
-    <tag module="mofron-layout-grid">Grid</tag>
-    <tag module="mofron-layout-hrzcenter">HrzCent</tag>
+    <!-- layout -->
     <tag module="mofron-layout-margin">Margin</tag>
-    <tag module="mofron-layout-horizon">loHoriz</tag>
-    <tag module="mofron-event-link">evLink</tag>
-    <tag module="../comp/SlideShare.js">SlideShare</tag>
-    <tag src="./tag/index/whats.mof">Whats</tag>
-    <tag src="./tag/index/why.mof">Why</tag>
-    <tag src="./tag/index/detail.mof">Detail</tag>
 </require>
 
 <responsive>
-    <mobile orientation=portrait>800</mobile>
-    <mobile orientation=landscape>1400</mobile>
+    <mobile orientation=portrait>1100</mobile>
+    <mobile orientation=landscape>800</mobile>
     <tablet>800</tablet>
-    <iPhone>3000</iPhone>
     <default>625</default>
 </responsive>
 
-<template name=ftframe>
-    <Component tag=@title>
-        <TtlFrame name=@frm_name effect=efHrzcnt(90) mainColor=240,230,250 baseColor=255,253,255 shadow="0.015rem">
-            <style>padding-bottom: 0.2rem; height:null;</style>
-            <title>
-                <Text effect=Hrzpos("center") style="font-size:0.45rem;" font="Iceland">@title</Text>
-            </title>
-            <Component layout=HrzCent(85) style="margin-top:0.2rem;">
-                <Text size="0.23rem" font="Quicksand">@desc</Text>
-            </Component>
-            <Button name=@btn_name height="0.35rem" effect=efHrzcnt(50) accentColor=240,230,250 clickEvent=what_btn_clk>
-                <style>margin-top:0.2rem;</style>
-                <text>
-                    <Text size="0.2rem" mainColor="#0073bb">"Detail"</Text>
-                </text>
-            </Button>
-        </TtlFrame>
-    </Component>
-</template>
-
-<script name=what_btn_clk param=p1,p2,p3 run=init>
-    try {
-        let tag     = p1.tag();
-        let scr_val = 0;
-        if (undefined !== tag["Module Based"]) {
-            mf.objkey.dtl_modsb.target().getRawDom().scrollIntoView(true);
-        } else if (undefined !== tag["Replaceable"]) {
-            mf.objkey.dtl_repl.target().getRawDom().scrollIntoView(true);
-        } else if (undefined !== tag["Utility Functions"]) {
-            mf.objkey.dtl_utlfnc.target().getRawDom().scrollIntoView(true);
-        }
-    } catch (e) {
-        console.error(e.stack);
-        throw new Error(e.stack);
-    }
-</script>
-
-<script run=init>
-let stbtn = () => {
-    window.location.href = "./docs.html";
-}
-</script>
-
-<Appbs mainColor=240,230,250 effect=Fade(true,1000)>
-    <title>
-        <Text font="Iceland" style="font-size:0.45rem;">"mofron"</Text>
-    </title>
-    <style>-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;</style>
-    <theme>
-        <Text mainColor=120,120,120></Text>
-    </theme>
-    <option>
-        <header logo='./img/logo.png' effect=Shadow({blur:'0.4rem'})>
-            <navi>
-                <Link size='0.2rem' url='./docs.html',true >Docs</Link>
-                <Icon size='0.35rem' event=evLink(['https://github.com/mofron/mofron',true])>fab fa-github</Icon>
-                <Icon size='0.35rem' event=evLink(['https://twitter.com/mofronjs',true])>fab fa-twitter</Icon>
-            </navi>
-        </header>
-    </option>
-    <Prjtop baseColor=253,245,253 effect=Syncwin([true,true],['0px','-50%']) name=prjtop>
+<AppBase color='#f0e6fa' effect=Fade(true,1000)>
+    <param>
+        <style>
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 0.4rem;
+        </style>
         <theme>
-            <Button replace=Button accentColor=240,230,250></Button>
+            <Text color='#787878' font=Iceland></Text>
         </theme>
-        <option>
-            <text size='0.6rem' style='z-index:10;' font="Iceland">The module based frontend framework.</text>
-            <button clickEvent=stbtn>'Get Started'</button>
-        </option>
+        <title>mofron,"./img/logo.png"</title>
+        <background>
+            <div baseColor='#fafafa'></div>
+        </background>
+        <header param=navi>
+            <div layout=Margin('left','0.2rem') style="display:flex;">
+                <Link url=('./docs.html',true) size=0.25rem>Document</Link>
+                <Icon link=('https://github.com/mofron/mofron',true) size=0.35rem>fab fa-github</Icon>
+                <Icon link=('https://twitter.com/mofronjs',true) size=0.35rem>fab fa-twitter</Icon>
+            </div>
+        </header>
+    </param>
+    <Prjtop baseColor='#fdf5fd' name=prjtop offset=-40%>
+        <image>
+            <Image size=(2.5rem,2.5rem)>./img/mofron_tp.png</Image>
+        </image>
+        <text>Selectable UI as if you try clothes.</text>
+        <button>Get Started,"./docs.html"</button>
     </Prjtop>
-    <Why></Why>
     <Whats></Whats>
-    <Detail></Detail>
-</Appbs>
+</AppBase>
 
-<div baseColor=250,250,250 style="padding-bottom:0.5rem;">
-    <respsv>
-        <mobile>
-            <layout>
-                <HrzCent>95</HrzCent>
-            </layout>
-        </mobile>
-        <other>
-            <layout>
-                <HrzCent>35</HrzCent>
-            </layout>
-        </other>
-    </respsv>
-    <Frame baseColor=253,245,253 effect=Hrzpos("center") layout=loHoriz() shadow="0.015rem">
-        <event>
-            <evLink>"./docs.html"</evLink>
-        </event>
-        <Image path="./img/logo.png" height="1rem">
-            <style>margin-left:0.8rem;</style>
-        </Image>
-        <Text size="0.2rem" mainColor=120,120,120 effect=Vrtpos("center") style="margin-left:0.3rem;">Get Started</Text>
-    </Frame>
-</div>
-<Footer mainColor=190,190,190 baseColor=240,230,250 height="1rem">
-    <Text effect=Hrzpos("center") style="margin-top:0.2rem;" mainColor=120,120,120 size="0.18rem">
-        Released under the MIT License
+<Footer color=('#bebebe','#f0e6fa') height=1rem>
+    <style>display:flex;</style>
+    <Text color='#787878' size=0.3rem>
+        <effect>
+            <Hrzpos>center</Hrzpos>
+            <Vrtpos>center</Vrtpos>
+        </effect>
+        <text>Released under the MIT License</text>
     </Text>
 </Footer>

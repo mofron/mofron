@@ -18,11 +18,11 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 | Basic | Form | List |  |
 |:-:|:-:|:-:|:-:|
 | [Text](https://github.com/mofron/mofron-comp-text.git) | [Form](https://github.com/mofron/mofron-comp-form) | [Table](https://github.com/mofron/mofron-comp-table) | [Message](https://github.com/mofron/mofron-comp-message) |
-| [Button](https://github.com/mofron/mofron-comp-button.git) | [Input](https://github.com/mofron/mofron-comp-input) | Tab | Dialog |
+| [Button](https://github.com/mofron/mofron-comp-button.git) | [Input](https://github.com/mofron/mofron-comp-input) | Tab | [Dialog](https://github.com/mofron/mofron-comp-dialog.git) |
 | [Header](https://github.com/mofron/mofron-comp-header) | [CheckBox](https://github.com/mofron/mofron-comp-checkbox) | [Menu](https://github.com/mofron/mofron-comp-menu) | Progress |
 | [Frame](https://github.com/mofron/mofron-comp-frame.git) | [CheckList](https://github.com/mofron/mofron-comp-checklist.git) | Carousel |  Tooltip |
 | [Image](https://github.com/mofron/mofron-comp-image.git)   | [Radio](https://github.com/mofron/mofron-comp-radio.git) | Tree |  |
-|  Heading  | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
+|  [Heading](https://github.com/mofron/mofron-comp-heading.git)  | [RadioList](https://github.com/mofron/mofron-comp-radiolist.git) | |  |
 |  [LinkTxt](https://github.com/mofron/mofron-comp-linktxt)   | [DropDown](https://github.com/mofron/mofron-comp-dropdown) | | |
 | Accordion                                                   |  TextArea                                                   | | |
 |  [ModalFil](https://github.com/mofron/mofron-comp-modalfil)  | FileSel                                                    | | |
@@ -41,8 +41,8 @@ You can see [documentation](https://mofron.github.io/mofron/docs.html)
 ## Default Effect
 |        |        |         |       |
 |:------:|:------:|:-------:|:-----:|
-| Fade   | Radius | Shadow  | Blur  |
-| HrzPos | VrtPos | Slant   | Scale |
+| [Fade](https://github.com/mofron/mofron-effect-fade.git) | [Radius](https://github.com/mofron/mofron-effect-radius.git) | [Shadow](https://github.com/mofron/mofron-effect-shadow.git)  | Blur  |
+| [HrzPos](https://github.com/mofron/mofron-effect-hrzpos.git) | [VrtPos](https://github.com/mofron/mofron-effect-vrtpos.git) | Slant   | Scale |
 |SyncWin | [Position](https://github.com/mofron/mofron-effect-position) |         |       |
 
 

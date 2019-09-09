@@ -1,32 +1,106 @@
+<require>
+    <!-- component -->
+    <tag module="mofron-comp-ttlframe">TtlFrame</tag>
+    <tag module="mofron-comp-button">Button</tag>
+    <tag module="mofron-comp-dialog">Dialog</tag>
+    <tag module="mofron-comp-slideshare">SlideShare</tag>
+    <!-- layout -->
+    <tag module="mofron-layout-padding">Padding</tag>
+    <tag module="mofron-layout-hrzcenter">HrzCent</tag>
+    <tag module="mofron-layout-grid">Grid</tag>
+    <!-- effect -->
+    <tag module="mofron-effect-hrzcenter">efHrzcnt</tag>
+</require>
+
+<script name=what_btn_clk param=p1,p2,p3 run=init>
+let tag     = p1.tag();
+let scr_val = 0;
+
+/* switch visible of slide */
+slide_mod.visible(false);
+slide_rep.visible(false);
+slide_utl.visible(false);
+
+if (undefined !== tag["Module Based"]) {
+    slide_mod.visible(true);
+    dtldlg.visible(true);
+} else if (undefined !== tag["Replaceable"]) {
+    slide_rep.visible(true);
+    dtldlg.visible(true);
+} else if (undefined !== tag["Utility Functions"]) {
+    slide_utl.visible(true);
+    dtldlg.visible(true);
+}
+</script>
+
+<template name=ftframe>
+    <div tag=@title>
+        <TtlFrame effect=efHrzcnt(90) color=('#f0e6fa','#fffdff') shadow=0.015rem>
+            <style>padding-bottom: 0.2rem; height:null;</style>
+            <title>
+                <Text effect=Hrzpos("center") size=0.35rem>@title</Text>
+            </title>
+            <div layout=HrzCent(85) style="margin-top:0.2rem;">
+                <Text size=0.23rem style="font-family:Quicksand;">@desc</Text>
+            </div>
+            <Button name=@btn_name height=0.35rem effect=efHrzcnt(50) accentColor=240,230,250 clickEvent=@@what_btn_clk>
+                <style>margin-top:0.2rem;</style>
+                <text>
+                    <Text color='#0073bb'>Detail</Text>
+                </text>
+            </Button>
+        </TtlFrame>
+    </div>
+</template>
+
 <div baseColor=250,250,250 layout=Padding('top','0.2rem',false) width='100%'>
-    <Text effect=Hrzpos('center') size="0.5rem" font="Iceland">"What is a mofron?"</Text>
-    <Component effect=efHrzcnt(90)>
+    <Text effect=Hrzpos('center') size=0.5rem font="Iceland">Feature</Text>
+    <div effect=efHrzcnt(90)>
         <respsv>
             <mobile>
                 <layout>
-                    <Margin>"top","0.2rem"</Margin>
+                    <Margin>top,0.2rem</Margin>
                 </layout>
             </mobile>
             <other>
                 <layout>
-                    <Grid>[33.3, 33.3, 33.3]</Grid>
+                    <Grid>(33.3,33.3,33.3)</Grid>
                 </layout>
             </other>
         </respsv>
+        
         <template name=ftframe title="Module Based" btn_name="modbase_btn">
             <desc>
-                All components are made up of node modules. It makes simple to build a web page.
+                All components are made up of node modules.
+                You just select a completed UI component from the list.
+                You can build web page, even if you don’t have knowledge of the front end.
             </desc>
         </template>
         <template name=ftframe title="Replaceable" btn_name="repl_btn">
             <desc>
-                UI components can be replaced. This feature will minimize the impact on design and feature changes. For example, it makes easy to shift from mockup to production.
+                UI components can be replaced.
+                Just change the module name and it makes easy to change UI design and functions.
             </desc>
         </template>
         <template name=ftframe title="Utility Functions" btn_name="utlfnc_btn">
             <desc>
-                The mofron has some utility functions such as 'effects' and 'layout'. it makes easy to build a web page without JS and CSS.
+                The mofron has some utility functions such as 'effects' and 'layout'.
+                You can build advanced design, even if you don’t have knowledge of the front end.
             </desc>
         </template>
-    </Component>
+    </div>
 </div>
+
+<Dialog size=(5rem,4rem) name=dtldlg>
+    <modal param=effect>
+        <Fade>true,300</Fade>
+        <Fade eid=1>false,300</Fade>
+    </modal>
+    <effect>
+        <Fade>true,300</Fade>
+        <Fade eid=1>false,300</Fade>
+    </effect>
+    <SlideShare name=slide_mod src="//www.slideshare.net/slideshow/embed_code/key/FEMhsyd6vq2yTt" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border-width:1px;max-width:100%;" visible=false></SlideShare>
+    <SlideShare name=slide_rep src="//www.slideshare.net/slideshow/embed_code/key/1mlaDQYdlDnfwo" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border-width:1px;max-width:100%;" visible=false></SlideShare>
+    <SlideShare name=slide_utl src="//www.slideshare.net/slideshow/embed_code/key/yJNyDxiyf5JUQA" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border-width:1px;max-width:100%;" visible=false></SlideShare>
+</Dialog>

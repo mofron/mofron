@@ -31,7 +31,7 @@ mofron.Effect = class extends mofron.CompConf {
                     exe_eff.contents(exe_eff.component());
                     exe_eff.isInited(true);
                     /* execute callback */
-                    mofron.func.effCallback(this);
+		    mofron.func.effCallback(exe_eff);
                 } catch (e) {
                     console.error(e.stack);
                     throw e;
@@ -100,6 +100,19 @@ mofron.Effect = class extends mofron.CompConf {
         }
     }
     
+    delCallback (idx) {
+        try {
+            if ('number' !== typeof idx) {
+                throw new Error('invalid parameter');
+	    }
+	    /* delete callback */
+	    this.m_member['callback'].splice(idx, 1);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+
     isSkipped (eid, ord) {
         try {
             if ( (true === this.suspend()) ||
