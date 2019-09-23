@@ -31,7 +31,7 @@ mofron.Effect = class extends mofron.CompConf {
                     exe_eff.contents(exe_eff.component());
                     exe_eff.isInited(true);
                     /* execute callback */
-		    mofron.func.effCallback(exe_eff);
+		    mofron.func.effCallback(exe_eff, exe_eff.callback());
                 } catch (e) {
                     console.error(e.stack);
                     throw e;

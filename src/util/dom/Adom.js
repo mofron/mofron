@@ -76,10 +76,16 @@ mofron.Adom = class extends mofron.Dom {
         try {
             if (undefined === kv) {
                 /* getter */ 
+		if (1 === this.child().length) {
+                    return this.child()[0].style();
+		}
                 return this.m_style;
             }
             if ('string' === typeof kv) {
                 /* getter */
+		if (1 === this.child().length) {
+                    return this.child()[0].style(kv);
+                }
                 return (undefined === this.m_style[kv]) ? null : this.m_style[kv];
             }
             /* setter */

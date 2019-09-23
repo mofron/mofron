@@ -179,6 +179,9 @@ module.exports = {
             let sp_eff = [];
 	    /* execute 0 speed effect */
 	    for (let eidx1 in eff) {
+	        if (true === eff[eidx1].isSkipped(eid,_oidx)) {
+                    continue;
+                }
 	        if (null === eff[eidx1].speed()) {
 		    if ( (eidx1 == eff.length-1) && (0 === sp_eff.length)) {
                         /* last execute index */
@@ -372,9 +375,8 @@ module.exports = {
         }
     },
     
-    effCallback : (eff) => {
+    effCallback : (eff, cb) => {
         try {
-            let cb = eff.callback();
             let upd_cb = [];
             if (0 !== cb.length) {
                 let exec = () => {
