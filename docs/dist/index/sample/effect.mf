@@ -1,0 +1,9 @@
+<setting>
+    <tag load="mofron-comp-text">Text</tag>
+    <tag load="mofron-effect-fade">Fade</tag>
+    <tag load="mofron-effect-slide">Slide</tag>
+    <tag load="mofron-effect-textshadow">TextShadow</tag>
+</setting>
+
+<Text text="Effect Sample" style="font-size:0.3rem;">@effect
+</Text>

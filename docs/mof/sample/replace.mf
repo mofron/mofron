@@ -1,0 +1,95 @@
+<setting>
+    <tag load="mofron-comp-loginform">LoginForm</tag>
+    <tag load="mofron-comp-input">Input</tag>
+    <tag load="mofron-comp-yoko">Yoko</tag>
+    <tag load="mofron-comp-haruki">Haruki</tag>
+</setting>
+
+<script run=init>
+let smp_rep_evt = (cmp,val) => {
+    try {
+        let cbuf = smp_rep.confmng("codebuf");
+        if (null === cbuf) {
+            return;
+        }
+        
+        let thm_name = smp_rep_sel.text()[smp_rep_sel.select()].text();
+        thm_name     = thm_name.slice(0,1).toUpperCase() + thm_name.slice(1);
+        let cls_tag  = "&lt;&#047;LoginForm&gt;";
+        
+        if ("smp_rep_sel" === cmp.name()) {
+            if (0 === val) {
+                //rep = Input;
+                cbuf = cbuf.replace(/@inp-theme/g, cls_tag + "&#010;&#010;");
+                
+            } else {
+                fetch("./sample/replace_theme.mf")
+                .then(resp => resp.text())
+                .then((data) => {
+                    let sp_char = "";
+                    for (let didx in data) {
+                        if ("<" === data[didx]) {
+                            sp_char += "&lt;";
+                        } else if (">" === data[didx]) {
+                            sp_char += "&gt;";
+                        } else {
+                            sp_char += data[didx];
+                        }
+                    }
+                    if (1 === val) {
+                        sp_char = sp_char.replace(/@inp-theme/g,"Yoko");
+                    } else {
+                        sp_char = sp_char.replace(/@inp-theme/g,"Haruki");
+                    }
+                    cbuf = cbuf.replace(/@inp-theme/g, sp_char);
+                    smp_rep.code(cbuf);
+                }).catch(error => console.error(error));
+            }
+
+            let login_form = [lf1,lf2,lf3];
+            for (let lf_idx in login_form) {
+                login_form[lf_idx].visible(false);
+            }
+            login_form[smp_rep_sel.select()].visible(true);
+            
+        } else if ("smp_rep" === cmp.name()) {
+            cbuf = cbuf.replace(/@inp-theme/g, "&lt;&#047;LoginForm&gt;&#010;&#010;&#010;");
+        }
+        smp_rep.code(cbuf);
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
+</script>
+
+<SampleCodes name=smp_rep src="./dist/index/sample/replace.mf" load-event=@smp_rep_evt>
+    <desc>
+        ["Theme features provide a powerful component replacement.","You can also replace the contents of components that have already been defined.","The sample replaces the Input component defined inside the login form."]
+    </desc>
+    <edit>
+        <DropDown name=smp_rep_sel effect=VrtPos horizon=true change-event=@smp_rep_evt>
+            <label>theme:</label>
+            <size>2rem,0.3rem</size>
+            <text>["Input","Yoko","Haruki"]</text>
+        </DropDown>
+    </edit>
+    <div>
+        <theme>
+            <LoginForm:config>
+                <color>#787878,#f0e6fa,#3f51b5</color>
+            </LoginForm:config>
+        </theme>
+        <LoginForm name=lf1></LoginForm>
+        <LoginForm name=lf2 visible=false>
+            <theme>
+                <Input:replace>Yoko</Input:replace>
+            </theme>
+        </LoginForm>
+        <LoginForm name=lf3 visible=false>
+            <theme>
+                <Input:replace>Haruki</Input:replace>
+            </theme>
+        </LoginForm>
+    </div>
+</SampleCodes>

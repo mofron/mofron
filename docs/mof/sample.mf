@@ -1,0 +1,26 @@
+<setting>
+    <tag load="mofron-comp-codeprettify">Code</tag>
+    <tag load="mofron-comp-inputtext">InputTxt</tag>
+    <tag load="mofron-comp-dropdown">DropDown</tag>
+    <tag load="mofron-comp-frame">Frame</tag>
+    <tag load="mofron-comp-button">Button</tag>
+    <tag load="mofron-comp-ujarak">Ujarak</tag>
+    <tag load="mofron-comp-winona">Winona</tag>
+    <tag load="mofron-effect-vrtpos">VrtPos</tag>
+    <tag load="mofron-layout-hrzcenter">HrzCent</tag>
+    <tag load="../js/comp/SampleCodes.js">SampleCodes</tag>
+</setting>
+
+<div>
+    <theme>
+        <Text:config color='#787878'></Text:config>
+    </theme>
+    <layout>
+        <HrzCent>70</HrzCent>
+        <Margin>top,0.5rem</Margin>
+    </layout>
+    <Text size="0.45rem" font=Iceland effect=HrzPos>Sample</Text>
+    <mf-load>./sample/module.mf</mf-load>
+    <mf-load>./sample/replace.mf</mf-load>
+    <mf-load>./sample/effect.mf</mf-load>
+</div>

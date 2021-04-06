@@ -1,0 +1,55 @@
+<setting>
+    <tag load="mofron-comp-ttlframe">TFrame</tag>
+    <tag load="mofron-layout-grid">Grid</tag>
+    <tag load="mofron-layout-hrzcenter">HrzCent</tag>
+    <tag load="mofron-layout-margin">Margin</tag>
+    <tag load="mofron-effect-hrzpos">HrzPos</tag>
+</setting>
+
+<template name=feature>
+    <div>
+        <TFrame size=(90%,null) color=('#f0e6fa','#fffdff') shadow=0.02rem>
+            <text effect=HrzPos>$title</text>
+            <effect:HrzPos></effect:HrzPos>
+            <div layout=HrzCent:85 style="margin-top:0.2rem;margin-bottom:0.2rem;">
+                <Text size=0.23rem>
+                    <style lock=true>font-family:Quicksand;</style>
+                    <text>$desc</text>
+                </Text>
+            </div>
+        </TFrame>
+    </div>
+</template>
+
+<div width='100%'>
+    <Text size="0.45rem" effect=HrzPos>Feature</Text>
+    <div style="margin-top:0.3rem;">
+        <access-conf>
+            <mf-access orientation=portrait>
+                <layout>
+                    <HrzCent>85</HrzCent>
+                    <Margin>top,0.3rem</Margin>
+                </layout>
+            </mf-access>
+            <mf-access device=default,tablet>
+                <layout:Grid>[33.3,33.3,33.3]</layout:Grid>
+            </mf-access>
+        </access-conf>
+        
+        <mf-tmpl ref=feature title="Reusable">
+            <desc>
+                "All components are made up of node modules.You just select a completed UI component from the list.You can build web page, even if you don’t have knowledge of the front end."
+            </desc>
+        </mf-tmpl>
+        <mf-tmpl ref=feature title="Replaceable">
+            <desc>
+                "UI components can be replaced.Just change the module name and it makes easy to change UI design and functions."
+            </desc>
+        </mf-tmpl>
+        <mf-tmpl ref=feature title="Easy to use">
+            <desc>
+                "The mofron has some utility functions such as 'event', 'effects' and 'layout'.You can build advanced design, even if you don’t have knowledge of the front end."
+            </desc>
+        </mf-tmpl>
+    </div>
+</div>

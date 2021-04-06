@@ -1,0 +1,5 @@
+<setting>
+    <tag load="mofron-comp-text">Text</tag>
+</setting>
+
+<Text size="0.3rem" style="margin:0.5rem;">Hello mofron!</Text>

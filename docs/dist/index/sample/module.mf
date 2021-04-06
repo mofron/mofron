@@ -1,0 +1,8 @@
+<setting>
+    <tag load="@btn-name">Button</tag>
+</setting>
+
+<Button size=(@btn-width,@btn-height)>
+    <color>#787878,#f0e6fa,#3f51b5</color>
+    <text>Button</text>
+</Button>

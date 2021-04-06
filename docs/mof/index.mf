@@ -1,0 +1,71 @@
+<setting>
+    <!-- component -->
+    <tag load="mofron-comp-text">Text</tag>
+    <tag load="mofron-comp-image">Image</tag>
+    <tag load="mofron-comp-appbase">AppBase</tag>
+    <tag load="mofron-comp-button">Button</tag>
+    <tag load="mofron-comp-ujarak">Ujarak</tag>
+    <tag load="mofron-comp-link">Link</tag>
+    <tag load="mofron-comp-aweicon">Icon</tag>
+    <tag load="mofron-comp-prjtop">PrjTop</tag>
+    <tag load="mofron-comp-footer">Footer</tag>
+    <!-- event -->
+    <tag load="mofron-event-link">eLink</tag>
+    <!-- effect -->
+    <tag load="mofron-effect-fade">Fade</tag>
+    <tag load="mofron-effect-position">Center</tag>
+    <tag load="mofron-effect-hrzpos">HrzPos</tag>
+    <tag load="mofron-effect-fontsmooth">FSmooth</tag>
+    <!-- layout -->
+    <tag load="mofron-layout-margin">Margin</tag>
+
+    <!-- <node load="test">Test</node>  -->
+    <html-style>
+        <mf-access device=mobile orientation=portrait>font-size:1200%;</mf-access>
+        <mf-access device=mobile orientation=landscape>font-size:600%;</mf-access>
+        <mf-access device=tablet>font-size:800%;</mf-access>
+    </html-style>
+    <root-conf>
+        <effect>
+            <Fade>true,3000</Fade>
+            <FSmooth></FSmooth>
+        </effect>
+        <theme ignore="smp_rep">
+            <Text:config color='#787878' font=Iceland></Text:config>
+            <Button replace=Ujarak>
+                <config base-color="#f0e6fa"></config>
+            </Button>
+        </theme>
+    </root-conf>
+</setting>
+
+<AppBase color=('#f0e6fa','#fafafa') title=(mofron,"./dist/img/logo_small.png")>
+    <mf-param>
+        <header:mf-pull:navi layout=Margin:('left','0.2rem') style="display:flex;align-items:center;">
+            <Link url=("./docs.html",true) size=0.25rem>Document</Link>
+            <Icon link=('https://github.com/mofron/mofron',true) size=0.35rem>fab fa-github</Icon>
+            <Icon link=('https://twitter.com/mofronjs',true) size=0.35rem>fab fa-twitter</Icon>
+        </header:mf-pull:navi>
+    </mf-param>
+    <PrjTop baseColor='#fdf5fd' name=prjtop offset=-50%>
+        <image>./dist/img/logo_large.png</image>
+        <text>["Javascript framework with replaceable UI","as if you changing clothes"]</text>
+        <button url="./docs.html">Get Started</button>
+    </PrjTop>
+    
+    <mf-load>./feature.mf</mf-load>
+    <mf-load>./sample.mf</mf-load>
+    
+    <div style="margin-top:0.2rem;">
+        <PrjTop baseColor='#fdf5fd' height=2rem>
+            <image>./dist/img/logo_large.png</image>
+            <button url="./docs.html">Get Started</button>
+        </PrjTop>
+    </div>
+    <Footer height=0.8rem base-color='#f0e6fa'>
+        <style>display:flex;</style>
+        <Text color='#787878' size=0.3rem effect=Center>
+            Released under the MIT License
+        </Text>
+    </Footer>
+</AppBase>

@@ -1,0 +1,9 @@
+<setting>
+    <tag load="mofron-comp-loginform">LoginForm</tag>
+    <tag load="mofron-comp-yoko">Yoko</tag>
+    <tag load="mofron-comp-haruki">Haruki</tag>
+</setting>
+
+<LoginForm color=(#787878,#f0e6fa,#3f51b5)>
+@inp-theme
+

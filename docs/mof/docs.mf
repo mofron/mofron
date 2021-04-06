@@ -1,0 +1,81 @@
+<setting>
+    <!-- component -->
+    <tag load="mofron-comp-text">Text</tag>
+    <tag load="mofron-comp-appbase">AppBase</tag>
+    <tag load="mofron-comp-aweicon">Icon</tag>
+    <tag load="mofron-comp-split">Split</tag>
+    <tag load="mofron-comp-borderhdg">Heading</tag>
+    <tag load="mofron-comp-codeprettify">Code</tag>
+    <tag load="mofron-comp-footer">Footer</tag>
+    <tag load="../js/comp/DocText.js">DText</tag>
+    <tag load="../js/comp/DocCode.js">DCode</tag>
+    <!-- effect -->
+    <tag load="mofron-effect-position">Center</tag>
+    <tag load="mofron-effect-fade">Fade</tag>
+    <tag load="mofron-effect-fontsmooth">FSmooth</tag>
+    <!-- layout -->
+    <tag load="mofron-layout-margin">Margin</tag>
+    <tag load="mofron-layout-hrzcenter">HrzCent</tag>
+    <!-- config -->
+    <html-style>
+        <mf-access device=mobile orientation=portrait>font-size:1200%;</mf-access>
+        <mf-access device=mobile orientation=landscape>font-size:600%;</mf-access>
+        <mf-access device=tablet>font-size:800%;</mf-access>
+    </html-style>
+    <root-conf>
+        <effect>
+            <Fade>true,3000</Fade>
+            <FSmooth></FSmooth>
+        </effect>
+        <theme ignore="DocText">
+            <Text:config color='#787878' font=Iceland></Text:config>
+            <Button replace=Ujarak>
+                <config base-color="#f0e6fa"></config>
+            </Button>
+        </theme>
+    </root-conf>
+</setting>
+
+<AppBase color=('#f0e6fa','#fafafa') title=("mofron document","./dist/img/logo_small.png")>
+    <header:mf-pull:navi>
+        <div layout=Margin:('left','0.2rem') style="display:flex;align-items:center;">
+            <Icon link=('https://github.com/mofron/mofron',true) size=0.35rem>fab fa-github</Icon>
+            <Icon link=('https://twitter.com/mofronjs',true) size=0.35rem>fab fa-twitter</Icon>
+        </div>
+    </header:mf-pull:navi>
+    <Split>
+        <left width=2rem>
+            <Text size=0.35rem style="margin:0.2rem;">Quick Start</Text>
+        </left>
+        <theme>
+            <Heading:config color=#af64f0></Heading:config>
+        </theme>
+        <right>
+            <layout>
+                <HrzCent>85</HrzCent>
+                <Margin>top,0.2rem</Margin>
+            </layout>
+            <div style="overflow:overlay;" layout=Margin:(top,0.2rem)>
+                <Heading>Setup Local Development Environment</Heading>
+                <DText>"Make sure you have the latest version of Node.js installed before installing mofron.Bellow command creates a new directory with default configuration files.Replace 'mofron-project-name' with any name if necessary"</DText>
+                <DCode>
+                    npx mofron-init mofron-project-name \ncd mofron-project-name\nnpm install mofron mofron-build
+                </DCode>
+                <Heading>Sample Project</Heading>
+                <DText>Edit ./mof/index.mf in the directory to create the content.This is a sample to display the simplest characters.</DText>
+                <DCode src="./dist/docs/simple.mf"></DCode>
+                <DText>Install the component module used by index.mf</DText>
+                <DCode>npm install mofron-comp-text</DCode>
+                <DText>Convert from markup format .mf file to javascript file.</DText>
+                <DCode>
+                    npx mofron-build index
+                </DCode>
+                <DText>"Since dist_index.js is generated in ./dist/index directory, if you read it from the html file, the contents of the sample will be displayed."</DText>
+            </div>
+            <div height=0.2rem></div>
+        </right>
+    </Split>
+    <Footer height=0.8rem base-color='#f0e6fa' style="display:flex;">
+        <Text color='#787878' size=0.3rem effect=Center>Released under the MIT License</Text>
+    </Footer>
+</AppBase>

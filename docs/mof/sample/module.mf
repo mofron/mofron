@@ -1,0 +1,79 @@
+
+<script run=init>
+let smp_mod_evt = (cmp,val) => {
+    try {
+        let chd   = smp_mod.child()[1].child();
+        let bname = smp_mod_sel.text()[smp_mod_sel.select()];
+        let cbuf  = smp_mod.confmng("codebuf");
+        if (null === cbuf) {
+            return;
+        }
+
+        /* result button event */
+        if (true === comutl.isinc(cmp,"Button")) {
+            alert("mofron-comp-" + bname);
+            return;
+        }
+
+        /* button visible */
+        for (let cidx in chd) {
+            chd[cidx].visible(false);
+        }
+        chd[smp_mod_sel.select()].visible(true);
+
+        /* button select */
+        cbuf = cbuf.replace(/@btn-name/g, "mofron-comp-" + bname);
+
+        /* button width */
+        for (let cidx in chd) {
+            chd[cidx].width(smp_mod_wid.value() + "rem");
+        }
+        cbuf = cbuf.replace(/@btn-width/g, smp_mod_wid.value() + "rem");
+
+        /* button height */
+        for (let cidx in chd) {
+            chd[cidx].height(smp_mod_hei.value() + "rem");
+        }
+        cbuf = cbuf.replace(/@btn-height/g, smp_mod_hei.value() + "rem");
+
+        smp_mod.code(cbuf);
+
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
+</script>
+
+<SampleCodes name=smp_mod src="./dist/index/sample/module.mf" load-event=@smp_mod_evt>
+    <desc font=Quicksand>
+       ["In mofron, it builds the UI with components declared as tags.","When you pass parameters to a component, you add tag attributes or child elements","Components defined as modules are reusable and you can easily switch components.","The sample shows how to use the basic button components and how to switch between the three types of buttons."]
+    </desc>
+    <edit>
+        <DropDown name=smp_mod_sel effect=VrtPos change-event=@smp_mod_evt>
+            <size>1rem,0.3rem</size>
+            <text>[button,ujarak,winona]</text>
+        </DropDown>
+        <InputTxt name=smp_mod_wid width=0.8rem type="number" horizon=true change-event=@smp_mod_evt>
+            <label>width:</label>
+            <value>1.5</value>
+            <suffix>rem</suffix>
+        </InputTxt>
+        <InputTxt name=smp_mod_hei width=0.8rem type="number" horizon=true change-event=@smp_mod_evt>
+            <label>height:</label>
+            <value>0.35</value>
+            <suffix>rem</suffix>
+        </InputTxt>
+    </edit>
+    <div>
+        <theme>
+            <Button:config click-event=@smp_mod_evt>
+                <style>margin:0.9rem;</style>
+                <color>#787878,#f0e6fa,#3f51b5</color>
+            </Button:config>
+        </theme>
+        <Button>"Button"</Button>
+        <Ujarak>"Button"</Ujarak>
+        <Winona>"Button"</Winona>
+    </div>
+</SampleCodes>

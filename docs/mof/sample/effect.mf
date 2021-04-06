@@ -1,0 +1,79 @@
+<setting>
+    <tag load="mofron-comp-checklist">CheckList</tag>
+    <tag load="mofron-effect-slide">Slide</tag>
+    <tag load="mofron-effect-textshadow">TxtShadow</tag>
+    <tag load="mofron-layout-horizon">Horiz</tag>
+
+</setting>
+
+<script run=init>
+let smp_eff_evt = (cmp,val) => {
+    try {
+        let cbuf = smp_eff.confmng("codebuf");
+        if (null === cbuf) {
+            return;
+        }
+        let code_eff = "";
+        
+        if (comutl.isinc(cmp,"CheckList")) {
+
+            let chkbx = cmp.checkbox();
+            for (let cb_idx in chkbx) {
+                smp_eff_txt.effect({ modname: chkbx[cb_idx].text() }).suspend(!val[cb_idx]);
+            }
+            if (false === val[2]) {
+                smp_eff_txt.style({ "text-shadow" : null });
+            }
+
+            for (let vidx in val) {
+                if (true === val[vidx]) {
+                    code_eff += "        &lt;" + chkbx[vidx].text() + "&gt;&lt;&#047;" + chkbx[vidx].text() + "&gt;&#010;";
+                }
+            }
+            if ("" !== code_eff) {
+                code_eff = "&#010;    &lt;effect&gt;&#010;" + code_eff + "    &lt;&#047;effect&gt;";
+            }
+        }
+        
+        cbuf = cbuf.replace(/@effect/g, code_eff);
+        smp_eff.code(cbuf);
+        
+        /* redisplay */
+        smp_eff_txt.visible(false);
+        setTimeout(() => {
+            smp_eff_txt.visible(true);
+        },500);
+    } catch (e) {
+        console.error(e.stack);
+        throw e;
+    }
+}
+</script>
+
+
+<SampleCodes name=smp_eff src="./dist/index/sample/effect.mf" load-event=@smp_eff_evt>
+    <desc>
+        ["You can specify a style for components, but the effects module is useful if you want to apply a more complex style.","You can flexibly configure components by applying effects according to your purpose."]
+    </desc>
+    <edit>
+        <CheckList change-event=@smp_eff_evt>
+            <layout>
+                <Horiz></Horiz>
+                <Margin>left,0.3rem</Margin>
+            </layout>
+            <checkbox>"Fade"</checkbox>
+            <checkbox>"Slide"</checkbox>
+            <checkbox>"TextShadow"</checkbox>
+        </CheckList>
+    </edit>
+    <div>
+        <Text name=smp_eff_txt text="Effect Sample" size="0.3rem" style="margin-top:0.6rem;">
+            <effect>
+                <HrzPos></HrzPos>
+                <Fade suspend=true></Fade>
+                <Slide suspend=true speed=700>left,0.1rem</Slide>
+                <TxtShadow suspend=true></TxtShadow>
+            </effect>
+        </Text>
+    </div>
+</SampleCodes>

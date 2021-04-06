@@ -1,0 +1,4 @@
+    <theme>
+        <Input:replace>@inp-theme</Input:replace>
+    </theme>
+</LoginForm>
