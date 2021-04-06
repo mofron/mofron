@@ -23,7 +23,7 @@ let smp_rep_evt = (cmp,val) => {
                 cbuf = cbuf.replace(/@inp-theme/g, cls_tag + "&#010;&#010;");
                 
             } else {
-                fetch("./sample/replace_theme.mf")
+                fetch("./dist/index/sample/replace_theme.mf")
                 .then(resp => resp.text())
                 .then((data) => {
                     let sp_char = "";
