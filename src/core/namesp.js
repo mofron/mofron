@@ -2,16 +2,12 @@
  * @file namespace.js
  * @author simpart
  */
+//const Window = require("./Window.js");
 module.exports = {
-    comp   : {},
-    layout : {},
-    event  : {},
-    effect : {},
-    respsv : {},
-    size   : {},
-    func   : {},
+    root   : [],
+    window : null,
+    class  : {},
     objkey : {},
-    theme  : null,
-    root   : new Array(),
-    debug  : false
+    util   : {},
+    //debug  : false
 };
