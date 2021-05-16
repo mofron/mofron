@@ -12,6 +12,12 @@ The following is a sample when using the Button module.
 <Button>button</Button>
 ```
 
+***attribute***
+| key | value |
+|:---:|:------|
+| load | (string) npm module name. or path to module file. |
+
+
 ## html-style
 
 ## root-conf
