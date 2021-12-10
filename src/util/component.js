@@ -173,7 +173,29 @@ mofron.util.component = {
 	    throw e;
 	}
     },
-    
+    follow_theme: (cmp) => {
+        try {
+	    let ret     = {};
+	    let chk_cmp = cmp.parent();
+	    let chk_thm = null;
+	    
+            while (chk_cmp) {
+                
+	        chk_thm = chk_cmp.theme();
+                for (tidx in chk_thm) {
+                    if (!ret[tidx]) {
+                        ret[tidx] = chk_thm[tidx];
+		    }
+		}
+                chk_cmp = chk_cmp.parent();
+                
+	    }
+	    return ret;
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
     theme: (cmp, thm) => {
         try {
 	    if (false === comutl.iscmp(cmp)) {

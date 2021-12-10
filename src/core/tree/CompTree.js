@@ -33,13 +33,20 @@ module.exports = class extends Tree {
             
             /* check render */
             if (true === this.target().isExists()) {
-	        let layout = chd.layout();
+	        let lo = chd.layout();
 		/* layout */
-		for(var lidx in layout) {
-		    lo[lo_idx].execute();
+		for(let lidx in lo) {
+		    lo[lidx].execute();
 		}
+		/* parent layout */
+                lo = this.target().layout();
+		for(let lidx2 in lo) {
+                    lo[lidx2].execute();
+		}
+
 		/* theme */
                 cmputl.theme(chd, this.target().theme());
+		cmputl.theme(chd, cmputl.follow_theme(this.target()));
 
 	        /* render child */
 		cmputl.render(chd);

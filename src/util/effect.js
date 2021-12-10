@@ -20,6 +20,8 @@ mofron.util.effect = {
 		    b_evt[bidx][0](elst[eidx], elst[eidx].component(), b_evt[bidx][1]);
                 }
 	    }
+	    /* set transition */
+            effutl.transition(elst);
             
             let next_order = () => {
                 let fin_cnt = 0;
@@ -50,20 +52,18 @@ mofron.util.effect = {
 	        elst[eidx2].otCallback(next, elst.length);
                 
                 if (0 === elst[eidx2].speed()) {
-		    effutl.transition(elst);
                     elst[eidx2].execute();
 		} else {
                     setTimeout(
                         (tm) => {
                             try {
-			        effutl.transition(elst);
                                 tm.execute();
                             } catch (e) {
                                 console.error(e.stack);
                                 throw e;
                             }
                         },
-                        50 + elst[eidx2].delay(),
+                        50,
                         elst[eidx2]
                     );
 		}
@@ -135,7 +135,7 @@ mofron.util.effect = {
     transition: (eff) => {
         try {
             let rdom      = eff[0].component().rootDom();
-            let cmp_trans = {};
+            let cmp_trans = {};  //effutl.gettrans(rdom.style('tarnsition'));
 
             /* get the effect transition that will be executed */
             let eff_trans = {};
@@ -152,6 +152,7 @@ mofron.util.effect = {
 		        let cubic = eff[eidx].cubicBezier();
 		        eff_trans[tbuf[bidx]] += 'cubic-bezier(' + cubic[0] + ',' + cubic[1] + ',' + cubic[2] + ',' + cubic[3] + ')';
                     }
+		    eff_trans[tbuf[bidx]] += ' ' + eff[eidx].delay() + 'ms';
 		}
 	    }
 	    if (0 === Object.keys(eff_trans).length) {
@@ -168,8 +169,6 @@ mofron.util.effect = {
 	    if (0 < setval.transition.length) {
 	        setval.transition = setval.transition.substring(0, setval.transition.length-1);
             }
-
-
 	    cmputl.rstyle(eff[0].component(), setval, { bpref: true });
             eff[0].component().styleDom().style(setval, { bpref: true });
 	    
