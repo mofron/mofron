@@ -21,7 +21,7 @@ module.exports = class extends ModConf {
 	    this.confmng().add("speed",  { type: "number", init: 0 });
             this.confmng().add("delay",  { type: "number", init: 0 });
 	    this.confmng().add(
-	        "timing", { type: "string", init: "ease", select: ["ease","linear","ease-in","ease-out","ease-in-out"] }
+	        "timing", { type: "string", init: "linear", select: ["ease","linear","ease-in","ease-out","ease-in-out"] }
             );
 	    this.confmng().add("cubic",  { type: "array" });
             this.confmng().add("transition", { type: "string", list: true })

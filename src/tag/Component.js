@@ -215,7 +215,8 @@ module.exports = class extends Base {
                 }
                 return incmp[key];
             } else if (false === comutl.iscmp(val)) {
-                throw new Error("invalid parameter");
+	        this.innerComp(key).config(val);
+		return;
             }
             /* setter */
             if (undefined !== incmp[key]) {
@@ -477,7 +478,8 @@ module.exports = class extends Base {
     config (p1,p2,p3,p4,p5) {
         try {
 	    this.rootDom();
-	    if (0 === arguments.length) {
+	    if ( (0 === arguments.length) ||
+	         ((1 === arguments.length) && (undefined === p1)) ) {
                 return super.config();
 	    }
             super.config(p1,p2,p3,p4,p5);

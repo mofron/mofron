@@ -393,6 +393,23 @@ mofron.util.component = {
 	}
     },
 
+    exec_effect: (cmp, eid, cb) => {
+        try {
+	    let chd = cmp.child();
+	    for (let cidx in chd) {
+	        mofron.util.component.exec_effect(chd[cidx], eid);
+	    }
+	    if (false === cmp.execEffect(eid, cb)) {
+                if ('function' === typeof cb) {
+                    cb();
+		}
+	    }
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    },
+
     visible: (cmp, vflg, ef, ep) => {
         try {
 	    if (false === comutl.iscmp(cmp)) {
@@ -440,10 +457,12 @@ mofron.util.component = {
                     throw e;
                 }
             }
-            if (false === cmp.execEffect((true === vflg) ? 0 : 1, scb)) {
-                /* it doesn't execute effect */
-		scb();
-	    }
+
+            cmputl.exec_effect(
+	        cmp,
+		(true === vflg) ? 0 : 1,
+		scb
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;
