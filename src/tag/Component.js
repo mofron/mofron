@@ -28,13 +28,15 @@ module.exports = class extends Base {
 	    this.confmng().add("layout",      { type: "ModConf", list: true });
 	    this.confmng().add("effect",      { type: "ModConf", list: true });
 	    this.confmng().add("event",       { type: "ModConf", list: true });
+	    this.confmng().add("renderEvent_before", { type: "event", list: true, private: true });
+	    this.confmng().add("renderEvent_after",  { type: "event", list: true, private: true });
             this.confmng().add("style",       { type: "key-value" });
 	    this.confmng().add("theme",       { type: "key-value" });
 	    this.confmng().add("innerComp",   { type: "key-value", private: true });
             this.confmng().add("mainColor",   { type: "color" });
             this.confmng().add("baseColor",   { type: "color" });
 	    this.confmng().add("accentColor", { type: "color" });
-
+            
             /* initialize member */
             this.m_tree = new CompTree(this);
             
@@ -86,6 +88,7 @@ module.exports = class extends Base {
      */
     childDom (tgt) {
         try {
+	    this.rootDom();
 	    let ret = this.confmng("childDom", tgt);
 	    if (null === ret) {
 	        if (0 < this.rootDom().length) {
@@ -134,9 +137,27 @@ module.exports = class extends Base {
         }
     }
     
+    renderEvent (prm, typ) {
+        try {
+	    let type = (undefined === typ) ? "after" : typ;
+	    if (undefined === prm) {
+                return this.confmng("renderEvent_" + type);
+	    }
+            this.confmng("renderEvent_" + type, prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     beforeRender () {
         try {
             cmputl.chdloop(this, "beforeRender");
+            
+	    let evt = this.renderEvent(undefined, "before");
+	    for (let eidx in evt) {
+                evt[0](this,evt[1]);
+	    }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -157,6 +178,11 @@ module.exports = class extends Base {
     afterRender () {
         try {
             cmputl.chdloop(this, "afterRender");
+            
+            let evt = this.renderEvent(undefined, "after");
+            for (let eidx in evt) {
+                evt[0](this,evt[1]);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;

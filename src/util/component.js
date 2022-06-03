@@ -201,6 +201,7 @@ mofron.util.component = {
 	    if (false === comutl.iscmp(cmp)) {
                 throw new Error("invalid parameter");
             }
+	    
 	    /*
 	     * create the theme for execution with theme of component
 	     * added to theme of parameter.

@@ -153,11 +153,6 @@ mofron.util.effect = {
 		        eff_trans[tbuf[bidx]] += 'cubic-bezier(' + cubic[0] + ',' + cubic[1] + ',' + cubic[2] + ',' + cubic[3] + ')';
                     }
 		    eff_trans[tbuf[bidx]] += ' ' + eff[eidx].delay() + 'ms';
-                    
-
-		    let init_style = {};
-		    init_style[tbuf[bidx]] = null
-                    eff[0].component().styleDom().style(init_style);
 		}
 	    }
 	    if (0 === Object.keys(eff_trans).length) {
