@@ -141,27 +141,8 @@ mofron.util.component = {
                 cmputl.initmconf(chd[cidx], idx);
 	    }
             /* init module config */
-            if ( ("effect" === idx) || ("zsp_effect" === idx)) {
-	        /* init effect */
-                let efflst = cmputl.modconf(cmp, "effect");
-		let eid    = ("none" !== cmp.style("display")) ? 0 : 1;
-		let oid    = 0;
-		let exelst = [];
-                while (true) {
-                    efflst = mofron.util.effect.getlist(efflst,eid,oid);
-		    if (0 === efflst.length) {
-                        break;
-		    }
-		    oid++;
-                    
-		    for (let eidx in efflst) {
-                        if ( ((idx === "effect") && (0 !== efflst[eidx].speed())) ||
-		             ((idx === "zsp_effect") && (0 === efflst[eidx].speed())) ) {
-                            exelst.push(efflst[eidx]);
-		        }
-		    }
-		}
-                mofron.util.effect.exec(exelst, eid);
+            if (-1 !== idx.indexOf('effect')) {
+                cmputl.initeffect(cmp,idx);
             } else {
                 let cnf = cmputl.modconf(cmp, idx);
                 for (let cfidx in cnf) {
@@ -173,6 +154,46 @@ mofron.util.component = {
 	    throw e;
 	}
     },
+    
+    initeffect: (cmp, idx) => {
+        try {
+	    let eid     = ("none" !== cmp.style("display")) ? 0 : 1;
+	    let exe_lst = [];
+            if ("zsp_effect" === idx) {
+	        exe_lst = cmp.effect({ speed:0 });
+		if (null === exe_lst) {
+                    return;
+		} else if (false === Array.isArray(exe_lst)) {
+                    exe_lst = [exe_lst];
+		}
+	    } else {
+	        let eff_lst = [];
+	        eff_lst = cmp.effect({ eid:-1 });
+		if (null === eff_lst) {
+                    eff_lst = [];
+		} else if (false === Array.isArray(eff_lst)) {
+                    eff_lst = [eff_lst];
+		}
+		if (null !== cmp.effect({ eid:eid })) {
+                    eff_lst = eff_lst.concat(cmp.effect({ eid:eid }));
+		}
+		for (let eidx in eff_lst) {
+                    if (0 !== eff_lst[eidx].speed()) {
+                        exe_lst.push(eff_lst[eidx]);
+		    }
+		}
+	    }
+	    if (0 === exe_lst.length) {
+                return;
+	    }
+	    mofron.util.effect.exec(exe_lst, -1);
+            mofron.util.effect.exec(exe_lst, eid);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    },
+
     follow_theme: (cmp) => {
         try {
 	    let ret     = {};
@@ -496,7 +517,7 @@ mofron.util.component = {
 		    let cmp_idx = cmp.parent().getTree().getIndex(cmp);
 		    let pc_len  = cmp.parent().child().length;
                     if (cmp_idx === pc_len-1) {
-		        /* insert to last of parent */
+                        /* insert to last of parent */
                         rdom[ridx].push({ target: rdom[ridx].parent().getRawDom() });
 		    } else {
                         /* insert to target index of parent */

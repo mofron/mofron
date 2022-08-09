@@ -17,7 +17,7 @@ module.exports = class extends ModConf {
             this.confmng().add("otCallback",  { type: "event", list: true });
 	    this.confmng().add("beforeEvent", { type: "event", list: true });
             this.confmng().add("order",  { type: "number", init: 0 });
-            this.confmng().add("eid",    { type: "number", init: 0 });
+            this.confmng().add("eid",    { type: "number", init: -1 });
 	    this.confmng().add("speed",  { type: "number", init: 0 });
             this.confmng().add("delay",  { type: "number", init: 0 });
 	    this.confmng().add(

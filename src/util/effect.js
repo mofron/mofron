@@ -50,24 +50,11 @@ mofron.util.effect = {
 	    let next = next_order(eff, eid, evf, oid);
             for (let eidx2 in elst) {
 	        elst[eidx2].otCallback(next, elst.length);
-                
-                if (0 === elst[eidx2].speed()) {
-                    elst[eidx2].execute();
-		} else {
-                    setTimeout(
-                        (tm) => {
-                            try {
-                                tm.execute();
-                            } catch (e) {
-                                console.error(e.stack);
-                                throw e;
-                            }
-                        },
-                        50,
-                        elst[eidx2]
-                    );
-		}
-
+                setTimeout(
+		    (tm) => { tm.execute(); },
+		    (0 === elst[eidx2].speed()) ? 0 : 50,
+		     elst[eidx2]
+		);
 	    }
             
             return true;
