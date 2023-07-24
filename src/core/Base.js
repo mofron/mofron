@@ -8,7 +8,7 @@ const ConfManager = require("./ConfManager.js");
 
 let genid = () => {
     try {
-        let ret_id = '_' + new Date().getTime() + '-';
+        let ret_id = '_';
         let loop   = 0;
         let val    = 0;
         for (loop = 0; loop < 8; loop++) {

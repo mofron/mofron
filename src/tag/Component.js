@@ -216,6 +216,10 @@ module.exports = class extends Base {
             }
             /* setter */
             ct.addChild(chd, idx);
+            if ((true === this.isExists()) && (true === cmputl.isinncmp(this))) {
+                /* perform layout on added components */
+                cmputl.initmconf(this, "layout");
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -237,7 +241,7 @@ module.exports = class extends Base {
             if (undefined === val) {
                 /* getter */
                 if (undefined === incmp[key]) {
-                    this[key](new defcmp());
+                    this[key](new defcmp({}));
                 }
                 return incmp[key];
             } else if (false === comutl.iscmp(val)) {
@@ -301,6 +305,8 @@ module.exports = class extends Base {
             if ("string" === typeof kv) {
                 /* getter */
 		return this.styleDom().style(kv);
+	    } else if (undefined === kv) {
+                return this.styleDom().style(kv).get();
 	    }
             this.styleDom().style(kv, opt);
             this.confmng("style", kv, opt);
@@ -487,8 +493,7 @@ module.exports = class extends Base {
     
     accentColor (prm, opt) {
         /* this is interface */
-	this.confmng("accentColor",prm);
-	return null;
+	return this.confmng("accentColor",prm);
     }
     
 

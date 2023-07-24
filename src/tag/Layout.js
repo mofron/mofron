@@ -12,7 +12,7 @@ module.exports = class extends ModConf {
             this.modname('Layout');
             
 	    this.confmng().add("skip", { type: "Component", list: true });
-            this.confmng().add("execlog", { type: "Component", list: true });
+            this.confmng().add("execlog", { type: "Component", list: true, private:true });
             
             //this.m_execnt = 0;
         } catch (e) {

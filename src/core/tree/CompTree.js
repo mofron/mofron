@@ -33,11 +33,6 @@ module.exports = class extends Tree {
             
             /* check render */
             if (true === this.target().isExists()) {
-	        let lo = chd.layout();
-		/* layout */
-		for(let lidx in lo) {
-		    lo[lidx].execute();
-		}
 		/* parent layout */
                 lo = this.target().layout();
 		for(let lidx2 in lo) {
@@ -78,6 +73,7 @@ module.exports = class extends Tree {
 
 	    if (true === o_chd.isExists()) {
 	        cmputl.render(n_chd);
+		cmputl.initmconf(n_chd.parent(), "layout");
 	    }
             
 	    o_chd.destroy()

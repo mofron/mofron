@@ -74,18 +74,6 @@ mofron.util.component = {
     
     modconf: (cmp, idx, po, opt) => {
         try {
-	    if ( (true === comutl.isinc(po, "ModConf")) &&
-                 (true === po.innerTgt()) &&
-	         (true === cmputl.isinncmp(cmp)) ) {
-	        return cmputl.modconf(cmp.childDom().component(), idx, po, opt);
-            }
-            
-            if (false === comutl.iscmp(cmp) ) {
-                throw new Error("invalid component object");
-            } else if (("layout" !== idx) && ("effect" !== idx) && ("event" !== idx)) {
-                throw new Error("invalid index:" + idx);
-	    }
-            
 	    if (true === Array.isArray(po)) {
                 for (let pidx in po) {
                     cmputl.modconf(cmp, idx, po[pidx], opt);
@@ -94,8 +82,7 @@ mofron.util.component = {
             }
             if (false === comutl.isinc(po, "ModConf")) {
                 /* getter */
-                let get_cmp = (true === cmputl.isinncmp(cmp)) ? cmp.childDom().component() : cmp;
-		let mc_lst  = get_cmp.confmng().get(idx);
+		let mc_lst  = cmp.confmng().get(idx);
                 if ('object' !== typeof po) {
                     return mc_lst;
                 }
@@ -136,6 +123,7 @@ mofron.util.component = {
 	    if (false === comutl.iscmp(cmp)) {
                 throw new Error("invalid parameter");
 	    }
+
 	    let chd = cmp.getTree().getChild();
             for (let cidx in chd) {
                 cmputl.initmconf(chd[cidx], idx);
@@ -274,13 +262,23 @@ mofron.util.component = {
 			    /* update child list for execution theme */
                             chd = rep_cmp.getTree().getChild();
                             
-                            //let rep_inn = rep_cmp.confmng("innerComp");
 			    for (let inn_idx2 in inn_cmp) {
                                 rep_cmp[inn_idx2]().config(inn_cmp[inn_idx2].config());
 			    }
                         }
                     } else if (undefined !== exe_thm2[thm_tgt].config) {
                         /* config theme */
+                        for (let cnf_idx in exe_thm2[thm_tgt].config) {
+                            if (('layout' === cnf_idx) || ('effect' === cnf_idx) || ('event' === cnf_idx)) {
+			        for (let cnf_idx_2 in exe_thm2[thm_tgt].config[cnf_idx]) {
+				    let cnf_nm  = exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].modname();
+				    let rep_cnf = new mofron.require[cnf_nm]();
+				    rep_cnf.config(exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].config());
+				    exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2] = rep_cnf;
+			        }
+			    }
+			}
+                        
                         cmp.config(exe_thm2[thm_tgt].config);
                     }
                 }
