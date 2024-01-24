@@ -108,18 +108,24 @@ module.exports = class extends Base {
 	}
     }
 
-    conf (kv, opt, idx) {
+    conf (k_kv, v_opt, idx, opt) {
         try {
             let cnf = this.m_conf[idx];
-            if (undefined === kv) {
-                /* get style object */
+            if (undefined === k_kv) {
+                /* get dom-config object */
                 return cnf;
-            } else if ('string' === typeof kv) {
-                /* get style value of the key */
-                return cnf.get(kv);
+            } else if (('string' === typeof k_kv) && (undefined === v_opt)) {
+                /* getter */
+                return cnf.get(k_kv);
             }
             /* setter */
-            cnf.set(kv, opt);
+            if ('object' === typeof k_kv) {
+                cnf.set(k_kv, v_opt);
+            } else if ('string' === typeof k_kv) {
+                let set_kv = {};
+                set_kv[k_kv] = v_opt;
+                cnf.set(set_kv, opt);
+            }
             this.value(null);
 	} catch (e) {
             console.error(e.stack);
@@ -159,9 +165,9 @@ module.exports = class extends Base {
      * @param val : (object) value of attribute
      * @return
      */
-    attrs (kv, opt) {
+    attrs (k_kv, v_opt, opt) {
         try {
-	    return this.conf(kv, opt, IDX_ATTRS);
+	    return this.conf(k_kv, v_opt, IDX_ATTRS, opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -174,9 +180,9 @@ module.exports = class extends Base {
      * @param kv  : (object/string) key-value object / key of
      * @param val : (object)  value of property
      */
-    props (kv, opt) {
+    props (k_kv, v_opt, opt) {
         try {
-	    return this.conf(kv, opt, IDX_PROPS);
+	    return this.conf(k_kv, v_opt, IDX_PROPS);
         } catch (e) {
             console.error(e.stack);
             throw e;

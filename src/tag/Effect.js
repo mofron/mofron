@@ -13,9 +13,9 @@ module.exports = class extends ModConf {
             super();
             this.modname('Effect');
             
-	    this.confmng().add("callback",    { type: "event", list: true });
-            this.confmng().add("otCallback",  { type: "event", list: true });
-	    this.confmng().add("beforeEvent", { type: "event", list: true });
+	    this.confmng().add("callback",    { type: "event", list: true, private:true});
+            this.confmng().add("otCallback",  { type: "event", list: true, private:true });
+	    this.confmng().add("beforeEvent", { type: "event", list: true, private:true });
             this.confmng().add("order",  { type: "number", init: 0 });
             this.confmng().add("eid",    { type: "number", init: -1 });
 	    this.confmng().add("speed",  { type: "number", init: 0 });
