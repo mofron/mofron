@@ -91,12 +91,7 @@ module.exports = class extends DomConf {
     domGet () {
         try {
             let clnm    = this.dom().getRawDom().className;
-            if ( (undefined === clnm) ||
-                 (null      === clnm) ||
-                 (''        === clnm) ) {
-                return null;
-            }
-            return clnm.split(' ');
+            return ('string' === typeof clnm) ? clnm.split(' ') : null;
         } catch (e) {
             console.error(e.stack);
             throw e;

@@ -402,10 +402,9 @@ module.exports = class extends Base {
     destroy () {
         try {
 	    /* destroy in component layer */
-	    if (null === this.parent()) {
-                return;
+	    if (null !== this.parent()) {
+                this.parent().getTree().delChild(this);
 	    }
-            this.parent().getTree().delChild(this);
 
 	    /* destroy in dom layer */
             let rdom = this.rootDom();

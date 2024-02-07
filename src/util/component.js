@@ -270,12 +270,19 @@ mofron.util.component = {
                         /* config theme */
                         for (let cnf_idx in exe_thm2[thm_tgt].config) {
                             if (('layout' === cnf_idx) || ('effect' === cnf_idx) || ('event' === cnf_idx)) {
-			        for (let cnf_idx_2 in exe_thm2[thm_tgt].config[cnf_idx]) {
-				    let cnf_nm  = exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].modname();
-				    let rep_cnf = new mofron.require[cnf_nm]();
-				    rep_cnf.config(exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].config());
-				    exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2] = rep_cnf;
-			        }
+			        if (true !== Array.isArray(exe_thm2[thm_tgt].config[cnf_idx])) {
+                                    let cnf_nm  = exe_thm2[thm_tgt].config[cnf_idx].modname();
+                                    let rep_cnf = new mofron.require[cnf_nm]();
+                                    rep_cnf.config(exe_thm2[thm_tgt].config[cnf_idx].config());
+                                    exe_thm2[thm_tgt].config[cnf_idx] = rep_cnf;
+				} else {
+			            for (let cnf_idx_2 in exe_thm2[thm_tgt].config[cnf_idx]) {
+				        let cnf_nm  = exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].modname();
+				        let rep_cnf = new mofron.require[cnf_nm]();
+				        rep_cnf.config(exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2].config());
+				        exe_thm2[thm_tgt].config[cnf_idx][cnf_idx_2] = rep_cnf;
+			            }
+                                }
 			    }
 			}
                         

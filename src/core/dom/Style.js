@@ -44,7 +44,16 @@ module.exports = class extends DomConf {
     domGet (key) {
         try {
             if (undefined === key) {
-                return this.dom().getRawDom().style;
+	        let ret   = {};
+		let style = this.dom().getRawDom().style;
+		for (let sidx in style) {
+                    if ( ("" !== style[sidx]) &&
+		         (null !== style[sidx]) &&
+			 ('function' !== typeof style[sidx]) ) {
+                        ret[sidx] = style[sidx];
+		    }
+		}
+                return ret;
             }
             let val = this.dom().getRawDom().style[getcamel(key)];
             return ((undefined === val) || ("" === val)) ? null : val;
