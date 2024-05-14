@@ -116,7 +116,7 @@ module.exports = class {
 		     (true === comutl.isinc(val, "Base")) ) {
                     throw new Error('invalid parameter');
                 }
-            } else if (true === comutl.isinc(val, 'Base')) {
+            } else if ((true === comutl.isinc(val, 'Base')) && ('object' !== opt.type)) {
                 if (false === comutl.isinc(val, opt.type)) {
                     throw new Error('invalid parameter');
                 }

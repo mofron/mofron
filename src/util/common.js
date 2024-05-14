@@ -240,7 +240,10 @@ mofron.util.common = {
                 throw new Error('invalid parameter');
             }
             if (prm1.type() !== prm2.type()) {
-                if ((undefined === prm1.toPixel()) || (undefined === prm2.toPixel())) {
+                if ((undefined !== prm1.toPixel()) && ('%' === prm2.type())) {
+		    /* calculate percentage size */
+                    return (prm1.value() * (prm2.value()/100)) + prm1.type();
+	        } else if ((undefined === prm1.toPixel()) || (undefined === prm2.toPixel())) {
                     throw new Error('not supported type');
                 }
                 return new mofron.class.Pixel(prm1.toPixel() + prm2.toPixel()).toString();
