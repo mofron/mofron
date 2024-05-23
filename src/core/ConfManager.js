@@ -191,6 +191,18 @@ module.exports = class {
             throw e;
         }
     }
+
+    options (key) {
+        try {
+            if (undefined !== key) {
+                return this.m_opt[key];
+            }
+            return this.m_opt;
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     
     delete (key) {
         try {

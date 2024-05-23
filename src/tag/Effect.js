@@ -252,5 +252,23 @@ module.exports = class extends ModConf {
             throw e;
         }
     }
+    
+    confmng (key, val, opt) {
+        try {
+            let ret = super.confmng(key, val, opt);
+	    /* check auto apply */
+            if ( (true === super.confmng().options('auto-apply')) &&
+	         (undefined !== val) &&
+	         (null !== this.component()) &&
+		 (true === this.component().isExists()) ) {
+                this.contents(this.component());
+            }
+            return ret;
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+
 }
 /* end of file */

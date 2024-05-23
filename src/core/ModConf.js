@@ -75,5 +75,31 @@ module.exports = class extends Base {
             throw e;
         }
     }
+
+    destroy () {
+        try {
+            let cnf_type = null;
+            if (true === mofron.util.common.isinc(this,'Event')) {
+                cnf_type = 'event';
+            } else if (true === mofron.util.common.isinc(this,'Effect')) {
+                cnf_type = 'effect';
+	    } else if (true === mofron.util.common.isinc(this,'Layout')) {
+                cnf_type = 'layout';
+	    }
+            let cnf_lst = this.component().confmng().m_conf[cnf_type];
+            let cnf_idx = null;
+            for (let eidx in cnf_lst) {
+                if (this.id() === cnf_lst[eidx].id()) {
+                    cnf_idx = parseInt(eidx);
+                    break;
+                }
+            }
+
+            this.component().confmng().m_conf[cnf_type].splice(cnf_idx, 1);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
