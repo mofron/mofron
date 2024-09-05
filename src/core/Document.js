@@ -33,7 +33,7 @@ module.exports = class extends mofron.class.Component {
     
     style (kv) {
         try {
-            this.styleDom().style(kv);
+            return this.styleDom().style(kv);
 	} catch (e) {
             console.error(e.stack);
             throw e;

@@ -30,10 +30,46 @@ mofron.util.effect = {
 		        let eff_cmp = elst[fin_cnt].component();
                         fin_cnt++;
                         if (p3 <= fin_cnt) {
-                            if (false === effutl.exec(eff,eid,evf,oid+1)) {
+                            if (false === effutl.exec(eff,eid,evf,_oid+1)) {
 			        /* release transition */
-                                cmputl.rstyle(eff_cmp, { 'transition' : null }, { bpref: true });
-                                eff_cmp.styleDom().style({ 'transition' : null }, { bpref: true });
+				let cmp_trans_style = eff_cmp.style('transition');
+                                let set_trans_lst   = {};
+                                if (null !== cmp_trans_style) {
+                                    let sp_trans_style = cmp_trans_style.split(',');
+                                    for (let sp_trans_idx in sp_trans_style) {
+				        let trans_key = sp_trans_style[sp_trans_idx].split(' ');
+					if ("" !== trans_key[0]) {
+                                            set_trans_lst[trans_key[0]] = sp_trans_style[sp_trans_idx];
+					} else {
+                                            set_trans_lst[trans_key[1]] = sp_trans_style[sp_trans_idx];
+					}
+                                    }
+                                }
+                                
+                                let eff_trans = elst[fin_cnt-1].transition();
+				for (let el_idx in elst) {
+				    let eff_trans = elst[el_idx].transition();
+                                    for (let et_idx in eff_trans) {
+                                        delete set_trans_lst[eff_trans[et_idx]];
+                                    }
+                                }
+
+                                // check transition length
+                                if (0 === Object.keys(set_trans_lst).length) {
+                                    cmputl.rstyle(eff_cmp, { 'transition' : null }, { bpref: true });
+                                    eff_cmp.styleDom().style({ 'transition' : null }, { bpref: true });
+                                } else {
+                                    
+                                    let set_trans_string = '';
+                                    for (let st_idx in set_trans_lst) {
+                                        set_trans_string += set_trans_lst[st_idx] + ',';
+                                    }
+                                    set_trans_string = set_trans_string.substring(0, set_trans_string.length-1);
+
+                                    cmputl.rstyle(eff_cmp, { 'transition' : set_trans_string }, { bpref: true });
+                                    eff_cmp.styleDom().style({ 'transition' : set_trans_string }, { bpref: true });
+                                }
+                                
                                 /* execute callback function */
                                 if ((undefined !== evf) && ("function" === typeof evf[0])) {
                                     evf[0](p2,eid,evf[1]);
@@ -121,45 +157,46 @@ mofron.util.effect = {
     
     transition: (eff) => {
         try {
-            let rdom      = eff[0].component().rootDom();
-            let cmp_trans = {};  //effutl.gettrans(rdom.style('tarnsition'));
+            let rdom = eff[0].component().rootDom();
+            let cmp_trans_style = eff[0].component().style('transition');
+	    let set_trans_lst   = {};
+            if (null !== cmp_trans_style) {
+	        let sp_trans_style = cmp_trans_style.split(',');
+		for (let sp_trans_idx in sp_trans_style) {
+		    set_trans_lst[sp_trans_style[sp_trans_idx].split(' ')[0]] = sp_trans_style[sp_trans_idx];
+		}
+	    }
 
-            /* get the effect transition that will be executed */
-            let eff_trans = {};
             for (let eidx in eff) {
-	        if (0 === eff[eidx].speed()) {
+                if (0 === eff[eidx].speed()) {
                     continue;
-		}
-                let tbuf = eff[eidx].transition();
-		for (let bidx in tbuf) {
-                    eff_trans[tbuf[bidx]]  = eff[eidx].speed() + 'ms ';
-		    if (null === eff[eidx].cubicBezier()) {
-		        eff_trans[tbuf[bidx]] += eff[eidx].timing();
-		    } else {
-		        let cubic = eff[eidx].cubicBezier();
-		        eff_trans[tbuf[bidx]] += 'cubic-bezier(' + cubic[0] + ',' + cubic[1] + ',' + cubic[2] + ',' + cubic[3] + ')';
-                    }
-		    eff_trans[tbuf[bidx]] += ' ' + eff[eidx].delay() + 'ms';
-		}
+                }
+                let eff_trans = eff[eidx].transition();
+                for (let et_idx in eff_trans) {
+                    set_trans_lst[eff_trans[et_idx]] = eff_trans[et_idx] +' ' + eff[eidx].speed() + 'ms ' + eff[eidx].timing();
+                }
 	    }
-	    if (0 === Object.keys(eff_trans).length) {
-                return;
-	    }
-	    /* set transition list to buff */
-            for (let tidx in eff_trans) {
-                cmp_trans[tidx] = eff_trans[tidx];
-            }
-            let setval = { 'transition' : "" };
-	    for (let tidx2 in cmp_trans) {
-	        setval.transition += tidx2 + " " + cmp_trans[tidx2] + ","
-	    }
-	    if (0 < setval.transition.length) {
-	        setval.transition = setval.transition.substring(0, setval.transition.length-1);
-            }
-	    cmputl.rstyle(eff[0].component(), setval, { bpref: true });
-            eff[0].component().styleDom().style(setval, { bpref: true });
-	    
             
+            // check transition length
+            if (0 === Object.keys(set_trans_lst).length) {
+                return;
+            }
+
+            let set_trans_string = '';
+            for (let st_idx in set_trans_lst) {
+                set_trans_string += set_trans_lst[st_idx] + ',';
+            }
+            set_trans_string = set_trans_string.substring(0, set_trans_string.length-1);
+
+            cmputl.rstyle(
+                eff[0].component(),
+                { 'transition': set_trans_string },
+                { bpref: true }
+            );
+            eff[0].component().styleDom().style(
+                { 'transition': set_trans_string },
+                { bpref: true }
+            );
 	} catch (e) {
             console.error(e.stack);
             throw e;
