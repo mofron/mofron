@@ -74,13 +74,13 @@ module.exports = class extends mofron.class.Component {
         try {
             if ( (undefined !== screen.orientation) &&
                  (null      === screen.orientation.onchange) ) {
-                screen.orientation.onchange = this.orientationHandler;
+                screen.orientation.onchange = this.orientationHandler.bind(this);
             } else if (null === screen.onmozorientationchange) {
-                screen.onmozorientationchange = this.orientationHandler;
+                screen.onmozorientationchange = this.orientationHandler.bind(this);
             } else if (null === screen.onmsorientationchange) {
-                screen.onmsorientationchange = this.orientationHandler;
+                screen.onmsorientationchange = this.orientationHandler.bind(this);
             } else {
-                window.addEventListener("orientationchange", this.orientationHandler);
+                window.addEventListener("orientationchange", this.orientationHandler.bind(this));
             }
         } catch (e) {
             console.error(e.stack);
@@ -97,7 +97,7 @@ module.exports = class extends mofron.class.Component {
 		 ("landscape-secondary" === screen.orientation.type) ) {
                 /* landscape event */
 		if ("function" === typeof this["landscapeEvent"]) {
-                    ef = this.landscapeEvent();
+                    evt_fnc = this.landscapeEvent();
 		}
             } else if ( ("portrait-primary"   === screen.mozOrientation)   ||
                         ("portrait-secondary" === screen.mozOrientation)   ||
@@ -105,23 +105,23 @@ module.exports = class extends mofron.class.Component {
                         ("portrait-secondary" === screen.orientation.type) ) {
                 /* vertical event */
 		if ("function" === typeof this["portraitEvent"]) {
-                    ef = this.portraitEvent();
+                    evt_fnc = this.portraitEvent();
 		}
             } else {
                 if (window.innerHeight < window.innerWidth) {
                     /* landscape event */
 		    if ("function" === typeof this["landscapeEvent"]) {
-		        ef = this.landscapeEvent();
+		        evt_fnc = this.landscapeEvent();
 		    }
                 } else {
                     /* portrait event */
 		    if ("function" === typeof this["portraitEvent"]) {
-		        ef = this.portraitEvent();
+		        evt_fnc = this.portraitEvent();
 		    }
                 }
             }
-            for (let eidx in ef) {
-                ef[eidx].exec(this, evt);
+            for (let eidx in evt_fnc) {
+                evt_fnc[eidx][0](this, evt, evt_fnc[eidx][1]);
 	    }
 	} catch (e) {
             console.error(e.stack);

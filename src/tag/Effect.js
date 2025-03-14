@@ -67,7 +67,14 @@ module.exports = class extends ModConf {
             /* execute effect */
             let exec = (exe_eff) => {
                 try {
-                    exe_eff.contents(exe_eff.component());
+		    if (0 !== exe_eff.delay()) {
+                        setTimeout(
+			    () => { exe_eff.contents(exe_eff.component()); },
+                            exe_eff.delay()
+			);
+		    } else {
+                        exe_eff.contents(exe_eff.component());
+                    }
                     exe_eff.isInited(true);
                     setTimeout(exe_eff.exeCallback, exe_eff.speed() + exe_eff.delay(), exe_eff);
                 } catch (e) {
